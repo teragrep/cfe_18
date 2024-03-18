@@ -148,7 +148,7 @@ public class StorageController {
     // New storage with the flow
     @RequestMapping(path = "/flow", method = RequestMethod.PUT, produces = "application/json")
     public ResponseEntity<String> addNewStorage(@RequestBody FlowStorage newFlowStorage) {
-        LOGGER.info("about to insert <[" + newFlowStorage + "]>");
+        LOGGER.info("about to insert <[{}]>",newFlowStorage);
         try {
             FlowStorage fs = storageMapper.addStorageForFlow(
                     newFlowStorage.getFlow(),
@@ -170,12 +170,12 @@ public class StorageController {
     // Link storage to capture
     @RequestMapping(path = "/capture", method = RequestMethod.PUT, produces = "application/json")
     public ResponseEntity<String> linkStorageToCapture(@RequestBody CaptureStorage newCaptureStorage) {
-        LOGGER.info("about to insert <[" + newCaptureStorage + "]>");
+        LOGGER.info("about to insert <[{}]>",newCaptureStorage);
         try {
             CaptureStorage cs = storageMapper.addStorageForCapture(
                     newCaptureStorage.getCapture_id(),
                     newCaptureStorage.getStorage_id());
-            LOGGER.info("Values returned <[" + cs + "]>");
+            LOGGER.info("Values returned <[{}]>",cs);
             JSONObject jsonObject = new JSONObject();
             jsonObject.put("id", cs.getCapture_id());
             jsonObject.put("message", "New capture storage created");
@@ -203,12 +203,12 @@ public class StorageController {
     // Insert standalone storage
     @RequestMapping(path = "", method = RequestMethod.PUT, produces = "application/json")
     public ResponseEntity<String> addStorage(@RequestBody Storage newStorage) {
-        LOGGER.info("about to insert <[" + newStorage + "]>");
+        LOGGER.info("about to insert <[{}]>",newStorage);
         try {
             Storage s = storageMapper.addStorage(
                     newStorage.getCfe_type().toString(),
                     newStorage.getTarget_name());
-            LOGGER.info("Values returned <[" + s + "]>");
+            LOGGER.info("Values returned <[{}]>",s);
             JSONObject jsonObject = new JSONObject();
             jsonObject.put("id", s.getId());
             jsonObject.put("message", "New storage created");
@@ -233,7 +233,7 @@ public class StorageController {
     // Delete Storage
     @RequestMapping(path = "/{id}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> removeStorage(@PathVariable("id") int id) {
-        LOGGER.info("Deleting Storage " + id);
+        LOGGER.info("Deleting Storage {}", id);
         JSONObject jsonErr = new JSONObject();
         jsonErr.put("id", id);
         try {
@@ -261,7 +261,7 @@ public class StorageController {
     // Delete flow storage
     @RequestMapping(path = "/flow/{flow}/{id}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> removeFlowStorage(@PathVariable("flow") String flow, @PathVariable("id") int id) {
-        LOGGER.info("Deleting " + flow + " Storage " + id);
+        LOGGER.info("Deleting flow Storage with id of= {}", id);
         JSONObject jsonErr = new JSONObject();
         jsonErr.put("id", id);
         try {
@@ -289,7 +289,7 @@ public class StorageController {
     // Delete capture storage
     @RequestMapping(path = "/capture/{capture_id}/{storage_id}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> removeCaptureStorage(@PathVariable("capture_id") int capture_id, @PathVariable("storage_id") int storage_id) {
-        LOGGER.info("Deleting capture = " + capture_id + ", Storage " + storage_id);
+        LOGGER.info("Deleting capture storage with id of = {}",storage_id);
         JSONObject jsonErr = new JSONObject();
         jsonErr.put("id", capture_id);
         try {

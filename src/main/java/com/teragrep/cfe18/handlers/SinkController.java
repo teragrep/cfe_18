@@ -104,21 +104,20 @@ public class SinkController {
     // GET ALL Sinks
     @RequestMapping(path = "", method = RequestMethod.GET, produces = "application/json")
     public List<Sink> getAllSink() {
-        LOGGER.info("about to get <[" + sinkMapper.getAllSinks() + "]>");
         return sinkMapper.getAllSinks();
     }
 
 
     @RequestMapping(path = "/details", method = RequestMethod.PUT, produces = "application/json")
     public ResponseEntity<String> newSink(@RequestBody Sink newSink) {
-        LOGGER.info("about to insert <[" + newSink + "]>");
+        LOGGER.info("about to insert <[{}]>",newSink);
         try {
             Sink n = sinkMapper.addNewSink(
                     newSink.getProtocol(),
                     newSink.getIp_address(),
                     newSink.getPort(),
                     newSink.getFlow());
-            LOGGER.info("Values returned <[" + n + "]>");
+            LOGGER.info("Values returned <[{}]>",n );
             JSONObject jsonObject = new JSONObject();
             jsonObject.put("id", n.getId());
             jsonObject.put("message", "New sink created");
@@ -147,7 +146,7 @@ public class SinkController {
     // Delete
     @RequestMapping(path = "/id/{id}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> deleteSink(@PathVariable("id") int id) {
-        LOGGER.info("Deleting sink " + id);
+        LOGGER.info("Deleting sink {}", id);
         JSONObject jsonErr = new JSONObject();
         jsonErr.put("id", id);
         try {
