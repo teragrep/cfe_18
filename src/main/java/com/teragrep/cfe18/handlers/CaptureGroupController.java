@@ -177,6 +177,15 @@ public class CaptureGroupController {
 
     // Delete
     @RequestMapping(path = "group/{name}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @Operation(summary = "Delete capture group")
+    @ApiResponses(value = {
+                       @ApiResponse(responseCode = "200", description = "Capture group deleted",
+                              content = {@Content(mediaType = "application/json",
+                                        schema = @Schema(implementation = CaptureGroup.class))}),
+                        @ApiResponse(responseCode = "400", description = "Capture group does not exist or it is being used",
+                                content = @Content),
+                        @ApiResponse(responseCode = "500", description = "Internal server error, contact admin", content = @Content)
+                })
     public ResponseEntity<String> removeCaptureGroup(@PathVariable("name") String name) {
         LOGGER.info("Deleting Capture group " + name);
         JSONObject jsonErr = new JSONObject();
