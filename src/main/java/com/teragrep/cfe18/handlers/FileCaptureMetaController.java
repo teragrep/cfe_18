@@ -84,7 +84,7 @@ public class FileCaptureMetaController {
 
 
     @RequestMapping(path = "/meta/{name}", method = RequestMethod.GET, produces = "application/json")
-        @Operation(summary = "Fetch processing type by name")
+    @Operation(summary = "Fetch processing type by name")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Processing type retrieved",
                     content = {@Content(mediaType = "application/json",
@@ -118,7 +118,7 @@ public class FileCaptureMetaController {
 
     // Get ALL endpoint
     @RequestMapping(path = "/meta/", method = RequestMethod.GET, produces = "application/json")
-        @Operation(summary = "Fetch all processing types", description = "Will return empty list if there are no processing types to fetch")
+    @Operation(summary = "Fetch all processing types", description = "Will return empty list if there are no processing types to fetch")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Processing types fetched",
                     content = {@Content(mediaType = "application/json",
