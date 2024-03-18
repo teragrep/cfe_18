@@ -126,7 +126,7 @@ public class HostMetaController {
 
     @RequestMapping(method = RequestMethod.PUT, path = "/meta", produces = "application/json")
     public ResponseEntity<String> addHostMeta(@RequestBody HostMeta newHostMeta) {
-        LOGGER.info("about to insert <[" + newHostMeta + "]>");
+        LOGGER.info("about to insert <[{}]>",newHostMeta);
         try {
             HostMeta hm = hostMetaMapper.addHostMeta(
                     newHostMeta.getArch(),
@@ -136,7 +136,7 @@ public class HostMetaController {
                     newHostMeta.getOs(),
                     newHostMeta.getRelease_version()
             );
-            LOGGER.info("Values returned <[" + hm + "]>");
+            LOGGER.info("Values returned <[{}]>",hm);
             JSONObject jsonObject = new JSONObject();
             jsonObject.put("id", hm.getId());
             jsonObject.put("message", "New host meta added for host");
@@ -157,12 +157,12 @@ public class HostMetaController {
     // new interface for host metadata
     @RequestMapping(method = RequestMethod.PUT, path = "/meta/interface", produces = "application/json")
     public ResponseEntity<String> addInterface_type(@RequestBody InterfaceType newInterfaceType) {
-        LOGGER.info("about to insert <[" + newInterfaceType + "]>");
+        LOGGER.info("about to insert <[{}]>",newInterfaceType );
         try {
             InterfaceType it = hostMetaMapper.addInterface_type(
                     newInterfaceType.getInterfaceType(),
                     newInterfaceType.getHost_meta_id());
-            LOGGER.info("Values returned <[" + it + "]>");
+            LOGGER.info("Values returned <[{}]>",it);
             JSONObject jsonObject = new JSONObject();
             jsonObject.put("id", it.getHost_meta_id());
             jsonObject.put("message", "New interface created for host_meta");
@@ -178,12 +178,12 @@ public class HostMetaController {
     // new ip address for host metadata
     @RequestMapping(path = "/meta/ip", method = RequestMethod.PUT, produces = "application/json")
     public ResponseEntity<String> addIpAddress(@RequestBody IPAddress newIpAddress) {
-        LOGGER.info("about to insert <[" + newIpAddress + "]>");
+        LOGGER.info("about to insert <[{}]>",newIpAddress);
         try {
             IPAddress ia = hostMetaMapper.addIpAddress(
                     newIpAddress.getHost_meta_id(),
                     newIpAddress.getIpAddress());
-            LOGGER.info("Values returned <[" + ia + "]>");
+            LOGGER.info("Values returned <[{}]>",ia);
             JSONObject jsonObject = new JSONObject();
             jsonObject.put("id", ia.getHost_meta_id());
             jsonObject.put("message", "New ip address created for host_meta");
@@ -199,7 +199,7 @@ public class HostMetaController {
     // Delete IP
     @RequestMapping(path = "/meta/ip/{id}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> removeIp(@PathVariable("id") int id) {
-        LOGGER.info("Deleting Host " + id);
+        LOGGER.info("Deleting Host {}",id);
         JSONObject jsonErr = new JSONObject();
         jsonErr.put("id", id);
         try {
@@ -227,7 +227,7 @@ public class HostMetaController {
     // Delete Interface
     @RequestMapping(path = "/meta/interface/{id}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> removeInterface(@PathVariable("id") int id) {
-        LOGGER.info("Deleting Interface " + id);
+        LOGGER.info("Deleting Interface {}" , id);
         JSONObject jsonErr = new JSONObject();
         jsonErr.put("id", id);
         try {
@@ -255,7 +255,7 @@ public class HostMetaController {
     // Delete HostMeta
     @RequestMapping(path = "/meta/{id}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> removeHostMeta(@PathVariable("id") int id) {
-        LOGGER.info("Deleting Hostmeta " + id);
+        LOGGER.info("Deleting Hostmeta {}", id);
         JSONObject jsonErr = new JSONObject();
         jsonErr.put("id", id);
         jsonErr.put("message", "Unexpected error occurred");

@@ -192,7 +192,7 @@ public class CaptureController {
                     content = @Content)
     })
     public ResponseEntity<String> newCaptureFile(@RequestBody CaptureFile newCapture) {
-        LOGGER.info("about to insert <[" + newCapture + "]>");
+        LOGGER.info("about to insert <[{}]>",newCapture);
         try {
             CaptureFile c = captureMapper.addNewCaptureFile(
                     newCapture.getTag(),
@@ -207,7 +207,7 @@ public class CaptureController {
                     newCapture.getCapture_path(),
                     newCapture.getProcessing_type());
 
-            LOGGER.info("Values returned <[" + c + "]>");
+            LOGGER.info("Values returned <[{}]>",c);
             JSONObject jsonObjectFile = new JSONObject();
             jsonObjectFile.put("id", c.getId());
             jsonObjectFile.put("message", "New capture created");
@@ -232,7 +232,7 @@ public class CaptureController {
                     content = @Content)
     })
     public ResponseEntity<String> newCaptureRelp(@RequestBody CaptureRelp newCapture) {
-        LOGGER.info("about to insert <[" + newCapture + "]>");
+        LOGGER.info("about to insert <[{}]>",newCapture);
         try {
             CaptureRelp c = captureMapper.addNewCaptureRelp(
                     newCapture.getTag(),
@@ -243,7 +243,7 @@ public class CaptureController {
                     newCapture.getSource_type(),
                     newCapture.getProtocol(),
                     newCapture.getFlow());
-            LOGGER.info("Values returned <[" + c + "]>");
+            LOGGER.info("Values returned <[{}}]>",c);
             JSONObject jsonObjectRelp = new JSONObject();
             jsonObjectRelp.put("id", c.getId());
             jsonObjectRelp.put("message", "New capture created");
@@ -268,7 +268,7 @@ public class CaptureController {
             @ApiResponse(responseCode = "500", description = "Internal server error, contact admin", content = @Content)
     })
     public ResponseEntity<String> removeCapture(@PathVariable("id") int id) {
-        LOGGER.info("Deleting capture with id = " + id);
+        LOGGER.info("Deleting capture with id = {}",id);
         JSONObject jsonErr = new JSONObject();
         jsonErr.put("id", id);
         jsonErr.put("message", "Unexpected error occurred");
