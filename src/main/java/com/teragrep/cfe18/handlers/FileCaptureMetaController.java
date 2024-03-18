@@ -49,6 +49,11 @@ import com.teragrep.cfe18.FileCaptureMetaMapper;
 import com.teragrep.cfe18.handlers.entities.FileCaptureMeta;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.json.JSONObject;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -79,6 +84,15 @@ public class FileCaptureMetaController {
 
 
     @RequestMapping(path = "/meta/{name}", method = RequestMethod.GET, produces = "application/json")
+    @Operation(summary = "Fetch processing type by name")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Processing type retrieved",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = FileCaptureMeta.class))}),
+            @ApiResponse(responseCode = "400", description = "Processing type does not exist with the given name",
+                    content = @Content),
+            @ApiResponse(responseCode = "500", description = "Internal server error, contact admin", content = @Content)
+                })
     public ResponseEntity<?> getProcessingType(@PathVariable("name") String name) {
         try {
             FileCaptureMeta fc = fileCaptureMetaMapper.getProcessingTypeByName(name);
@@ -104,6 +118,12 @@ public class FileCaptureMetaController {
 
     // Get ALL endpoint
     @RequestMapping(path = "/meta/", method = RequestMethod.GET, produces = "application/json")
+    @Operation(summary = "Fetch all processing types", description = "Will return empty list if there are no processing types to fetch")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Processing types fetched",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = FileCaptureMeta.class))})
+                })
     public List<FileCaptureMeta> getAllProcessingType() {
         return fileCaptureMetaMapper.getAllProcessingType();
     }

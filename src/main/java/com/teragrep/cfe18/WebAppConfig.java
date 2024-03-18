@@ -62,15 +62,5 @@ public class WebAppConfig implements WebMvcConfigurer {
         registry.addViewController("/").setViewName("forward:/index.html");
     }
 
-    @Override
-    public void addCorsMappings(CorsRegistry registry) {
-        registry.addMapping("/**")
-                .allowedMethods("*")
-                .allowedHeaders("*")
-                .exposedHeaders("*")
-                .allowedOriginPatterns("*")
-                .allowCredentials(true)
-                .maxAge(3600);
-    }
 
 }
