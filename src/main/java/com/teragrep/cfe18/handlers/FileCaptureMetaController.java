@@ -86,12 +86,12 @@ public class FileCaptureMetaController {
     @RequestMapping(path = "/meta/{name}", method = RequestMethod.GET, produces = "application/json")
         @Operation(summary = "Fetch processing type by name")
     @ApiResponses(value = {
-                        @ApiResponse(responseCode = "200", description = "Processing type retrieved",
-                                content = {@Content(mediaType = "application/json",
-                                        schema = @Schema(implementation = FileCaptureMeta.class))}),
-                        @ApiResponse(responseCode = "400", description = "Processing type does not exist with the given name",
-                                content = @Content),
-                      @ApiResponse(responseCode = "500", description = "Internal server error, contact admin", content = @Content)
+            @ApiResponse(responseCode = "200", description = "Processing type retrieved",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = FileCaptureMeta.class))}),
+            @ApiResponse(responseCode = "400", description = "Processing type does not exist with the given name",
+                    content = @Content),
+            @ApiResponse(responseCode = "500", description = "Internal server error, contact admin", content = @Content)
                 })
     public ResponseEntity<?> getProcessingType(@PathVariable("name") String name) {
         try {
@@ -120,9 +120,9 @@ public class FileCaptureMetaController {
     @RequestMapping(path = "/meta/", method = RequestMethod.GET, produces = "application/json")
         @Operation(summary = "Fetch all processing types", description = "Will return empty list if there are no processing types to fetch")
     @ApiResponses(value = {
-                        @ApiResponse(responseCode = "200", description = "Processing types fetched",
-                                content = {@Content(mediaType = "application/json",
-                                        schema = @Schema(implementation = FileCaptureMeta.class))})
+            @ApiResponse(responseCode = "200", description = "Processing types fetched",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = FileCaptureMeta.class))})
                 })
     public List<FileCaptureMeta> getAllProcessingType() {
         return fileCaptureMetaMapper.getAllProcessingType();
