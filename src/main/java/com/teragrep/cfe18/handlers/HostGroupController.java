@@ -111,13 +111,13 @@ public class HostGroupController {
     // Insert host group with host
     @RequestMapping(path = "/group", method = RequestMethod.PUT, produces = "application/json")
     public ResponseEntity<String> newHostGroup(@RequestBody HostGroup newHostGroup) {
-        LOGGER.info("about to insert <[" + newHostGroup + "]>");
+        LOGGER.info("About to insert <[{}]>",newHostGroup);
         try {
             HostGroup hg = hostGroupMapper.addNewHostGroup(
                     newHostGroup.getHost_id(),
                     newHostGroup.getHost_group_name()
             );
-            LOGGER.info("Values returned <[" + hg + "]>");
+            LOGGER.debug("Values returned <[{}]>",hg);
             JSONObject jsonObject = new JSONObject();
             jsonObject.put("host_group_id", hg.getId());
             jsonObject.put("message", "New host group created with name = " + hg.getHost_group_name());
@@ -146,7 +146,7 @@ public class HostGroupController {
     // Delete
     @RequestMapping(path = "/group/{name}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> removeHost(@PathVariable("name") String name) {
-        LOGGER.info("Deleting Host Group " + name);
+        LOGGER.info("Deleting Host Group <[{}]>", name);
         JSONObject jsonErr = new JSONObject();
         jsonErr.put("id", 0);
         try {

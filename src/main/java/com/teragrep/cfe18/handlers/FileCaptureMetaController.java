@@ -131,7 +131,7 @@ public class FileCaptureMetaController {
 
     @RequestMapping(path = "/meta/rule", method = RequestMethod.PUT, produces = "application/json")
     public ResponseEntity<String> newFileMeta(@RequestBody FileCaptureMeta newFileCaptureMeta) {
-        LOGGER.info("about to insert <[" + newFileCaptureMeta + "]>");
+        LOGGER.info("About to insert <[{}]>",newFileCaptureMeta);
         try {
             FileCaptureMeta n = fileCaptureMetaMapper.addNewProcessingType(
                     newFileCaptureMeta.getTemplate(),
@@ -139,8 +139,7 @@ public class FileCaptureMetaController {
                     newFileCaptureMeta.getName(),
                     newFileCaptureMeta.getInputtype().toString(),
                     newFileCaptureMeta.getInputvalue());
-            LOGGER.info("Values returned <[" + n + "]>");
-
+            LOGGER.debug("Values returned <[{}]>",n);
             JSONObject jsonObject = new JSONObject();
             // ID is never returned from database so null should suffice.
             String v = null;
@@ -176,7 +175,7 @@ public class FileCaptureMetaController {
     // Delete
     @RequestMapping(path = "meta/{name}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> removeProcessingType(@PathVariable("name") String name) {
-        LOGGER.info("Deleting processing type " + name);
+        LOGGER.info("Deleting processing type  <[{}]>",name);
         JSONObject jsonErr = new JSONObject();
         jsonErr.put("id", 0);
         try {

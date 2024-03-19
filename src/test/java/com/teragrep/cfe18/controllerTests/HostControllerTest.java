@@ -61,8 +61,6 @@ import org.apache.http.util.EntityUtils;
 import org.json.JSONObject;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
 
@@ -214,8 +212,6 @@ public class HostControllerTest extends TestSpringBootInformation {
 
         // Entity response string
         String responseString = EntityUtils.toString(entity);
-        final Logger LOGGER = LoggerFactory.getLogger(HostController.class);
-        LOGGER.error(responseString);
 
         // Parsin respponse as JSONObject
         JSONObject responseAsJson = new JSONObject(responseString);

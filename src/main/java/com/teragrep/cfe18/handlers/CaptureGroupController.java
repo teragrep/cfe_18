@@ -142,7 +142,7 @@ public class CaptureGroupController {
             @ApiResponse(responseCode = "500", description = "Internal server error, contact admin", content = @Content)
     })
     public ResponseEntity<String> newCaptureGroup(@RequestBody CaptureGroup newCaptureGroup) {
-        LOGGER.info("about to insert <[" + newCaptureGroup + "]>");
+        LOGGER.info("About to insert <[{}]>",newCaptureGroup);
         JSONObject jsonErr = new JSONObject();
         jsonErr.put("id", 0);
         try {
@@ -150,7 +150,7 @@ public class CaptureGroupController {
                     newCaptureGroup.getCapture_def_group_name(),
                     newCaptureGroup.getCapture_definition_id()
             );
-            LOGGER.info("Values returned <[" + c + "]>");
+            LOGGER.debug("Values returned <[{}]>",c);
             JSONObject jsonObject = new JSONObject();
             jsonObject.put("capture_group_id", c.getId());
             jsonObject.put("message", "New capture group created with name = " + c.getCapture_def_group_name());
@@ -187,7 +187,7 @@ public class CaptureGroupController {
             @ApiResponse(responseCode = "500", description = "Internal server error, contact admin", content = @Content)
                 })
     public ResponseEntity<String> removeCaptureGroup(@PathVariable("name") String name) {
-        LOGGER.info("Deleting Capture group " + name);
+        LOGGER.info("Deleting Capture group <[{}]>", name);
         JSONObject jsonErr = new JSONObject();
         jsonErr.put("id", 0);
         try {

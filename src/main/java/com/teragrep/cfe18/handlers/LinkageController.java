@@ -111,13 +111,13 @@ public class LinkageController {
     // add new g_x_g
     @RequestMapping(path = "/linkage", method = RequestMethod.PUT, produces = "application/json")
     public ResponseEntity<String> newLinkage(@RequestBody Linkage newLinkage) {
-        LOGGER.info("about to insert <[" + newLinkage + "]>");
+        LOGGER.info("About to insert <[{}]>",newLinkage);
         try {
             Linkage l = linkageMapper.addLinkage(
                     newLinkage.getHost_group_id(),
                     newLinkage.getCapture_group_id()
             );
-            LOGGER.info("Values returned <[" + l + "]>");
+            LOGGER.debug("Values returned <[{}]>",l);
             JSONObject jsonObject = new JSONObject();
             jsonObject.put("id", l.getId());
             jsonObject.put("message", "New linkage created for groups = " + l.getCapture_group_name() + " and " + l.getHost_group_name());
@@ -133,7 +133,7 @@ public class LinkageController {
     // Delete
     @RequestMapping(path = "/linkage/{id}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> removeLinkage(@PathVariable("id") int id) {
-        LOGGER.info("Deleting Linkage " + id);
+        LOGGER.info("Deleting Linkage <[{}]>",id);
         JSONObject jsonErr = new JSONObject();
         jsonErr.put("id", id);
         try {

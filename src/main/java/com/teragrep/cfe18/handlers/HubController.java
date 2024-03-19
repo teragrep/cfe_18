@@ -112,13 +112,13 @@ public class HubController {
     // Insert hub
     @RequestMapping(path = "/hub", method = RequestMethod.PUT, produces = "application/json")
     public ResponseEntity<String> addNewHub(@RequestBody Hub newHub) {
-        LOGGER.info("about to insert <[" + newHub + "]>");
+        LOGGER.info("About to insert <[{}]>",newHub);
         try {
             Hub h = hubMapper.addHub(
                     newHub.getFqHost(),
                     newHub.getMd5(),
                     newHub.getIp());
-            LOGGER.info("Values returned <[" + h + "]>");
+            LOGGER.debug("Values returned <[{}]>",h);
             JSONObject jsonObject = new JSONObject();
             jsonObject.put("id", h.getHub_id());
             jsonObject.put("message", "New hub created");
@@ -145,7 +145,7 @@ public class HubController {
     // Delete
     @RequestMapping(path = "/hub/{id}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> removeHub(@PathVariable("id") int id) {
-        LOGGER.info("Deleting Hub " + id);
+        LOGGER.info("Deleting Hub <[{}]>",id);
         JSONObject jsonErr = new JSONObject();
         jsonErr.put("id", id);
         try {

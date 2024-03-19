@@ -87,10 +87,10 @@ public class FlowController {
 
     @RequestMapping(path = "", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> newFlow(@RequestBody Flow newFlow) {
-        LOGGER.info("about to insert <[" + newFlow + "]>");
+        LOGGER.info("About to insert <[{}]>",newFlow);
         try {
             Flow f = flowMapper.addNewFlow(newFlow.getName());
-            LOGGER.info("Values returned <[" + f + "]>");
+            LOGGER.debug("Values returned <[{}]>",f);
             JSONObject jsonObject = new JSONObject();
             jsonObject.put("id", f.getId());
             jsonObject.put("message", "new flow added with the name = " + f.getName());
@@ -106,7 +106,7 @@ public class FlowController {
     // Delete
     @RequestMapping(path = "/{name}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> removeFlow(@PathVariable("name") String name) {
-        LOGGER.info("Deleting flow " + name);
+        LOGGER.info("Deleting flow  <[{}]>",name);
         try {
             flowMapper.deleteFlow(name);
             JSONObject j = new JSONObject();
