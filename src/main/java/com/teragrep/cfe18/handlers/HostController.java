@@ -152,13 +152,13 @@ public class HostController {
     //Insert new host with cfe type
     @RequestMapping(path = "/file", method = RequestMethod.PUT, produces = "application/json")
     public ResponseEntity<String> newHostFile(@RequestBody HostFile newHostFile) {
-        LOGGER.info("about to insert <[{}]>",newHostFile);
+        LOGGER.info("About to insert <[{}]>",newHostFile);
         try {
             HostFile hf = hostMapper.addHostFile(
                     newHostFile.getMD5(),
                     newHostFile.getFqHost(),
                     newHostFile.getHub_fq());
-            LOGGER.info("about to insert <[{}}]>",hf);
+            LOGGER.debug("Values returned <[{}]>",hf);
             JSONObject jsonObject = new JSONObject();
             jsonObject.put("id", hf.getId());
             jsonObject.put("message", "New host created with cfe type");
@@ -186,12 +186,12 @@ public class HostController {
 
     @RequestMapping(path = "/relp", method = RequestMethod.PUT, produces = "application/json")
     public ResponseEntity<String> newHostRelp(@RequestBody HostRelp newHostRelp) {
-        LOGGER.info("about to insert <[{}]>",newHostRelp);
+        LOGGER.info("About to insert <[{}]>",newHostRelp);
         try {
             HostRelp hr = hostMapper.addHostRelp(
                     newHostRelp.getMd5(),
                     newHostRelp.getFqHost());
-            LOGGER.info("Values returned <[{}]>", hr);
+            LOGGER.debug("Values returned <[{}]>",hr);
             JSONObject jsonObject = new JSONObject();
             jsonObject.put("id", hr.getId());
             jsonObject.put("message", "New host created with relp type");
@@ -218,7 +218,7 @@ public class HostController {
     // Delete
     @RequestMapping(path = "/{id}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> removeHost(@PathVariable("id") int id) {
-        LOGGER.info("Deleting Host {}", id);
+        LOGGER.info("Deleting Host  <[{}]>",id);
         JSONObject jsonErr = new JSONObject();
         jsonErr.put("id", id);
         try {
