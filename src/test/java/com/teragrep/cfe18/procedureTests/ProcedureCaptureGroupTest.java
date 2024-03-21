@@ -54,7 +54,9 @@ import org.junit.jupiter.api.Assertions;
 import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.sql.*;
+import java.sql.CallableStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -83,9 +85,6 @@ public class ProcedureCaptureGroupTest extends DBUnitbase {
     accordingly.
      */
     public void testProcedureAddCaptureGroupSuccess() throws Exception {
-
-        Connection conn = DriverManager.getConnection(this.DBUNIT_CONNECTION_URL + "?" + "user=" + this.DBUNIT_USERNAME + "&password=" + this.DBUNIT_PASSWORD);
-
         IDataSet expectedDataSet = new FlatXmlDataSetBuilder().build(new File("src/test/resources/XMLProcedureCaptureGroup/procedureCaptureGroupTestDataExpectedData1.xml"));
         ITable expectedTable1 = expectedDataSet.getTable("cfe_18.capture_def_group_x_capture_def");
         ITable expectedTable2 = expectedDataSet.getTable("cfe_18.capture_def_group");
@@ -95,8 +94,8 @@ public class ProcedureCaptureGroupTest extends DBUnitbase {
         stmnt.setInt(2, 1);
         stmnt.execute();
 
-        ITable actualTable1 = getConnection().createQueryTable("result", "select * from cfe_18.capture_def_group_x_capture_def");
-        ITable actualTable2 = getConnection().createQueryTable("result", "select * from cfe_18.capture_def_group");
+        ITable actualTable1 = databaseConnection.createQueryTable("result", "select * from cfe_18.capture_def_group_x_capture_def");
+        ITable actualTable2 = databaseConnection.createQueryTable("result", "select * from cfe_18.capture_def_group");
 
         Assertion.assertEqualsIgnoreCols(expectedTable2, actualTable2, new String[]{"id"});
         Assertion.assertEqualsIgnoreCols(expectedTable1, actualTable1, new String[]{"id", "capture_def_group_id"});
@@ -107,8 +106,6 @@ public class ProcedureCaptureGroupTest extends DBUnitbase {
     This test is for when adding a capture_group with the same name does not create another group but rather uses the existing one with new capture_definition
      */
     public void testNoDuplicateCaptureGroup() throws Exception {
-        Connection conn = DriverManager.getConnection(this.DBUNIT_CONNECTION_URL + "?" + "user=" + this.DBUNIT_USERNAME + "&password=" + this.DBUNIT_PASSWORD);
-
         IDataSet expectedDataSet = new FlatXmlDataSetBuilder().build(new File("src/test/resources/XMLProcedureCaptureGroup/procedureCaptureGroupTestDataExpectedData2.xml"));
         ITable expectedTable1 = expectedDataSet.getTable("cfe_18.capture_def_group_x_capture_def");
         ITable expectedTable2 = expectedDataSet.getTable("cfe_18.capture_def_group");
@@ -118,8 +115,8 @@ public class ProcedureCaptureGroupTest extends DBUnitbase {
         stmnt.setInt(2, 2);
         stmnt.execute();
 
-        ITable actualTable1 = getConnection().createQueryTable("result", "select * from cfe_18.capture_def_group_x_capture_def");
-        ITable actualTable2 = getConnection().createQueryTable("result", "select * from cfe_18.capture_def_group");
+        ITable actualTable1 = databaseConnection.createQueryTable("result", "select * from cfe_18.capture_def_group_x_capture_def");
+        ITable actualTable2 = databaseConnection.createQueryTable("result", "select * from cfe_18.capture_def_group");
 
         Assertion.assertEqualsIgnoreCols(expectedTable2, actualTable2, new String[]{"id"});
         Assertion.assertEqualsIgnoreCols(expectedTable1, actualTable1, new String[]{"id", "capture_def_group_id"});
@@ -130,8 +127,6 @@ public class ProcedureCaptureGroupTest extends DBUnitbase {
     capture_group retrieval needs to be checked aswell. It is important that the values are gathered
      */
     public void testRetrieveCaptureGroup() throws Exception {
-        Connection conn = DriverManager.getConnection(this.DBUNIT_CONNECTION_URL + "?" + "user=" + this.DBUNIT_USERNAME + "&password=" + this.DBUNIT_PASSWORD);
-
         List<Integer> actualList = new ArrayList<>();
         CallableStatement stmnt = conn.prepareCall("{CALL cfe_18.retrieve_capture_group_details(?)}");
         stmnt.setString(1, "capturegroup1");
@@ -153,17 +148,11 @@ public class ProcedureCaptureGroupTest extends DBUnitbase {
     If the capture_group does not exist. This needs to be tested.
      */
     public void testCaptureGroupIsMissing() throws Exception {
-        Connection conn = DriverManager.getConnection(this.DBUNIT_CONNECTION_URL + "?" + "user=" + this.DBUNIT_USERNAME + "&password=" + this.DBUNIT_PASSWORD);
-
         SQLException state = Assertions.assertThrows(SQLException.class, () -> {
             CallableStatement stmnt = conn.prepareCall("{CALL cfe_18.retrieve_capture_group_details(?)}");
             stmnt.setString(1, "groupThatDontExist");
             stmnt.execute();
         });
-
         Assertions.assertEquals("45000", state.getSQLState());
-
     }
-
-
 }

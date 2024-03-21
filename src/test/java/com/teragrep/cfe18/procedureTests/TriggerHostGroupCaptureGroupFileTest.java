@@ -54,8 +54,6 @@ import org.junit.jupiter.api.Assertions;
 import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
 
@@ -76,8 +74,6 @@ public class TriggerHostGroupCaptureGroupFileTest extends DBUnitbase {
     This test bounces the trigger indicating that the trigger is in place.
     */
     public void testHostTriggerBounce() throws SQLException, Exception {
-        Connection conn = DriverManager.getConnection(this.DBUNIT_CONNECTION_URL + "?" + "user=" + this.DBUNIT_USERNAME + "&password=" + this.DBUNIT_PASSWORD);
-
         SQLException state = Assertions.assertThrows(SQLException.class, () -> {
             Statement stmnt = conn.createStatement();
             stmnt.addBatch("insert into cfe_18.host_groups_x_capture_def_group values(61,2,1)");
@@ -93,8 +89,6 @@ public class TriggerHostGroupCaptureGroupFileTest extends DBUnitbase {
     This test checks acceptance of new junction between host and log groups.
      */
     public void testHostTriggerAccept() throws Exception {
-        Connection conn = DriverManager.getConnection(this.DBUNIT_CONNECTION_URL + "?" + "user=" + this.DBUNIT_USERNAME + "&password=" + this.DBUNIT_PASSWORD);
-
         // Load the modified data for comparison
         IDataSet expectedDataSet = new FlatXmlDataSetBuilder().build(new File("src/test/resources/XMLTriggersHostXCapture/triggerGXGExpectedTestData1.xml"));
         ITable expectedTable = expectedDataSet.getTable("cfe_18.host_groups_x_capture_def_group");
@@ -106,13 +100,9 @@ public class TriggerHostGroupCaptureGroupFileTest extends DBUnitbase {
         stmnt.executeBatch();
 
         // Fetch database data after executing your code
-        ITable actualTable = getConnection().createQueryTable("result", "select * from cfe_18.host_groups_x_capture_def_group");
+        ITable actualTable = databaseConnection.createQueryTable("result", "select * from cfe_18.host_groups_x_capture_def_group");
 
         // Assert actual database table match expected table
         Assertion.assertEquals(expectedTable, actualTable);
-
-
     }
-
-
 }

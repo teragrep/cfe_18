@@ -56,8 +56,6 @@ import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.sql.CallableStatement;
-import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.SQLException;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
@@ -78,8 +76,6 @@ public class ProcedureStorageTest extends DBUnitbase {
     -Throws 42000 when not existing
     */
     public void testStorageFlowExistence() throws Exception {
-        Connection conn = DriverManager.getConnection(this.DBUNIT_CONNECTION_URL + "?" + "user=" + this.DBUNIT_USERNAME + "&password=" + this.DBUNIT_PASSWORD);
-
         SQLException state = Assertions.assertThrows(SQLException.class, () -> {
             CallableStatement stmnt = conn.prepareCall("{CALL flow.add_storage(?,?)}");
             stmnt.setString(1, "FlowThatDontExist");
@@ -98,7 +94,6 @@ public class ProcedureStorageTest extends DBUnitbase {
   */
 
     public void testStorageFlowAccept() throws Exception {
-        Connection conn = DriverManager.getConnection(this.DBUNIT_CONNECTION_URL + "?" + "user=" + this.DBUNIT_USERNAME + "&password=" + this.DBUNIT_PASSWORD);
         IDataSet expectedDataSet = new FlatXmlDataSetBuilder().build(new File("src/test/resources/XMLProcedureStorage/procedureStorageExpectedTestData1.xml"));
 
         ITable expectedTable = expectedDataSet.getTable("flow.flow_targets");
@@ -108,7 +103,7 @@ public class ProcedureStorageTest extends DBUnitbase {
         stmnt.setInt(2, 2);
         stmnt.execute();
 
-        ITable actualTable = getConnection().createQueryTable("result", "select * from flow.flow_targets");
+        ITable actualTable = databaseConnection.createQueryTable("result", "select * from flow.flow_targets");
 
         Assertion.assertEquals(expectedTable, actualTable);
 
@@ -119,7 +114,6 @@ public class ProcedureStorageTest extends DBUnitbase {
     -Takes capture_id and storage_id
     */
     public void testStorageCaptureLinkage() throws Exception {
-        Connection conn = DriverManager.getConnection(this.DBUNIT_CONNECTION_URL + "?" + "user=" + this.DBUNIT_USERNAME + "&password=" + this.DBUNIT_PASSWORD);
         IDataSet expectedDataSet = new FlatXmlDataSetBuilder().build(new File("src/test/resources/XMLProcedureStorage/procedureStorageExpectedTestData2.xml"));
 
         ITable expectedTable = expectedDataSet.getTable("cfe_18.capture_def_x_flow_targets");
@@ -129,7 +123,7 @@ public class ProcedureStorageTest extends DBUnitbase {
         stmnt.setInt(2, 2);
         stmnt.execute();
 
-        ITable actualTable = getConnection().createQueryTable("result", "select * from cfe_18.capture_def_x_flow_targets");
+        ITable actualTable = databaseConnection.createQueryTable("result", "select * from cfe_18.capture_def_x_flow_targets");
 
         Assertion.assertEquals(expectedTable, actualTable);
     }
@@ -140,8 +134,6 @@ public class ProcedureStorageTest extends DBUnitbase {
     -Throws 42000 when not existing
      */
     public void testStorageMissingStorageLinkage() throws Exception {
-        Connection conn = DriverManager.getConnection(this.DBUNIT_CONNECTION_URL + "?" + "user=" + this.DBUNIT_USERNAME + "&password=" + this.DBUNIT_PASSWORD);
-
         SQLException state = Assertions.assertThrows(SQLException.class, () -> {
             CallableStatement stmnt = conn.prepareCall("{CALL flow.add_storage_for_capture(?,?)}");
             stmnt.setInt(1, 1);
@@ -158,8 +150,6 @@ public class ProcedureStorageTest extends DBUnitbase {
     -Throws 45000 when indifferent
   */
     public void testStorageDifferentFlowLinkage() throws Exception {
-        Connection conn = DriverManager.getConnection(this.DBUNIT_CONNECTION_URL + "?" + "user=" + this.DBUNIT_USERNAME + "&password=" + this.DBUNIT_PASSWORD);
-
         SQLException state = Assertions.assertThrows(SQLException.class, () -> {
             CallableStatement stmnt = conn.prepareCall("{CALL flow.add_storage_for_capture(?,?)}");
             stmnt.setInt(1, 1);
@@ -176,8 +166,6 @@ public class ProcedureStorageTest extends DBUnitbase {
     -Throws 45000 when capture is missing
      */
     public void testStorageMissingCaptureLinkage() throws Exception {
-        Connection conn = DriverManager.getConnection(this.DBUNIT_CONNECTION_URL + "?" + "user=" + this.DBUNIT_USERNAME + "&password=" + this.DBUNIT_PASSWORD);
-
         SQLException state = Assertions.assertThrows(SQLException.class, () -> {
             CallableStatement stmnt = conn.prepareCall("{CALL flow.add_storage_for_capture(?,?)}");
             stmnt.setInt(1, 500);

@@ -54,7 +54,9 @@ import org.junit.jupiter.api.Assertions;
 import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.sql.*;
+import java.sql.CallableStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -78,9 +80,6 @@ public class ProcedureHostGroupFileTest extends DBUnitbase {
     This test is for checking that host_group add procedure works when adding a new host_group with host
      */
     public void testProcedureAddHostGroupSuccess() throws Exception {
-
-        Connection conn = DriverManager.getConnection(this.DBUNIT_CONNECTION_URL + "?" + "user=" + this.DBUNIT_USERNAME + "&password=" + this.DBUNIT_PASSWORD);
-
         IDataSet expectedDataSet = new FlatXmlDataSetBuilder().build(new File("src/test/resources/XMLProcedureHostGroup/procedureHostGroupTestDataExpected1.xml"));
         ITable expectedTable2 = expectedDataSet.getTable("location.host");
         ITable expectedTable3 = expectedDataSet.getTable("location.host_group");
@@ -89,9 +88,8 @@ public class ProcedureHostGroupFileTest extends DBUnitbase {
         stmnt.setInt(1, 1); // host id
         stmnt.setString(2, "host_group_6");
         stmnt.execute();
-
-        ITable actualTable2 = getConnection().createQueryTable("result", "select * from location.host");
-        ITable actualTable3 = getConnection().createQueryTable("result", "select * from location.host_group");
+        ITable actualTable2 = databaseConnection.createQueryTable("result", "select * from location.host");
+        ITable actualTable3 = databaseConnection.createQueryTable("result", "select * from location.host_group");
 
         //Assertion.assertEquals(expectedTable1, actualTable1); Currently under work. Host_group_x_host does not include host_group_id when adding new row?
         Assertion.assertEquals(expectedTable2, actualTable2);
@@ -103,8 +101,6 @@ public class ProcedureHostGroupFileTest extends DBUnitbase {
     This test is for checking that new host group is created when one does not exist during insertion.
      */
     public void testProcedureAddHostWithNewGroup() throws Exception {
-        Connection conn = DriverManager.getConnection(this.DBUNIT_CONNECTION_URL + "?" + "user=" + this.DBUNIT_USERNAME + "&password=" + this.DBUNIT_PASSWORD);
-
         IDataSet expectedDataSet = new FlatXmlDataSetBuilder().build(new File("src/test/resources/XMLProcedureHostGroup/procedureHostGroupTestDataExpected2.xml"));
         ITable expectedTable1 = expectedDataSet.getTable("location.host_group_x_host");
         ITable expectedTable2 = expectedDataSet.getTable("location.host");
@@ -115,9 +111,9 @@ public class ProcedureHostGroupFileTest extends DBUnitbase {
         stmnt.setString(2, "new_host_group");
         stmnt.execute();
 
-        ITable actualTable1 = getConnection().createQueryTable("result", "select * from location.host_group_x_host");
-        ITable actualTable2 = getConnection().createQueryTable("result", "select * from location.host");
-        ITable actualTable3 = getConnection().createQueryTable("result", "select * from location.host_group");
+        ITable actualTable1 = databaseConnection.createQueryTable("result", "select * from location.host_group_x_host");
+        ITable actualTable2 = databaseConnection.createQueryTable("result", "select * from location.host");
+        ITable actualTable3 = databaseConnection.createQueryTable("result", "select * from location.host_group");
 
         Assertion.assertEqualsIgnoreCols(expectedTable1, actualTable1, new String[]{"id"});
         Assertion.assertEquals(expectedTable2, actualTable2);
@@ -129,8 +125,6 @@ public class ProcedureHostGroupFileTest extends DBUnitbase {
     This test is for checking if the host id check is in place when inserting a host group with invalid host id
      */
     public void testHostValidityWithHostGroup() throws Exception {
-        Connection conn = DriverManager.getConnection(this.DBUNIT_CONNECTION_URL + "?" + "user=" + this.DBUNIT_USERNAME + "&password=" + this.DBUNIT_PASSWORD);
-
         SQLException state = Assertions.assertThrows(SQLException.class, () -> {
             CallableStatement stmnt = conn.prepareCall("{CALL location.add_host_group_with_host(?,?)}");
             stmnt.setInt(1, 1000);
@@ -144,7 +138,6 @@ public class ProcedureHostGroupFileTest extends DBUnitbase {
     This test is for checking the validity of host group output. Goal is that the matching values are returned using correct host group name
      */
     public void testRetrieveHostGroupDetails() throws Exception {
-        Connection conn = DriverManager.getConnection(this.DBUNIT_CONNECTION_URL + "?" + "user=" + this.DBUNIT_USERNAME + "&password=" + this.DBUNIT_PASSWORD);
         List<Integer> host_id = new ArrayList<>();
         List<String> md5 = new ArrayList<>();
         CallableStatement stmnt = conn.prepareCall("{CALL location.retrieve_host_group_details(?)}");
@@ -153,12 +146,9 @@ public class ProcedureHostGroupFileTest extends DBUnitbase {
         while (rs.next()) {
             host_id.add(rs.getInt("host_id"));
             md5.add(rs.getString("md5"));
-            String group_name = rs.getString("group_name");
-            String host_type = rs.getString("host_type");
-            int host_group_id = rs.getInt("host_group_id");
-            Assertions.assertEquals("host_group_1", group_name);
-            Assertions.assertEquals("cfe", host_type);
-            Assertions.assertEquals(1, host_group_id);
+            Assertions.assertEquals("host_group_1", rs.getString("group_name"));
+            Assertions.assertEquals("cfe", rs.getString("host_type"));
+            Assertions.assertEquals(1, rs.getInt("host_group_id"));
         }
         Assertions.assertEquals(Arrays.asList(1, 2, 3, 4), host_id);
         Assertions.assertEquals(Arrays.asList("12365", "12322", "1323", "4123"), md5);

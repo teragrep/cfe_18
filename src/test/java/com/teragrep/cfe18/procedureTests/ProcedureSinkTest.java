@@ -54,7 +54,8 @@ import org.junit.jupiter.api.Assertions;
 import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.sql.*;
+import java.sql.CallableStatement;
+import java.sql.ResultSet;
 
 public class ProcedureSinkTest extends DBUnitbase {
 
@@ -71,8 +72,6 @@ public class ProcedureSinkTest extends DBUnitbase {
     This test checks that completely new sink can be added with new protocol and flow.
      */
     public void testSinkAccept() throws Exception {
-        Connection conn = DriverManager.getConnection(this.DBUNIT_CONNECTION_URL + "?" + "user=" + this.DBUNIT_USERNAME + "&password=" + this.DBUNIT_PASSWORD);
-
         IDataSet expectedDataSet = new FlatXmlDataSetBuilder().build(new File("src/test/resources/XMLProcedureSink/procedureSinkExpectedData1.xml"));
         ITable expectedTable = expectedDataSet.getTable("flow.capture_sink");
         ITable expectedTable1 = expectedDataSet.getTable("flow.L7");
@@ -85,9 +84,9 @@ public class ProcedureSinkTest extends DBUnitbase {
         stmnt.setString(4, "flow2");
         stmnt.execute();
 
-        ITable actualTable = getConnection().createQueryTable("result", "select * from flow.capture_sink");
-        ITable actualTable1 = getConnection().createQueryTable("result", "select * from flow.L7");
-        ITable actualTable2 = getConnection().createQueryTable("result", "select * from flow.flows");
+        ITable actualTable = databaseConnection.createQueryTable("result", "select * from flow.capture_sink");
+        ITable actualTable1 = databaseConnection.createQueryTable("result", "select * from flow.L7");
+        ITable actualTable2 = databaseConnection.createQueryTable("result", "select * from flow.flows");
 
         Assertion.assertEquals(expectedTable, actualTable);
         Assertion.assertEquals(expectedTable1, actualTable1);
@@ -101,24 +100,13 @@ public class ProcedureSinkTest extends DBUnitbase {
     Goal is to receive correct values from retrieve_sink_by_id procedure
      */
     public void testSinkRetrieveById() throws Exception {
-        Connection conn = DriverManager.getConnection(this.DBUNIT_CONNECTION_URL + "?" + "user=" + this.DBUNIT_USERNAME + "&password=" + this.DBUNIT_PASSWORD);
-
         CallableStatement stmnt = conn.prepareCall("{CALL flow.retrieve_sink_by_id(?)}");
         stmnt.setString(1, "1");
         ResultSet rs = stmnt.executeQuery();
-        String ip = null;
-        String port = null;
-        String protocol = null;
-        String flow = null;
-        while (rs.next()) {
-            ip = rs.getString("ip");
-            port = rs.getString("port");
-            protocol = rs.getString("protocol");
-            flow = rs.getString("flow");
-        }
-        Assertions.assertEquals("ip11", ip);
-        Assertions.assertEquals("601", port);
-        Assertions.assertEquals("prot1", protocol);
-        Assertions.assertEquals("flow2", flow);
+        rs.next();
+        Assertions.assertEquals("ip11", rs.getString("ip"));
+        Assertions.assertEquals("601", rs.getString("port"));
+        Assertions.assertEquals("prot1", rs.getString("protocol"));
+        Assertions.assertEquals("flow2", rs.getString("flow"));
     }
 }

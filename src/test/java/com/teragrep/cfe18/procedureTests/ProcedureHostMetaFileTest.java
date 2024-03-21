@@ -54,7 +54,9 @@ import org.junit.jupiter.api.Assertions;
 import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.sql.*;
+import java.sql.CallableStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -75,9 +77,6 @@ public class ProcedureHostMetaFileTest extends DBUnitbase {
     Testi millä katsotaan IP n lisäys host_metaan mukaan.
      */
     public void testProcedureAddIpToHostMeta() throws Exception {
-
-        Connection conn = DriverManager.getConnection(this.DBUNIT_CONNECTION_URL + "?" + "user=" + this.DBUNIT_USERNAME + "&password=" + this.DBUNIT_PASSWORD);
-
         IDataSet expectedDataSet = new FlatXmlDataSetBuilder().build(new File("src/test/resources/XMLProcedureHostMeta/procedureHostMetaTestDataExpected1.xml"));
         ITable expectedTable1 = expectedDataSet.getTable("cfe_03.ip_addresses");
         ITable expectedTable2 = expectedDataSet.getTable("cfe_03.host_meta_x_ip");
@@ -87,8 +86,8 @@ public class ProcedureHostMetaFileTest extends DBUnitbase {
         stmnt.setString(2, "ipaddress1");
         stmnt.execute();
 
-        ITable actualTable1 = getConnection().createQueryTable("result", "select * from cfe_03.ip_addresses");
-        ITable actualTable2 = getConnection().createQueryTable("result", "select * from cfe_03.host_meta_x_ip");
+        ITable actualTable1 = databaseConnection.createQueryTable("result", "select * from cfe_03.ip_addresses");
+        ITable actualTable2 = databaseConnection.createQueryTable("result", "select * from cfe_03.host_meta_x_ip");
 
         Assertion.assertEquals(expectedTable1, actualTable1);
         Assertion.assertEquals(expectedTable2, actualTable2);
@@ -100,8 +99,6 @@ public class ProcedureHostMetaFileTest extends DBUnitbase {
      palauttaa 42000 error
      */
     public void testHostMetaValidityOnIp() throws Exception {
-        Connection conn = DriverManager.getConnection(this.DBUNIT_CONNECTION_URL + "?" + "user=" + this.DBUNIT_USERNAME + "&password=" + this.DBUNIT_PASSWORD);
-
         SQLException state = Assertions.assertThrows(SQLException.class, () -> {
             CallableStatement stmnt = conn.prepareCall("{CALL cfe_03.add_ip_address(?,?)}");
             stmnt.setInt(1, 1000);
@@ -116,8 +113,6 @@ public class ProcedureHostMetaFileTest extends DBUnitbase {
     palauttaa 42000 error
     */
     public void testHostMetaValidityOnInterface() throws Exception {
-        Connection conn = DriverManager.getConnection(this.DBUNIT_CONNECTION_URL + "?" + "user=" + this.DBUNIT_USERNAME + "&password=" + this.DBUNIT_PASSWORD);
-
         SQLException state = Assertions.assertThrows(SQLException.class, () -> {
             CallableStatement stmnt = conn.prepareCall("{CALL cfe_03.add_interface(?,?)}");
             stmnt.setInt(2, 1000);
@@ -131,8 +126,6 @@ public class ProcedureHostMetaFileTest extends DBUnitbase {
     Testi millä katsotaan interfacen lisäys host metan mukaan.
     */
     public void testProcedureAddInterfaceToHostMeta() throws Exception {
-        Connection conn = DriverManager.getConnection(this.DBUNIT_CONNECTION_URL + "?" + "user=" + this.DBUNIT_USERNAME + "&password=" + this.DBUNIT_PASSWORD);
-
         IDataSet expectedDataSet = new FlatXmlDataSetBuilder().build(new File("src/test/resources/XMLProcedureHostMeta/procedureHostMetaTestDataExpected2.xml"));
         ITable expectedTable1 = expectedDataSet.getTable("cfe_03.interfaces");
         ITable expectedTable2 = expectedDataSet.getTable("cfe_03.host_meta_x_interface");
@@ -142,8 +135,8 @@ public class ProcedureHostMetaFileTest extends DBUnitbase {
         stmnt.setInt(2, 1);
         stmnt.execute();
 
-        ITable actualTable1 = getConnection().createQueryTable("result", "select * from cfe_03.interfaces");
-        ITable actualTable2 = getConnection().createQueryTable("result", "select * from cfe_03.host_meta_x_interface");
+        ITable actualTable1 = databaseConnection.createQueryTable("result", "select * from cfe_03.interfaces");
+        ITable actualTable2 = databaseConnection.createQueryTable("result", "select * from cfe_03.host_meta_x_interface");
 
         Assertion.assertEquals(expectedTable1, actualTable1);
         Assertion.assertEquals(expectedTable2, actualTable2);
@@ -154,8 +147,6 @@ public class ProcedureHostMetaFileTest extends DBUnitbase {
     Testi millä katsotaan onnistuuko host_metan lisääminen hostiin.
  */
     public void testHostMetaWithHost() throws Exception {
-        Connection conn = DriverManager.getConnection(this.DBUNIT_CONNECTION_URL + "?" + "user=" + this.DBUNIT_USERNAME + "&password=" + this.DBUNIT_PASSWORD);
-
         IDataSet expectedDataSet = new FlatXmlDataSetBuilder().build(new File("src/test/resources/XMLProcedureHostMeta/procedureHostMetaTestDataExpected3.xml"));
         ITable expectedTable2 = expectedDataSet.getTable("cfe_03.host_meta");
         // käytetään aiempia arvoja mitä on jo testidatassa. Halutaan vain nähdä syntyykö uusi host meta hostille jolla ei ole host metaa vielä.
@@ -168,7 +159,7 @@ public class ProcedureHostMetaFileTest extends DBUnitbase {
         stmnt.setString(6, "release_version2");
         stmnt.execute();
 
-        ITable actualTable2 = getConnection().createQueryTable("result", "select * from cfe_03.host_meta");
+        ITable actualTable2 = databaseConnection.createQueryTable("result", "select * from cfe_03.host_meta");
 
         Assertion.assertEquals(expectedTable2, actualTable2);
 
@@ -180,8 +171,6 @@ public class ProcedureHostMetaFileTest extends DBUnitbase {
     palauttaa 42000 jos hostia ei ole olemassa
      */
     public void testHostExistenceOnHostMeta() throws Exception {
-        Connection conn = DriverManager.getConnection(this.DBUNIT_CONNECTION_URL + "?" + "user=" + this.DBUNIT_USERNAME + "&password=" + this.DBUNIT_PASSWORD);
-
         SQLException state = Assertions.assertThrows(SQLException.class, () -> {
             CallableStatement stmnt = conn.prepareCall("{CALL cfe_03.add_host_meta_data(?,?,?,?,?,?)}");
             stmnt.setString(1, "arch1");
@@ -200,8 +189,6 @@ public class ProcedureHostMetaFileTest extends DBUnitbase {
     Testi millä katsotaan onnistuuko host metan palautus oikeilla arvoilla.
     */
     public void testHostMetaRetrieve() throws Exception {
-        Connection conn = DriverManager.getConnection(this.DBUNIT_CONNECTION_URL + "?" + "user=" + this.DBUNIT_USERNAME + "&password=" + this.DBUNIT_PASSWORD);
-
         List<String> IpList = new ArrayList<>();
         List<String> InterfaceList = new ArrayList<>();
         CallableStatement stmnt = conn.prepareCall("{CALL cfe_03.retrieve_host_meta(?)}");
@@ -210,19 +197,12 @@ public class ProcedureHostMetaFileTest extends DBUnitbase {
         while (rs.next()) {
             IpList.add(rs.getString("ip_address"));
             InterfaceList.add(rs.getString("interface"));
-            int host_meta_id = rs.getInt("host_meta_id");
-            String arch = rs.getString("arch");
-            String release_version = rs.getString("release_version");
-            String flavor = rs.getString("flavor");
-            String os = rs.getString("os");
-            String hostname = rs.getString("hostname");
-            Assertions.assertEquals(host_meta_id, 1);
-            Assertions.assertEquals(arch, "arch1");
-            Assertions.assertEquals(release_version, "release_version1");
-            Assertions.assertEquals(flavor, "flavor1");
-            Assertions.assertEquals(os, "Linux1");
-            Assertions.assertEquals(hostname, "host1");
-
+            Assertions.assertEquals(1, rs.getInt("host_meta_id"));
+            Assertions.assertEquals("arch1", rs.getString("arch"));
+            Assertions.assertEquals("release_version1", rs.getString("release_version"));
+            Assertions.assertEquals("flavor1", rs.getString("flavor"));
+            Assertions.assertEquals("Linux1", rs.getString("os"));
+            Assertions.assertEquals("host1", rs.getString("hostname"));
         }
         Assertions.assertEquals(Arrays.asList("ip1", "ip2", "ip3", "ip1", "ip2", "ip3"), IpList);
         Assertions.assertEquals(Arrays.asList("ens192", "ens192", "ens192", "ens256", "ens256", "ens256"), InterfaceList);
@@ -232,40 +212,18 @@ public class ProcedureHostMetaFileTest extends DBUnitbase {
     Testi millä tarkastetaan cfe hostin palautus missä host_meta_id tulee mukana. Testidatan vuoksi hostin testi täälä.
 */
     public void testProcedureRetrieveCfeHost() throws Exception {
-        Connection conn = DriverManager.getConnection(this.DBUNIT_CONNECTION_URL + "?" + "user=" + this.DBUNIT_USERNAME + "&password=" + this.DBUNIT_PASSWORD);
-
         CallableStatement stmnt = conn.prepareCall("{CALL cfe_00.retrieve_host_details(?)}");
         stmnt.setInt(1, 2);
         ResultSet rs = stmnt.executeQuery();
-        int host_id = 0;
-        String md5 = null;
-        String fqhost = null;
-        String host_type = null;
-        int hub_id = 0;
-        String hostname = null;
-        int host_meta_id = 0;
-        String hub_fq = null;
-        // roll through the result
-        while (rs.next()) {
-            host_id = rs.getInt("host_id");
-            md5 = rs.getString("host_md5");
-            fqhost = rs.getString("host_fq");
-            host_type = rs.getString("host_type");
-            hub_id = rs.getInt("hub_id");
-            hostname = rs.getString("host_name");
-            host_meta_id = rs.getInt("host_meta_id");
-            hub_fq = rs.getString("hub_fq");
-
-        }
-        Assertions.assertEquals(host_id, 2); // host_id
-        Assertions.assertEquals(md5, "12322"); // md5
-        Assertions.assertEquals(fqhost, "2"); // fqhost
-        Assertions.assertEquals(host_type, "cfe"); // host_type
-        Assertions.assertEquals(hub_id, 1); // hub_id
-        Assertions.assertEquals(hostname, "host1"); // hostname
-        Assertions.assertEquals(host_meta_id, 1); // host_meta_id
-        Assertions.assertEquals(hub_fq, "1"); // hub_fq
-
+        rs.next();
+        Assertions.assertEquals(2, rs.getInt("host_id")); // host_id
+        Assertions.assertEquals("12322", rs.getString("host_md5")); // md5
+        Assertions.assertEquals("2", rs.getString("host_fq")); // fqhost
+        Assertions.assertEquals("cfe", rs.getString("host_type")); // host_type
+        Assertions.assertEquals(1, rs.getInt("hub_id")); // hub_id
+        Assertions.assertEquals("host1", rs.getString("host_name")); // hostname
+        Assertions.assertEquals(1, rs.getInt("host_meta_id")); // host_meta_id
+        Assertions.assertEquals("1", rs.getString("hub_fq")); // hub_fq
     }
 }
 
