@@ -46,14 +46,15 @@
 package com.teragrep.cfe18.controllerTests;
 
 import org.flywaydb.core.Flyway;
+import org.junit.jupiter.api.extension.AfterAllCallback;
 import org.junit.jupiter.api.extension.BeforeAllCallback;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-public class MigrateDatabaseExtension implements BeforeAllCallback {
+public class MigrateDatabaseExtension implements AfterAllCallback {
 
     @Override
-    public void beforeAll(ExtensionContext extensionContext) throws Exception {
+    public void afterAll(ExtensionContext extensionContext) throws Exception {
         // Call main spring context Flyway to apply migrations
         Flyway flyway = SpringExtension.getApplicationContext(extensionContext)
                 .getBean(Flyway.class);
