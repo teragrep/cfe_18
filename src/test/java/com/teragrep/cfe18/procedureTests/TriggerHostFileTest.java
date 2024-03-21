@@ -54,8 +54,6 @@ import org.junit.jupiter.api.Assertions;
 import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
 
@@ -76,8 +74,6 @@ public class TriggerHostFileTest extends DBUnitbase {
     This test bounces the trigger indicating that the trigger is in place.
     */
     public void testHostTriggerBounce() throws Exception {
-        Connection conn = DriverManager.getConnection(this.DBUNIT_CONNECTION_URL + "?" + "user=" + this.DBUNIT_USERNAME + "&password=" + this.DBUNIT_PASSWORD);
-
         SQLException state = Assertions.assertThrows(SQLException.class, () -> {
             Statement stmnt = conn.createStatement();
             stmnt.addBatch("insert into location.host_group_x_host values(60,2,11,'cfe')");
@@ -90,7 +86,6 @@ public class TriggerHostFileTest extends DBUnitbase {
     }
 
     public void testHostTriggerAccept() throws Exception {
-        Connection conn = DriverManager.getConnection(this.DBUNIT_CONNECTION_URL + "?" + "user=" + this.DBUNIT_USERNAME + "&password=" + this.DBUNIT_PASSWORD);
         IDataSet expectedDataSet = new FlatXmlDataSetBuilder().build(new File("src/test/resources/XMLTriggersHostXCapture/triggerHostExpectedData1.xml"));
         ITable expectedTable = expectedDataSet.getTable("location.host_group_x_host");
 
@@ -102,15 +97,10 @@ public class TriggerHostFileTest extends DBUnitbase {
 
 
         // Fetch database data after executing your code
-
-        ITable actualTable = getConnection().createQueryTable("result", "select * from location.host_group_x_host");
+        ITable actualTable = databaseConnection.createQueryTable("result", "select * from location.host_group_x_host");
 
         // Load expected data from an XML dataset
         // Assert actual database table match expected table
         Assertion.assertEquals(expectedTable, actualTable);
-
-
     }
-
-
 }

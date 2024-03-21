@@ -48,13 +48,17 @@ package com.teragrep.cfe18.procedureTests;
 import org.dbunit.DBTestCase;
 import org.dbunit.PropertiesBasedJdbcDatabaseTester;
 import org.dbunit.database.DatabaseConfig;
+import org.dbunit.database.DatabaseConnection;
 import org.dbunit.dataset.IDataSet;
 import org.dbunit.dataset.xml.FlatXmlDataSetBuilder;
 import org.dbunit.ext.mysql.MySqlMetadataHandler;
 import org.dbunit.operation.DatabaseOperation;
+import org.junit.jupiter.api.Assertions;
 
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.sql.Connection;
+import java.sql.DriverManager;
 
 
 public abstract class DBUnitbase extends DBTestCase {
@@ -63,7 +67,8 @@ public abstract class DBUnitbase extends DBTestCase {
     protected String DBUNIT_CONNECTION_URL = System.getProperty("tests.dbunit.connection.url");
     protected String DBUNIT_USERNAME = System.getProperty("tests.dbunit.username");
     protected String DBUNIT_PASSWORD = System.getProperty("tests.dbunit.password");
-
+    Connection conn;
+    DatabaseConnection databaseConnection;
 
     public DBUnitbase(String name) {
         super(name);
@@ -75,10 +80,10 @@ public abstract class DBUnitbase extends DBTestCase {
 
 
     protected void setUpDatabaseConfig(DatabaseConfig config) {
-        super.setUpDatabaseConfig(config);
         config.setProperty(DatabaseConfig.PROPERTY_METADATA_HANDLER, new MySqlMetadataHandler());
         config.setProperty(DatabaseConfig.FEATURE_CASE_SENSITIVE_TABLE_NAMES, true);
         config.setProperty(DatabaseConfig.FEATURE_QUALIFIED_TABLE_NAMES, true);
+        super.setUpDatabaseConfig(config);
     }
 
     @Override
@@ -88,14 +93,21 @@ public abstract class DBUnitbase extends DBTestCase {
 
     @Override
     protected DatabaseOperation getSetUpOperation() {
+        Assertions.assertAll(() -> {
+            conn = DriverManager.getConnection(this.DBUNIT_CONNECTION_URL + "?" + "user=" + this.DBUNIT_USERNAME + "&password=" + this.DBUNIT_PASSWORD);
+            databaseConnection = (DatabaseConnection) getConnection();
+        });
         return DatabaseOperation.CLEAN_INSERT;
 
     }
 
     @Override
     protected DatabaseOperation getTearDownOperation() {
+        Assertions.assertAll(() -> {
+            conn.close();
+            databaseConnection.close();
+
+        });
         return DatabaseOperation.DELETE_ALL;
-
     }
-
 }

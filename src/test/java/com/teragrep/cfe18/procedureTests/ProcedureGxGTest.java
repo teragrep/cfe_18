@@ -54,10 +54,9 @@ import org.junit.jupiter.api.Assertions;
 import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.sql.*;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.sql.CallableStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 
 /*
@@ -79,9 +78,6 @@ public class ProcedureGxGTest extends DBUnitbase {
     Testataan että linkitys onnistuu capture groupin ja host groupin välillä
      */
     public void testProcedureAddLinkageSuccess() throws Exception {
-
-        Connection conn = DriverManager.getConnection(this.DBUNIT_CONNECTION_URL + "?" + "user=" + this.DBUNIT_USERNAME + "&password=" + this.DBUNIT_PASSWORD);
-
         IDataSet expectedDataSet = new FlatXmlDataSetBuilder().build(new File("src/test/resources/XMLProcedureGxG/procedureGxGTestDataExpected1.xml"));
         ITable expectedTable1 = expectedDataSet.getTable("cfe_18.host_groups_x_capture_def_group");
 
@@ -90,7 +86,7 @@ public class ProcedureGxGTest extends DBUnitbase {
         stmnt.setInt(2, 6); //Capture group id
         stmnt.execute();
 
-        ITable actualTable1 = getConnection().createQueryTable("result", "select * from cfe_18.host_groups_x_capture_def_group");
+        ITable actualTable1 = databaseConnection.createQueryTable("result", "select * from cfe_18.host_groups_x_capture_def_group");
 
         Assertion.assertEqualsIgnoreCols(expectedTable1, actualTable1, new String[]{"id"});
 
@@ -100,8 +96,6 @@ public class ProcedureGxGTest extends DBUnitbase {
     Testataan että linkitys ei onnistu jos host_group ei ole olemassa
      */
     public void testProcedureGxGNoHost() throws Exception {
-        Connection conn = DriverManager.getConnection(this.DBUNIT_CONNECTION_URL + "?" + "user=" + this.DBUNIT_USERNAME + "&password=" + this.DBUNIT_PASSWORD);
-
         SQLException state = Assertions.assertThrows(SQLException.class, () -> {
             CallableStatement stmnt = conn.prepareCall("{call cfe_18.add_g_x_g(?,?)}");
             stmnt.setInt(1, 100);
@@ -115,7 +109,6 @@ public class ProcedureGxGTest extends DBUnitbase {
     Testataan että linkitys ei onnistu jos capture_group ei ole olemassa
      */
     public void testProcedureGxGNoCapture() throws Exception {
-        Connection conn = DriverManager.getConnection(this.DBUNIT_CONNECTION_URL + "?" + "user=" + this.DBUNIT_USERNAME + "&password=" + this.DBUNIT_PASSWORD);
         SQLException state = Assertions.assertThrows(SQLException.class, () -> {
             CallableStatement stmnt = conn.prepareCall("{call cfe_18.add_g_x_g(?,?)}");
             stmnt.setInt(1, 1);
@@ -130,25 +123,15 @@ public class ProcedureGxGTest extends DBUnitbase {
  */
 
     public void testProcedureGxGRetrieveByCapture() throws Exception {
-        Connection conn = DriverManager.getConnection(this.DBUNIT_CONNECTION_URL + "?" + "user=" + this.DBUNIT_USERNAME + "&password=" + this.DBUNIT_PASSWORD);
-
-        List<String> capture_name = new ArrayList<>();
-        List<String> host_name = new ArrayList<>();
         CallableStatement stmnt = conn.prepareCall("{CALL cfe_18.retrieve_g_x_g_details(?)}");
         stmnt.setString(1, "capturegroup1");
         ResultSet rs = stmnt.executeQuery();
-        while (rs.next()) {
-            capture_name.add(rs.getString("capture_name"));
-            host_name.add(rs.getString("host_name"));
-            int gxg_id = rs.getInt("g_x_g_id");
-            String host_type = rs.getString("host_type");
-            String capture_type = rs.getString("capture_type");
-            Assertions.assertEquals(1, gxg_id);
-            Assertions.assertEquals("cfe", host_type);
-            Assertions.assertEquals("cfe", capture_type);
-        }
-        Assertions.assertEquals(Arrays.asList("capturegroup1"), capture_name);
-        Assertions.assertEquals(Arrays.asList("host_group_1"), host_name);
+        rs.next(); // Forward to next
+        Assertions.assertEquals("capturegroup1", rs.getString("capture_name"));
+        Assertions.assertEquals("host_group_1", rs.getString("host_name"));
+        Assertions.assertEquals(1, rs.getInt("g_x_g_id"));
+        Assertions.assertEquals("cfe", rs.getString("host_type"));
+        Assertions.assertEquals("cfe", rs.getString("capture_type"));
     }
 
 
@@ -157,26 +140,15 @@ public class ProcedureGxGTest extends DBUnitbase {
 
      */
     public void testProcedureGxGRetrieveByHost() throws Exception {
-        Connection conn = DriverManager.getConnection(this.DBUNIT_CONNECTION_URL + "?" + "user=" + this.DBUNIT_USERNAME + "&password=" + this.DBUNIT_PASSWORD);
-
-        List<String> capture_name = new ArrayList<>();
-        List<String> host_name = new ArrayList<>();
-
         CallableStatement stmnt = conn.prepareCall("{CALL cfe_18.retrieve_g_x_g_details(?)}");
         stmnt.setString(1, "host_group_1");
         ResultSet rs = stmnt.executeQuery();
-        while (rs.next()) {
-            capture_name.add(rs.getString("capture_name"));
-            host_name.add(rs.getString("host_name"));
-            int gxg_id = rs.getInt("g_x_g_id");
-            String host_type = rs.getString("host_type");
-            String capture_type = rs.getString("capture_type");
-            Assertions.assertEquals(1, gxg_id);
-            Assertions.assertEquals("cfe", host_type);
-            Assertions.assertEquals("cfe", capture_type);
-        }
-        Assertions.assertEquals(Arrays.asList("capturegroup1"), capture_name);
-        Assertions.assertEquals(Arrays.asList("host_group_1"), host_name);
+        rs.next(); // Forward to next
+        Assertions.assertEquals("capturegroup1", rs.getString("capture_name"));
+        Assertions.assertEquals("host_group_1", rs.getString("host_name"));
+        Assertions.assertEquals(1, rs.getInt("g_x_g_id"));
+        Assertions.assertEquals("cfe", rs.getString("host_type"));
+        Assertions.assertEquals("cfe",  rs.getString("capture_type"));
     }
 
     /*
@@ -184,8 +156,6 @@ public class ProcedureGxGTest extends DBUnitbase {
     Custom error = '42000', 'type mismatch between host group and cature group'.
      */
     public void testProcedureGxGTypeMismatch() throws Exception {
-        Connection conn = DriverManager.getConnection(this.DBUNIT_CONNECTION_URL + "?" + "user=" + this.DBUNIT_USERNAME + "&password=" + this.DBUNIT_PASSWORD);
-
         SQLException state = Assertions.assertThrows(SQLException.class, () -> {
             CallableStatement stmnt = conn.prepareCall("{CALL cfe_18.add_g_x_g(?,?)}");
             stmnt.setInt(1, 1);

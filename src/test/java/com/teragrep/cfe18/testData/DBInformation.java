@@ -46,6 +46,8 @@
 package com.teragrep.cfe18.testData;
 
 import org.flywaydb.core.Flyway;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.TestInstance;
 
@@ -62,6 +64,11 @@ class DBInformation {
         conn = DriverManager.getConnection(this.DBUNIT_CONNECTION_URL + "?" + "user=" + this.DBUNIT_USERNAME + "&password=" + this.DBUNIT_PASSWORD);
         Flyway flyway = Flyway.configure().dataSource(DBUNIT_CONNECTION_URL + "/cfe_18", DBUNIT_USERNAME, DBUNIT_PASSWORD).load();
         flyway.migrate();
+    }
+
+    @AfterAll
+    public void cleanup() {
+        Assertions.assertDoesNotThrow(conn::close);
     }
 
     protected String DBUNIT_DRIVER_CLASS = System.getProperty("tests.dbunit.driver.class");

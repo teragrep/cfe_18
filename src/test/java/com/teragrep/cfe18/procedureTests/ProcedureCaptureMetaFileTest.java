@@ -54,10 +54,9 @@ import org.junit.jupiter.api.Assertions;
 import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.sql.*;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.sql.CallableStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 
 /*
@@ -80,9 +79,6 @@ public class ProcedureCaptureMetaFileTest extends DBUnitbase {
     In this example Tag and Tag_path are tested aswell that they are the same when inserting.
      */
     public void testProcedureAddCaptureSuccess() throws Exception {
-
-        Connection conn = DriverManager.getConnection(this.DBUNIT_CONNECTION_URL + "?" + "user=" + this.DBUNIT_USERNAME + "&password=" + this.DBUNIT_PASSWORD);
-
         IDataSet expectedDataSet = new FlatXmlDataSetBuilder().build(new File("src/test/resources/XMLProcedureCapture/procedureCaptureExpectedTestData1.xml"));
         ITable expectedTable = expectedDataSet.getTable("cfe_18.capture_definition");
 
@@ -100,7 +96,7 @@ public class ProcedureCaptureMetaFileTest extends DBUnitbase {
         stmnt.setString(11, "usesregex");
         stmnt.execute();
 
-        ITable actualTable = getConnection().createQueryTable("result", "select * from cfe_18.capture_definition");
+        ITable actualTable = databaseConnection.createQueryTable("result", "select * from cfe_18.capture_definition");
 
         Assertion.assertEqualsIgnoreCols(expectedTable, actualTable, new String[]{"capture_type_id", "id", "tag_id"});
 
@@ -111,7 +107,6 @@ public class ProcedureCaptureMetaFileTest extends DBUnitbase {
     Aim is to trigger sql state signal where this is not allowed
      */
     public void testProcedureCaptureTagMismatch() throws Exception {
-        Connection conn = DriverManager.getConnection(this.DBUNIT_CONNECTION_URL + "?" + "user=" + this.DBUNIT_USERNAME + "&password=" + this.DBUNIT_PASSWORD);
         SQLException state = Assertions.assertThrows(SQLException.class, () -> {
             CallableStatement stmnt = conn.prepareCall("{call cfe_18.add_new_capture_file(?,?,?,?,?,?,?,?,?,?,?)}");
             stmnt.setString(1, "632db722-tag.tag");
@@ -134,7 +129,6 @@ public class ProcedureCaptureMetaFileTest extends DBUnitbase {
      Test for checking capture insertion without tag. Tag path is suppose to create the new tag.
     */
     public void testProcedureCaptureTagCreate() throws Exception {
-        Connection conn = DriverManager.getConnection(this.DBUNIT_CONNECTION_URL + "?" + "user=" + this.DBUNIT_USERNAME + "&password=" + this.DBUNIT_PASSWORD);
         IDataSet expectedDataSet = new FlatXmlDataSetBuilder().build(new File("src/test/resources/XMLProcedureCapture/procedureCaptureExpectedTestData2.xml"));
         ITable expectedTable = expectedDataSet.getTable("cfe_18.tags");
 
@@ -151,7 +145,7 @@ public class ProcedureCaptureMetaFileTest extends DBUnitbase {
         stmnt.setString(10, "PathToCapture");
         stmnt.setString(11, "usesregex");
         stmnt.execute();
-        ITable actualTable = getConnection().createQueryTable("result", "select * from cfe_18.tags");
+        ITable actualTable = databaseConnection.createQueryTable("result", "select * from cfe_18.tags");
 
         Assertion.assertEqualsIgnoreCols(expectedTable, actualTable, new String[]{"id"});
     }
@@ -162,7 +156,6 @@ public class ProcedureCaptureMetaFileTest extends DBUnitbase {
     This test should accept the creation of new capture even tho there is no tag_path.
 */
     public void testProcedureCaptureTagPathNull() throws Exception {
-        Connection conn = DriverManager.getConnection(this.DBUNIT_CONNECTION_URL + "?" + "user=" + this.DBUNIT_USERNAME + "&password=" + this.DBUNIT_PASSWORD);
         IDataSet expectedDataSet = new FlatXmlDataSetBuilder().build(new File("src/test/resources/XMLProcedureCapture/procedureCaptureExpectedTestData3.xml"));
         ITable expectedTable = expectedDataSet.getTable("cfe_18.capture_definition");
         ITable expectedTable1 = expectedDataSet.getTable("cfe_18.tags");
@@ -182,9 +175,10 @@ public class ProcedureCaptureMetaFileTest extends DBUnitbase {
         stmnt.setString(11, "usesregex");
         stmnt.execute();
 
-        ITable actualTable = getConnection().createQueryTable("result", "select * from cfe_18.capture_definition");
-        ITable actualTable1 = getConnection().createQueryTable("result", "select * from cfe_18.tags");
-        ITable actualTable2 = getConnection().createQueryTable("result", "select * from cfe_18.capture_meta_file");
+        ITable actualTable = databaseConnection.createQueryTable("result", "select * from cfe_18.capture_definition");
+        ITable actualTable1 = databaseConnection.createQueryTable("result", "select * from cfe_18.tags");
+        ITable actualTable2 = databaseConnection.createQueryTable("result", "select * from cfe_18.capture_meta_file");
+
         Assertion.assertEqualsIgnoreCols(expectedTable, actualTable, new String[]{"capture_type_id", "id", "tag_id"});
         Assertion.assertEqualsIgnoreCols(expectedTable1, actualTable1, new String[]{"id"});
         Assertion.assertEqualsIgnoreCols(expectedTable2, actualTable2, new String[]{"id"});
@@ -196,7 +190,6 @@ public class ProcedureCaptureMetaFileTest extends DBUnitbase {
 */
 
     public void testProcedureCaptureMissingProcessingType() throws Exception {
-        Connection conn = DriverManager.getConnection(this.DBUNIT_CONNECTION_URL + "?" + "user=" + this.DBUNIT_USERNAME + "&password=" + this.DBUNIT_PASSWORD);
         SQLException state = Assertions.assertThrows(SQLException.class, () -> {
             CallableStatement stmnt = conn.prepareCall("{call cfe_18.add_new_capture_file(?,?,?,?,?,?,?,?,?,?,?)}");
             stmnt.setString(1, "632db722-tag.tag");
@@ -220,7 +213,6 @@ public class ProcedureCaptureMetaFileTest extends DBUnitbase {
     */
 
     public void testProcedureCaptureFaultyProcessingType() throws Exception {
-        Connection conn = DriverManager.getConnection(this.DBUNIT_CONNECTION_URL + "?" + "user=" + this.DBUNIT_USERNAME + "&password=" + this.DBUNIT_PASSWORD);
         SQLException state = Assertions.assertThrows(SQLException.class, () -> {
             CallableStatement stmnt = conn.prepareCall("{call cfe_18.add_new_capture_file(?,?,?,?,?,?,?,?,?,?,?)}");
             stmnt.setString(1, "632db722-tag.tag");
@@ -245,7 +237,6 @@ public class ProcedureCaptureMetaFileTest extends DBUnitbase {
 
  */
     public void testProcedureCaptureDuplicateAvoid() throws Exception {
-        Connection conn = DriverManager.getConnection(this.DBUNIT_CONNECTION_URL + "?" + "user=" + this.DBUNIT_USERNAME + "&password=" + this.DBUNIT_PASSWORD);
         IDataSet expectedDataSet = new FlatXmlDataSetBuilder().build(new File("src/test/resources/XMLProcedureCapture/procedureCaptureExpectedTestData4.xml"));
         ITable expectedTable = expectedDataSet.getTable("cfe_18.tags");
         ITable expectedTable1 = expectedDataSet.getTable("cfe_18.retentionTime");
@@ -272,16 +263,17 @@ public class ProcedureCaptureMetaFileTest extends DBUnitbase {
         stmnt.setString(11, "usesregex");
         stmnt.execute();
 
-        ITable actualTable = getConnection().createQueryTable("result", "select * from cfe_18.tags");
-        ITable actualTable1 = getConnection().createQueryTable("result", "select * from cfe_18.retentionTime");
-        ITable actualTable2 = getConnection().createQueryTable("result", "select * from cfe_18.category");
-        ITable actualTable3 = getConnection().createQueryTable("result", "select * from cfe_18.application");
-        ITable actualTable4 = getConnection().createQueryTable("result", "select * from cfe_18.captureIndex");
-        ITable actualTable5 = getConnection().createQueryTable("result", "select * from cfe_18.captureSourcetype");
-        ITable actualTable6 = getConnection().createQueryTable("result", "select * from flow.L7");
-        ITable actualTable7 = getConnection().createQueryTable("result", "select * from flow.flows");
-        ITable actualTable8 = getConnection().createQueryTable("result", "select * from cfe_18.capture_meta_file");
-        ITable actualTable9 = getConnection().createQueryTable("result", "select * from cfe_18.processing_type");
+        ITable actualTable = databaseConnection.createQueryTable("result", "select * from cfe_18.tags");
+        ITable actualTable1 = databaseConnection.createQueryTable("result", "select * from cfe_18.retentionTime");
+        ITable actualTable2 = databaseConnection.createQueryTable("result", "select * from cfe_18.category");
+        ITable actualTable3 = databaseConnection.createQueryTable("result", "select * from cfe_18.application");
+        ITable actualTable4 = databaseConnection.createQueryTable("result", "select * from cfe_18.captureIndex");
+        ITable actualTable5 = databaseConnection.createQueryTable("result", "select * from cfe_18.captureSourcetype");
+        ITable actualTable6 = databaseConnection.createQueryTable("result", "select * from flow.L7");
+        ITable actualTable7 = databaseConnection.createQueryTable("result", "select * from flow.flows");
+        ITable actualTable8 = databaseConnection.createQueryTable("result", "select * from cfe_18.capture_meta_file");
+        ITable actualTable9 = databaseConnection.createQueryTable("result", "select * from cfe_18.processing_type");
+
         Assertion.assertEqualsIgnoreCols(expectedTable, actualTable, new String[]{"id"});
         Assertion.assertEqualsIgnoreCols(expectedTable1, actualTable1, new String[]{"id"});
         Assertion.assertEqualsIgnoreCols(expectedTable2, actualTable2, new String[]{"id"});
@@ -298,47 +290,28 @@ public class ProcedureCaptureMetaFileTest extends DBUnitbase {
     This test confirms that data is retrieved accurately from capture_definition via procedure.
      */
     public void testProcedureCaptureGetById() throws Exception {
-
-        Connection conn = DriverManager.getConnection(this.DBUNIT_CONNECTION_URL + "?" + "user=" + this.DBUNIT_USERNAME + "&password=" + this.DBUNIT_PASSWORD);
-        List<Integer> actualList = new ArrayList<>();
         CallableStatement stmnt = conn.prepareCall("{CALL cfe_18.retrieve_capture_by_id(?)}");
         stmnt.setString(1, "1");
         ResultSet rs = stmnt.executeQuery();
-        while (rs.next()) {
-            actualList.add(rs.getInt("id"));
-            String tag = rs.getString("tag");
-            String app = rs.getString("app");
-            String captureIndex = rs.getString("captureIndex");
-            String retention_time = rs.getString("retention_time");
-            String source_type = rs.getString("source_type");
-            String category = rs.getString("category");
-            String rule_name = rs.getString("rule_name");
-            String flow = rs.getString("flow");
-            String protocol = rs.getString("protocol");
-            String capture_path = rs.getString("capture_path");
-            String tag_path = rs.getString("tag_path");
-            Assertions.assertEquals("tag1", tag);
-            Assertions.assertEquals("app1", app);
-            Assertions.assertEquals("index1", captureIndex);
-            Assertions.assertEquals("P30D", retention_time);
-            Assertions.assertEquals("sourcetype1", source_type);
-            Assertions.assertEquals("audit", category);
-            Assertions.assertEquals("usesregex", rule_name);
-            Assertions.assertEquals("flow1", flow);
-            Assertions.assertEquals("prot1", protocol);
-            Assertions.assertEquals("capPathRegex", capture_path);
-            Assertions.assertEquals("tagPathRegex", tag_path);
-        }
-        // Expecting to get only one record with ID of 1
-        Assertions.assertEquals(Arrays.asList(1), actualList);
+        rs.next(); // Needs to forward to first
+        Assertions.assertEquals(1, rs.getInt("id"));
+        Assertions.assertEquals("tag1", rs.getString("tag"));
+        Assertions.assertEquals("app1", rs.getString("app"));
+        Assertions.assertEquals("index1", rs.getString("captureIndex"));
+        Assertions.assertEquals("P30D", rs.getString("retention_time"));
+        Assertions.assertEquals("sourcetype1", rs.getString("source_type"));
+        Assertions.assertEquals("audit", rs.getString("category"));
+        Assertions.assertEquals("usesregex", rs.getString("rule_name"));
+        Assertions.assertEquals("flow1", rs.getString("flow"));
+        Assertions.assertEquals("prot1", rs.getString("protocol"));
+        Assertions.assertEquals("capPathRegex", rs.getString("capture_path"));
+        Assertions.assertEquals("tagPathRegex", rs.getString("tag_path"));
     }
 
     /*
     This test is for checking that capture can not be inserted if L7_id is faulty or missing
      */
     public void testMissingL7() throws Exception {
-        Connection conn = DriverManager.getConnection(this.DBUNIT_CONNECTION_URL + "?" + "user=" + this.DBUNIT_USERNAME + "&password=" + this.DBUNIT_PASSWORD);
-
         SQLException state = Assertions.assertThrows(SQLException.class, () -> {
             CallableStatement stmnt = conn.prepareCall("{call cfe_18.add_new_capture_file(?,?,?,?,?,?,?,?,?,?,?)}");
             stmnt.setString(1, "632db722-tag.tag");
@@ -362,8 +335,6 @@ public class ProcedureCaptureMetaFileTest extends DBUnitbase {
     This test is for checking that capture can not be inserted if flow_id is faulty or missing
      */
     public void testMissingFlow() throws Exception {
-        Connection conn = DriverManager.getConnection(this.DBUNIT_CONNECTION_URL + "?" + "user=" + this.DBUNIT_USERNAME + "&password=" + this.DBUNIT_PASSWORD);
-
         SQLException state = Assertions.assertThrows(SQLException.class, () -> {
             CallableStatement stmnt = conn.prepareCall("{call cfe_18.add_new_capture_file(?,?,?,?,?,?,?,?,?,?,?)}");
             stmnt.setString(1, "632db722-tag.tag");

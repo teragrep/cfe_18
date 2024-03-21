@@ -54,8 +54,6 @@ import org.junit.jupiter.api.Assertions;
 import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
 
@@ -75,8 +73,6 @@ public class TriggerTagTest extends DBUnitbase {
     This test bounces the trigger indicating that the trigger is in place.
     */
     public void testTagTriggerBounce() throws Exception {
-        Connection conn = DriverManager.getConnection(this.DBUNIT_CONNECTION_URL + "?" + "user=" + this.DBUNIT_USERNAME + "&password=" + this.DBUNIT_PASSWORD);
-
         // Execute the tested code that modify the database here
         // execute statement here
         SQLException state = Assertions.assertThrows(SQLException.class, () -> {
@@ -86,15 +82,12 @@ public class TriggerTagTest extends DBUnitbase {
             stmnt.executeBatch();
         });
         Assertions.assertEquals("17001", state.getSQLState());
-
-
     }
 
     /*
     Test for checking that the trigger allows values which do not conflict.
      */
     public void testTagTriggerAccept() throws Exception {
-        Connection conn = DriverManager.getConnection(this.DBUNIT_CONNECTION_URL + "?" + "user=" + this.DBUNIT_USERNAME + "&password=" + this.DBUNIT_PASSWORD);
         IDataSet expectedDataSet = new FlatXmlDataSetBuilder().build(new File("src/test/resources/XMLTriggersHostXCapture/triggerTagExpectedData1.xml"));
         ITable expectedTable = expectedDataSet.getTable("cfe_18.capture_def_group_x_capture_def");
 
@@ -107,14 +100,10 @@ public class TriggerTagTest extends DBUnitbase {
         stmnt.executeBatch();
 
         // Fetch database data after executing your code
-        ITable actualTable = getConnection().createQueryTable("result", "select * from cfe_18.capture_def_group_x_capture_def");
+        ITable actualTable = databaseConnection.createQueryTable("result", "select * from cfe_18.capture_def_group_x_capture_def");
 
         // Load expected data from an XML dataset
         // Assert actual database table match expected table
         Assertion.assertEquals(expectedTable, actualTable);
-
-
     }
-
-
 }

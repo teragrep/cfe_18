@@ -54,7 +54,9 @@ import org.junit.jupiter.api.Assertions;
 import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.sql.*;
+import java.sql.CallableStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 
 public class ProcedureHostAddCfeFileTest extends DBUnitbase {
@@ -72,9 +74,6 @@ public class ProcedureHostAddCfeFileTest extends DBUnitbase {
     Test for checking if the procedure lets add host without an existing hub.
      */
     public void testProcedureCfeHostNoHub() throws Exception {
-
-        Connection conn = DriverManager.getConnection(this.DBUNIT_CONNECTION_URL + "?" + "user=" + this.DBUNIT_USERNAME + "&password=" + this.DBUNIT_PASSWORD);
-
         SQLException state = Assertions.assertThrows(SQLException.class, () -> {
             CallableStatement stmnt = conn.prepareCall("{CALL location.host_add_cfe(?,?,?)}");
             stmnt.setString(1, "someMd5Test");
@@ -93,8 +92,6 @@ public class ProcedureHostAddCfeFileTest extends DBUnitbase {
     No clue how to fix it yet.
     */
     public void testProcedureCfeHubAccept() throws Exception {
-        Connection conn = DriverManager.getConnection(this.DBUNIT_CONNECTION_URL + "?" + "user=" + this.DBUNIT_USERNAME + "&password=" + this.DBUNIT_PASSWORD);
-
         // Gets the expected dataset
         IDataSet expectedDataSet = new FlatXmlDataSetBuilder().build(new File("src/test/resources/XMLProcedureHost/procedureHostExpectedTestData1.xml"));
         ITable expectedTable = expectedDataSet.getTable("cfe_00.host_type_cfe");
@@ -106,7 +103,7 @@ public class ProcedureHostAddCfeFileTest extends DBUnitbase {
         stmnt.execute();
 
         // Retrieves the dataset which happened after the execution
-        ITable actualTable = getConnection().createQueryTable("result", "select * from cfe_00.host_type_cfe");
+        ITable actualTable = databaseConnection.createQueryTable("result", "select * from cfe_00.host_type_cfe");
 
         // Assert actual database table match expected table
         Assertion.assertEqualsIgnoreCols(expectedTable, actualTable, new String[]{"hub_id", "host_id"});
@@ -117,8 +114,6 @@ public class ProcedureHostAddCfeFileTest extends DBUnitbase {
         This test checks that cfe host can be added and linked to a hub.
      */
     public void testProcedureCfeHostAccept() throws Exception {
-        Connection conn = DriverManager.getConnection(this.DBUNIT_CONNECTION_URL + "?" + "user=" + this.DBUNIT_USERNAME + "&password=" + this.DBUNIT_PASSWORD);
-
         IDataSet expectedDataSet = new FlatXmlDataSetBuilder().build(new File("src/test/resources/XMLProcedureHost/procedureHostExpectedTestData2.xml"));
         ITable expectedTable = expectedDataSet.getTable("location.host");
 
@@ -128,12 +123,10 @@ public class ProcedureHostAddCfeFileTest extends DBUnitbase {
         stmnt.setString(2, "534209325");
         stmnt.setString(3, "1");
         stmnt.execute();
-
-        ITable actualTable = getConnection().createQueryTable("result", "select * from location.host");
+        ITable actualTable = databaseConnection.createQueryTable("result", "select * from location.host");
 
         // Assert actual database table match expected table
         Assertion.assertEqualsIgnoreCols(expectedTable, actualTable, new String[]{"id"});
-
     }
 
 
@@ -141,58 +134,29 @@ public class ProcedureHostAddCfeFileTest extends DBUnitbase {
     This test is retrieving relp based host
 */
     public void testProcedureRetrieveRelpHost() throws Exception {
-        Connection conn = DriverManager.getConnection(this.DBUNIT_CONNECTION_URL + "?" + "user=" + this.DBUNIT_USERNAME + "&password=" + this.DBUNIT_PASSWORD);
-
-
         CallableStatement stmnt = conn.prepareCall("{CALL cfe_00.retrieve_host_details(?)}");
         stmnt.setInt(1, 25);
         ResultSet rs = stmnt.executeQuery();
-        int host_id = 0;
-        String md5 = null;
-        String fqhost = null;
-        String host_type = null;
-        // roll through the result
-        while (rs.next()) {
-            host_id = rs.getInt("host_id");
-            md5 = rs.getString("md5");
-            fqhost = rs.getString("fqhost");
-            host_type = rs.getString("host_type");
-
-        }
-        Assertions.assertEquals(host_id, 25);
-        Assertions.assertEquals(md5, "relpmd5");
-        Assertions.assertEquals(fqhost, "relpfqhost");
-        Assertions.assertEquals(host_type, "relp");
+        rs.next();
+        Assertions.assertEquals(25, rs.getInt("host_id"));
+        Assertions.assertEquals("relpmd5", rs.getString("md5"));
+        Assertions.assertEquals("relpfqhost", rs.getString("fqhost"));
+        Assertions.assertEquals("relp", rs.getString("host_type"));
     }
 
     /*
     This test is retrieving cfe hub
 */
     public void testProcedureRetrieveHub() throws Exception {
-        Connection conn = DriverManager.getConnection(this.DBUNIT_CONNECTION_URL + "?" + "user=" + this.DBUNIT_USERNAME + "&password=" + this.DBUNIT_PASSWORD);
-
         CallableStatement stmnt = conn.prepareCall("{CALL location.retrieve_cfe_hub_details(?)}");
         stmnt.setInt(1, 1);
         ResultSet rs = stmnt.executeQuery();
-        int hub_id = 0;
-        int host_id = 0;
-        String hub_fq = null;
-        String ip = null;
-        String md5 = null;
-        // roll through the result
-        while (rs.next()) {
-            hub_id = rs.getInt("hub_id");
-            host_id = rs.getInt("host_id");
-            hub_fq = rs.getString("hub_fq_host");
-            ip = rs.getString("ip");
-            md5 = rs.getString("md5");
-
-        }
-        Assertions.assertEquals(hub_id, 1);
-        Assertions.assertEquals(host_id, 1);
-        Assertions.assertEquals(hub_fq, "1");
-        Assertions.assertEquals(ip, "ip?");
-        Assertions.assertEquals(md5, "12365");
+        rs.next();
+        Assertions.assertEquals(1, rs.getInt("hub_id"));
+        Assertions.assertEquals(1, rs.getInt("host_id"));
+        Assertions.assertEquals("1", rs.getString("hub_fq_host"));
+        Assertions.assertEquals("ip?", rs.getString("ip"));
+        Assertions.assertEquals("12365", rs.getString("md5"));
     }
 
 
@@ -200,8 +164,6 @@ public class ProcedureHostAddCfeFileTest extends DBUnitbase {
     This test is adding a new relp host
 */
     public void testProcedureAddRelpHost() throws Exception {
-        Connection conn = DriverManager.getConnection(this.DBUNIT_CONNECTION_URL + "?" + "user=" + this.DBUNIT_USERNAME + "&password=" + this.DBUNIT_PASSWORD);
-
         IDataSet expectedDataSet = new FlatXmlDataSetBuilder().build(new File("src/test/resources/XMLProcedureHost/procedureHostExpectedTestData3.xml"));
         ITable expectedTable = expectedDataSet.getTable("location.host");
 
@@ -210,7 +172,7 @@ public class ProcedureHostAddCfeFileTest extends DBUnitbase {
         stmnt.setString(2, "ReliantFqHost");
         stmnt.execute();
 
-        ITable actualTable = getConnection().createQueryTable("result", "select * from location.host");
+        ITable actualTable = databaseConnection.createQueryTable("result", "select * from location.host");
 
         // Assert actual database table match expected table
         Assertion.assertEqualsIgnoreCols(expectedTable, actualTable, new String[]{"id"});
@@ -221,8 +183,6 @@ public class ProcedureHostAddCfeFileTest extends DBUnitbase {
     This test is for trying to retrieve cfe based host without hostmeta included. Results in error state 42000 "insert host meta data first"
      */
     public void testProcedureRetrieveHostWithoutMeta() throws Exception {
-        Connection conn = DriverManager.getConnection(this.DBUNIT_CONNECTION_URL + "?" + "user=" + this.DBUNIT_USERNAME + "&password=" + this.DBUNIT_PASSWORD);
-
         SQLException state = Assertions.assertThrows(SQLException.class, () -> {
             CallableStatement stmnt = conn.prepareCall("{CALL location.retrieve_host_details(?)}");
             stmnt.setInt(1, 1);

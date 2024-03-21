@@ -54,7 +54,9 @@ import org.junit.jupiter.api.Assertions;
 import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.sql.*;
+import java.sql.CallableStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 public class ProcedureProcessingTypeTest extends DBUnitbase {
     public ProcedureProcessingTypeTest(String name) {
@@ -71,8 +73,6 @@ public class ProcedureProcessingTypeTest extends DBUnitbase {
     This test checks that procedure is in place and accepts insertion with new and correct values.
      */
     public void testProcessingTypeAcceptInsert() throws Exception {
-        Connection conn = DriverManager.getConnection(this.DBUNIT_CONNECTION_URL + "?" + "user=" + this.DBUNIT_USERNAME + "&password=" + this.DBUNIT_PASSWORD);
-
         // Gets the expected dataset
         IDataSet expectedDataSet = new FlatXmlDataSetBuilder().build(new File("src/test/resources/XMLProcedureProcessingType/procedureProcessingTypeExpectedTestData1.xml"));
         ITable expectedTable = expectedDataSet.getTable("cfe_18.processing_type");
@@ -86,7 +86,7 @@ public class ProcedureProcessingTypeTest extends DBUnitbase {
         stmnt.setString(5, "TestRegex2");
         stmnt.execute();
 
-        ITable actualTable = getConnection().createQueryTable("result", "select * from cfe_18.processing_type");
+        ITable actualTable = databaseConnection.createQueryTable("result", "select * from cfe_18.processing_type");
 
         Assertion.assertEqualsIgnoreCols(expectedTable, actualTable, new String[]{"ruleset_id", "template_id"});
 
@@ -98,8 +98,6 @@ public class ProcedureProcessingTypeTest extends DBUnitbase {
      next 4 tests are for checking if one of the values inserted was null
      */
     public void testProcessingTypeNullRegex() throws Exception {
-        Connection conn = DriverManager.getConnection(this.DBUNIT_CONNECTION_URL + "?" + "user=" + this.DBUNIT_USERNAME + "&password=" + this.DBUNIT_PASSWORD);
-
         SQLException state = Assertions.assertThrows(SQLException.class, () -> {
             CallableStatement stmnt = conn.prepareCall("{CALL cfe_18.create_data_for_processing_type(?,?,?,?,?)}");
             stmnt.setString(1, "template1");
@@ -113,8 +111,6 @@ public class ProcedureProcessingTypeTest extends DBUnitbase {
     }
 
     public void testProcessingTypeNullNewline() throws Exception {
-        Connection conn = DriverManager.getConnection(this.DBUNIT_CONNECTION_URL + "?" + "user=" + this.DBUNIT_USERNAME + "&password=" + this.DBUNIT_PASSWORD);
-
         SQLException state = Assertions.assertThrows(SQLException.class, () -> {
             CallableStatement stmnt = conn.prepareCall("{CALL cfe_18.create_data_for_processing_type(?,?,?,?,?)}");
             stmnt.setString(1, "template1");
@@ -128,8 +124,6 @@ public class ProcedureProcessingTypeTest extends DBUnitbase {
     }
 
     public void testProcessingTypeNullRuleset() throws Exception {
-        Connection conn = DriverManager.getConnection(this.DBUNIT_CONNECTION_URL + "?" + "user=" + this.DBUNIT_USERNAME + "&password=" + this.DBUNIT_PASSWORD);
-
         SQLException state = Assertions.assertThrows(SQLException.class, () -> {
             CallableStatement stmnt = conn.prepareCall("{CALL cfe_18.create_data_for_processing_type(?,?,?,?,?)}");
             stmnt.setString(1, "template1");
@@ -143,8 +137,6 @@ public class ProcedureProcessingTypeTest extends DBUnitbase {
     }
 
     public void testProcessingTypeNullTemplate() throws Exception {
-        Connection conn = DriverManager.getConnection(this.DBUNIT_CONNECTION_URL + "?" + "user=" + this.DBUNIT_USERNAME + "&password=" + this.DBUNIT_PASSWORD);
-
         SQLException state = Assertions.assertThrows(SQLException.class, () -> {
             CallableStatement stmnt = conn.prepareCall("{CALL cfe_18.create_data_for_processing_type(?,?,?,?,?)}");
             stmnt.setString(1, null);
@@ -162,28 +154,14 @@ public class ProcedureProcessingTypeTest extends DBUnitbase {
     Checks if the values inserted from XML correspond to the values fetch via procedure call.
      */
     public void testProcessingTypeRetrieveByName() throws Exception {
-        Connection conn = DriverManager.getConnection(this.DBUNIT_CONNECTION_URL + "?" + "user=" + this.DBUNIT_USERNAME + "&password=" + this.DBUNIT_PASSWORD);
-
         CallableStatement stmnt = conn.prepareCall("{CALL cfe_18.retrieve_processing_type_by_name(?)}");
         stmnt.setString(1, "name1");
         ResultSet rs = stmnt.executeQuery();
-        String ruleset = null;
-        String template = null;
-        String name = null;
-        String inputtype = null;
-        String inputvalue = null;
-        while (rs.next()) {
-            ruleset = rs.getString("ruleset");
-            template = rs.getString("template");
-            name = rs.getString("name");
-            inputtype = rs.getString("inputtype");
-            inputvalue = rs.getString("inputvalue");
-
-        }
-        Assertions.assertEquals("RulesAreMadeToBeBroken", ruleset);
-        Assertions.assertEquals("TemplateForBaking", template);
-        Assertions.assertEquals("name1", name);
-        Assertions.assertEquals("regex", inputtype);
-        Assertions.assertEquals("YourNormalRegex", inputvalue);
+        rs.next();
+        Assertions.assertEquals("RulesAreMadeToBeBroken", rs.getString("ruleset"));
+        Assertions.assertEquals("TemplateForBaking", rs.getString("template"));
+        Assertions.assertEquals("name1", rs.getString("name"));
+        Assertions.assertEquals("regex", rs.getString("inputtype"));
+        Assertions.assertEquals("YourNormalRegex", rs.getString("inputvalue"));
     }
 }
