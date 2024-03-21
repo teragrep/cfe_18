@@ -101,8 +101,10 @@ public class HostController {
                 switch (state) {
                     case "45000":
                         jsonErr.put("message", "Record does not exist with the given host id");
+                        break;
                     case "45100":
                         jsonErr.put("message", "Host given is a hub");
+                        break;
                 }
             } else if (ex.getMessage().equals("Different host_type")) {
                 LOGGER.error(ex.getMessage());
