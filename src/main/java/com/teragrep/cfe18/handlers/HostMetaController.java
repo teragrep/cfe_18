@@ -47,9 +47,15 @@ package com.teragrep.cfe18.handlers;
 
 
 import com.teragrep.cfe18.HostMetaMapper;
+import com.teragrep.cfe18.handlers.entities.FileCaptureMeta;
 import com.teragrep.cfe18.handlers.entities.HostMeta;
 import com.teragrep.cfe18.handlers.entities.InterfaceType;
 import com.teragrep.cfe18.handlers.entities.IPAddress;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.json.JSONObject;
 import org.mybatis.spring.SqlSessionTemplate;
@@ -82,6 +88,15 @@ public class HostMetaController {
 
 
     @RequestMapping(path = "/meta/{id}", method = RequestMethod.GET, produces = "application/json")
+    @Operation(summary = "Fetch host meta by id")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Host meta retrieved",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = HostMeta.class))}),
+            @ApiResponse(responseCode = "400", description = "Host meta does not exist with the given host_meta_id OR IP and/or Interface is missing",
+                    content = @Content),
+            @ApiResponse(responseCode = "500", description = "Internal server error, contact admin", content = @Content)
+    })
     public ResponseEntity<?> getHostMeta(@PathVariable("id") int id) {
         try {
             List<HostMeta> hm = hostMetaMapper.getHostMetaById(id);
@@ -107,12 +122,24 @@ public class HostMetaController {
 
     // GET ALL Hostmeta. IP and Interface excluded.
     @RequestMapping(path = "/meta", method = RequestMethod.GET, produces = "application/json")
+    @Operation(summary = "Fetch all host metas. No IP or Interface included", description = "Will return empty list if there are no host metas to fetch")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "host metas fetched",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = HostMeta.class))})
+    })
     public List<HostMeta> getAllHostMeta() {
         return hostMetaMapper.getAllHostMeta();
     }
 
     // GET ALL IP Addresses
     @RequestMapping(path = "/meta/ip", method = RequestMethod.GET, produces = "application/json")
+    @Operation(summary = "Fetch all IP addresses", description = "Will return empty list if there are no IP addresses to fetch")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "IP addresses fetched",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = IPAddress.class))})
+    })
     public List<IPAddress> getAllHostMetaIp() {
         return hostMetaMapper.getAllHostMetaIp();
     }
@@ -120,11 +147,26 @@ public class HostMetaController {
 
     // GET ALL Interfaces
     @RequestMapping(path = "/meta/interface", method = RequestMethod.GET, produces = "application/json")
+    @Operation(summary = "Fetch all interface types", description = "Will return empty list if there are no interface types to fetch")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Interface types fetched",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = InterfaceType.class))})
+    })
     public List<InterfaceType> getAllHostMetaInterface() {
         return hostMetaMapper.getAllHostMetaInterface();
     }
 
     @RequestMapping(method = RequestMethod.PUT, path = "/meta", produces = "application/json")
+    @Operation(summary = "Insert new host meta. IP and Interface excluded.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "New host meta created",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = HostMeta.class))}),
+            @ApiResponse(responseCode = "400", description = "Nulls are not allowed",
+                    content = @Content),
+            @ApiResponse(responseCode = "500", description = "Internal server error, contact admin", content = @Content)
+    })
     public ResponseEntity<String> addHostMeta(@RequestBody HostMeta newHostMeta) {
         LOGGER.info("About to insert <[{}]>",newHostMeta);
         try {
@@ -156,6 +198,15 @@ public class HostMetaController {
 
     // new interface for host metadata
     @RequestMapping(method = RequestMethod.PUT, path = "/meta/interface", produces = "application/json")
+    @Operation(summary = "Insert interface type")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "New interface type created",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = InterfaceType.class))}),
+            @ApiResponse(responseCode = "400", description = "SQL Constraint error",
+                    content = @Content),
+            @ApiResponse(responseCode = "500", description = "Internal server error, contact admin", content = @Content)
+    })
     public ResponseEntity<String> addInterface_type(@RequestBody InterfaceType newInterfaceType) {
         LOGGER.info("About to insert <[{}]>",newInterfaceType );
         try {
@@ -177,6 +228,15 @@ public class HostMetaController {
 
     // new ip address for host metadata
     @RequestMapping(path = "/meta/ip", method = RequestMethod.PUT, produces = "application/json")
+    @Operation(summary = "Insert IP address")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "New IP address created",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = IPAddress.class))}),
+            @ApiResponse(responseCode = "400", description = "SQL Constraint error",
+                    content = @Content),
+            @ApiResponse(responseCode = "500", description = "Internal server error, contact admin", content = @Content)
+    })
     public ResponseEntity<String> addIpAddress(@RequestBody IPAddress newIpAddress) {
         LOGGER.info("About to insert <[{}]>",newIpAddress);
         try {
@@ -198,6 +258,15 @@ public class HostMetaController {
 
     // Delete IP
     @RequestMapping(path = "/meta/ip/{id}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @Operation(summary = "Delete IP address")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "IP address deleted",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = IPAddress.class))}),
+            @ApiResponse(responseCode = "400", description = "IP address is being used OR IP address does not exist",
+                    content = @Content),
+            @ApiResponse(responseCode = "500", description = "Internal server error, contact admin", content = @Content)
+    })
     public ResponseEntity<String> removeIp(@PathVariable("id") int id) {
         LOGGER.info("Deleting Host <[{}]>",id);
         JSONObject jsonErr = new JSONObject();
@@ -226,6 +295,15 @@ public class HostMetaController {
 
     // Delete Interface
     @RequestMapping(path = "/meta/interface/{id}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @Operation(summary = "Delete interface type")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Interface type deleted",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = InterfaceType.class))}),
+            @ApiResponse(responseCode = "400", description = "Interface type is being used OR Interface type does not exist",
+                    content = @Content),
+            @ApiResponse(responseCode = "500", description = "Internal server error, contact admin", content = @Content)
+    })
     public ResponseEntity<String> removeInterface(@PathVariable("id") int id) {
         LOGGER.info("Deleting Interface <[{}]>",id);
         JSONObject jsonErr = new JSONObject();
@@ -254,6 +332,15 @@ public class HostMetaController {
 
     // Delete HostMeta
     @RequestMapping(path = "/meta/{id}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @Operation(summary = "Delete host meta")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Host meta deleted",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = InterfaceType.class))}),
+            @ApiResponse(responseCode = "400", description = "Host meta is being used OR Host meta does not exist",
+                    content = @Content),
+            @ApiResponse(responseCode = "500", description = "Internal server error, contact admin", content = @Content)
+    })
     public ResponseEntity<String> removeHostMeta(@PathVariable("id") int id) {
         LOGGER.info("Deleting Hostmeta <[{}]>",id);
         JSONObject jsonErr = new JSONObject();

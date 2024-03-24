@@ -46,7 +46,13 @@
 package com.teragrep.cfe18.handlers;
 
 import com.teragrep.cfe18.LinkageMapper;
+import com.teragrep.cfe18.handlers.entities.FileCaptureMeta;
 import com.teragrep.cfe18.handlers.entities.Linkage;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.json.JSONObject;
 import org.mybatis.spring.SqlSessionTemplate;
@@ -81,6 +87,15 @@ public class LinkageController {
 
     // retrieve g_x_g details by group_name
     @RequestMapping(path = "/linkage/{name}", method = RequestMethod.GET, produces = "application/json")
+    @Operation(summary = "Fetch linkage by either capture group name or host group name")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Linkage retrieved",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = Linkage.class))}),
+            @ApiResponse(responseCode = "400", description = "Record does not exist with the given group name",
+                    content = @Content),
+            @ApiResponse(responseCode = "500", description = "Internal server error, contact admin", content = @Content)
+    })
     public ResponseEntity<?> getLinkage(@PathVariable("name") String name) {
         try {
             List<Linkage> l = linkageMapper.getLinkageByName(name);
@@ -104,12 +119,27 @@ public class LinkageController {
 
     // GET ALL Linkages
     @RequestMapping(path = "/linkage", method = RequestMethod.GET, produces = "application/json")
+    @Operation(summary = "Fetch all linkages", description = "Will return empty list if there are no linkages to fetch")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Linkages fetched",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = Linkage.class))})
+    })
     public List<Linkage> getAllLinkage() {
         return linkageMapper.getAllLinkage();
     }
 
     // add new g_x_g
     @RequestMapping(path = "/linkage", method = RequestMethod.PUT, produces = "application/json")
+    @Operation(summary = "Insert new linkage")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "New linkage created",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = Linkage.class))}),
+            @ApiResponse(responseCode = "400", description = "SQL Constraint error",
+                    content = @Content),
+            @ApiResponse(responseCode = "500", description = "Internal server error, contact admin", content = @Content)
+    })
     public ResponseEntity<String> newLinkage(@RequestBody Linkage newLinkage) {
         LOGGER.info("About to insert <[{}]>",newLinkage);
         try {
@@ -132,6 +162,15 @@ public class LinkageController {
 
     // Delete
     @RequestMapping(path = "/linkage/{id}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @Operation(summary = "Delete linkage")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Linkage deleted",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = Linkage.class))}),
+            @ApiResponse(responseCode = "400", description = "Linkage is being used OR Linkage does not exist",
+                    content = @Content),
+            @ApiResponse(responseCode = "500", description = "Internal server error, contact admin", content = @Content)
+    })
     public ResponseEntity<String> removeLinkage(@PathVariable("id") int id) {
         LOGGER.info("Deleting Linkage <[{}]>",id);
         JSONObject jsonErr = new JSONObject();

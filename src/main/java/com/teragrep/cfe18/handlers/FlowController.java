@@ -46,7 +46,13 @@
 package com.teragrep.cfe18.handlers;
 
 import com.teragrep.cfe18.FlowMapper;
+import com.teragrep.cfe18.handlers.entities.FileCaptureMeta;
 import com.teragrep.cfe18.handlers.entities.Flow;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.json.JSONObject;
 import org.mybatis.spring.SqlSessionTemplate;
@@ -81,11 +87,26 @@ public class FlowController {
     // Get ALL endpoint
 
     @RequestMapping(path = "", method = RequestMethod.GET, produces = "application/json")
+    @Operation(summary = "Fetch all flows", description = "Will return empty list if there are no flows to fetch")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Flows types fetched",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = Flow.class))})
+    })
     public List<Flow> getAllFlow() {
         return flowMapper.getAllFlow();
     }
 
     @RequestMapping(path = "", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
+    @Operation(summary = "Insert new flow")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "New flow created",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = Flow.class))}),
+            @ApiResponse(responseCode = "400", description = "Internal SQL Exception, most likely NULL",
+                    content = @Content),
+            @ApiResponse(responseCode = "500", description = "Internal server error, contact admin", content = @Content)
+    })
     public ResponseEntity<String> newFlow(@RequestBody Flow newFlow) {
         LOGGER.info("About to insert <[{}]>",newFlow);
         try {
@@ -105,6 +126,15 @@ public class FlowController {
 
     // Delete
     @RequestMapping(path = "/{name}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @Operation(summary = "Delete flow")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Flow deleted",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = Flow.class))}),
+            @ApiResponse(responseCode = "400", description = "Flow is being used OR Flow does not exist",
+                    content = @Content),
+            @ApiResponse(responseCode = "500", description = "Internal server error, contact admin", content = @Content)
+    })
     public ResponseEntity<String> removeFlow(@PathVariable("name") String name) {
         LOGGER.info("Deleting flow  <[{}]>",name);
         try {

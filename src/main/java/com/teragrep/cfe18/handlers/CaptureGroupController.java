@@ -182,7 +182,7 @@ public class CaptureGroupController {
             @ApiResponse(responseCode = "200", description = "Capture group deleted",
                     content = {@Content(mediaType = "application/json",
                             schema = @Schema(implementation = CaptureGroup.class))}),
-            @ApiResponse(responseCode = "400", description = "Capture group does not exist or it is being used",
+            @ApiResponse(responseCode = "400", description = "Capture group does not exist OR Capture group is being used",
                     content = @Content),
             @ApiResponse(responseCode = "500", description = "Internal server error, contact admin", content = @Content)
                 })
