@@ -46,7 +46,13 @@
 package com.teragrep.cfe18.handlers;
 
 import com.teragrep.cfe18.HostGroupMapper;
+import com.teragrep.cfe18.handlers.entities.FileCaptureMeta;
 import com.teragrep.cfe18.handlers.entities.HostGroup;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.json.JSONObject;
 import org.mybatis.spring.SqlSessionTemplate;
@@ -81,6 +87,15 @@ public class HostGroupController {
 
     // Get host group details
     @RequestMapping(path = "/group/{name}", method = RequestMethod.GET, produces = "application/json")
+    @Operation(summary = "Fetch host group by name")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Host group retrieved",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = HostGroup.class))}),
+            @ApiResponse(responseCode = "400", description = "Host group does not exist with the given host group name",
+                    content = @Content),
+            @ApiResponse(responseCode = "500", description = "Internal server error, contact admin", content = @Content)
+    })
     public ResponseEntity<?> getResults(@PathVariable("name") String name) {
         JSONObject jsonErr = new JSONObject();
         jsonErr.put("id", 0);
@@ -103,6 +118,12 @@ public class HostGroupController {
 
 
     @RequestMapping(path = "/group", method = RequestMethod.GET, produces = "application/json")
+    @Operation(summary = "Fetch all host groups", description = "Will return empty list if there are no host groups to fetch")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Host groups fetched",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = HostGroup.class))})
+    })
     public List<HostGroup> getAllHostGroup() {
         return hostGroupMapper.getAllHostGroup();
     }
@@ -110,6 +131,15 @@ public class HostGroupController {
 
     // Insert host group with host
     @RequestMapping(path = "/group", method = RequestMethod.PUT, produces = "application/json")
+    @Operation(summary = "Insert host group with host")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "New host group created AND/OR host linked to host group",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = HostGroup.class))}),
+            @ApiResponse(responseCode = "400", description = "Type mismatch between host group and host OR Host does not exist",
+                    content = @Content),
+            @ApiResponse(responseCode = "500", description = "Internal server error, contact admin", content = @Content)
+    })
     public ResponseEntity<String> newHostGroup(@RequestBody HostGroup newHostGroup) {
         LOGGER.info("About to insert <[{}]>",newHostGroup);
         try {
@@ -145,6 +175,15 @@ public class HostGroupController {
 
     // Delete
     @RequestMapping(path = "/group/{name}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @Operation(summary = "Delete host group")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Host group deleted",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = HostGroup.class))}),
+            @ApiResponse(responseCode = "400", description = "Host group is being used OR Host group does not exist",
+                    content = @Content),
+            @ApiResponse(responseCode = "500", description = "Internal server error, contact admin", content = @Content)
+    })
     public ResponseEntity<String> removeHost(@PathVariable("name") String name) {
         LOGGER.info("Deleting Host Group <[{}]>", name);
         JSONObject jsonErr = new JSONObject();

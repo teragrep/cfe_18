@@ -46,7 +46,13 @@
 package com.teragrep.cfe18.handlers;
 
 import com.teragrep.cfe18.SinkMapper;
+import com.teragrep.cfe18.handlers.entities.FileCaptureMeta;
 import com.teragrep.cfe18.handlers.entities.Sink;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.json.JSONObject;
 import org.mybatis.spring.SqlSessionTemplate;
@@ -80,6 +86,15 @@ public class SinkController {
 
 
     @RequestMapping(path = "/id/{id}", method = RequestMethod.GET, produces = "application/json")
+    @Operation(summary = "Fetch sink by ID")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Capture sink retrieved",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = Sink.class))}),
+            @ApiResponse(responseCode = "400", description = "Sink does not exist with the given name",
+                    content = @Content),
+            @ApiResponse(responseCode = "500", description = "Internal server error, contact admin", content = @Content)
+    })
     public ResponseEntity<?> getSink(@PathVariable("id") int id) {
         JSONObject jsonErr = new JSONObject();
         jsonErr.put("id", id);
@@ -103,12 +118,27 @@ public class SinkController {
 
     // GET ALL Sinks
     @RequestMapping(path = "", method = RequestMethod.GET, produces = "application/json")
+    @Operation(summary = "Fetch all capture sinks", description = "Will return empty list if there are no capture sinks to fetch")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Capture sinks fetched",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = Sink.class))})
+    })
     public List<Sink> getAllSink() {
         return sinkMapper.getAllSinks();
     }
 
 
     @RequestMapping(path = "/details", method = RequestMethod.PUT, produces = "application/json")
+    @Operation(summary = "Insert new capture sink")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "New capture sink created",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = Sink.class))}),
+            @ApiResponse(responseCode = "400", description = "Flow and protocol combination already exists OR Port length exceeded",
+                    content = @Content),
+            @ApiResponse(responseCode = "500", description = "Internal server error, contact admin", content = @Content)
+    })
     public ResponseEntity<String> newSink(@RequestBody Sink newSink) {
         LOGGER.info("About to insert <[{}]>",newSink);
         try {
@@ -145,6 +175,15 @@ public class SinkController {
 
     // Delete
     @RequestMapping(path = "/id/{id}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @Operation(summary = "Delete capture sinks")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Capture sink deleted",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = Sink.class))}),
+            @ApiResponse(responseCode = "400", description = "Capture sink is being used OR Capture sink does not exist",
+                    content = @Content),
+            @ApiResponse(responseCode = "500", description = "Internal server error, contact admin", content = @Content)
+    })
     public ResponseEntity<String> deleteSink(@PathVariable("id") int id) {
         LOGGER.info("Deleting sink <[{}]>",id);
         JSONObject jsonErr = new JSONObject();

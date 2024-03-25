@@ -46,8 +46,14 @@
 package com.teragrep.cfe18.handlers;
 
 import com.teragrep.cfe18.HostMapper;
+import com.teragrep.cfe18.handlers.entities.FileCaptureMeta;
 import com.teragrep.cfe18.handlers.entities.HostFile;
 import com.teragrep.cfe18.handlers.entities.HostRelp;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.json.JSONObject;
 import org.mybatis.spring.SqlSessionTemplate;
@@ -82,6 +88,15 @@ public class HostController {
 
     // Get host by id
     @RequestMapping(path = "/file/{id}", method = RequestMethod.GET, produces = "application/json")
+    @Operation(summary = "Fetch file based host by ID")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "File based host retrieved",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = HostFile.class))}),
+            @ApiResponse(responseCode = "400", description = "ID given does not match any host_id OR ID given directs to a hub based host OR ID given points to different type of host",
+                    content = @Content),
+            @ApiResponse(responseCode = "500", description = "Internal server error, contact admin", content = @Content)
+    })
     public ResponseEntity<?> getHostFile(@PathVariable("id") int id) {
         try {
             HostFile hf = hostMapper.getHostFileById(id);
@@ -116,6 +131,15 @@ public class HostController {
 
     // Get host by id
     @RequestMapping(path = "/relp/{id}", method = RequestMethod.GET, produces = "application/json")
+    @Operation(summary = "Fetch relp based host by ID")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Relp based host retrieved",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = HostRelp.class))}),
+            @ApiResponse(responseCode = "400", description = "ID given does not match any host_id OR ID given points to different type of host",
+                    content = @Content),
+            @ApiResponse(responseCode = "500", description = "Internal server error, contact admin", content = @Content)
+    })
     public ResponseEntity<?> getHostRelp(@PathVariable("id") int id) {
         try {
             HostRelp hr = hostMapper.getHostRelpById(id);
@@ -146,6 +170,12 @@ public class HostController {
 
     // GET ALL hosts
     @RequestMapping(path = "", method = RequestMethod.GET, produces = "application/json")
+    @Operation(summary = "Fetch all hosts", description = "Will return empty list if there are no hosts to fetch")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Hosts fetched",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = HostFile.class))})
+    })
     public List<HostFile> getAllHost() {
         return hostMapper.getAllHost();
     }
@@ -153,6 +183,15 @@ public class HostController {
 
     //Insert new host with cfe type
     @RequestMapping(path = "/file", method = RequestMethod.PUT, produces = "application/json")
+    @Operation(summary = "Insert file based host")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "New file based host created",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = HostFile.class))}),
+            @ApiResponse(responseCode = "400", description = "ID,MD5 or fqhost already exists OR Hub does not exist",
+                    content = @Content),
+            @ApiResponse(responseCode = "500", description = "Internal server error, contact admin", content = @Content)
+    })
     public ResponseEntity<String> newHostFile(@RequestBody HostFile newHostFile) {
         LOGGER.info("About to insert <[{}]>",newHostFile);
         try {
@@ -187,6 +226,15 @@ public class HostController {
     }
 
     @RequestMapping(path = "/relp", method = RequestMethod.PUT, produces = "application/json")
+    @Operation(summary = "Insert relp based host")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "New relp based host created",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = HostRelp.class))}),
+            @ApiResponse(responseCode = "400", description = "ID,MD5 or fqhost already exists",
+                    content = @Content),
+            @ApiResponse(responseCode = "500", description = "Internal server error, contact admin", content = @Content)
+    })
     public ResponseEntity<String> newHostRelp(@RequestBody HostRelp newHostRelp) {
         LOGGER.info("About to insert <[{}]>",newHostRelp);
         try {
@@ -219,6 +267,15 @@ public class HostController {
 
     // Delete
     @RequestMapping(path = "/{id}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @Operation(summary = "Delete host")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Host deleted",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = HostFile.class))}),
+            @ApiResponse(responseCode = "400", description = "Host is being used OR Host does not exist",
+                    content = @Content),
+            @ApiResponse(responseCode = "500", description = "Internal server error, contact admin", content = @Content)
+    })
     public ResponseEntity<String> removeHost(@PathVariable("id") int id) {
         LOGGER.info("Deleting Host  <[{}]>",id);
         JSONObject jsonErr = new JSONObject();

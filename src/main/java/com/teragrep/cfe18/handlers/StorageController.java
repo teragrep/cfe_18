@@ -47,8 +47,14 @@ package com.teragrep.cfe18.handlers;
 
 import com.teragrep.cfe18.StorageMapper;
 import com.teragrep.cfe18.handlers.entities.CaptureStorage;
+import com.teragrep.cfe18.handlers.entities.FileCaptureMeta;
 import com.teragrep.cfe18.handlers.entities.FlowStorage;
 import com.teragrep.cfe18.handlers.entities.Storage;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.json.JSONObject;
 import org.mybatis.spring.SqlSessionTemplate;
@@ -82,6 +88,15 @@ public class StorageController {
 
     // Fetch flow storages
     @RequestMapping(path = "/flow/{flow}", method = RequestMethod.GET, produces = "application/json")
+    @Operation(summary = "Fetch flow storage by flow name")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Flow storage retrieved",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = FlowStorage.class))}),
+            @ApiResponse(responseCode = "400", description = "Flow storage does not exist with the given name",
+                    content = @Content),
+            @ApiResponse(responseCode = "500", description = "Internal server error, contact admin", content = @Content)
+    })
     public ResponseEntity<?> getStoragesByFlow(@PathVariable String flow) {
         try {
             List<FlowStorage> fs = storageMapper.retrieveFlowStorages(flow);
@@ -105,12 +120,27 @@ public class StorageController {
 
     // Get ALL Flow storages
     @RequestMapping(path = "/flow", method = RequestMethod.GET, produces = "application/json")
+    @Operation(summary = "Fetch all flow storages", description = "Will return empty list if there are no flow storages to fetch")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Flow storages fetched",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = FlowStorage.class))})
+    })
     public List<FlowStorage> getAllFlowStorages() {
         return storageMapper.getAllFlowStorage();
     }
 
     // Fetch capture storages
     @RequestMapping(path = "/capture/{capture_id}", method = RequestMethod.GET, produces = "application/json")
+    @Operation(summary = "Fetch capture storage by capture id")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Capture storage retrieved",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = CaptureStorage.class))}),
+            @ApiResponse(responseCode = "400", description = "Capture storage does not exist with the given ID",
+                    content = @Content),
+            @ApiResponse(responseCode = "500", description = "Internal server error, contact admin", content = @Content)
+    })
     public ResponseEntity<?> getStoragesByCaptureID(@PathVariable int capture_id) {
         try {
             List<CaptureStorage> cs = storageMapper.retrieveCaptureStorages(capture_id);
@@ -133,6 +163,12 @@ public class StorageController {
 
     // Fetch ALL Capture storages
     @RequestMapping(path = "/capture", method = RequestMethod.GET, produces = "application/json")
+    @Operation(summary = "Fetch all capture storages", description = "Will return empty list if there are no capture storages to fetch")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Capture storages fetched",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = CaptureStorage.class))})
+    })
     public List<CaptureStorage> getAllCaptureStorages() {
         return storageMapper.getAllCaptureStorage();
     }
@@ -140,6 +176,12 @@ public class StorageController {
 
     // Fetch all storages
     @RequestMapping(path = "", method = RequestMethod.GET, produces = "application/json")
+    @Operation(summary = "Fetch all standalone storages", description = "Will return empty list if there are no storages to fetch")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Storages fetched",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = Storage.class))})
+    })
     public List<Storage> getStorages() {
         return storageMapper.getStorages();
     }
@@ -147,6 +189,15 @@ public class StorageController {
 
     // New storage with the flow
     @RequestMapping(path = "/flow", method = RequestMethod.PUT, produces = "application/json")
+    @Operation(summary = "Insert new flow storage")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "New flow storage created",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = FlowStorage.class))}),
+            @ApiResponse(responseCode = "400", description = "SQL Constraint error",
+                    content = @Content),
+            @ApiResponse(responseCode = "500", description = "Internal server error, contact admin", content = @Content)
+    })
     public ResponseEntity<String> addNewStorage(@RequestBody FlowStorage newFlowStorage) {
         LOGGER.info("About to insert <[{}]>",newFlowStorage);
         try {
@@ -169,6 +220,15 @@ public class StorageController {
 
     // Link storage to capture
     @RequestMapping(path = "/capture", method = RequestMethod.PUT, produces = "application/json")
+    @Operation(summary = "Insert new capture storage")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "New capture storage created",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = CaptureStorage.class))}),
+            @ApiResponse(responseCode = "400", description = "Flow storage does not exist for linking",
+                    content = @Content),
+            @ApiResponse(responseCode = "500", description = "Internal server error, contact admin", content = @Content)
+    })
     public ResponseEntity<String> linkStorageToCapture(@RequestBody CaptureStorage newCaptureStorage) {
         LOGGER.info("About to insert <[{}]>",newCaptureStorage);
         try {
@@ -202,6 +262,15 @@ public class StorageController {
 
     // Insert standalone storage
     @RequestMapping(path = "", method = RequestMethod.PUT, produces = "application/json")
+    @Operation(summary = "Insert standalone storage")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "New storage created",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = Storage.class))}),
+            @ApiResponse(responseCode = "400", description = "Storage name already exists",
+                    content = @Content),
+            @ApiResponse(responseCode = "500", description = "Internal server error, contact admin", content = @Content)
+    })
     public ResponseEntity<String> addStorage(@RequestBody Storage newStorage) {
         LOGGER.info("About to insert <[{}]>",newStorage);
         try {
@@ -232,6 +301,15 @@ public class StorageController {
 
     // Delete Storage
     @RequestMapping(path = "/{id}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @Operation(summary = "Delete standalone storage")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Storage deleted",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = Storage.class))}),
+            @ApiResponse(responseCode = "400", description = "Storage is being used OR Storage does not exist",
+                    content = @Content),
+            @ApiResponse(responseCode = "500", description = "Internal server error, contact admin", content = @Content)
+    })
     public ResponseEntity<String> removeStorage(@PathVariable("id") int id) {
         LOGGER.info("Deleting Storage <[{}]>", id);
         JSONObject jsonErr = new JSONObject();
@@ -260,6 +338,15 @@ public class StorageController {
 
     // Delete flow storage
     @RequestMapping(path = "/flow/{flow}/{id}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @Operation(summary = "Delete flow storage")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Flow storage deleted",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = FlowStorage.class))}),
+            @ApiResponse(responseCode = "400", description = "Flow storage is being used OR Flow storage does not exist",
+                    content = @Content),
+            @ApiResponse(responseCode = "500", description = "Internal server error, contact admin", content = @Content)
+    })
     public ResponseEntity<String> removeFlowStorage(@PathVariable("flow") String flow, @PathVariable("id") int id) {
         LOGGER.info("Deleting flow Storage with id <[{}]>", id);
         JSONObject jsonErr = new JSONObject();
@@ -288,6 +375,15 @@ public class StorageController {
 
     // Delete capture storage
     @RequestMapping(path = "/capture/{capture_id}/{storage_id}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @Operation(summary = "Delete capture storage")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Capture storage deleted",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = FileCaptureMeta.class))}),
+            @ApiResponse(responseCode = "400", description = "Capture storage is being used OR Capture storage does not exist",
+                    content = @Content),
+            @ApiResponse(responseCode = "500", description = "Internal server error, contact admin", content = @Content)
+    })
     public ResponseEntity<String> removeCaptureStorage(@PathVariable("capture_id") int capture_id, @PathVariable("storage_id") int storage_id) {
         LOGGER.info("Deleting capture storage with id <[{}]>",storage_id);
         JSONObject jsonErr = new JSONObject();

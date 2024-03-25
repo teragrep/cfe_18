@@ -46,6 +46,7 @@
 package com.teragrep.cfe18.handlers;
 
 import com.teragrep.cfe18.FileCaptureMetaMapper;
+import com.teragrep.cfe18.handlers.entities.CaptureGroup;
 import com.teragrep.cfe18.handlers.entities.FileCaptureMeta;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.json.JSONObject;
@@ -130,6 +131,15 @@ public class FileCaptureMetaController {
 
 
     @RequestMapping(path = "/meta/rule", method = RequestMethod.PUT, produces = "application/json")
+    @Operation(summary = "Insert processing type for file based capture")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "New processing type created",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = FileCaptureMeta.class))}),
+            @ApiResponse(responseCode = "400", description = "Similar processing type already exists with same values but different name OR Null value was inserted",
+                    content = @Content),
+            @ApiResponse(responseCode = "500", description = "Internal server error, contact admin", content = @Content)
+    })
     public ResponseEntity<String> newFileMeta(@RequestBody FileCaptureMeta newFileCaptureMeta) {
         LOGGER.info("About to insert <[{}]>",newFileCaptureMeta);
         try {
@@ -174,6 +184,15 @@ public class FileCaptureMetaController {
 
     // Delete
     @RequestMapping(path = "meta/{name}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @Operation(summary = "Delete processing type")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Processing type deleted",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = FileCaptureMeta.class))}),
+            @ApiResponse(responseCode = "400", description = "Processing type is being used OR Processing type does not exist",
+                    content = @Content),
+            @ApiResponse(responseCode = "500", description = "Internal server error, contact admin", content = @Content)
+    })
     public ResponseEntity<String> removeProcessingType(@PathVariable("name") String name) {
         LOGGER.info("Deleting processing type  <[{}]>",name);
         JSONObject jsonErr = new JSONObject();

@@ -262,7 +262,7 @@ public class CaptureController {
             @ApiResponse(responseCode = "200", description = "Capture deleted",
                     content = {@Content(mediaType = "application/json",
                             schema = @Schema(implementation = CaptureRelp.class))}),
-            @ApiResponse(responseCode = "400", description = "Capture does not exist or it is being used",
+            @ApiResponse(responseCode = "400", description = "Capture does not exist OR Capture is being used",
                     content = @Content),
             @ApiResponse(responseCode = "500", description = "Internal server error, contact admin", content = @Content)
     })

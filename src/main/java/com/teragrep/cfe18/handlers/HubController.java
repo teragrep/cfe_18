@@ -46,7 +46,13 @@
 package com.teragrep.cfe18.handlers;
 
 import com.teragrep.cfe18.HubMapper;
+import com.teragrep.cfe18.handlers.entities.FileCaptureMeta;
 import com.teragrep.cfe18.handlers.entities.Hub;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.json.JSONObject;
 import org.mybatis.spring.SqlSessionTemplate;
@@ -81,6 +87,15 @@ public class HubController {
 
     // Get Hub
     @RequestMapping(path = "/hub/{hub_id}", method = RequestMethod.GET, produces = "application/json")
+    @Operation(summary = "Fetch hub by ID")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Hub retrieved",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = Hub.class))}),
+            @ApiResponse(responseCode = "400", description = "Hub does not exist with the given ID",
+                    content = @Content),
+            @ApiResponse(responseCode = "500", description = "Internal server error, contact admin", content = @Content)
+    })
     public ResponseEntity<?> getHubById(@PathVariable("hub_id") int hub_id) {
         JSONObject jsonErr = new JSONObject();
         jsonErr.put("id", hub_id);
@@ -104,6 +119,12 @@ public class HubController {
 
     // Get ALL Hubs
     @RequestMapping(path = "/hub", method = RequestMethod.GET, produces = "application/json")
+    @Operation(summary = "Fetch all hubs", description = "Will return empty list if there are no hubs to fetch")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Hubs fetched",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = Hub.class))})
+    })
     public List<Hub> getAllHub() {
         return hubMapper.getAllHub();
     }
@@ -111,6 +132,15 @@ public class HubController {
 
     // Insert hub
     @RequestMapping(path = "/hub", method = RequestMethod.PUT, produces = "application/json")
+    @Operation(summary = "Insert new hub")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "New hub created",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = Hub.class))}),
+            @ApiResponse(responseCode = "400", description = "ID,MD5 or fqhost already exists",
+                    content = @Content),
+            @ApiResponse(responseCode = "500", description = "Internal server error, contact admin", content = @Content)
+    })
     public ResponseEntity<String> addNewHub(@RequestBody Hub newHub) {
         LOGGER.info("About to insert <[{}]>",newHub);
         try {
@@ -144,6 +174,15 @@ public class HubController {
 
     // Delete
     @RequestMapping(path = "/hub/{id}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @Operation(summary = "Delete hub")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Hub deleted",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = Hub.class))}),
+            @ApiResponse(responseCode = "400", description = "Hub is being used OR Hub does not exist",
+                    content = @Content),
+            @ApiResponse(responseCode = "500", description = "Internal server error, contact admin", content = @Content)
+    })
     public ResponseEntity<String> removeHub(@PathVariable("id") int id) {
         LOGGER.info("Deleting Hub <[{}]>",id);
         JSONObject jsonErr = new JSONObject();
