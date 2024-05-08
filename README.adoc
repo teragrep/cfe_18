@@ -24,6 +24,38 @@ See the official documentation on https://docs.teragrep.com[docs.teragrep.com].
 . Setup database according to end-user needs
 . Can be deployed using https://tomcat.apache.org/tomcat-9.0-doc/deployer-howto.html[tomcat]/JBoss
 
+== How to run in a container?
+
+Containerized deployment for CFE-18. Requires external database to use. It uses public tomcat docker image (tomcat:8-jre8-temurin-focal)
+
+Expected files are:
+
+* `docker/application.properties`
+* `docker/cfe-18.war`
+* `docker/log4j2.xml` *optional* since it will use default if not provided.
+
+docker/application.properties requires configuring:
+
+* spring.datasource.url = jdbc:mariadb://127.0.0.1:3306/cfe_18
+* spring.datasource.username = username
+* spring.datasource.password = password
+* spring.datasource.driver-class-name = org.mariadb.jdbc.Driver
+
+(Recommended to use MariaDB as database)
+
+
+.Example run command
+[source,console]
+----
+$ docker run -ti  -v ~/git/cfe_18/docker/application.properties:/etc/tomcat/Catalina/localhost/cfe-18/application.properties:ro -v ~/git/cfe_18/docker/log4j2.xml:/etc/tomcat/Catalina/localhost/cfe-18/log4j2.xml:ro  -p 8080:8080 cfe_18_containerized
+----
+where
+
+1. application.properties and log4j2.xml are mounted accordingly.
+2. 8080:8080 are for external and internal ports.
+3. cfe_18_containerized the container name
+
+
 == Contributing
 
 You can involve yourself with our project by https://github.com/teragrep/cfe_18/issues/new/choose[opening an issue] or submitting a pull request.
