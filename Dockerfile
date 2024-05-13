@@ -1,7 +1,7 @@
 # Tomcat image
 FROM tomcat:8-jre8-temurin-focal
 
-COPY target/cfe-18.war ${CATALINA_HOME}/webapps/
+COPY target/cfe_18.war ${CATALINA_HOME}/webapps/
 
 EXPOSE 8080
 
