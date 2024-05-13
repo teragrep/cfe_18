@@ -302,8 +302,9 @@
             <exclude>src/main/webapp/**</exclude>
             <!-- Test -->
             <exclude>src/test/resources/**</exclude>
-            <!-- -->
+            <!-- Docker -->
             <exclude>docker/**</exclude>
+            <exclude>Dockerfile</exclude>
           </excludes>
         </configuration>
       </plugin>
