@@ -30,8 +30,13 @@ Containerized deployment for CFE-18. Requires external database to use. It uses 
 
 Expected files are:
 
-* `docker/application.properties`
-* `docker/log4j2.xml` *optional* since it will use default if not provided.
+`/etc/tomcat/Catalina/localhost/cfe-18/application.properties`
+`/etc/tomcat/Catalina/localhost/cfe-18/log4j2.xml`
+
+Example files for configuration are:
+
+`docker/application.properties`
+`docker/log4j2.xml`
 
 docker/application.properties requires configuring:
 
@@ -46,13 +51,13 @@ docker/application.properties requires configuring:
 .Example run command
 [source,console]
 ----
-$ docker run -ti  -v cfe_18/docker/application.properties:/etc/tomcat/Catalina/localhost/cfe-18/application.properties:ro -v cfe_18/docker/log4j2.xml:/etc/tomcat/Catalina/localhost/cfe-18/log4j2.xml:ro  -p 8080:8080 cfe_18_containerized
+$ docker run -ti  -v docker/application.properties:/etc/tomcat/Catalina/localhost/cfe-18/application.properties:ro -v docker/log4j2.xml:/etc/tomcat/Catalina/localhost/cfe-18/log4j2.xml:ro  -p 8080:8080 ghcr.io/teragrep/cfe_18:latest
 ----
 where
 
 1. application.properties and log4j2.xml are mounted accordingly.
 2. 8080:8080 are for external and internal ports.
-3. cfe_18_containerized the container name
+3. ghcr.io/teragrep/cfe_18:latest image from Githubs image repository
 
 
 == Contributing
