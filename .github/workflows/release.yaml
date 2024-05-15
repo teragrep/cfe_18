@@ -6,8 +6,7 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    permissions:
-      contents: write-all
+    permissions: write-all
     services:
       mariadb:
         image: mariadb:10.5
