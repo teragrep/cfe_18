@@ -95,26 +95,11 @@ public class ApplicationMetaController {
     public ResponseEntity<?> getApplicationMeta(@PathVariable("application") String application) {
         try {
             List<ApplicationMeta> am = applicationMetaMapper.getApplicationMeta(application);
-            if (am.isEmpty()) {
-                throw new Exception("Empty record");
-            } else {
-                return new ResponseEntity<>(am, HttpStatus.OK);
-            }
+            return new ResponseEntity<>(am, HttpStatus.OK);
         } catch(Exception ex){
             JSONObject jsonErr = new JSONObject();
             jsonErr.put("id", 0);
             jsonErr.put("message", "Unexpected error");
-            final Throwable cause = ex.getCause();
-            if (cause instanceof SQLException) {
-                LOGGER.error((cause).getMessage());
-                String state = ((SQLException) cause).getSQLState();
-                if (state.equals("45000")) {
-                    jsonErr.put("message", "Application meta does not exist");
-                }
-            } else if (ex.getMessage().equals("Empty record")) {
-                LOGGER.error(ex.getMessage());
-                jsonErr.put("message", "No records found");
-            }
             return new ResponseEntity<>(jsonErr.toString(), HttpStatus.BAD_REQUEST);
         }
     }
