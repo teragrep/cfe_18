@@ -53,9 +53,9 @@ BEGIN
             RESIGNAL;
         END;
     START TRANSACTION;
-        select a.app,
-               amk.meta_key_name,
-               am.meta_value
+        select a.app                as          application,
+               amk.meta_key_name    as          application_meta_key,
+               am.meta_value        as          application_meta_value
         from cfe_18.application a
                     inner join application_meta am on a.id = am.application_id
                     inner join application_meta_key amk on am.meta_key_id = amk.meta_key_id
