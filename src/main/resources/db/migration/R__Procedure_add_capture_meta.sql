@@ -45,7 +45,7 @@
  */
 use cfe_18;
 DELIMITER //
-CREATE OR REPLACE PROCEDURE add_application_meta(application varchar(48),application_meta_key varchar(1024), application_meta_value varchar(1024))
+CREATE OR REPLACE PROCEDURE add_capture_meta(capture_id int,capture_meta_key varchar(1024), capture_meta_value varchar(1024))
 BEGIN
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
         BEGIN
@@ -54,32 +54,34 @@ BEGIN
         END;
     START TRANSACTION;
     -- check if application exists for metadata
-    if(select id from cfe_18.application where app=application) is null then
+    if(select id from cfe_18.capture_definition where id=capture_id) is null then
         -- standardized JSON error response
-        SELECT JSON_OBJECT('id', null, 'message', 'Application does not exist with given ID') into @app;
-        signal sqlstate '42000' set message_text = @app;
+        SELECT JSON_OBJECT('id', capture_id, 'message', 'Capture does not exist with given ID') into @nocapture;
+        signal sqlstate '42000' set message_text = @nocapture;
     end if;
 
     -- check if similar row exists already to avoid duplication
-    if(select a.id
-        from cfe_18.application a
-                    inner join application_meta am on a.id = am.application_id
-                    inner join application_meta_key amk on am.meta_key_id = amk.meta_key_id
-                     where a.app=application
-                     and am.meta_value=application_meta_value
-                     and amk.meta_key_name=application_meta_key) is null then
+    if(select cd.id
+        from cfe_18.capture_definition cd
+                    inner join capture_meta cm on cd.id = cm.capture_id
+                    inner join capture_meta_key cmk on cm.meta_key_id = cmk.meta_key_id
+                     where cd.id=capture_id
+                     and cm.meta_value=capture_meta_value
+                     and cmk.meta_key_name=capture_meta_key) is null then
     -- insert new record
-    insert into cfe_18.application_meta_key(meta_key_name) values (application_meta_key);
+    insert into cfe_18.capture_meta_key(meta_key_name) values (capture_meta_key);
         select last_insert_id() into @id;
-        insert into cfe_18.application_meta(application_id,meta_key_id,meta_value) values(
-            (select id from cfe_18.application where app=application)
+        insert into cfe_18.capture_meta(capture_id,meta_key_id,meta_value) values(
+            capture_id
             ,@id
-            ,application_meta_value);
-    -- return given application name as signal
-    select application as application;
-    else
-        select a.app as application from cfe_18.application a where a.app=application;
+            ,capture_meta_value);
     end if;
+    -- return given application name and capture_id as signal
+       select a.app as application,
+           cd.id as capture_id
+    from cfe_18.application a
+        inner join capture_definition cd on cd.application_id=a.id
+    where cd.id=capture_id ;
     COMMIT;
 END;
 //

@@ -45,7 +45,7 @@
  */
  use cfe_18;
 DELIMITER //
-CREATE OR REPLACE PROCEDURE retrieve_application_meta(application varchar(48))
+CREATE OR REPLACE PROCEDURE retrieve_capture_meta(capture_id int)
 BEGIN
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
         BEGIN
@@ -53,13 +53,21 @@ BEGIN
             RESIGNAL;
         END;
     START TRANSACTION;
-        select a.app                as          application,
-               amk.meta_key_name    as          application_meta_key,
-               am.meta_value        as          application_meta_value
-        from cfe_18.application a
-                    inner join application_meta am on a.id = am.application_id
-                    inner join application_meta_key amk on am.meta_key_id = amk.meta_key_id
-                     where a.app=application;
+    -- check for existence of capture meta before attempting retrieval. Throws custom error.
+        if(select cm.capture_id from capture_meta cm where cm.capture_id=capture_id)is null then
+            -- standardized JSON error response
+            SELECT JSON_OBJECT('id', capture_id, 'message', 'Capture meta does not exist with given ID') into @nometa;
+            signal sqlstate '42000' set message_text = @nometa;
+        end if;
+        select cd.id                as          capture_id,
+               a.app                as          application,
+               cmk.meta_key_name    as          application_meta_key,
+               cm.meta_value        as          application_meta_value
+        from cfe_18.capture_definition cd
+                    inner join application a on cd.application_id = a.id
+                    inner join capture_meta cm on cd.id = cm.capture_id
+                    inner join capture_meta_key cmk on cm.meta_key_id = cmk.meta_key_id
+                     where cd.id=capture_id;
     COMMIT;
 END;
 //

@@ -55,5 +55,5 @@ create table capture_meta (
   meta_key_id int not null,
   meta_value varchar(1024),
   constraint foreign key (capture_id) references capture_definition(id),
-  constraint  foreign key (meta_key_id) references  application_meta_key(meta_key_id)
+  constraint  foreign key (meta_key_id) references  capture_meta_key(meta_key_id)
 );
