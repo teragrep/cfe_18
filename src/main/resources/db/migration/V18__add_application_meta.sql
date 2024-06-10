@@ -45,15 +45,15 @@
  */
 use cfe_18;
 
-create table application_meta_key (
+create table capture_meta_key (
     meta_key_id int auto_increment primary key,
     meta_key_name varchar(1024)
 );
 
-create table application_meta (
-  application_id int not null,
+create table capture_meta (
+  capture_id int not null,
   meta_key_id int not null,
   meta_value varchar(1024),
-  constraint foreign key (application_id) references application(id),
+  constraint foreign key (capture_id) references capture_definition(id),
   constraint  foreign key (meta_key_id) references  application_meta_key(meta_key_id)
 );
