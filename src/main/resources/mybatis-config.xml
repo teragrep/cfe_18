@@ -11,6 +11,6 @@
         <mapper resource="com/teragrep/cfe18/SinkMapper.xml"/>
         <mapper resource="com/teragrep/cfe18/HostMapper.xml"/>
         <mapper resource="com/teragrep/cfe18/HostMetaMapper.xml"/>
-        <mapper resource="com/teragrep/cfe18/ApplicationMetaMapper.xml"/>
+        <mapper resource="com/teragrep/cfe18/CaptureMetaMapper.xml"/>
     </mappers>
 </configuration>

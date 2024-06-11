@@ -43,19 +43,54 @@
  * Teragrep, the applicable Commercial License may apply to this file if you as
  * a licensee so wish it.
  */
-package com.teragrep.cfe18;
+package com.teragrep.cfe18.handlers.entities;
 
-import com.teragrep.cfe18.handlers.entities.ApplicationMeta;
-import org.apache.ibatis.annotations.Mapper;
+public class CaptureMeta {
 
-import java.util.List;
+    public int capture_id;
+    public String application;
+    public String capture_meta_key;
+    public String capture_meta_value;
 
-@Mapper
-public interface ApplicationMetaMapper {
-     ApplicationMeta addNewApplicationMeta(
-             String application,
-             String application_meta_key,
-             String application_meta_value);
+    public int getCapture_id() {
+        return capture_id;
+    }
 
-     List<ApplicationMeta> getApplicationMeta(String application);
+    public void setCapture_id(int capture_id) {
+        this.capture_id = capture_id;
+    }
+
+    public String getApplication() {
+        return application;
+    }
+
+    public void setApplication(String application) {
+        this.application = application;
+    }
+
+    public String getCapture_meta_key() {
+        return capture_meta_key;
+    }
+
+    public void setCapture_meta_key(String capture_meta_key) {
+        this.capture_meta_key = capture_meta_key;
+    }
+
+    public String getCapture_meta_value() {
+        return capture_meta_value;
+    }
+
+    public void setCapture_meta_value(String capture_meta_value) {
+        this.capture_meta_value = capture_meta_value;
+    }
+
+    @Override
+    public String toString() {
+        return "CaptureMeta{" +
+                "capture_id=" + capture_id +
+                ", application='" + application + '\'' +
+                ", capture_meta_key='" + capture_meta_key + '\'' +
+                ", capture_meta_value='" + capture_meta_value + '\'' +
+                '}';
+    }
 }

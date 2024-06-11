@@ -43,45 +43,19 @@
  * Teragrep, the applicable Commercial License may apply to this file if you as
  * a licensee so wish it.
  */
-package com.teragrep.cfe18.handlers.entities;
+package com.teragrep.cfe18;
 
-public class ApplicationMeta {
+import com.teragrep.cfe18.handlers.entities.CaptureMeta;
+import org.apache.ibatis.annotations.Mapper;
 
-    public String application;
-    public String application_meta_key;
-    public String application_meta_value;
+import java.util.List;
 
+@Mapper
+public interface CaptureMetaMapper {
+     CaptureMeta addNewCaptureMeta(
+             int capture_id,
+             String capture_meta_key,
+             String capture_meta_value);
 
-    public String getApplication() {
-        return application;
-    }
-
-    public void setApplication(String application) {
-        this.application = application;
-    }
-
-    public String getApplication_meta_key() {
-        return application_meta_key;
-    }
-
-    public void setApplication_meta_key(String application_meta_key) {
-        this.application_meta_key = application_meta_key;
-    }
-
-    public String getApplication_meta_value() {
-        return application_meta_value;
-    }
-
-    public void setApplication_meta_value(String application_meta_value) {
-        this.application_meta_value = application_meta_value;
-    }
-
-    @Override
-    public String toString() {
-        return "ApplicationMeta{" +
-                "application='" + application + '\'' +
-                ", application_meta_key='" + application_meta_key + '\'' +
-                ", application_meta_value='" + application_meta_value + '\'' +
-                '}';
-    }
+     List<CaptureMeta> getCaptureMeta(int capture_id);
 }

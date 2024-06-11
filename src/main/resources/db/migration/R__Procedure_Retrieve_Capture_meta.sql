@@ -61,8 +61,8 @@ BEGIN
         end if;
         select cd.id                as          capture_id,
                a.app                as          application,
-               cmk.meta_key_name    as          application_meta_key,
-               cm.meta_value        as          application_meta_value
+               cmk.meta_key_name    as          capture_meta_key,
+               cm.meta_value        as          capture_meta_value
         from cfe_18.capture_definition cd
                     inner join application a on cd.application_id = a.id
                     inner join capture_meta cm on cd.id = cm.capture_id
