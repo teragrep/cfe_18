@@ -77,11 +77,9 @@ BEGIN
             ,capture_meta_value);
     end if;
     -- return given application name and capture_id as signal
-       select a.app as application,
-           cd.id as capture_id
-    from cfe_18.application a
-        inner join capture_definition cd on cd.application_id=a.id
-    where cd.id=capture_id ;
+       select cd.id as capture_id
+       from capture_definition cd
+        where cd.id=capture_id;
     COMMIT;
 END;
 //

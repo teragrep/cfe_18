@@ -203,8 +203,6 @@ public class CaptureMetaControllerTest extends TestSpringBootInformation{
     public void testRetrieveCaptureMeta() throws Exception {
         ArrayList<CaptureMeta> expected = new ArrayList<>();
         CaptureMeta captureMeta = new CaptureMeta();
-        captureMeta.setCapture_id(1);
-        captureMeta.setApplication("relp");
         captureMeta.setCapture_meta_key("relpKey1");
         captureMeta.setCapture_meta_value("relpValue1");
         expected.add(captureMeta);
@@ -212,7 +210,7 @@ public class CaptureMetaControllerTest extends TestSpringBootInformation{
         String json = gson.toJson(expected);
 
         // Asserting get request
-        HttpGet requestGet = new HttpGet("http://localhost:" + port + "/capture/meta/" + expected.get(0).getCapture_id());
+        HttpGet requestGet = new HttpGet("http://localhost:" + port + "/capture/meta/" + 1);
 
         requestGet.setHeader("Authorization", "Bearer " + token);
 

@@ -48,7 +48,6 @@ package com.teragrep.cfe18.handlers.entities;
 public class CaptureMeta {
 
     public int capture_id;
-    public String application;
     public String capture_meta_key;
     public String capture_meta_value;
 
@@ -60,13 +59,6 @@ public class CaptureMeta {
         this.capture_id = capture_id;
     }
 
-    public String getApplication() {
-        return application;
-    }
-
-    public void setApplication(String application) {
-        this.application = application;
-    }
 
     public String getCapture_meta_key() {
         return capture_meta_key;
@@ -88,7 +80,6 @@ public class CaptureMeta {
     public String toString() {
         return "CaptureMeta{" +
                 "capture_id=" + capture_id +
-                ", application='" + application + '\'' +
                 ", capture_meta_key='" + capture_meta_key + '\'' +
                 ", capture_meta_value='" + capture_meta_value + '\'' +
                 '}';
