@@ -59,9 +59,11 @@ BEGIN
             SELECT JSON_OBJECT('id', capture_id, 'message', 'Capture meta does not exist with given ID') into @nometa;
             signal sqlstate '42000' set message_text = @nometa;
         end if;
-        select cmk.meta_key_name    as          capture_meta_key,
+        select cd.id    as          capture_id,
+                cmk.meta_key_name    as          capture_meta_key,
                cm.meta_value        as          capture_meta_value
         from  cfe_18.capture_meta cm
+                    inner join cfe_18.capture_definition cd on cd.id=cm.capture_id
                     inner join cfe_18.capture_meta_key cmk on cm.meta_key_id = cmk.meta_key_id
                      where cm.capture_id=capture_id;
     COMMIT;

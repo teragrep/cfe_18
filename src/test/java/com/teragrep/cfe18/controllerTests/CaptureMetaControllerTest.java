@@ -203,6 +203,7 @@ public class CaptureMetaControllerTest extends TestSpringBootInformation{
     public void testRetrieveCaptureMeta() throws Exception {
         ArrayList<CaptureMeta> expected = new ArrayList<>();
         CaptureMeta captureMeta = new CaptureMeta();
+        captureMeta.setCapture_id(1);
         captureMeta.setCapture_meta_key("relpKey1");
         captureMeta.setCapture_meta_value("relpValue1");
         expected.add(captureMeta);

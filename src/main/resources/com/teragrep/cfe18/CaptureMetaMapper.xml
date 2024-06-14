@@ -9,6 +9,7 @@
         {CALL cfe_18.retrieve_capture_meta(#{param1})}
     </select>
     <resultMap type="com.teragrep.cfe18.handlers.entities.CaptureMeta" id="captureMeta">
+        <result property="capture_id" column="capture_id"/>
         <result property="capture_meta_key" column="capture_meta_key"/>
         <result property="capture_meta_value" column="capture_meta_value"/>
     </resultMap>
