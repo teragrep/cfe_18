@@ -50,6 +50,7 @@ import com.teragrep.cfe18.handlers.entities.*;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
+import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPut;
 import org.apache.http.entity.ContentType;
@@ -330,6 +331,112 @@ public class CaptureMetaControllerTest extends TestSpringBootInformation{
         assertEquals(expected, actual);
     }
 
+    @Test
+    @Order(5)
+    public void testGetAllCaptureMetas() throws Exception {
+        // add another capture meta for capture
+        CaptureMeta captureMeta = new CaptureMeta();
+        captureMeta.setCapture_id(1);
+        captureMeta.setCapture_meta_key("relpKey2");
+        captureMeta.setCapture_meta_value("relpValue2");
 
+        String jsonFileApplication = gson.toJson(captureMeta);
 
+        // forms the json to requestEntity
+        StringEntity requestEntity4 = new StringEntity(
+                String.valueOf(jsonFileApplication),
+                ContentType.APPLICATION_JSON);
+
+        // Creates the request
+        HttpPut request4 = new HttpPut("http://localhost:" + port + "/capture/meta/");
+        // set requestEntity to the put request
+        request4.setEntity(requestEntity4);
+        // Header
+        request4.setHeader("Authorization", "Bearer " + token);
+
+        // Execute inserting another capture meta
+        HttpClientBuilder.create().build().execute(request4);
+
+        // Creating a list of existing capture metas
+        ArrayList<CaptureMeta> expected = new ArrayList<>();
+        CaptureMeta captureMeta2 = new CaptureMeta();
+        captureMeta2.setCapture_id(1);
+        captureMeta2.setCapture_meta_key("relpKey1");
+        captureMeta2.setCapture_meta_value("relpValue1");
+
+        expected.add(captureMeta2);
+        expected.add(captureMeta);
+
+        String json = gson.toJson(expected);
+        // Fetching all capture metas
+        HttpGet requestGet = new HttpGet("http://localhost:" + port + "/capture/meta" );
+
+        requestGet.setHeader("Authorization", "Bearer " + token);
+
+        HttpResponse responseGet = HttpClientBuilder.create().build().execute(requestGet);
+
+        HttpEntity entityGet = responseGet.getEntity();
+
+        String responseStringGet = EntityUtils.toString(entityGet, "UTF-8");
+
+        // Assertions
+        assertThat(
+                responseGet.getStatusLine().getStatusCode(),
+                equalTo(HttpStatus.SC_OK));
+        assertEquals(json, responseStringGet);
+    }
+
+    @Test
+    @Order(6)
+    public void testDeleteCaptureMeta() throws Exception {
+        HttpDelete delete = new HttpDelete("http://localhost:" + port + "/capture/meta/"+1);
+
+        // Header
+        delete.setHeader("Authorization", "Bearer " + token);
+
+        HttpResponse deleteResponse = HttpClientBuilder.create().build().execute(delete);
+
+        HttpEntity entityDelete = deleteResponse.getEntity();
+
+        String responseStringGet = EntityUtils.toString(entityDelete, "UTF-8");
+
+        // Parsin respponse as JSONObject
+        JSONObject responseAsJson = new JSONObject(responseStringGet);
+
+        // Creating string from Json that was given as a response
+        String actual = responseAsJson.get("message").toString();
+
+        // Creating expected message as JSON Object from the data that was sent towards endpoint
+        String expected = "capture meta 1 deleted.";
+
+        assertThat(deleteResponse.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_OK));
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    @Order(7)
+    public void testDeleteNonExistentCaptureMeta() throws Exception {
+        HttpDelete delete = new HttpDelete("http://localhost:" + port + "/capture/meta/"+122);
+
+        // Header
+        delete.setHeader("Authorization", "Bearer " + token);
+
+        HttpResponse deleteResponse = HttpClientBuilder.create().build().execute(delete);
+
+        HttpEntity entityDelete = deleteResponse.getEntity();
+
+        String responseStringGet = EntityUtils.toString(entityDelete, "UTF-8");
+
+        // Parsin respponse as JSONObject
+        JSONObject responseAsJson = new JSONObject(responseStringGet);
+
+        // Creating string from Json that was given as a response
+        String actual = responseAsJson.get("message").toString();
+
+        // Creating expected message as JSON Object from the data that was sent towards endpoint
+        String expected = "Record does not exist";
+
+        assertThat(deleteResponse.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_BAD_REQUEST));
+        assertEquals(expected, actual);
+    }
 }
