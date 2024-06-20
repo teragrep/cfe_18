@@ -54,7 +54,7 @@ BEGIN
         END;
     START TRANSACTION;
     -- check for existence of capture meta before attempting retrieval. Throws custom error.
-        if(select cm.capture_id from capture_meta cm where cm.capture_id=capture_id)is null then
+        if((select count(cm.capture_id) from capture_meta cm where cm.capture_id=capture_id)=0) then
             -- standardized JSON error response
             SELECT JSON_OBJECT('id', capture_id, 'message', 'Capture meta does not exist with given ID') into @nometa;
             signal sqlstate '42000' set message_text = @nometa;

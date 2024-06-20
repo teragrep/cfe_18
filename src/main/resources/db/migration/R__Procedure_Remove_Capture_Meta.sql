@@ -54,16 +54,18 @@ BEGIN
         END;
     START TRANSACTION;
         -- check if metadata exists for capture
-    if(select id from cfe_18.capture_definition where id=capture_id) is null then
+    if((select count(cm.capture_id) from cfe_18.capture_meta cm where cm.capture_id=capture_id)=0)  then
         -- standardized JSON error response
         SELECT JSON_OBJECT('id', capture_id, 'message', 'Meta data does not exist for capture') into @nometa;
-        signal sqlstate '42000' set message_text = @nometa;
+        signal sqlstate '45000' set message_text = @nometa;
     end if;
         delete cm.*, cmk.*
         from cfe_18.capture_meta cm
             inner join cfe_18.capture_meta_key cross join capture_meta_key cmk on cm.meta_key_id = cmk.meta_key_id
         where cm.capture_id=capture_id;
     COMMIT;
+    -- Return capture_id as signal
+    select capture_id as capture_id;
 END;
 //
 DELIMITER ;

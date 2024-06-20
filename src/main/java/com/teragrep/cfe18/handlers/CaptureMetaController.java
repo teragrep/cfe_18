@@ -47,6 +47,7 @@ package com.teragrep.cfe18.handlers;
 
 import com.teragrep.cfe18.CaptureMetaMapper;
 import com.teragrep.cfe18.handlers.entities.CaptureMeta;
+import com.teragrep.cfe18.handlers.entities.Flow;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -59,6 +60,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -150,5 +152,53 @@ public class CaptureMetaController {
             return new ResponseEntity<>("Unexpected error", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
+    @RequestMapping(path = "", method = RequestMethod.GET, produces = "application/json")
+    @Operation(summary = "Fetch all capture metas", description = "Will return empty list if there are no capture metas to fetch")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Capture metas fetched",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = CaptureMeta.class))})
+    })
+    public List<CaptureMeta> getAllCaptureMetas(){
+        return captureMetaMapper.getAllCaptureMetas();
+    }
+
+    // Delete
+    @RequestMapping(path = "/{capture_id}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @Operation(summary = "Delete capture meta")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Capture meta deleted",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = CaptureMeta.class))}),
+            @ApiResponse(responseCode = "400", description = "Capture meta does not exist",
+                    content = @Content),
+            @ApiResponse(responseCode = "500", description = "Internal server error, contact admin", content = @Content)
+    })
+    public ResponseEntity<String> removeCaptureMeta(@PathVariable("capture_id") int capture_id) {
+        LOGGER.info("Deleting Capture meta <[{}]>",capture_id);
+        try {
+            captureMetaMapper.deleteCaptureMeta(capture_id);
+            JSONObject j = new JSONObject();
+            j.put("id", capture_id);
+            j.put("message", "capture meta " + capture_id + " deleted.");
+            return new ResponseEntity<>(j.toString(), HttpStatus.OK);
+        } catch (Exception ex) {
+            JSONObject jsonErr = new JSONObject();
+            jsonErr.put("id", 0);
+            final Throwable cause = ex.getCause();
+            if (cause instanceof SQLException) {
+                LOGGER.error((cause).getMessage());
+                String state = ((SQLException) cause).getSQLState();
+                if (state.equals("45000")) {
+                    jsonErr.put("message", "Record does not exist");
+                }
+                return new ResponseEntity<>(jsonErr.toString(), HttpStatus.BAD_REQUEST);
+            }
+            return new ResponseEntity<>("Unexpected error", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+    }
+
 
 }

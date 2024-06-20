@@ -58,4 +58,9 @@ public interface CaptureMetaMapper {
              String capture_meta_value);
 
      List<CaptureMeta> getCaptureMeta(int capture_id);
+
+     List<CaptureMeta> getAllCaptureMetas();
+
+     CaptureMeta deleteCaptureMeta(int capture_id);
+
 }
