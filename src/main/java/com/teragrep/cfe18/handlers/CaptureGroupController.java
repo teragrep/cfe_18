@@ -94,6 +94,7 @@ public class CaptureGroupController {
     })
     public ResponseEntity<?> getResults(@PathVariable("name") String name, @RequestParam(required = false) Integer version) {
         JSONObject jsonErr = new JSONObject();
+        // Can't be assigned ID since fetch happens through name.
         jsonErr.put("id", 0);
         jsonErr.put("message", "Unexpected error");
         try {
@@ -144,7 +145,7 @@ public class CaptureGroupController {
     public ResponseEntity<String> newCaptureGroup(@RequestBody CaptureGroup newCaptureGroup) {
         LOGGER.info("About to insert <[{}]>",newCaptureGroup);
         JSONObject jsonErr = new JSONObject();
-        jsonErr.put("id", 0);
+        jsonErr.put("id", newCaptureGroup.getCapture_definition_id());
         try {
             CaptureGroup c = captureGroupMapper.addNewCaptureGroup(
                     newCaptureGroup.getCapture_def_group_name(),
@@ -193,10 +194,12 @@ public class CaptureGroupController {
     public ResponseEntity<String> removeCaptureGroup(@PathVariable("name") String name) {
         LOGGER.info("Deleting Capture group <[{}]>", name);
         JSONObject jsonErr = new JSONObject();
+        // Can't be assigned ID since fetch happens through name.
         jsonErr.put("id", 0);
         try {
             captureGroupMapper.deleteCaptureGroup(name);
             JSONObject j = new JSONObject();
+            // Can't be assigned ID since fetch happens through name.
             j.put("id", 0);
             j.put("message", "Capture group " + name + " deleted.");
             return new ResponseEntity<>(j.toString(), HttpStatus.OK);

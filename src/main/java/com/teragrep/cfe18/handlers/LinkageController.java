@@ -103,6 +103,7 @@ public class LinkageController {
             final Throwable cause = ex.getCause();
             if (cause instanceof SQLException) {
                 JSONObject jsonErr = new JSONObject();
+                // Can't be assigned ID since fetch happens through name.
                 jsonErr.put("id", 0);
                 LOGGER.error((cause).getMessage());
                 String state = ((SQLException) cause).getSQLState();

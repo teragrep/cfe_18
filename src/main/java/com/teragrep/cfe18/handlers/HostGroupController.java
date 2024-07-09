@@ -97,6 +97,7 @@ public class HostGroupController {
     })
     public ResponseEntity<?> getResults(@PathVariable("name") String name, @RequestParam(required = false) Integer version) {
         JSONObject jsonErr = new JSONObject();
+        // Can't be assigned ID since fetch happens through name.
         jsonErr.put("id", 0);
         try {
             List<HostGroup> hg = hostGroupMapper.getHostGroupByName(name,version);
@@ -186,6 +187,7 @@ public class HostGroupController {
     public ResponseEntity<String> removeHost(@PathVariable("name") String name) {
         LOGGER.info("Deleting Host Group <[{}]>", name);
         JSONObject jsonErr = new JSONObject();
+        // Can't be assigned ID since fetch happens through name.
         jsonErr.put("id", 0);
         try {
             hostGroupMapper.deleteHostGroup(name);
