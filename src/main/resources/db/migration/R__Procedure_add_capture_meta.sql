@@ -53,7 +53,7 @@ BEGIN
             RESIGNAL;
         END;
     START TRANSACTION;
-    -- check if application exists for metadata
+    -- check if capture exists for metadata
     if(select id from cfe_18.capture_definition where id=capture_id) is null then
         -- standardized JSON error response
         SELECT JSON_OBJECT('id', capture_id, 'message', 'Capture does not exist with given ID') into @nocapture;
@@ -70,10 +70,9 @@ BEGIN
                      and cmk.meta_key_name=capture_meta_key) is null then
     -- insert new record
     insert into cfe_18.capture_meta_key(meta_key_name) values (capture_meta_key);
-        select last_insert_id() into @id;
         insert into cfe_18.capture_meta(capture_id,meta_key_id,meta_value) values(
             capture_id
-            ,@id
+            ,(select last_insert_id())
             ,capture_meta_value);
     end if;
     -- return given application name and capture_id as signal
