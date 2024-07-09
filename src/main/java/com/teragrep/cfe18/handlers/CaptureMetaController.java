@@ -100,7 +100,7 @@ public class CaptureMetaController {
             return new ResponseEntity<>(am, HttpStatus.OK);
         } catch(Exception ex){
             JSONObject jsonErr = new JSONObject();
-            jsonErr.put("id", 0);
+            jsonErr.put("id", capture_id);
             final Throwable cause = ex.getCause();
             if (cause instanceof SQLException) {
                 LOGGER.error((cause).getMessage());
@@ -127,7 +127,7 @@ public class CaptureMetaController {
     public ResponseEntity<String> newCaptureMeta(@RequestBody CaptureMeta newCaptureMeta){
         LOGGER.info("About to insert <[{}]>", newCaptureMeta);
         JSONObject jsonErr = new JSONObject();
-        jsonErr.put("id", 0);
+        jsonErr.put("id", newCaptureMeta.getCapture_id());
         try {
             CaptureMeta cm = captureMetaMapper.addNewCaptureMeta(
                     newCaptureMeta.getCapture_id(),
@@ -185,7 +185,7 @@ public class CaptureMetaController {
             return new ResponseEntity<>(j.toString(), HttpStatus.OK);
         } catch (Exception ex) {
             JSONObject jsonErr = new JSONObject();
-            jsonErr.put("id", 0);
+            jsonErr.put("id", capture_id);
             final Throwable cause = ex.getCause();
             if (cause instanceof SQLException) {
                 LOGGER.error((cause).getMessage());
