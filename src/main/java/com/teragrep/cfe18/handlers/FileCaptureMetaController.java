@@ -100,6 +100,7 @@ public class FileCaptureMetaController {
             return new ResponseEntity<>(fc, HttpStatus.OK);
         } catch (Exception ex) {
             JSONObject jsonErr = new JSONObject();
+            // Can't be assigned ID since fetch happens through name.
             jsonErr.put("id", 0);
             final Throwable cause = ex.getCause();
             if (cause instanceof SQLException) {
@@ -151,9 +152,7 @@ public class FileCaptureMetaController {
                     newFileCaptureMeta.getInputvalue());
             LOGGER.debug("Values returned <[{}]>",n);
             JSONObject jsonObject = new JSONObject();
-            // ID is never returned from database so null should suffice.
-            String v = null;
-            jsonObject.put("id", v);
+            jsonObject.put("id", newFileCaptureMeta.getId());
             jsonObject.put("message", "New processing type created with the name = " + n.getName());
 
             return new ResponseEntity<>(jsonObject.toString(), HttpStatus.CREATED);
@@ -196,6 +195,7 @@ public class FileCaptureMetaController {
     public ResponseEntity<String> removeProcessingType(@PathVariable("name") String name) {
         LOGGER.info("Deleting processing type  <[{}]>",name);
         JSONObject jsonErr = new JSONObject();
+        // Can't be assigned ID since fetch happens through name.
         jsonErr.put("id", 0);
         try {
             fileCaptureMetaMapper.deleteProcessingType(name);
