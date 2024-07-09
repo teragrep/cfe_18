@@ -158,7 +158,7 @@ public class FileCaptureMetaController {
             return new ResponseEntity<>(jsonObject.toString(), HttpStatus.CREATED);
         } catch (RuntimeException ex) {
             JSONObject jsonErr = new JSONObject();
-            jsonErr.put("id", 0);
+            jsonErr.put("id", newFileCaptureMeta.getId());
             LOGGER.error(ex.getMessage());
             if (ex instanceof NullPointerException) {
                 LOGGER.error(ex.getMessage());
@@ -200,6 +200,7 @@ public class FileCaptureMetaController {
         try {
             fileCaptureMetaMapper.deleteProcessingType(name);
             JSONObject j = new JSONObject();
+            // Can't be assigned ID since fetch happens through name.
             j.put("id", 0);
             j.put("message", "Processing type " + name + " deleted.");
             return new ResponseEntity<>(j.toString(), HttpStatus.OK);
