@@ -167,6 +167,10 @@ public class CaptureGroupController {
                     jsonErr.put("message", "Type mismatch between capture group and capture");
                 } else if (state.equals("1644-45000")) {
                     jsonErr.put("message", "Capture does not exist");
+                } else if (state.equals("1062-23000")) {
+                    jsonErr.put("message","Tag already exists within given group");
+                } else {
+                    jsonErr.put("message", "Error unrecognized, contact admin");
                 }
                 return new ResponseEntity<>(jsonErr.toString(), HttpStatus.BAD_REQUEST);
             }
