@@ -9,6 +9,7 @@
         {CALL cfe_18.retrieve_processing_type_by_name(#{name})}
     </select>
     <resultMap type="com.teragrep.cfe18.handlers.entities.FileCaptureMeta" id="processingType">
+        <result property="id" column="id"/>
         <result property="inputtype" column="inputtype"/>
         <result property="template" column="template"/>
         <result property="ruleset" column="ruleset"/>
@@ -31,6 +32,7 @@
         {CALL cfe_18.retrieve_all_processing_types()}
     </select>
     <resultMap id="allProcessingType" type="com.teragrep.cfe18.handlers.entities.FileCaptureMeta">
+        <result property="id" column="id"/>
         <result property="name" column="name"/>
         <result property="inputtype" column="inputtype"/>
         <result property="inputvalue" column="inputvalue"/>

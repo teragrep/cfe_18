@@ -183,7 +183,7 @@ public class FileCaptureMetaControllerTest extends TestSpringBootInformation {
         file1.setRuleset("test");
         file1.setName("test");
         file1.setTemplate("test");
-        file1.setId(null);
+        file1.setId(2);
         String json1 = real.toJson(file1);
 
 
@@ -209,7 +209,7 @@ public class FileCaptureMetaControllerTest extends TestSpringBootInformation {
         file2.setRuleset("ruleset1");
         file2.setName("name1");
         file2.setTemplate("regex.moustache");
-        file2.setId(null);
+        file2.setId(1);
 
         // add the expected values to json
         expected.add(file2);

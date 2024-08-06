@@ -52,7 +52,8 @@ BEGIN
             ROLLBACK;
             RESIGNAL;
         end;
-    select pt.type_name                 as name,
+    select pt.id                        as id,
+           pt.type_name                 as name,
            i.inputtype                  as inputtype,
            coalesce(r.regex, n.newline) as inputvalue,
            r2.rule                      as ruleset,

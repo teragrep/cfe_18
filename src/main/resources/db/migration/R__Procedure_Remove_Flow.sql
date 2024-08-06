@@ -57,8 +57,6 @@ BEGIN
         SELECT JSON_OBJECT('id', null, 'message', 'Flow does not exist') into @f;
         signal sqlstate '45000' set message_text = @f;
     end if;
-    select id into @FlowId from flow.flows where name = flowname;
-
     delete from flow.flows where name = flowname;
     COMMIT;
 end;
