@@ -12,12 +12,8 @@
     <script-file value="$PROJECT_DIR$/src/main/resources/db/migration/V10__Trigger_duplicate_host.sql" />
     <script-file value="$PROJECT_DIR$/src/main/resources/db/migration/V11__Trigger_duplicate_tag.sql" />
     <script-file value="$PROJECT_DIR$/src/main/resources/db/migration/V12__Trigger_duplicate_host_g_x_log_g.sql" />
-    <script-file value="$PROJECT_DIR$/src/main/resources/db/migration/V13__updateRestrictTriggerCapture.sql" />
     <script-file value="$PROJECT_DIR$/src/main/resources/db/migration/V17__updateRestrictTriggerHostXCapture.sql" />
-    <script-file value="$PROJECT_DIR$/src/main/resources/db/migration/V16__updateRestrictTriggerHostGroup.sql" />
-    <script-file value="$PROJECT_DIR$/src/main/resources/db/migration/V15__updateRestrictTriggerHost.sql" />
     <script-file value="$PROJECT_DIR$/src/main/resources/db/migration/V14__updateRestrictTriggerCaptureGroup.sql" />
-    <script-file value="$PROJECT_DIR$/src/main/resources/db/migration/V18__HostPrimaryKey.sql" />
     <script-file value="$PROJECT_DIR$/src/main/resources/db/migration/R__Procedure_add_FileCaptureMeta.sql" />
     <script-file value="$PROJECT_DIR$/src/main/resources/db/migration/R__Procedure_add_host_group.sql" />
     <script-file value="$PROJECT_DIR$/src/main/resources/db/migration/R__Procedure_add_g_x_g.sql" />
@@ -70,8 +66,13 @@
     <script-file value="$PROJECT_DIR$/src/main/resources/db/migration/R__Procedure_Remove_Storage.sql" />
     <script-file value="$PROJECT_DIR$/src/main/resources/db/migration/R__Procedure_Remove_Flow_Storage.sql" />
     <script-file value="$PROJECT_DIR$/src/main/resources/db/migration/R__Procedure_Remove_Capture_Storage.sql" />
+    <script-file value="$PROJECT_DIR$/src/main/resources/db/migration/V18__add_application_meta.sql" />
+    <script-file value="$PROJECT_DIR$/src/main/resources/db/migration/R__Procedure_Retrieve_Capture_meta.sql" />
+    <script-file value="$PROJECT_DIR$/src/main/resources/db/migration/R__Procedure_add_capture_meta.sql" />
+    <script-file value="$PROJECT_DIR$/src/main/resources/db/migration/R__Procedure_Remove_Capture_Meta.sql" />
+    <script-file value="$PROJECT_DIR$/src/main/resources/db/migration/R__Procedure_Retrieve_All_Capture_metas.sql" />
     <script-mode>FILE</script-mode>
-    <data-source id="4ca053e2-bcb1-4dbb-bb2d-719dc30f70f1" namespace="schema/&quot;cfe_18&quot;" />
+    <data-source id="75d30341-17bd-4dce-8efc-451abfa760eb" />
     <method v="2" />
   </configuration>
 </component>
