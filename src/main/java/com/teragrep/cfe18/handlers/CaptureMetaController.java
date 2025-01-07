@@ -47,7 +47,6 @@ package com.teragrep.cfe18.handlers;
 
 import com.teragrep.cfe18.CaptureMetaMapper;
 import com.teragrep.cfe18.handlers.entities.CaptureMeta;
-import com.teragrep.cfe18.handlers.entities.CaptureRelp;
 import com.teragrep.cfe18.handlers.entities.Flow;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -201,35 +200,5 @@ public class CaptureMetaController {
 
     }
 
-
-    // Key value fetch
-    @RequestMapping(path="/{key}/{value}",method= RequestMethod.GET, produces="application/json")
-    @Operation(summary = "Fetch capture definitions by key and value")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Found the capture definitions",
-                    content = {@Content(mediaType = "application/json",
-                            schema = @Schema(implementation = CaptureMeta.class))}),
-            @ApiResponse(responseCode = "400", description = "Capture meta key or value does not exist",
-                    content = @Content)
-    })
-    public ResponseEntity<?> getApplicationMetaKeyValue(@PathVariable("key") String key, @PathVariable("value") String value) {
-        try {
-            // Using CaptureRelp is sufficient here since we are only returning capture definition details.
-            List<CaptureRelp> am = captureMetaMapper.getCaptureMetaByKeyValue(key,value);
-            return new ResponseEntity<>(am, HttpStatus.OK);
-        } catch(Exception ex){
-            JSONObject jsonErr = new JSONObject();
-            final Throwable cause = ex.getCause();
-            if (cause instanceof SQLException) {
-                LOGGER.error((cause).getMessage());
-                String state = ((SQLException) cause).getSQLState();
-                if (state.equals("42000")) {
-                    jsonErr.put("message", "Capture meta KEY or VALUE does not exist with given parameters");
-                    return new ResponseEntity<>(jsonErr.toString(), HttpStatus.BAD_REQUEST);
-                }
-            }
-            return new ResponseEntity<>("Unexpected error", HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
 
 }

@@ -388,97 +388,8 @@ public class CaptureMetaControllerTest extends TestSpringBootInformation{
         assertEquals(json, responseStringGet);
     }
 
-
     @Test
     @Order(6)
-    public void testCaptureMetaKeyValue() {
-        // expected capture
-        ArrayList<CaptureRelp> expected = new ArrayList<>();
-        CaptureRelp captureRelp = new CaptureRelp();
-        captureRelp.setId(1);
-        captureRelp.setTag("relpTag");
-        captureRelp.setApplication("relp");
-        captureRelp.setIndex("audit_relp");
-        captureRelp.setSource_type("relpsource1");
-        expected.add(captureRelp);
-        String jsonFile = gson.toJson(expected);
-
-        // Fetching capture definition via key value pair from capture meta
-        HttpGet requestGet = new HttpGet("http://localhost:" + port + "/capture/meta/relpKey2/relpValue2");
-
-        requestGet.setHeader("Authorization", "Bearer " + token);
-
-        HttpResponse responseGet = Assertions.assertDoesNotThrow(() ->  HttpClientBuilder.create().build().execute(requestGet));
-
-        HttpEntity entityGet = responseGet.getEntity();
-
-        String responseStringGet = Assertions.assertDoesNotThrow(() ->  EntityUtils.toString(entityGet, "UTF-8"));
-
-        // Assertions
-        assertEquals(jsonFile, responseStringGet);
-        assertThat(
-                responseGet.getStatusLine().getStatusCode(),
-                equalTo(HttpStatus.SC_OK));
-
-    }
-    @Test
-    @Order(7)
-    public void testCaptureMetaKeyValueNoKey() {
-        // Fetching capture definition via key value pair from capture meta
-        HttpGet requestGet = new HttpGet("http://localhost:" + port + "/capture/meta/missingKey/relpValue2");
-
-        requestGet.setHeader("Authorization", "Bearer " + token);
-
-        HttpResponse responseGet = Assertions.assertDoesNotThrow(() ->  HttpClientBuilder.create().build().execute(requestGet));
-
-        HttpEntity entityGet = responseGet.getEntity();
-
-        String responseStringGet = Assertions.assertDoesNotThrow(() ->  EntityUtils.toString(entityGet, "UTF-8"));
-
-        // Parsin respponse as JSONObject
-        JSONObject responseAsJson = Assertions.assertDoesNotThrow(() ->  new JSONObject(responseStringGet));
-
-        // Creating string from Json that was given as a response
-        String actual = Assertions.assertDoesNotThrow(() ->  responseAsJson.get("message").toString());
-
-        String expected = "Capture meta KEY or VALUE does not exist with given parameters";
-        // Assertions
-        assertEquals(expected, actual);
-        assertThat(
-                responseGet.getStatusLine().getStatusCode(),
-                equalTo(HttpStatus.SC_BAD_REQUEST));
-
-    }
-    @Test
-    @Order(8)
-    public void testCaptureMetaKeyValueNoValue() {
-        // Fetching capture definition via key value pair from capture meta
-        HttpGet requestGet = new HttpGet("http://localhost:" + port + "/capture/meta/relpKey2/missingValue");
-
-        requestGet.setHeader("Authorization", "Bearer " + token);
-
-        HttpResponse responseGet = Assertions.assertDoesNotThrow(() ->  HttpClientBuilder.create().build().execute(requestGet));
-
-        HttpEntity entityGet = responseGet.getEntity();
-
-        String responseStringGet = Assertions.assertDoesNotThrow(() ->  EntityUtils.toString(entityGet, "UTF-8"));
-
-        // Parsin respponse as JSONObject
-        JSONObject responseAsJson = Assertions.assertDoesNotThrow(() ->  new JSONObject(responseStringGet));
-
-        // Creating string from Json that was given as a response
-        String actual = Assertions.assertDoesNotThrow(() ->  responseAsJson.get("message").toString());
-
-        String expected = "Capture meta KEY or VALUE does not exist with given parameters";
-        // Assertions
-        assertEquals(expected, actual);
-        assertThat(
-                responseGet.getStatusLine().getStatusCode(),
-                equalTo(HttpStatus.SC_BAD_REQUEST));
-
-    }
-    @Test
-    @Order(9)
     public void testDeleteCaptureMeta()   {
         HttpDelete delete = new HttpDelete("http://localhost:" + port + "/capture/meta/"+1);
 
@@ -505,7 +416,7 @@ public class CaptureMetaControllerTest extends TestSpringBootInformation{
     }
 
     @Test
-    @Order(10)
+    @Order(7)
     public void testDeleteNonExistentCaptureMeta()   {
         HttpDelete delete = new HttpDelete("http://localhost:" + port + "/capture/meta/"+122);
 
@@ -530,5 +441,4 @@ public class CaptureMetaControllerTest extends TestSpringBootInformation{
         assertThat(deleteResponse.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_BAD_REQUEST));
         assertEquals(expected, actual);
     }
-
 }
