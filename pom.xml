@@ -305,6 +305,7 @@
             <!-- Docker -->
             <exclude>docker/**</exclude>
             <exclude>Dockerfile</exclude>
+            <exclude>tomcatContainerImage/</exclude>
           </excludes>
         </configuration>
       </plugin>
