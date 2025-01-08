@@ -24,8 +24,6 @@ RUN tar xf apache-tomcat-${TOMCAT_VERSION}.tar.gz -C /opt/tomcat
 # Tomcat ownership
 RUN chown -R tomcat: /opt/tomcat/*
 
-# Make files executable
-
 EXPOSE 8080
 # Start with Catalina
 CMD ["bin/catalina.sh","run"]
