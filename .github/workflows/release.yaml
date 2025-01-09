@@ -119,7 +119,7 @@ jobs:
       - name: Build and push Docker image
         uses: docker/build-push-action@v5
         with:
-          file: tomcatContainerImage/Dockerfile
+          file: ./tomcatContainerImage/Dockerfile
           context: .
           push: true
           tags: ${{ steps.meta.outputs.tags }}
