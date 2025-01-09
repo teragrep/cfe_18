@@ -6,7 +6,7 @@ on:
 env:
   REGISTRY: ghcr.io
   IMAGE_NAME: ${{ github.repository }}
-  TOMCAT: teragrep/tomcatbasecfe18
+  TOMCAT: ${{ github.repository }}/tomcatbasecfe18
 
 jobs:
   build-and-push-image:
