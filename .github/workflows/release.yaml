@@ -6,6 +6,7 @@ on:
 env:
   REGISTRY: ghcr.io
   IMAGE_NAME: ${{ github.repository }}
+  TOMCAT: tomcatbase
 
 jobs:
   build-and-push-image:
@@ -117,7 +118,7 @@ jobs:
         id: meta
         uses: docker/metadata-action@v5
         with:
-          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          images: ${{ env.REGISTRY }}/${{ env.TOMCAT }}
 
       - name: Build and push Docker image
         uses: docker/build-push-action@v5
@@ -126,5 +127,7 @@ jobs:
           file: tomcatContainerImage/Dockerfile
           push: true
           tags: ${{ steps.meta.outputs.tags }}
-          labels: ${{ steps.meta.outputs.labels }}
+          labels: |
+            org.opencontainers.image.description=${{ env.TOMCAT }}
+            org.opencontainers.image.title=tomcatbase
 
