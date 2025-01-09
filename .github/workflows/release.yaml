@@ -6,7 +6,7 @@ on:
 env:
   REGISTRY: ghcr.io
   IMAGE_NAME: ${{ github.repository }}
-  TOMCAT: tomcatbase
+  TOMCAT: tomcatbasecfe18
 
 jobs:
   build-and-push-image:
@@ -129,5 +129,5 @@ jobs:
           tags: ${{ steps.meta.outputs.tags }}
           labels: |
             org.opencontainers.image.description=${{ env.TOMCAT }}
-            org.opencontainers.image.title=tomcatbase
+            org.opencontainers.image.title=${{ env.TOMCAT }}
 
