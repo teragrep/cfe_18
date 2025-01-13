@@ -111,7 +111,7 @@ public class CaptureController {
             }
         } catch (Exception ex) {
             JSONObject jsonErr = new JSONObject();
-            jsonErr.put("id", 0);
+            jsonErr.put("id", id);
             final Throwable cause = ex.getCause();
             if (cause instanceof SQLException) {
                 LOGGER.error((cause).getMessage());
@@ -149,7 +149,7 @@ public class CaptureController {
             }
         } catch (Exception ex) {
             JSONObject jsonErr = new JSONObject();
-            jsonErr.put("id", 0);
+            jsonErr.put("id", id);
             final Throwable cause = ex.getCause();
             if (cause instanceof SQLException) {
                 LOGGER.error((cause).getMessage());
