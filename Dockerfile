@@ -1,5 +1,5 @@
 # STAGE 0
-FROM rockylinux:9 as BASE
+FROM rockylinux:9 as base
 
 # Rocky linux 9 does not come with java at all. Wget for downloading package
 RUN dnf update -y && dnf install wget java-11-openjdk-headless -y && dnf clean all
@@ -27,7 +27,7 @@ RUN chown -R tomcat: /opt/tomcat/*
 
 # STAGE 1
 # Tomcat image
-FROM BASE
+FROM base
 
 COPY target/cfe_18.war ${CATALINA_HOME}/webapps/
 
