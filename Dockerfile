@@ -1,10 +1,12 @@
 # STAGE 0
-FROM rockylinux:9 as base
+FROM rockylinux:9 AS base
 
 # Rocky linux 9 does not come with java at all. Wget for downloading package
 RUN dnf update -y && dnf install wget java-11-openjdk-headless -y && dnf clean all
 # Tomcat user
 RUN useradd -r -m -U -d /opt/tomcat -s /bin/false tomcat
+
+USER tomcat
 
 ENV TOMCAT_MAJOR 9
 ENV TOMCAT_VERSION 9.0.98
@@ -13,10 +15,10 @@ RUN mkdir -p "${CATALINA_HOME}"
 WORKDIR ${CATALINA_HOME}
 
 # WGET and verify
-RUN wget -cq https://downloads.apache.org/tomcat/tomcat-${TOMCAT_MAJOR}/v${TOMCAT_VERSION}/KEYS
+RUN wget -cq https://archive.apache.org/dist/tomcat/tomcat-${TOMCAT_MAJOR}/v${TOMCAT_VERSION}/KEYS
 RUN gpg2 --import KEYS
-RUN wget -cq https://downloads.apache.org/tomcat/tomcat-${TOMCAT_MAJOR}/v${TOMCAT_VERSION}/bin/apache-tomcat-${TOMCAT_VERSION}.tar.gz
-RUN wget -cq https://downloads.apache.org/tomcat/tomcat-${TOMCAT_MAJOR}/v${TOMCAT_VERSION}/bin/apache-tomcat-${TOMCAT_VERSION}.tar.gz.asc
+RUN wget -cq https://archive.apache.org/dist/tomcat/tomcat-${TOMCAT_MAJOR}/v${TOMCAT_VERSION}/bin/apache-tomcat-${TOMCAT_VERSION}.tar.gz
+RUN wget -cq https://archive.apache.org/dist/tomcat/tomcat-${TOMCAT_MAJOR}/v${TOMCAT_VERSION}/bin/apache-tomcat-${TOMCAT_VERSION}.tar.gz.asc
 RUN gpg2 --verify ${CATALINA_HOME}/apache-tomcat-${TOMCAT_VERSION}.tar.gz.asc ${CATALINA_HOME}/apache-tomcat-${TOMCAT_VERSION}.tar.gz
 
 # install tomcat
