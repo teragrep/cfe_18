@@ -96,11 +96,11 @@ public class HubController {
                     content = @Content),
             @ApiResponse(responseCode = "500", description = "Internal server error, contact admin", content = @Content)
     })
-    public ResponseEntity<?> getHubById(@PathVariable("hub_id") int hub_id) {
+    public ResponseEntity<?> getHubById(@PathVariable("hub_id") int hub_id, @RequestParam(required = false) Integer version) {
         JSONObject jsonErr = new JSONObject();
         jsonErr.put("id", hub_id);
         try {
-            Hub h = hubMapper.getHubById(hub_id);
+            Hub h = hubMapper.getHubById(hub_id,version);
             return new ResponseEntity<>(h, HttpStatus.OK);
         } catch (Exception ex) {
             final Throwable cause = ex.getCause();
@@ -125,8 +125,8 @@ public class HubController {
                     content = {@Content(mediaType = "application/json",
                             schema = @Schema(implementation = Hub.class))})
     })
-    public List<Hub> getAllHub() {
-        return hubMapper.getAllHub();
+    public List<Hub> getAllHub(@RequestParam(required = false) Integer version) {
+        return hubMapper.getAllHub(version);
     }
 
 

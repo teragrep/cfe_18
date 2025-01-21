@@ -154,8 +154,9 @@ public class ProcedureProcessingTypeTest extends DBUnitbase {
     Checks if the values inserted from XML correspond to the values fetch via procedure call.
      */
     public void testProcessingTypeRetrieveByName() throws Exception {
-        CallableStatement stmnt = conn.prepareCall("{CALL cfe_18.retrieve_processing_type_by_name(?)}");
+        CallableStatement stmnt = conn.prepareCall("{CALL cfe_18.retrieve_processing_type_by_name(?,?)}");
         stmnt.setString(1, "name1");
+        stmnt.setString(2, null);
         ResultSet rs = stmnt.executeQuery();
         rs.next();
         Assertions.assertEquals("RulesAreMadeToBeBroken", rs.getString("ruleset"));

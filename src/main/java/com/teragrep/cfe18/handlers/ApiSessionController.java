@@ -43,24 +43,35 @@
  * Teragrep, the applicable Commercial License may apply to this file if you as
  * a licensee so wish it.
  */
-package com.teragrep.cfe18;
+package com.teragrep.cfe18.handlers;
 
-import com.teragrep.cfe18.handlers.entities.HostGroup;
-import org.apache.ibatis.annotations.Mapper;
+import com.teragrep.cfe18.ApiSessionMapper;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import org.mybatis.spring.SqlSessionTemplate;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
+import javax.sql.DataSource;
 
-@Mapper
-public interface HostGroupMapper {
+@RestController
+@RequestMapping(path="/version")
+@SecurityRequirement(name="api")
+public class ApiSessionController {
 
-    List<HostGroup> getHostGroupByName(String host_group_name,Integer version);
+    @Autowired
+    DataSource dataSource;
 
-    HostGroup addNewHostGroup(
-            int host_id,
-            String host_group_name
-    );
+    @Autowired
+    SqlSessionTemplate sqlSessionTemplate;
 
-    List<HostGroup> getAllHostGroup(Integer version);
+    @Autowired
+    ApiSessionMapper apiSessionMapper;
 
-    HostGroup deleteHostGroup(String name);
+    @RequestMapping(path = "", method = RequestMethod.GET)
+    public int version(){
+        return apiSessionMapper.getSession();
+    }
+
 }

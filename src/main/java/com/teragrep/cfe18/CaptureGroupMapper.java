@@ -53,14 +53,14 @@ import java.util.List;
 @Mapper
 public interface CaptureGroupMapper {
 
-    List<CaptureGroup> getCaptureGroupByName(String capture_def_group_name);
+    List<CaptureGroup> getCaptureGroupByName(String capture_def_group_name,Integer version);
 
     CaptureGroup addNewCaptureGroup(
             String capture_def_group_name,
             Integer capture_definition_id
     );
 
-    List<CaptureGroup> getAllCaptureGroup();
+    List<CaptureGroup> getAllCaptureGroup(Integer version);
 
     CaptureGroup deleteCaptureGroup(String name);
 }

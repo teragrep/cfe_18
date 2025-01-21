@@ -55,7 +55,7 @@ import java.util.List;
 public interface FlowMapper {
     Flow addNewFlow(String name);
 
-    List<Flow> getAllFlow();
+    List<Flow> getAllFlow(Integer version);
 
     Flow deleteFlow(String name);
 

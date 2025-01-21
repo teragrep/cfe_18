@@ -58,9 +58,9 @@ public interface SinkMapper {
             String port,
             String flow);
 
-    Sink getSinkById(int Id);
+    Sink getSinkById(int Id,Integer version);
 
-    List<Sink> getAllSinks();
+    List<Sink> getAllSinks(Integer version);
 
     Sink deleteSinkById(int id);
 }

@@ -54,9 +54,9 @@ import java.util.List;
 @Mapper
 public interface HostMapper {
 
-    HostFile getHostFileById(int host_meta_id);
+    HostFile getHostFileById(int host_meta_id,Integer version);
 
-    HostRelp getHostRelpById(int host_meta_id);
+    HostRelp getHostRelpById(int host_meta_id,Integer version);
 
 
     HostFile addHostFile(
@@ -68,7 +68,7 @@ public interface HostMapper {
             String md5,
             String FqHost);
 
-    List<HostFile> getAllHost();
+    List<HostFile> getAllHost(Integer version);
 
     HostFile deleteHost(int host_id);
 

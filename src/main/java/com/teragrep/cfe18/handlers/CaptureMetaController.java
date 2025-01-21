@@ -94,9 +94,9 @@ public class CaptureMetaController {
             @ApiResponse(responseCode = "400", description = "Capture meta does not exist",
                     content = @Content)
     })
-    public ResponseEntity<?> getApplicationMeta(@PathVariable("capture_id") int capture_id) {
+    public ResponseEntity<?> getApplicationMeta(@PathVariable("capture_id") int capture_id, @RequestParam(required = false) Integer version) {
         try {
-            List<CaptureMeta> am = captureMetaMapper.getCaptureMeta(capture_id);
+            List<CaptureMeta> am = captureMetaMapper.getCaptureMeta(capture_id,version);
             return new ResponseEntity<>(am, HttpStatus.OK);
         } catch(Exception ex){
             JSONObject jsonErr = new JSONObject();
@@ -160,8 +160,8 @@ public class CaptureMetaController {
                     content = {@Content(mediaType = "application/json",
                             schema = @Schema(implementation = CaptureMeta.class))})
     })
-    public List<CaptureMeta> getAllCaptureMetas(){
-        return captureMetaMapper.getAllCaptureMetas();
+    public List<CaptureMeta> getAllCaptureMetas(@RequestParam(required = false) Integer version){
+        return captureMetaMapper.getAllCaptureMetas(version);
     }
 
     // Delete

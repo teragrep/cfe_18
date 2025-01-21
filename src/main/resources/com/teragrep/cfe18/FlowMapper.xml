@@ -17,7 +17,7 @@
 
     <!-- Get ALL Flows -->
     <select id="getAllFlow" resultMap="allFlow" statementType="CALLABLE">
-        {CALL flow.retrieve_all_flows()}
+        {CALL flow.retrieve_all_flows(#{param1})}
     </select>
     <resultMap id="allFlow" type="com.teragrep.cfe18.handlers.entities.Flow">
         <result property="id" column="id"/>

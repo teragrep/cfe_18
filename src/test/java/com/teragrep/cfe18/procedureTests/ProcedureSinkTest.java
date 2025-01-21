@@ -100,8 +100,9 @@ public class ProcedureSinkTest extends DBUnitbase {
     Goal is to receive correct values from retrieve_sink_by_id procedure
      */
     public void testSinkRetrieveById() throws Exception {
-        CallableStatement stmnt = conn.prepareCall("{CALL flow.retrieve_sink_by_id(?)}");
+        CallableStatement stmnt = conn.prepareCall("{CALL flow.retrieve_sink_by_id(?,?)}");
         stmnt.setString(1, "1");
+        stmnt.setString(2, null);
         ResultSet rs = stmnt.executeQuery();
         rs.next();
         Assertions.assertEquals("ip11", rs.getString("ip"));

@@ -96,9 +96,9 @@ public class LinkageController {
                     content = @Content),
             @ApiResponse(responseCode = "500", description = "Internal server error, contact admin", content = @Content)
     })
-    public ResponseEntity<?> getLinkage(@PathVariable("name") String name) {
+    public ResponseEntity<?> getLinkage(@PathVariable("name") String name, @RequestParam(required = false) Integer version) {
         try {
-            List<Linkage> l = linkageMapper.getLinkageByName(name);
+            List<Linkage> l = linkageMapper.getLinkageByName(name,version);
             return new ResponseEntity<>(l, HttpStatus.OK);
         } catch (Exception ex) {
             final Throwable cause = ex.getCause();
@@ -125,8 +125,8 @@ public class LinkageController {
                     content = {@Content(mediaType = "application/json",
                             schema = @Schema(implementation = Linkage.class))})
     })
-    public List<Linkage> getAllLinkage() {
-        return linkageMapper.getAllLinkage();
+    public List<Linkage> getAllLinkage(@RequestParam(required = false) Integer version) {
+        return linkageMapper.getAllLinkage(version);
     }
 
     // add new g_x_g

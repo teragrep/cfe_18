@@ -123,8 +123,9 @@ public class ProcedureGxGTest extends DBUnitbase {
  */
 
     public void testProcedureGxGRetrieveByCapture() throws Exception {
-        CallableStatement stmnt = conn.prepareCall("{CALL cfe_18.retrieve_g_x_g_details(?)}");
+        CallableStatement stmnt = conn.prepareCall("{CALL cfe_18.retrieve_g_x_g_details(?,?)}");
         stmnt.setString(1, "capturegroup1");
+        stmnt.setString(2, null);
         ResultSet rs = stmnt.executeQuery();
         rs.next(); // Forward to next
         Assertions.assertEquals("capturegroup1", rs.getString("capture_name"));
@@ -140,8 +141,9 @@ public class ProcedureGxGTest extends DBUnitbase {
 
      */
     public void testProcedureGxGRetrieveByHost() throws Exception {
-        CallableStatement stmnt = conn.prepareCall("{CALL cfe_18.retrieve_g_x_g_details(?)}");
+        CallableStatement stmnt = conn.prepareCall("{CALL cfe_18.retrieve_g_x_g_details(?,?)}");
         stmnt.setString(1, "host_group_1");
+        stmnt.setString(2, null);
         ResultSet rs = stmnt.executeQuery();
         rs.next(); // Forward to next
         Assertions.assertEquals("capturegroup1", rs.getString("capture_name"));

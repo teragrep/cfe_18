@@ -97,9 +97,10 @@ public class StorageController {
                     content = @Content),
             @ApiResponse(responseCode = "500", description = "Internal server error, contact admin", content = @Content)
     })
-    public ResponseEntity<?> getStoragesByFlow(@PathVariable String flow) {
+    public ResponseEntity<?> getStoragesByFlow(@PathVariable String flow, @RequestParam(required = false) Integer version) {
         try {
-            List<FlowStorage> fs = storageMapper.retrieveFlowStorages(flow);
+            List<FlowStorage> fs = storageMapper.retrieveFlowStorages(flow
+            ,version);
             return new ResponseEntity<>(fs, HttpStatus.OK);
         } catch (Exception ex) {
 
@@ -126,8 +127,8 @@ public class StorageController {
                     content = {@Content(mediaType = "application/json",
                             schema = @Schema(implementation = FlowStorage.class))})
     })
-    public List<FlowStorage> getAllFlowStorages() {
-        return storageMapper.getAllFlowStorage();
+    public List<FlowStorage> getAllFlowStorages(@RequestParam(required = false) Integer version) {
+        return storageMapper.getAllFlowStorage(version);
     }
 
     // Fetch capture storages
@@ -141,9 +142,9 @@ public class StorageController {
                     content = @Content),
             @ApiResponse(responseCode = "500", description = "Internal server error, contact admin", content = @Content)
     })
-    public ResponseEntity<?> getStoragesByCaptureID(@PathVariable int capture_id) {
+    public ResponseEntity<?> getStoragesByCaptureID(@PathVariable int capture_id, @RequestParam(required = false) Integer version) {
         try {
-            List<CaptureStorage> cs = storageMapper.retrieveCaptureStorages(capture_id);
+            List<CaptureStorage> cs = storageMapper.retrieveCaptureStorages(capture_id,version);
             return new ResponseEntity<>(cs, HttpStatus.OK);
         } catch (Exception ex) {
             JSONObject jsonErr = new JSONObject();
@@ -169,8 +170,8 @@ public class StorageController {
                     content = {@Content(mediaType = "application/json",
                             schema = @Schema(implementation = CaptureStorage.class))})
     })
-    public List<CaptureStorage> getAllCaptureStorages() {
-        return storageMapper.getAllCaptureStorage();
+    public List<CaptureStorage> getAllCaptureStorages(@RequestParam(required = false) Integer version) {
+        return storageMapper.getAllCaptureStorage(version);
     }
 
 
@@ -182,8 +183,8 @@ public class StorageController {
                     content = {@Content(mediaType = "application/json",
                             schema = @Schema(implementation = Storage.class))})
     })
-    public List<Storage> getStorages() {
-        return storageMapper.getStorages();
+    public List<Storage> getStorages(@RequestParam(required = false) Integer version) {
+        return storageMapper.getStorages(version);
     }
 
 

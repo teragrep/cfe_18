@@ -191,8 +191,9 @@ public class ProcedureHostMetaFileTest extends DBUnitbase {
     public void testHostMetaRetrieve() throws Exception {
         List<String> IpList = new ArrayList<>();
         List<String> InterfaceList = new ArrayList<>();
-        CallableStatement stmnt = conn.prepareCall("{CALL cfe_03.retrieve_host_meta(?)}");
+        CallableStatement stmnt = conn.prepareCall("{CALL cfe_03.retrieve_host_meta(?,?)}");
         stmnt.setInt(1, 1);
+        stmnt.setString(2, null);
         ResultSet rs = stmnt.executeQuery();
         while (rs.next()) {
             IpList.add(rs.getString("ip_address"));
@@ -204,16 +205,17 @@ public class ProcedureHostMetaFileTest extends DBUnitbase {
             Assertions.assertEquals("Linux1", rs.getString("os"));
             Assertions.assertEquals("host1", rs.getString("hostname"));
         }
-        Assertions.assertEquals(Arrays.asList("ip1", "ip2", "ip3", "ip1", "ip2", "ip3"), IpList);
-        Assertions.assertEquals(Arrays.asList("ens192", "ens192", "ens192", "ens256", "ens256", "ens256"), InterfaceList);
+        Assertions.assertEquals(Arrays.asList("ip1", "ip1", "ip2", "ip2", "ip3", "ip3"), IpList);
+        Assertions.assertEquals(Arrays.asList("ens192", "ens256", "ens192", "ens256", "ens192", "ens256"), InterfaceList);
     }
 
     /*
     Testi millä tarkastetaan cfe hostin palautus missä host_meta_id tulee mukana. Testidatan vuoksi hostin testi täälä.
 */
     public void testProcedureRetrieveCfeHost() throws Exception {
-        CallableStatement stmnt = conn.prepareCall("{CALL cfe_00.retrieve_host_details(?)}");
+        CallableStatement stmnt = conn.prepareCall("{CALL cfe_00.retrieve_host_details(?,?)}");
         stmnt.setInt(1, 2);
+        stmnt.setString(2, null);
         ResultSet rs = stmnt.executeQuery();
         rs.next();
         Assertions.assertEquals(2, rs.getInt("host_id")); // host_id

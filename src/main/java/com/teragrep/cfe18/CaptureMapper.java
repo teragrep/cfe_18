@@ -53,9 +53,9 @@ import java.util.List;
 
 @Mapper
 public interface CaptureMapper {
-    CaptureFile getCaptureFileById(int id);
+    CaptureFile getCaptureFileById(int id,Integer version);
 
-    CaptureRelp getCaptureRelpById(int id);
+    CaptureRelp getCaptureRelpById(int id,Integer version);
 
     CaptureFile addNewCaptureFile(String tag,
                                   String retention,
@@ -80,7 +80,7 @@ public interface CaptureMapper {
     );
 
 
-    List<CaptureFile> getAllCapture();
+    List<CaptureFile> getAllCapture(Integer version);
 
     CaptureFile deleteCapture(int id);
 }

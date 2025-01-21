@@ -94,9 +94,9 @@ public class FileCaptureMetaController {
                     content = @Content),
             @ApiResponse(responseCode = "500", description = "Internal server error, contact admin", content = @Content)
                 })
-    public ResponseEntity<?> getProcessingType(@PathVariable("name") String name) {
+    public ResponseEntity<?> getProcessingType(@PathVariable("name") String name, @RequestParam(required = false) Integer version) {
         try {
-            FileCaptureMeta fc = fileCaptureMetaMapper.getProcessingTypeByName(name);
+            FileCaptureMeta fc = fileCaptureMetaMapper.getProcessingTypeByName(name,version);
             return new ResponseEntity<>(fc, HttpStatus.OK);
         } catch (Exception ex) {
             JSONObject jsonErr = new JSONObject();
@@ -125,8 +125,8 @@ public class FileCaptureMetaController {
                     content = {@Content(mediaType = "application/json",
                             schema = @Schema(implementation = FileCaptureMeta.class))})
                 })
-    public List<FileCaptureMeta> getAllProcessingType() {
-        return fileCaptureMetaMapper.getAllProcessingType();
+    public List<FileCaptureMeta> getAllProcessingType(@RequestParam(required = false) Integer version) {
+        return fileCaptureMetaMapper.getAllProcessingType(version);
     }
 
 

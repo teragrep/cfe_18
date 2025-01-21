@@ -93,8 +93,8 @@ public class FlowController {
                     content = {@Content(mediaType = "application/json",
                             schema = @Schema(implementation = Flow.class))})
     })
-    public List<Flow> getAllFlow() {
-        return flowMapper.getAllFlow();
+    public List<Flow> getAllFlow(@RequestParam(required = false) Integer version) {
+        return flowMapper.getAllFlow(version);
     }
 
     @RequestMapping(path = "", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)

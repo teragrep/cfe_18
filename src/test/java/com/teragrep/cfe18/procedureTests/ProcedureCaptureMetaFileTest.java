@@ -290,8 +290,9 @@ public class ProcedureCaptureMetaFileTest extends DBUnitbase {
     This test confirms that data is retrieved accurately from capture_definition via procedure.
      */
     public void testProcedureCaptureGetById() throws Exception {
-        CallableStatement stmnt = conn.prepareCall("{CALL cfe_18.retrieve_capture_by_id(?)}");
+        CallableStatement stmnt = conn.prepareCall("{CALL cfe_18.retrieve_capture_by_id(?,?)}");
         stmnt.setString(1, "1");
+        stmnt.setString(2, null);
         ResultSet rs = stmnt.executeQuery();
         rs.next(); // Needs to forward to first
         Assertions.assertEquals(1, rs.getInt("id"));

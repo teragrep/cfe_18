@@ -96,11 +96,11 @@ public class HostGroupController {
                     content = @Content),
             @ApiResponse(responseCode = "500", description = "Internal server error, contact admin", content = @Content)
     })
-    public ResponseEntity<?> getResults(@PathVariable("name") String name) {
+    public ResponseEntity<?> getResults(@PathVariable("name") String name, @RequestParam(required = false) Integer version) {
         JSONObject jsonErr = new JSONObject();
         jsonErr.put("id", 0);
         try {
-            List<HostGroup> hg = hostGroupMapper.getHostGroupByName(name);
+            List<HostGroup> hg = hostGroupMapper.getHostGroupByName(name,version);
             return new ResponseEntity<>(hg, HttpStatus.OK);
         } catch (Exception ex) {
             final Throwable cause = ex.getCause();
@@ -124,8 +124,8 @@ public class HostGroupController {
                     content = {@Content(mediaType = "application/json",
                             schema = @Schema(implementation = HostGroup.class))})
     })
-    public List<HostGroup> getAllHostGroup() {
-        return hostGroupMapper.getAllHostGroup();
+    public List<HostGroup> getAllHostGroup(@RequestParam(required = false) Integer version) {
+        return hostGroupMapper.getAllHostGroup(version);
     }
 
 

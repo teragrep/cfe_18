@@ -52,7 +52,7 @@ import java.util.List;
 
 @Mapper
 public interface FileCaptureMetaMapper {
-    FileCaptureMeta getProcessingTypeByName(String name);
+    FileCaptureMeta getProcessingTypeByName(String name,Integer version);
 
     FileCaptureMeta addNewProcessingType(
             String Template,
@@ -61,7 +61,7 @@ public interface FileCaptureMetaMapper {
             String inputtype,
             String inputvalue);
 
-    List<FileCaptureMeta> getAllProcessingType();
+    List<FileCaptureMeta> getAllProcessingType(Integer version);
 
     FileCaptureMeta deleteProcessingType(String name);
 };
