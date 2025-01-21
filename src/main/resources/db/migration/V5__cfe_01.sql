@@ -49,8 +49,11 @@ create table options
     id          int auto_increment primary key,
     outputdir   varchar(255) not null,
     includefrom varchar(255) not null,
-    rebind      varchar(255) not null
-);
+    rebind      varchar(255) not null,
+    start_trxid BIGINT UNSIGNED GENERATED ALWAYS AS ROW START INVISIBLE,
+    end_trxid BIGINT UNSIGNED GENERATED ALWAYS AS ROW END INVISIBLE,
+    PERIOD FOR SYSTEM_TIME(start_trxid, end_trxid)
+) WITH SYSTEM VERSIONING;
 
 
 create table cfe_01_promise
@@ -59,7 +62,10 @@ create table cfe_01_promise
     options_id int not null,
     metrics_id int not null,
     constraint ´cfe_01_to_promise´ foreign key (id) references cfe_00.promises (id),
-    constraint ´cfe_01_to_options´ foreign key (options_id) references options (id)
-);
+    constraint ´cfe_01_to_options´ foreign key (options_id) references options (id),
+    start_trxid BIGINT UNSIGNED GENERATED ALWAYS AS ROW START INVISIBLE,
+    end_trxid BIGINT UNSIGNED GENERATED ALWAYS AS ROW END INVISIBLE,
+    PERIOD FOR SYSTEM_TIME(start_trxid, end_trxid)
+) WITH SYSTEM VERSIONING;
 
 

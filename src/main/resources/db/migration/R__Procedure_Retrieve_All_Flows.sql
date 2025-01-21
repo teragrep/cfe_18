@@ -45,14 +45,19 @@
  */
 use flow;
 delimiter //
-create or replace procedure retrieve_all_flows()
+create or replace procedure retrieve_all_flows(tx_id int)
 begin
     declare exit handler for sqlexception
         begin
             rollback;
             resignal;
         end;
-    select id, name from flow.flows;
+    if(tx_id) is null then
+        set @time = (select max(transaction_id) from mysql.transaction_registry);
+    else
+        set @time=tx_id;
+    end if;
+    select id, name from flow.flows for system_time as of transaction @time;
 end;
 //
 delimiter ;

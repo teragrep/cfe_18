@@ -45,21 +45,26 @@
  */
 use flow;
 DELIMITER //
-CREATE OR REPLACE PROCEDURE retrieve_all_flow_storages()
+CREATE OR REPLACE PROCEDURE retrieve_all_flow_storages(tx_id int)
 BEGIN
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
         BEGIN
             ROLLBACK;
             RESIGNAL;
         end;
+    if(tx_id) is null then
+         set @time = (select max(transaction_id) from mysql.transaction_registry);
+    else
+         set @time=tx_id;
+    end if;
     select ft.id          as id,
            f.name         as flow,
            s.storage_name as storage_name,
            s.cfe_type     as storage_type,
            ft.storage_id  as storage_id
-    from flow.flows f
-             inner join flow_targets ft on f.id = ft.flow_id
-             inner join storages s on ft.storage_id = s.id;
+    from flow.flows for system_time as of transaction @time f
+             inner join flow_targets for system_time as of transaction @time ft on f.id = ft.flow_id
+             inner join storages for system_time as of transaction @time s on ft.storage_id = s.id;
 end;
 //
 DELIMITER ;

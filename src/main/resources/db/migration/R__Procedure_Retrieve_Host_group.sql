@@ -45,7 +45,7 @@
  */
 use location;
 DELIMITER //
-CREATE OR REPLACE PROCEDURE retrieve_host_group_details(grp_name varchar(255))
+CREATE OR REPLACE PROCEDURE retrieve_host_group_details(grp_name varchar(255),tx_id int)
 BEGIN
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
         BEGIN
@@ -53,7 +53,12 @@ BEGIN
             RESIGNAL;
         END;
     START TRANSACTION;
-    if (select distinct id from location.host_group where groupName = grp_name) is null then
+            if(tx_id) is null then
+             set @time = (select max(transaction_id) from mysql.transaction_registry);
+        else
+             set @time=tx_id;
+        end if;
+    if (select distinct id from location.host_group for system_time as of transaction @time where groupName = grp_name) is null then
         SELECT JSON_OBJECT('id', NULL, 'message', 'Host group does not exist.') into @hg;
         signal sqlstate '45000' set message_text = @hg;
     end if;
@@ -62,9 +67,9 @@ BEGIN
            hg.groupName   as group_name,
            hgxh.host_type as host_type,
            hg.id          as host_group_id
-    from location.host h
-             inner join location.host_group_x_host hgxh on h.id = hgxh.host_id
-             inner join location.host_group hg on hgxh.host_group_id = hg.id
+    from location.host for system_time as of transaction @time h
+             inner join location.host_group_x_host for system_time as of transaction @time hgxh on h.id = hgxh.host_id
+             inner join location.host_group for system_time as of transaction @time hg on hgxh.host_group_id = hg.id
     where hg.groupName = grp_name;
     COMMIT;
 END;

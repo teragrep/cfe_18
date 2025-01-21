@@ -45,17 +45,22 @@
  */
 use cfe_03;
 DELIMITER //
-CREATE OR REPLACE PROCEDURE retrieve_all_host_ip_addresses()
+CREATE OR REPLACE PROCEDURE retrieve_all_host_ip_addresses(tx_id int)
 BEGIN
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
         BEGIN
             ROLLBACK;
             RESIGNAL;
         end;
+        if(tx_id) is null then
+             set @time = (select max(transaction_id) from mysql.transaction_registry);
+        else
+             set @time=tx_id;
+        end if;
     select distinct ip_address        as ip_address,
                     hmxi.host_meta_id as host_meta_id
-    from cfe_03.ip_addresses
-             inner join cfe_03.host_meta_x_ip hmxi on ip_addresses.id = hmxi.ip_id;
+    from cfe_03.ip_addresses for system_time as of transaction @time
+             inner join cfe_03.host_meta_x_ip for system_time as of transaction @time hmxi on ip_addresses.id = hmxi.ip_id;
 end;
 //
 DELIMITER ;

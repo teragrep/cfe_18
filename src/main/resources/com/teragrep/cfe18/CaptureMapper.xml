@@ -48,6 +48,7 @@
         <result property="flow" column="flow"/>
         <result property="protocol" column="protocol"/>
         <result property="captureType" column="capture_type"/>
+        <result property="sinkId" column="sinkId"/>
     </resultMap>
 
 

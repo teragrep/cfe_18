@@ -45,7 +45,7 @@
  */
 use cfe_18;
 DELIMITER //
-CREATE OR REPLACE PROCEDURE retrieve_capture_by_id(proc_id int)
+CREATE OR REPLACE PROCEDURE retrieve_capture_by_id(proc_id int,tx_id int)
 BEGIN
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
         BEGIN
@@ -53,13 +53,18 @@ BEGIN
             RESIGNAL;
         END;
     START TRANSACTION;
-    if (select id from capture_definition where id = proc_id) is null then
+            if(tx_id) is null then
+             set @time = (select max(transaction_id) from mysql.transaction_registry);
+        else
+             set @time=tx_id;
+        end if;
+    if (select id from capture_definition for system_time as of transaction @time where id = proc_id) is null then
         SELECT JSON_OBJECT('id', proc_id, 'message', 'Capture does not exist with the given ID') into @cid;
         signal sqlstate '45000' set message_text = @cid;
     end if;
 
 
-    if (select capture_type from cfe_18.capture_definition where capture_type = 'cfe' and id = proc_id) is not null then
+    if (select capture_type from cfe_18.capture_definition for system_time as of transaction @time where capture_type = 'cfe' and id = proc_id) is not null then
         select c.id                 as id,
                t.tag                as tag,
                a.app                as app,
@@ -73,18 +78,18 @@ BEGIN
                cmf.capturePath      as capture_path,
                cmf.tagPath          as tag_path,
                c.capture_type       as capture_type
-        from cfe_18.capture_definition c
-                 inner join tags t on t.id = c.tag_id
-                 inner join application a on c.application_id = a.id
-                 inner join captureIndex cI on c.captureIndex_id = cI.id
-                 inner join retentionTime rT on c.retentionTime_id = rT.id
-                 inner join captureSourcetype cS on c.captureSourcetype_id = cS.id
-                 inner join category c2 on c.category_id = c2.id
-                 inner join flow.flows f on c.flow_id = f.id
-                 inner join flow.L7 L on c.L7_id = L.id
-                 inner join capture_type ct on c.capture_type_id = ct.id
-                 inner join capture_meta_file cmf on ct.id = cmf.id
-                 inner join processing_type pt on cmf.processing_type_id = pt.id
+        from cfe_18.capture_definition for system_time as of transaction @time c
+                 inner join tags for system_time as of transaction @time t on t.id = c.tag_id
+                 inner join application for system_time as of transaction @time a on c.application_id = a.id
+                 inner join captureIndex for system_time as of transaction @time cI on c.captureIndex_id = cI.id
+                 inner join retentionTime for system_time as of transaction @time rT on c.retentionTime_id = rT.id
+                 inner join captureSourcetype for system_time as of transaction @time  cS on c.captureSourcetype_id = cS.id
+                 inner join category for system_time as of transaction @time c2 on c.category_id = c2.id
+                 inner join flow.flows for system_time as of transaction @time f on c.flow_id = f.id
+                 inner join flow.L7 for system_time as of transaction @time L on c.L7_id = L.id
+                 inner join capture_type for system_time as of transaction @time ct on c.capture_type_id = ct.id
+                 inner join capture_meta_file for system_time as of transaction @time cmf on ct.id = cmf.id
+                 inner join processing_type for system_time as of transaction @time pt on cmf.processing_type_id = pt.id
         where c.id = proc_id
           and t.id = c.tag_id
           and a.id = c.application_id
@@ -98,7 +103,7 @@ BEGIN
           and cmf.id = ct.id
           and pt.id = cmf.processing_type_id;
     elseif (select capture_type
-            from cfe_18.capture_definition
+            from cfe_18.capture_definition for system_time as of transaction @time
             where capture_type = 'relp'
               and id = proc_id) is not null then
         select c.id                 as id,
@@ -111,16 +116,16 @@ BEGIN
                f.name               as flow,
                L.app_protocol       as protocol,
                c.capture_type       as capture_type
-        from cfe_18.capture_definition c
-                 inner join tags t on t.id = c.tag_id
-                 inner join application a on c.application_id = a.id
-                 inner join captureIndex cI on c.captureIndex_id = cI.id
-                 inner join retentionTime rT on c.retentionTime_id = rT.id
-                 inner join captureSourcetype cS on c.captureSourcetype_id = cS.id
-                 inner join category c2 on c.category_id = c2.id
-                 inner join flow.flows f on c.flow_id = f.id
-                 inner join flow.L7 L on c.L7_id = L.id
-                 inner join capture_type ct on c.capture_type_id = ct.id
+        from cfe_18.capture_definition for system_time as of transaction @time c
+                 inner join tags for system_time as of transaction @time t on t.id = c.tag_id
+                 inner join application for system_time as of transaction @time a on c.application_id = a.id
+                 inner join captureIndex for system_time as of transaction @time cI on c.captureIndex_id = cI.id
+                 inner join retentionTime for system_time as of transaction @time rT on c.retentionTime_id = rT.id
+                 inner join captureSourcetype for system_time as of transaction @time cS on c.captureSourcetype_id = cS.id
+                 inner join category for system_time as of transaction @time c2 on c.category_id = c2.id
+                 inner join flow.flows for system_time as of transaction @time f on c.flow_id = f.id
+                 inner join flow.L7 for system_time as of transaction @time L on c.L7_id = L.id
+                 inner join capture_type for system_time as of transaction @time ct on c.capture_type_id = ct.id
         where c.id = proc_id
           and t.id = c.tag_id
           and a.id = c.application_id

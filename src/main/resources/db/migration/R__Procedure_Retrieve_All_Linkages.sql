@@ -45,13 +45,18 @@
  */
 use cfe_18;
 DELIMITER //
-CREATE OR REPLACE PROCEDURE retrieve_all_linkages()
+CREATE OR REPLACE PROCEDURE retrieve_all_linkages(tx_id int)
 BEGIN
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
         BEGIN
             ROLLBACK;
             RESIGNAL;
         end;
+        if(tx_id) is null then
+             set @time = (select max(transaction_id) from mysql.transaction_registry);
+        else
+             set @time=tx_id;
+        end if;
     select hgxcdg.id                  as linkage_id,
            cdg.id                     as capture_group_id,
            cdg.capture_def_group_name as capture_group_name,
@@ -59,9 +64,9 @@ BEGIN
            hg.id                      as host_group_id,
            hg.groupName               as host_group_name,
            hg.host_type               as host_type
-    from cfe_18.host_groups_x_capture_def_group hgxcdg
-             inner join capture_def_group cdg on hgxcdg.capture_group_id = cdg.id
-             inner join location.host_group hg on hgxcdg.host_group_id = hg.id;
+    from cfe_18.host_groups_x_capture_def_group for system_time as of transaction @time hgxcdg
+             inner join capture_def_group for system_time as of transaction @time cdg on hgxcdg.capture_group_id = cdg.id
+             inner join location.host_group for system_time as of transaction @time hg on hgxcdg.host_group_id = hg.id;
 
 end;
 //

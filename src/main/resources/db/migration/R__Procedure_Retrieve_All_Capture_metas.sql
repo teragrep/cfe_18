@@ -45,7 +45,7 @@
  */
 use cfe_18;
 DELIMITER //
-CREATE OR REPLACE PROCEDURE retrieve_capture_metas()
+CREATE OR REPLACE PROCEDURE retrieve_capture_metas(tx_id int)
 BEGIN
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
         BEGIN
@@ -53,12 +53,17 @@ BEGIN
             RESIGNAL;
         END;
     START TRANSACTION;
+        if(tx_id) is null then
+             set @time = (select max(transaction_id) from mysql.transaction_registry);
+        else
+             set @time=tx_id;
+        end if;
         select cd.id                    as          capture_id,
                 cmk.meta_key_name       as          capture_meta_key,
                cm.meta_value            as          capture_meta_value
-        from  cfe_18.capture_meta cm
-            inner join cfe_18.capture_definition cd on cd.id=cm.capture_id
-            inner join cfe_18.capture_meta_key cmk on cm.meta_key_id = cmk.meta_key_id;
+        from  cfe_18.capture_meta for system_time as of transaction @time  cm
+            inner join cfe_18.capture_definition for system_time as of transaction @time  cd on cd.id=cm.capture_id
+            inner join cfe_18.capture_meta_key for system_time as of transaction @time  cmk on cm.meta_key_id = cmk.meta_key_id;
     COMMIT;
 END;
 //

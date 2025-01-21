@@ -52,9 +52,11 @@ create table hubs
     host_id   int unique   not null,
     ip        varchar(255) not null,
     host_type varchar(20)  not null check (host_type = 'cfe'),
-    constraint ´HubIdToHost´ foreign key (host_id, host_type) references location.host (id, host_type)
-
-);
+    constraint ´HubIdToHost´ foreign key (host_id, host_type) references location.host (id, host_type),
+    start_trxid BIGINT UNSIGNED GENERATED ALWAYS AS ROW START INVISIBLE,
+    end_trxid BIGINT UNSIGNED GENERATED ALWAYS AS ROW END INVISIBLE,
+    PERIOD FOR SYSTEM_TIME(start_trxid, end_trxid)
+) WITH SYSTEM VERSIONING;
 
 create table promises
 (
@@ -62,22 +64,31 @@ create table promises
     copy_dir varchar(255) not null,
     hub_id   int          not null,
     constraint ´HubIdToHubs´ foreign key (hub_id) references hubs (id),
-    unique key (id, hub_id)
-);
+    unique key (id, hub_id),
+    start_trxid BIGINT UNSIGNED GENERATED ALWAYS AS ROW START INVISIBLE,
+    end_trxid BIGINT UNSIGNED GENERATED ALWAYS AS ROW END INVISIBLE,
+    PERIOD FOR SYSTEM_TIME(start_trxid, end_trxid)
+) WITH SYSTEM VERSIONING;
 
 create table include_cf
 (
     id         int          not null,
     include_cf varchar(255) not null,
-    constraint ´promise_id´ foreign key (id) references promises (id)
-);
+    constraint ´promise_id´ foreign key (id) references promises (id),
+    start_trxid BIGINT UNSIGNED GENERATED ALWAYS AS ROW START INVISIBLE,
+    end_trxid BIGINT UNSIGNED GENERATED ALWAYS AS ROW END INVISIBLE,
+    PERIOD FOR SYSTEM_TIME(start_trxid, end_trxid)
+) WITH SYSTEM VERSIONING;
 
 create table bundles
 (
     id          int          not null,
     bundle_name varchar(255) not null,
-    constraint ´bundle_id´ foreign key (id) references promises (id)
-);
+    constraint ´bundle_id´ foreign key (id) references promises (id),
+    start_trxid BIGINT UNSIGNED GENERATED ALWAYS AS ROW START INVISIBLE,
+    end_trxid BIGINT UNSIGNED GENERATED ALWAYS AS ROW END INVISIBLE,
+    PERIOD FOR SYSTEM_TIME(start_trxid, end_trxid)
+) WITH SYSTEM VERSIONING;
 
 create table host_type_cfe
 (
@@ -86,8 +97,11 @@ create table host_type_cfe
     hub_id    int         not null,
     constraint hostTypeCfe foreign key (host_id, host_type) references location.host (id, host_type) on delete cascade,
     constraint hub_id_TO_hubs foreign key (hub_id) references hubs (id),
-    unique key (host_id, hub_id)
-);
+    unique key (host_id, hub_id),
+    start_trxid BIGINT UNSIGNED GENERATED ALWAYS AS ROW START INVISIBLE,
+    end_trxid BIGINT UNSIGNED GENERATED ALWAYS AS ROW END INVISIBLE,
+    PERIOD FOR SYSTEM_TIME(start_trxid, end_trxid)
+) WITH SYSTEM VERSIONING;
 
 create table host_cfe_x_promise
 (
@@ -97,5 +111,8 @@ create table host_cfe_x_promise
     promise_id int not null,
     unique key (host_id, promise_id),
     constraint host_id_TO_host foreign key (host_id, hub_id) references host_type_cfe (host_id, hub_id),
-    constraint promise_id_TO_promise foreign key (promise_id, hub_id) references promises (id, hub_id)
-);
+    constraint promise_id_TO_promise foreign key (promise_id, hub_id) references promises (id, hub_id),
+    start_trxid BIGINT UNSIGNED GENERATED ALWAYS AS ROW START INVISIBLE,
+    end_trxid BIGINT UNSIGNED GENERATED ALWAYS AS ROW END INVISIBLE,
+    PERIOD FOR SYSTEM_TIME(start_trxid, end_trxid)
+) WITH SYSTEM VERSIONING;

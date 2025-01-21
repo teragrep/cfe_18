@@ -45,30 +45,41 @@
  */
 use location;
 
+
+
 create table host
 (
     id        int primary key auto_increment,
     MD5       varchar(32) unique  not null,
     fqhost    varchar(128) unique not null,
     host_type varchar(20)         not null check (host_type in ('aws', 'manual', 'cfe', 'windows', 'hec', 'azure', 'relp')),
-    unique key (id, host_type)
-);
+    unique key (id, host_type),
+    start_trxid BIGINT UNSIGNED GENERATED ALWAYS AS ROW START INVISIBLE,
+    end_trxid BIGINT UNSIGNED GENERATED ALWAYS AS ROW END INVISIBLE,
+    PERIOD FOR SYSTEM_TIME(start_trxid, end_trxid)
+) WITH SYSTEM VERSIONING;
 
 create table host_type_aws
 (
     id        int         not null,
     accountId BIGINT      not null,
     host_type varchar(20) not null check (host_type = 'aws'),
-    constraint hostTypeAws foreign key (id, host_type) references host (id, host_type) on delete cascade
-);
+    constraint hostTypeAws foreign key (id, host_type) references host (id, host_type) on delete cascade,
+    start_trxid BIGINT UNSIGNED GENERATED ALWAYS AS ROW START INVISIBLE,
+    end_trxid BIGINT UNSIGNED GENERATED ALWAYS AS ROW END INVISIBLE,
+    PERIOD FOR SYSTEM_TIME(start_trxid, end_trxid)
+) WITH SYSTEM VERSIONING;
 
 create table host_type_manual
 (
     id        int          not null,
     comments  varchar(255) not null,
     host_type varchar(20)  not null check (host_type = 'manual'),
-    constraint hostTypeManual foreign key (id, host_type) references host (id, host_type) on delete cascade
-);
+    constraint hostTypeManual foreign key (id, host_type) references host (id, host_type) on delete cascade,
+    start_trxid BIGINT UNSIGNED GENERATED ALWAYS AS ROW START INVISIBLE,
+    end_trxid BIGINT UNSIGNED GENERATED ALWAYS AS ROW END INVISIBLE,
+    PERIOD FOR SYSTEM_TIME(start_trxid, end_trxid)
+) WITH SYSTEM VERSIONING;
 
 
 
@@ -77,31 +88,44 @@ create table host_type_windows
     id        int          not null,
     domain    varchar(255) not null,
     host_type varchar(20)  not null check (host_type = 'windows'),
-    constraint hostTypeWindows foreign key (id, host_type) references host (id, host_type) on delete cascade
-);
+    constraint hostTypeWindows foreign key (id, host_type) references host (id, host_type) on delete cascade,
+    start_trxid BIGINT UNSIGNED GENERATED ALWAYS AS ROW START INVISIBLE,
+    end_trxid BIGINT UNSIGNED GENERATED ALWAYS AS ROW END INVISIBLE,
+    PERIOD FOR SYSTEM_TIME(start_trxid, end_trxid)
+) WITH SYSTEM VERSIONING;
 
 create table host_type_hec
 (
     id        int          not null,
     token     varchar(255) not null,
     host_type varchar(20)  not null check (host_type = 'hec'),
-    constraint hostTypeHec foreign key (id, host_type) references host (id, host_type) on delete cascade
-);
+    constraint hostTypeHec foreign key (id, host_type) references host (id, host_type) on delete cascade,
+    start_trxid BIGINT UNSIGNED GENERATED ALWAYS AS ROW START INVISIBLE,
+    end_trxid BIGINT UNSIGNED GENERATED ALWAYS AS ROW END INVISIBLE,
+    PERIOD FOR SYSTEM_TIME(start_trxid, end_trxid)
+) WITH SYSTEM VERSIONING;
 
 create table host_type_azure
 (
     id        int         not null,
     host_type varchar(20) not null check (host_type = 'azure'),
-    constraint hostTypeAzure foreign key (id, host_type) references host (id, host_type) on delete cascade
-);
+    constraint hostTypeAzure foreign key (id, host_type) references host (id, host_type) on delete cascade,
+    start_trxid BIGINT UNSIGNED GENERATED ALWAYS AS ROW START INVISIBLE,
+    end_trxid BIGINT UNSIGNED GENERATED ALWAYS AS ROW END INVISIBLE,
+    PERIOD FOR SYSTEM_TIME(start_trxid, end_trxid)
+) WITH SYSTEM VERSIONING;
 
 create table host_group
 (
     id        int primary key auto_increment,
     host_type varchar(64)  not null check (host_type in ('aws', 'manual', 'cfe', 'windows', 'hec', 'azure', 'relp')),
     groupName varchar(255) not null,
-    unique (id, host_type)
-);
+    unique (id, host_type),
+    start_trxid BIGINT UNSIGNED GENERATED ALWAYS AS ROW START INVISIBLE,
+    end_trxid BIGINT UNSIGNED GENERATED ALWAYS AS ROW END INVISIBLE,
+    PERIOD FOR SYSTEM_TIME(start_trxid, end_trxid)
+) WITH SYSTEM VERSIONING;
+
 create table host_group_x_host
 (
     id            int primary key auto_increment,
@@ -111,6 +135,9 @@ create table host_group_x_host
     constraint hostToHostGroupType foreign key (host_id, host_type) references location.host (id, host_type),
     constraint hostTypeToHostGroup foreign key (host_group_id, host_type) references location.host_group (id, host_type) on delete cascade,
     unique key (host_group_id, host_id),
-    index (host_type, host_group_id)
-);
+    index (host_type, host_group_id),
+    start_trxid BIGINT UNSIGNED GENERATED ALWAYS AS ROW START INVISIBLE,
+    end_trxid BIGINT UNSIGNED GENERATED ALWAYS AS ROW END INVISIBLE,
+    PERIOD FOR SYSTEM_TIME(start_trxid, end_trxid)
+) WITH SYSTEM VERSIONING;
 

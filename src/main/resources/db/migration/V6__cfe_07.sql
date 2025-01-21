@@ -48,14 +48,21 @@ use cfe_07;
 create table cfe_07_promise
 (
     id int primary key,
-    constraint ´cfe_07_to_promise´ foreign key (id) references cfe_00.promises (id)
-);
+    constraint ´cfe_07_to_promise´ foreign key (id) references cfe_00.promises (id),
+    start_trxid BIGINT UNSIGNED GENERATED ALWAYS AS ROW START INVISIBLE,
+    end_trxid BIGINT UNSIGNED GENERATED ALWAYS AS ROW END INVISIBLE,
+    PERIOD FOR SYSTEM_TIME(start_trxid, end_trxid)
+) WITH SYSTEM VERSIONING;
+
 create table config
 (
     id      int auto_increment primary key,
     dir     varchar(25) not null,
-    workdir varchar(25) not null
-);
+    workdir varchar(25) not null,
+    start_trxid BIGINT UNSIGNED GENERATED ALWAYS AS ROW START INVISIBLE,
+    end_trxid BIGINT UNSIGNED GENERATED ALWAYS AS ROW END INVISIBLE,
+    PERIOD FOR SYSTEM_TIME(start_trxid, end_trxid)
+) WITH SYSTEM VERSIONING;
 
 create table instances
 (
@@ -64,8 +71,11 @@ create table instances
     flow_id   int not null,
     config_id int not null,
     constraint ´instanceToFlow´ foreign key (flow_id) references flow.flows (id),
-    constraint ´instanceToConfig´ foreign key (config_id) references config (id)
-);
+    constraint ´instanceToConfig´ foreign key (config_id) references config (id),
+    start_trxid BIGINT UNSIGNED GENERATED ALWAYS AS ROW START INVISIBLE,
+    end_trxid BIGINT UNSIGNED GENERATED ALWAYS AS ROW END INVISIBLE,
+    PERIOD FOR SYSTEM_TIME(start_trxid, end_trxid)
+) WITH SYSTEM VERSIONING;
 
 
 create table instance_targets
@@ -83,8 +93,11 @@ create table instance_targets
     resumerIntervalMax     int          not null,
     userResumerIntervalMax boolean      not null,
     constraint ´TargetToFlowTargets´ foreign key (flow_id, flow_target_id) references flow.flow_targets (flow_id, id),
-    constraint ´TargetToInstanceTargets´ foreign key (flow_id, instance_id) references instances (flow_id, id)
-);
+    constraint ´TargetToInstanceTargets´ foreign key (flow_id, instance_id) references instances (flow_id, id),
+    start_trxid BIGINT UNSIGNED GENERATED ALWAYS AS ROW START INVISIBLE,
+    end_trxid BIGINT UNSIGNED GENERATED ALWAYS AS ROW END INVISIBLE,
+    PERIOD FOR SYSTEM_TIME(start_trxid, end_trxid)
+) WITH SYSTEM VERSIONING;
 
 
 create table cfe_07_promise_x_instance
@@ -93,6 +106,9 @@ create table cfe_07_promise_x_instance
     cfe_07_promise_id int not null,
     instance_id       int not null,
     constraint ´cfe_07_promiseToInstance´ foreign key (cfe_07_promise_id) references cfe_07_promise (id),
-    constraint ´instance_idToInstance´ foreign key (instance_id) references instances (id)
-);
+    constraint ´instance_idToInstance´ foreign key (instance_id) references instances (id),
+    start_trxid BIGINT UNSIGNED GENERATED ALWAYS AS ROW START INVISIBLE,
+    end_trxid BIGINT UNSIGNED GENERATED ALWAYS AS ROW END INVISIBLE,
+    PERIOD FOR SYSTEM_TIME(start_trxid, end_trxid)
+) WITH SYSTEM VERSIONING;
 

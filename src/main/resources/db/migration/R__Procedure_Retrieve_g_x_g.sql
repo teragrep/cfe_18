@@ -45,7 +45,7 @@
  */
 use cfe_18;
 DELIMITER //
-CREATE OR REPLACE PROCEDURE retrieve_g_x_g_details(grp_name varchar(255))
+CREATE OR REPLACE PROCEDURE retrieve_g_x_g_details(grp_name varchar(255),tx_id int)
 BEGIN
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
         BEGIN
@@ -53,12 +53,18 @@ BEGIN
             RESIGNAL;
         END;
     START TRANSACTION;
-
-    if ((select capture_def_group_name from cfe_18.capture_def_group where capture_def_group_name = grp_name) and
-        (select groupName from location.host_group where groupName = grp_name)) is null then
+            if(tx_id) is null then
+             set @time = (select max(transaction_id) from mysql.transaction_registry);
+        else
+             set @time=tx_id;
+        end if;
+    if ((select capture_def_group_name from cfe_18.capture_def_group for system_time as of transaction @time where capture_def_group_name = grp_name) and
+        (select groupName from location.host_group for system_time as of transaction @time where groupName = grp_name)) is null then
         SELECT JSON_OBJECT('id', NULL, 'message', 'group does not exist with the given name') into @gxg;
         signal sqlstate '45000' set message_text = @gxg;
     end if;
+
+
 
     -- return resultset accordingly
     select distinct hgxcdg.id                  as g_x_g_id,
@@ -68,11 +74,11 @@ BEGIN
                     cdgxcd.capture_type        as capture_type,
                     hg.id                      as host_group_id,
                     cdg.id                     as capture_group_id
-    from host_groups_x_capture_def_group hgxcdg
-             inner join capture_def_group cdg on hgxcdg.capture_group_id = cdg.id
-             inner join location.host_group hg on hgxcdg.host_group_id = hg.id
-             inner join capture_def_group_x_capture_def cdgxcd on cdg.id = cdgxcd.capture_def_group_id
-             inner join location.host_group_x_host hgxh on hg.id = hgxh.host_group_id
+    from host_groups_x_capture_def_group for system_time as of transaction @time hgxcdg
+             inner join capture_def_group for system_time as of transaction @time cdg on hgxcdg.capture_group_id = cdg.id
+             inner join location.host_group for system_time as of transaction @time hg on hgxcdg.host_group_id = hg.id
+             inner join capture_def_group_x_capture_def for system_time as of transaction @time cdgxcd on cdg.id = cdgxcd.capture_def_group_id
+             inner join location.host_group_x_host for system_time as of transaction @time hgxh on hg.id = hgxh.host_group_id
     where hg.groupName = grp_name
        or cdg.capture_def_group_name = grp_name;
     COMMIT;

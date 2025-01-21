@@ -45,24 +45,29 @@
  */
 use cfe_18;
 DELIMITER //
-CREATE OR REPLACE PROCEDURE retrieve_all_processing_types()
+CREATE OR REPLACE PROCEDURE retrieve_all_processing_types(tx_id int)
 BEGIN
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
         BEGIN
             ROLLBACK;
             RESIGNAL;
         end;
+        if(tx_id) is null then
+             set @time = (select max(transaction_id) from mysql.transaction_registry);
+        else
+             set @time=tx_id;
+        end if;
     select pt.type_name                 as name,
            i.inputtype                  as inputtype,
            coalesce(r.regex, n.newline) as inputvalue,
            r2.rule                      as ruleset,
            t.template                   as template
-    from cfe_18.processing_type pt
-             inner join inputtype i on pt.inputtype_id = i.id
-             LEFT JOIN regex r ON i.id = r.id AND i.inputtype = r.inputtype
-             LEFT JOIN newline n ON i.id = n.id AND i.inputtype = n.inputtype
-             inner join ruleset r2 on pt.ruleset_id = r2.id
-             inner join templates t on pt.template_id = t.id;
+    from cfe_18.processing_type for system_time as of transaction @time pt
+             inner join inputtype for system_time as of transaction @time i on pt.inputtype_id = i.id
+             LEFT JOIN regex for system_time as of transaction @time r ON i.id = r.id AND i.inputtype = r.inputtype
+             LEFT JOIN newline for system_time as of transaction @time n ON i.id = n.id AND i.inputtype = n.inputtype
+             inner join ruleset for system_time as of transaction @time r2 on pt.ruleset_id = r2.id
+             inner join templates for system_time as of transaction @time t on pt.template_id = t.id;
 end;
 //
 DELIMITER ;

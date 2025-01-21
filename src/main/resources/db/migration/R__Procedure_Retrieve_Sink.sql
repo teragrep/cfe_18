@@ -45,7 +45,7 @@
  */
 use flow;
 DELIMITER //
-CREATE OR REPLACE PROCEDURE retrieve_sink_by_id(proc_id int)
+CREATE OR REPLACE PROCEDURE retrieve_sink_by_id(proc_id int,tx_id int)
 BEGIN
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
         BEGIN
@@ -53,7 +53,12 @@ BEGIN
             RESIGNAL;
         END;
     START TRANSACTION;
-    if (select id from capture_sink where id = proc_id) is null then
+            if(tx_id) is null then
+             set @time = (select max(transaction_id) from mysql.transaction_registry);
+        else
+             set @time=tx_id;
+        end if;
+    if (select id from capture_sink for system_time as of transaction @time where id = proc_id) is null then
         SELECT JSON_OBJECT('id', proc_id, 'message', 'Sink does not exist') into @sink;
         signal sqlstate '45000' set message_text = @sink;
     end if;
@@ -61,9 +66,9 @@ BEGIN
            cs.sink_port   as port,
            L.app_protocol as protocol,
            f.name         as flow
-    from capture_sink cs
-             inner join L7 L on cs.L7_id = L.id
-             inner join flows f on cs.flow_id = f.id
+    from capture_sink for system_time as of transaction @time cs
+             inner join L7 for system_time as of transaction @time L on cs.L7_id = L.id
+             inner join flows for system_time as of transaction @time f on cs.flow_id = f.id
     where cs.id = proc_id
       and L.id = cs.L7_id
       and f.id = cs.flow_id;

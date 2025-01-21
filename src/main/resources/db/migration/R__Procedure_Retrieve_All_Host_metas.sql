@@ -45,13 +45,18 @@
  */
 use cfe_03;
 DELIMITER //
-CREATE OR REPLACE PROCEDURE retrieve_all_host_metas()
+CREATE OR REPLACE PROCEDURE retrieve_all_host_metas(tx_id int)
 BEGIN
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
         BEGIN
             ROLLBACK;
             RESIGNAL;
         end;
+        if(tx_id) is null then
+             set @time = (select max(transaction_id) from mysql.transaction_registry);
+        else
+             set @time=tx_id;
+        end if;
     select hm.id       as host_meta_id,
            hm.host_id  as host_id,
            hm.hostname as host_name,
@@ -59,12 +64,11 @@ BEGIN
            ft.flavor   as flavor,
            a.arch      as arch,
            rv.rel_ver  as release_version
-
-    from cfe_03.host_meta hm
-             inner join cfe_03.os_type ot on hm.os_id = ot.id
-             inner join cfe_03.flavor_type ft on hm.flavor_id = ft.id
-             inner join cfe_03.arch_type a on hm.arch_id = a.id
-             inner join cfe_03.release_version rv on hm.release_ver_id = rv.id;
+    from cfe_03.host_meta for system_time as of transaction @time hm
+             inner join cfe_03.os_type for system_time as of transaction @time ot on hm.os_id = ot.id
+             inner join cfe_03.flavor_type for system_time as of transaction @time  ft on hm.flavor_id = ft.id
+             inner join cfe_03.arch_type for system_time as of transaction @time a on hm.arch_id = a.id
+             inner join cfe_03.release_version for system_time as of transaction @time rv on hm.release_ver_id = rv.id;
 
 end;
 //
