@@ -26,7 +26,11 @@ See the official documentation on https://docs.teragrep.com[docs.teragrep.com].
 
 == How to run in a container?
 
-Containerized deployment for CFE-18. Requires external database to use. It uses public tomcat docker image (tomcat:8-jre8-temurin-focal)
+****
+Files are stored under `quadlets/docker` directory. They are viable for containerized deployment without quadlets.
+****
+
+Containerized deployment for CFE-18. Requires external database to use. It uses https://docs.docker.com/build/building/multi-stage/[multi-stage] to build Rocky Linux 9 as base image.
 
 Expected files are:
 
@@ -35,10 +39,10 @@ Expected files are:
 
 Example files for configuration are:
 
-`docker/application.properties`
-`docker/log4j2.xml`
+`/quadlets/docker/application.properties`
+`/quadlets/docker/log4j2.xml`
 
-docker/application.properties requires configuring:
+/quadlets/docker/application.properties requires configuring:
 
 * spring.datasource.url = jdbc:mariadb://127.0.0.1:3306/cfe_18
 * spring.datasource.username = username
@@ -47,17 +51,87 @@ docker/application.properties requires configuring:
 
 (Recommended to use MariaDB as database)
 
-
 .Example run command
 [source,console]
 ----
-$ docker run -ti  -v docker/application.properties:/etc/tomcat/Catalina/localhost/cfe-18/application.properties:ro -v docker/log4j2.xml:/etc/tomcat/Catalina/localhost/cfe-18/log4j2.xml:ro  -p 8080:8080 ghcr.io/teragrep/cfe_18:latest
+$ docker run -ti  -v /quadlets/docker/application.properties:/etc/tomcat/Catalina/localhost/cfe-18/application.properties:ro -v /quadlets/docker/log4j2.xml:/etc/tomcat/Catalina/localhost/cfe-18/log4j2.xml:ro  -p 8080:8080 ghcr.io/teragrep/cfe_18:latest
 ----
 where
 
 1. application.properties and log4j2.xml are mounted accordingly.
 2. 8080:8080 are for external and internal ports.
 3. ghcr.io/teragrep/cfe_18:latest image from Githubs image repository
+
+
+
+=== How to run container with quadlets
+
+https://docs.podman.io/en/latest/markdown/podman-systemd.unit.5.html[quadlets docs]
+
+*****
+This is the recommended deployment style for containerized deployment. Running podman containers without quadlets results them not starting independently after host reboots.
+*****
+
+==== docker directory
+Files required for tomcat to deploy CFE_18. Explained on `How to run in a container?`
+
+==== docker-entrypoint-initdb.d directory
+Files required for MariaDB to initialize MariaDB with correct databases intact.
+MariaDB initialization script docs : https://hub.docker.com/_/mariadb[Initializing the database contents]
+
+==== cfe18.container
+----
+[Unit]
+Description=CFE_18 container
+Requires=cfe18mariadb.service
+
+[Container]
+Image=ghcr.io/teragrep/cfe_18:latest
+Volume=/opt/teragrep/cfe_18/app:/etc/tomcat/Catalina/localhost/cfe_18:Z
+PublishPort=8080:8080
+# Static IP for cfe_18
+IP=10.88.0.3
+
+[Install]
+# Start by default on boot
+WantedBy=multi-user.target default.target
+----
+Keywords explained
+
+- Requires , Needs to have mariadb service running before starting cfe18 container
+- Image , Pulls image from gchr.io to be used for container deployment
+- Volume , mounts contents of  `quadlets/docker` under Tomcat configuration. (application.properties and log4j2.xml)
+- PublishPort , Opens internal and external port for accessing CFE_18
+- IP , Declare IP in podman subnet
+
+==== cfe18mariadb.container
+----
+[Unit]
+Description=Database container for CFE_18
+
+[Container]
+Image=docker.io/mariadb:11.5
+SecurityLabelDisable=true
+# Should be stored as a secret when actually using to deploy.
+Environment=MARIADB_ROOT_PASSWORD=password
+# Static IP for cfe_18 to connect to
+IP=10.88.0.2
+# DB initialization script
+Volume=/opt/teragrep/cfe_18/database/init:/docker-entrypoint-initdb.d
+# Persistent Storage
+Volume=/opt/teragrep/cfe_18/database/data:/var/lib/mysql
+
+[Install]
+WantedBy=multi-user.target default.target
+----
+Keywords explained
+
+- Image , Pulls image from gchr.io to be used for container deployment
+- SecurityLabelDisable , Turns off SELinux labeling
+- Environment , Env variable which is required by MariaDB image to install MariaDB inside the container
+- IP , Declare IP in podman subnet
+- Volume(1) , Mounts contents of  `quadlets/docker-entrypoint-inidb.d` into the container for MariaDB to start database initialization
+- Volume(2) , Creates persistent storage which is saved on host under `/opt/teragrep/cfe_18/database/data`
 
 
 == Contributing
