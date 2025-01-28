@@ -52,7 +52,7 @@ BEGIN
             ROLLBACK;
             RESIGNAL;
         end;
-        if(tx_id) is null then
+    if(tx_id) is null then
         set @time = (select max(transaction_id) from mysql.transaction_registry);
     else
         set @time=tx_id;

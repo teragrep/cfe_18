@@ -52,11 +52,11 @@ BEGIN
             ROLLBACK;
             RESIGNAL;
         end;
-            if(tx_id) is null then
-             set @time = (select max(transaction_id) from mysql.transaction_registry);
-        else
-             set @time=tx_id;
-        end if;
+    if(tx_id) is null then
+        set @time = (select max(transaction_id) from mysql.transaction_registry);
+    else
+        set @time=tx_id;
+    end if;
     select s.storage_name as storage_name, s.cfe_type as storage_type, s.id as storage_id
     from flow.storages for system_time as of transaction @time s;
 end;

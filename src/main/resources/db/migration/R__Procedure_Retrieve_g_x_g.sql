@@ -53,18 +53,18 @@ BEGIN
             RESIGNAL;
         END;
     START TRANSACTION;
-            if(tx_id) is null then
-             set @time = (select max(transaction_id) from mysql.transaction_registry);
-        else
-             set @time=tx_id;
-        end if;
+
+    if(tx_id) is null then
+        set @time = (select max(transaction_id) from mysql.transaction_registry);
+    else
+        set @time=tx_id;
+    end if;
+
     if ((select capture_def_group_name from cfe_18.capture_def_group for system_time as of transaction @time where capture_def_group_name = grp_name) and
         (select groupName from location.host_group for system_time as of transaction @time where groupName = grp_name)) is null then
         SELECT JSON_OBJECT('id', NULL, 'message', 'group does not exist with the given name') into @gxg;
         signal sqlstate '45000' set message_text = @gxg;
     end if;
-
-
 
     -- return resultset accordingly
     select distinct hgxcdg.id                  as g_x_g_id,

@@ -53,11 +53,13 @@ BEGIN
             RESIGNAL;
         END;
     START TRANSACTION;
-                if(tx_id) is null then
-             set @time = (select max(transaction_id) from mysql.transaction_registry);
-        else
-             set @time=tx_id;
-        end if;
+
+    if(tx_id) is null then
+        set @time = (select max(transaction_id) from mysql.transaction_registry);
+    else
+        set @time=tx_id;
+    end if;
+
     if ((select count(id) from cfe_18.capture_def_x_flow_targets for system_time as of transaction @time where capture_def_id = capture_id) = 0) then
         SELECT JSON_OBJECT('id', capture_id, 'message', 'Capture storage does not exist with given ID') into @cs;
         signal sqlstate '45000' set message_text = @cs;

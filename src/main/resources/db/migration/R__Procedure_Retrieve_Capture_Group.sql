@@ -53,11 +53,13 @@ BEGIN
             RESIGNAL;
         END;
     START TRANSACTION;
-            if(tx_id) is null then
-             set @time = (select max(transaction_id) from mysql.transaction_registry);
-        else
-             set @time=tx_id;
-        end if;
+
+    if(tx_id) is null then
+         set @time = (select max(transaction_id) from mysql.transaction_registry);
+    else
+         set @time=tx_id;
+    end if;
+
     if (select capture_def_group.capture_def_group_name
         from capture_def_group for system_time as of transaction @time
         where capture_def_group.capture_def_group_name = grp_name) is null then

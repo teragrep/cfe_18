@@ -53,11 +53,13 @@ BEGIN
             RESIGNAL;
         END;
     START TRANSACTION;
-            if(tx_id) is null then
-             set @time = (select max(transaction_id) from mysql.transaction_registry);
-        else
-             set @time=tx_id;
-        end if;
+
+    if(tx_id) is null then
+        set @time = (select max(transaction_id) from mysql.transaction_registry);
+    else
+        set @time=tx_id;
+    end if;
+
     if (select id from capture_definition for system_time as of transaction @time where id = proc_id) is null then
         SELECT JSON_OBJECT('id', proc_id, 'message', 'Capture does not exist with the given ID') into @cid;
         signal sqlstate '45000' set message_text = @cid;

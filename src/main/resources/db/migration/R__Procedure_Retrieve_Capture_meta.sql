@@ -53,25 +53,27 @@ BEGIN
             RESIGNAL;
         END;
     START TRANSACTION;
-                if(tx_id) is null then
-             set @time = (select max(transaction_id) from mysql.transaction_registry);
-        else
-             set @time=tx_id;
-        end if;
-    -- check for existence of capture meta before attempting retrieval. Throws custom error.
-        if((select count(cm.capture_id) from capture_meta for system_time as of transaction @time cm where cm.capture_id=capture_id)=0) then
-            -- standardized JSON error response
-            SELECT JSON_OBJECT('id', capture_id, 'message', 'Capture meta does not exist with given ID') into @nometa;
-            signal sqlstate '42000' set message_text = @nometa;
-        end if;
 
-        select cd.id    as          capture_id,
-                cmk.meta_key_name    as          capture_meta_key,
-               cm.meta_value        as          capture_meta_value
-        from  cfe_18.capture_meta for system_time as of transaction @time cm
-                    inner join cfe_18.capture_definition for system_time as of transaction @time cd on cd.id=cm.capture_id
-                    inner join cfe_18.capture_meta_key for system_time as of transaction @time cmk on cm.meta_key_id = cmk.meta_key_id
-                     where cm.capture_id=capture_id;
+    if(tx_id) is null then
+        set @time = (select max(transaction_id) from mysql.transaction_registry);
+    else
+        set @time=tx_id;
+    end if;
+
+    -- check for existence of capture meta before attempting retrieval. Throws custom error.
+    if((select count(cm.capture_id) from capture_meta for system_time as of transaction @time cm where cm.capture_id=capture_id)=0) then
+        -- standardized JSON error response
+        SELECT JSON_OBJECT('id', capture_id, 'message', 'Capture meta does not exist with given ID') into @nometa;
+        signal sqlstate '42000' set message_text = @nometa;
+    end if;
+
+    select cd.id                as         capture_id,
+           cmk.meta_key_name    as         capture_meta_key,
+           cm.meta_value        as         capture_meta_value
+    from  cfe_18.capture_meta for system_time as of transaction @time cm
+                inner join cfe_18.capture_definition for system_time as of transaction @time cd on cd.id=cm.capture_id
+                inner join cfe_18.capture_meta_key for system_time as of transaction @time cmk on cm.meta_key_id = cmk.meta_key_id
+                 where cm.capture_id=capture_id;
     COMMIT;
 END;
 //

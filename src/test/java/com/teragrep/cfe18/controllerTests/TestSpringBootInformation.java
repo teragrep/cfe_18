@@ -53,7 +53,6 @@ import org.springframework.test.context.TestPropertySource;
 @TestPropertySource(properties = "spring.flyway.clean-disabled=false")
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @ExtendWith(MigrateDatabaseExtension.class)
-//@TestPropertySource(locations="classpath:test.properties")
 class TestSpringBootInformation {
 
 
