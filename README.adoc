@@ -2,7 +2,7 @@
 
 CFE_18 takes advantage of relational-database standardization and MariaDB system-versioning through creating database schema according to integration data needs.
 
-CFE_18 uses Flyway migration strategy to ensure fault-free deployment and presents data through Swagger-ui via RESTful endpoints. CFE_18 does have Spring boot framework built-in utilizes the framework only through endpoints. MyBatis works as a mapper between Spring boot and MariaDB database and creates queries specified within said mappers.
+The project uses the Flyway migration strategy to ensure fault-free deployment and presents data through Swagger UI via RESTful endpoints. CFE_18 does have Spring Boot framework built-in which utilizes the framework only through endpoints. MyBatis works as a mapper between Spring boot and MariaDB database and creates queries specified within said mappers.
 
 == Features
 
@@ -17,7 +17,7 @@ See the official documentation on https://docs.teragrep.com[docs.teragrep.com].
 
 * Java 8
 
-== How to use
+== How to Use
 
 . Setup database according to end-user needs
 . Can be deployed using https://tomcat.apache.org/tomcat-9.0-doc/deployer-howto.html[tomcat]/JBoss
@@ -28,7 +28,7 @@ See the official documentation on https://docs.teragrep.com[docs.teragrep.com].
 NOTE: Files are stored under `quadlets/docker` directory. They are viable for containerized deployment without quadlets.
 
 
-CFE_18 requires external database to use. CFE_18 image uses https://docs.docker.com/build/building/multi-stage/[multi-stage] to build Rocky Linux 9 during the first stage as base image and installs Apache Tomcat on top of the previous stage. CFE_18.war is deployed via using Apache Tomcat.
+The project requires external database to use. CFE_18 image uses https://docs.docker.com/build/building/multi-stage/[multi-stage] to build Rocky Linux 9 during the first stage as base image and installs Apache Tomcat on top of the previous stage. CFE_18.war is deployed via using Apache Tomcat.
 
 Expected files are:
 
@@ -47,7 +47,7 @@ Example files for configuration are:
 * spring.datasource.password = password
 * spring.datasource.driver-class-name = org.mariadb.jdbc.Driver
 
-It is required to use MariaDB as database solution for CFE_18 containerized deployment when using CFE_18 image. MariaDB is required since CFE_18 takes advantage of MariaDBs' https://mariadb.com/kb/en/system-versioned-tables/[system-versioned tables].
+MariaDB must be used as the database solution for CFE_18 containerized deployment, when using CFE_18 image. MariaDB is required since CFE_18 takes advantage of MariaDBs' https://mariadb.com/kb/en/system-versioned-tables/[system-versioned tables].
 
 .Example run command
 [source,console]
@@ -56,7 +56,7 @@ $ docker run -ti  -v /quadlets/docker/application.properties:/etc/tomcat/Catalin
 ----
 Please notice that in the example command above:
 
-1. application.properties and log4j2.xml are mounted accordingly.
+1. `application.properties` and `log4j2.xml` are mounted accordingly.
 2. 8080:8080 are for external and internal ports.
 3. ghcr.io/teragrep/cfe_18:latest image from Githubs image repository
 
@@ -69,20 +69,20 @@ https://docs.podman.io/en/latest/markdown/podman-systemd.unit.5.html[See also th
 IMPORTANT: This is the recommended deployment style for containerized deployment. Running Podman containers without Quadlets results them not starting independently after host reboots.
 
 
-==== docker directory
+==== Docker directory
 
-Files inside the directory are required for Apache Tomcat to deploy CFE_18. Files are explained in the section `How to Run in a Container?`
+Files inside the directory are required for Apache Tomcat to deploy CFE_18. They are explained in the section `How to Run in a Container?`
 
 ==== docker-entrypoint-initdb.d directory
 
-Files inside the directory are required for MariaDB to initialize with correct databases intact.
-See also MariaDB https://hub.docker.com/_/mariadb[initialization script documentation for initializing the database contents]
+Files inside the directory are required for MariaDB to initialize with the correct databases intact.
+See also MariaDB https://hub.docker.com/_/mariadb[initialization script documentation for initializing the database contents].
 
 ==== cfe18.container
 
-Following Quadlet file is required to deploy CFE_18 Podman container as system service. Example below is from `quadlets/cfe18.container`.
+The following Quadlet file is required to deploy CFE_18 Podman container as a system service. The example below is from `quadlets/cfe18.container`.
 
-Following Quadlet file is inserted under `/etc/containers/systemd` on the host machine. See more on https://docs.podman.io/en/latest/markdown/podman-systemd.unit.5.html[Podman Quadlet docs]
+The following Quadlet file is inserted under `/etc/containers/systemd` on the host machine. See more on https://docs.podman.io/en/latest/markdown/podman-systemd.unit.5.html[Podman Quadlet docs].
 
 .Quadlet file for CFE_18 container
 ----
@@ -112,9 +112,9 @@ Keywords explained
 
 ==== cfe18mariadb.container
 
-Following Quadlet file is required to deploy MariaDB Podman container as system service. Example below is from `quadlets/cfe18mariadb.container`.
+The following Quadlet file is required to deploy MariaDB Podman container as system service. Example below is from `quadlets/cfe18mariadb.container`.
 
-Following Quadlet file is inserted under `/etc/containers/systemd` on the host machine. See more on https://docs.podman.io/en/latest/markdown/podman-systemd.unit.5.html[Podman Quadlet docs].
+The following Quadlet file is inserted under `/etc/containers/systemd` on the host machine. See more on https://docs.podman.io/en/latest/markdown/podman-systemd.unit.5.html[Podman Quadlet docs].
 
 .Quadlet file for MariaDB container
 ----
