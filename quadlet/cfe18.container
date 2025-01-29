@@ -1,0 +1,14 @@
+[Unit]
+Description=CFE_18 container
+Requires=cfe18mariadb.service
+
+[Container]
+Image=ghcr.io/teragrep/cfe_18:latest
+Volume=/opt/teragrep/cfe_18/app:/etc/tomcat/Catalina/localhost/cfe_18:Z
+PublishPort=8080:8080
+# Static IP for cfe_18
+IP=10.88.0.3
+
+[Install]
+# Start by default on boot
+WantedBy=multi-user.target default.target

@@ -1,0 +1,17 @@
+[Unit]
+Description=Database container for CFE_18
+
+[Container]
+Image=docker.io/mariadb:11.5
+SecurityLabelDisable=true
+# Should be stored as a secret when actually using to deploy.
+Environment=MARIADB_ROOT_PASSWORD=password
+# Static IP for cfe_18 to connect to
+IP=10.88.0.2
+# DB initialization script
+Volume=/opt/teragrep/cfe_18/database/init:/docker-entrypoint-initdb.d
+# Persistent Storage
+Volume=/opt/teragrep/cfe_18/database/data:/var/lib/mysql
+
+[Install]
+WantedBy=multi-user.target default.target
