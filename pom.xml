@@ -7,7 +7,7 @@
   <artifactId>cfe_18</artifactId>
   <version>${revision}${sha1}${changelist}</version>
   <name>cfe_18</name>
-  <description>Main Data Management System cfe_18</description>
+  <description>Integration main data management for Teragrep</description>
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -302,8 +302,9 @@
             <exclude>src/main/webapp/**</exclude>
             <!-- Test -->
             <exclude>src/test/resources/**</exclude>
+            <!-- Quadlet -->
+            <exclude>quadlet/**</exclude>
             <!-- Docker -->
-            <exclude>docker/**</exclude>
             <exclude>Dockerfile</exclude>
             <exclude>tomcatContainerImage/</exclude>
           </excludes>
