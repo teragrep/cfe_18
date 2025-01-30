@@ -271,7 +271,7 @@
             <license implementation="org.apache.rat.analysis.license.SimplePatternBasedLicense">
               <notes>Also allow the license url to be https.</notes>
               <patterns>
-                <pattern>Main data management system (MDMS) cfe_18</pattern>
+                <pattern>Integration main data management for Teragrep</pattern>
               </patterns>
             </license>
           </licenses>
