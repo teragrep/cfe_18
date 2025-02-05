@@ -5,7 +5,9 @@ Requires=cfe18mariadb.service
 [Container]
 Image=ghcr.io/teragrep/cfe_18:latest
 Volume=/opt/teragrep/cfe_18/app:/etc/tomcat/Catalina/localhost/cfe_18:Z
+Volume=/opt/teragrep/cfe_18/conf/server.xml:/opt/tomcat/apache-tomcat-9.0.98/conf/server.xml:Z
 PublishPort=8080:8080
+PublishPort=8009:8009
 # Static IP for cfe_18
 IP=10.88.0.3
 
