@@ -304,6 +304,8 @@
             <exclude>src/test/resources/**</exclude>
             <!-- Quadlet -->
             <exclude>quadlet/**</exclude>
+            <!-- Tomcat -->
+            <exclude>tomcat/**</exclude>
             <!-- Docker -->
             <exclude>Dockerfile</exclude>
             <exclude>tomcatContainerImage/</exclude>
