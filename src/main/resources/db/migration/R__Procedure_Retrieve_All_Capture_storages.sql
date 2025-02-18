@@ -45,20 +45,25 @@
  */
 use cfe_18;
 DELIMITER //
-CREATE OR REPLACE PROCEDURE retrieve_all_capture_storages()
+CREATE OR REPLACE PROCEDURE retrieve_all_capture_storages(tx_id int)
 BEGIN
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
         BEGIN
             ROLLBACK;
             RESIGNAL;
         END;
+        if(tx_id) is null then
+             set @time = (select max(transaction_id) from mysql.transaction_registry);
+        else
+             set @time=tx_id;
+        end if;
     select cdxft.capture_def_id as capture_id,
            cdxft.flow_target_id as storage_id,
            s.storage_name       as storage_name
-    from capture_def_x_flow_targets cdxft
-             inner join flow.flow_targets ft
+    from capture_def_x_flow_targets for system_time as of transaction @time cdxft
+             inner join flow.flow_targets for system_time as of transaction @time ft
                         on cdxft.flow_id = ft.flow_id and cdxft.flow_target_id = ft.storage_id
-             inner join flow.storages s on ft.storage_id = s.id;
+             inner join flow.storages for system_time as of transaction @time s on ft.storage_id = s.id;
 
 END;
 

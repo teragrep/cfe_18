@@ -24,7 +24,7 @@
 
     <!-- get flow storages -->
     <select id="retrieveFlowStorages" resultMap="flowTargets" statementType="CALLABLE">
-        {CALL flow.retrieve_flow_storages(#{param1})}
+        {CALL flow.retrieve_flow_storages(#{param1},#{param2})}
     </select>
     <resultMap id="flowTargets" type="com.teragrep.cfe18.handlers.entities.FlowStorage">
         <result property="storage_name" column="target"/>
@@ -37,7 +37,7 @@
 
     <!-- get ALL capture storages -->
     <select id="retrieveCaptureStorages" resultMap="captureTargets" statementType="CALLABLE">
-        {CALL cfe_18.retrieve_capture_storages(#{param1})}
+        {CALL cfe_18.retrieve_capture_storages(#{param1},#{param2})}
     </select>
     <resultMap id="captureTargets" type="com.teragrep.cfe18.handlers.entities.CaptureStorage">
         <result property="storage_name" column="storage_name"/>
@@ -48,7 +48,7 @@
 
     <!-- GET all storages -->
     <select id="getStorages" resultMap="allStorages" statementType="CALLABLE">
-        {CALL flow.retrieve_storages()}
+        {CALL flow.retrieve_storages(#{param1})}
     </select>
     <resultMap id="allStorages" type="com.teragrep.cfe18.handlers.entities.Storage">
         <result property="target_name" column="storage_name"/>
@@ -68,7 +68,7 @@
 
     <!-- Get ALL Capture Storages -->
     <select id="getAllCaptureStorage" resultMap="allCaptureStorage" statementType="CALLABLE">
-        {CALL cfe_18.retrieve_all_capture_storages()}
+        {CALL cfe_18.retrieve_all_capture_storages(#{param1})}
     </select>
     <resultMap id="allCaptureStorage" type="com.teragrep.cfe18.handlers.entities.CaptureStorage">
         <result property="capture_id" column="capture_id"/>
@@ -79,7 +79,7 @@
 
     <!-- Get ALL Flow Storages -->
     <select id="getAllFlowStorage" resultMap="allFlowStorage" statementType="CALLABLE">
-        {CALL flow.retrieve_all_flow_storages()}
+        {CALL flow.retrieve_all_flow_storages(#{param1})}
     </select>
     <resultMap id="allFlowStorage" type="com.teragrep.cfe18.handlers.entities.FlowStorage">
         <result property="id" column="id"/>

@@ -45,7 +45,7 @@
  */
 use cfe_03;
 DELIMITER //
-CREATE OR REPLACE PROCEDURE retrieve_host_meta(proc_host_meta_id int)
+CREATE OR REPLACE PROCEDURE retrieve_host_meta(proc_host_meta_id int,tx_id int)
 BEGIN
 
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
@@ -54,15 +54,20 @@ BEGIN
             RESIGNAL;
         END;
     START TRANSACTION;
-    if (select id from host_meta where id = proc_host_meta_id) is null
+            if(tx_id) is null then
+             set @time = (select max(transaction_id) from mysql.transaction_registry);
+        else
+             set @time=tx_id;
+        end if;
+    if (select id from host_meta for system_time as of transaction @time where id = proc_host_meta_id) is null
     then
         SELECT JSON_OBJECT('id', proc_host_meta_id, 'message', 'Host metadata does not exist for the given ID')
         into @hmd;
         signal sqlstate '45000' set message_text = @hmd;
     end if;
 
-    if (((select count(*) from cfe_03.host_meta_x_ip where host_meta_id = proc_host_meta_id) and
-         (select count(*) from cfe_03.host_meta_x_interface where host_meta_id = proc_host_meta_id)) = 0) then
+    if (((select count(*) from cfe_03.host_meta_x_ip for system_time as of transaction @time where host_meta_id = proc_host_meta_id) and
+         (select count(*) from cfe_03.host_meta_x_interface for system_time as of transaction @time where host_meta_id = proc_host_meta_id)) = 0) then
         SELECT JSON_OBJECT('id', proc_host_meta_id, 'message', 'IP and/or INTERFACE is missing for given host_meta_id')
         into @ipihm;
         signal sqlstate '45100' set message_text = @ipihm;
@@ -77,15 +82,15 @@ BEGIN
            ia.ip_address as ip_address,
            hm.hostname   as hostname,
            hm.host_id    as host_id
-    from host_meta hm
-             inner join arch_type a on hm.arch_id = a.id
-             inner join release_version rv on hm.release_ver_id = rv.id
-             inner join flavor_type ft on hm.flavor_id = ft.id
-             inner join os_type ot on hm.os_id = ot.id
-             inner join host_meta_x_interface hmxi on hm.id = hmxi.host_meta_id
-             inner join host_meta_x_ip h on hm.id = h.host_meta_id
-             inner join interfaces i on hmxi.interface_id = i.id
-             inner join ip_addresses ia on h.ip_id = ia.id
+    from host_meta for system_time as of transaction @time hm
+             inner join arch_type for system_time as of transaction @time a on hm.arch_id = a.id
+             inner join release_version for system_time as of transaction @time rv on hm.release_ver_id = rv.id
+             inner join flavor_type for system_time as of transaction @time ft on hm.flavor_id = ft.id
+             inner join os_type for system_time as of transaction @time ot on hm.os_id = ot.id
+             inner join host_meta_x_interface for system_time as of transaction @time hmxi on hm.id = hmxi.host_meta_id
+             inner join host_meta_x_ip for system_time as of transaction @time h on hm.id = h.host_meta_id
+             inner join interfaces for system_time as of transaction @time i on hmxi.interface_id = i.id
+             inner join ip_addresses for system_time as of transaction @time ia on h.ip_id = ia.id
     where hm.id = proc_host_meta_id
       and a.id = hm.arch_id
       and rv.id = hm.release_ver_id

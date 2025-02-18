@@ -48,37 +48,55 @@ use cfe_03;
 create table interfaces
 (
     id        int auto_increment primary key,
-    interface varchar(255) not null unique
-);
+    interface varchar(255) not null unique,
+    start_trxid BIGINT UNSIGNED GENERATED ALWAYS AS ROW START INVISIBLE,
+    end_trxid BIGINT UNSIGNED GENERATED ALWAYS AS ROW END INVISIBLE,
+    PERIOD FOR SYSTEM_TIME(start_trxid, end_trxid)
+) WITH SYSTEM VERSIONING;
 create table ip_addresses
 (
     id         int auto_increment primary key,
-    ip_address varchar(255) not null unique
-);
+    ip_address varchar(255) not null unique,
+    start_trxid BIGINT UNSIGNED GENERATED ALWAYS AS ROW START INVISIBLE,
+    end_trxid BIGINT UNSIGNED GENERATED ALWAYS AS ROW END INVISIBLE,
+    PERIOD FOR SYSTEM_TIME(start_trxid, end_trxid)
+) WITH SYSTEM VERSIONING;
 
 create table arch_type
 (
     id   int auto_increment primary key,
-    arch varchar(255) unique not null
-);
+    arch varchar(255) unique not null,
+    start_trxid BIGINT UNSIGNED GENERATED ALWAYS AS ROW START INVISIBLE,
+    end_trxid BIGINT UNSIGNED GENERATED ALWAYS AS ROW END INVISIBLE,
+    PERIOD FOR SYSTEM_TIME(start_trxid, end_trxid)
+) WITH SYSTEM VERSIONING;
 
 create table flavor_type
 (
     id     int auto_increment primary key,
-    flavor varchar(255) unique not null
-);
+    flavor varchar(255) unique not null,
+    start_trxid BIGINT UNSIGNED GENERATED ALWAYS AS ROW START INVISIBLE,
+    end_trxid BIGINT UNSIGNED GENERATED ALWAYS AS ROW END INVISIBLE,
+    PERIOD FOR SYSTEM_TIME(start_trxid, end_trxid)
+) WITH SYSTEM VERSIONING;
 
 create table os_type
 (
     id int auto_increment primary key,
-    os varchar(255) unique not null
-);
+    os varchar(255) unique not null,
+    start_trxid BIGINT UNSIGNED GENERATED ALWAYS AS ROW START INVISIBLE,
+    end_trxid BIGINT UNSIGNED GENERATED ALWAYS AS ROW END INVISIBLE,
+    PERIOD FOR SYSTEM_TIME(start_trxid, end_trxid)
+) WITH SYSTEM VERSIONING;
 
 create table release_version
 (
     id      int auto_increment primary key,
-    rel_ver varchar(255) unique not null
-);
+    rel_ver varchar(255) unique not null,
+    start_trxid BIGINT UNSIGNED GENERATED ALWAYS AS ROW START INVISIBLE,
+    end_trxid BIGINT UNSIGNED GENERATED ALWAYS AS ROW END INVISIBLE,
+    PERIOD FOR SYSTEM_TIME(start_trxid, end_trxid)
+) WITH SYSTEM VERSIONING;
 
 
 create table host_meta
@@ -95,8 +113,11 @@ create table host_meta
     constraint flavor foreign key (flavor_id) references flavor_type (id),
     constraint arch foreign key (arch_id) references arch_type (id),
     constraint os foreign key (os_id) references os_type (id),
-    constraint ´MD5ToLocationHost´ foreign key (host_id) references location.host (id) on delete cascade
-);
+    constraint ´MD5ToLocationHost´ foreign key (host_id) references location.host (id) on delete cascade,
+    start_trxid BIGINT UNSIGNED GENERATED ALWAYS AS ROW START INVISIBLE,
+    end_trxid BIGINT UNSIGNED GENERATED ALWAYS AS ROW END INVISIBLE,
+    PERIOD FOR SYSTEM_TIME(start_trxid, end_trxid)
+) WITH SYSTEM VERSIONING;
 
 
 create table host_meta_x_interface
@@ -106,8 +127,11 @@ create table host_meta_x_interface
     interface_id int not null,
     constraint manyToInterface foreign key (interface_id) references interfaces (id),
     constraint interfacesToHostMeta foreign key (host_meta_id) references host_meta (id) on delete cascade,
-    unique key (host_meta_id, interface_id)
-);
+    unique key (host_meta_id, interface_id),
+    start_trxid BIGINT UNSIGNED GENERATED ALWAYS AS ROW START INVISIBLE,
+    end_trxid BIGINT UNSIGNED GENERATED ALWAYS AS ROW END INVISIBLE,
+    PERIOD FOR SYSTEM_TIME(start_trxid, end_trxid)
+) WITH SYSTEM VERSIONING;
 
 create table host_meta_x_ip
 (
@@ -116,8 +140,11 @@ create table host_meta_x_ip
     ip_id        int not null,
     constraint manyToIp foreign key (ip_id) references ip_addresses (id),
     constraint ipsToHostMeta foreign key (host_meta_id) references host_meta (id) on delete cascade,
-    unique key (host_meta_id, ip_id)
-);
+    unique key (host_meta_id, ip_id),
+    start_trxid BIGINT UNSIGNED GENERATED ALWAYS AS ROW START INVISIBLE,
+    end_trxid BIGINT UNSIGNED GENERATED ALWAYS AS ROW END INVISIBLE,
+    PERIOD FOR SYSTEM_TIME(start_trxid, end_trxid)
+) WITH SYSTEM VERSIONING;
 
 
 

@@ -45,7 +45,7 @@
  */
 use cfe_18;
 DELIMITER //
-CREATE OR REPLACE PROCEDURE retrieve_capture_storages(capture_id int)
+CREATE OR REPLACE PROCEDURE retrieve_capture_storages(capture_id int,tx_id int)
 BEGIN
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
         BEGIN
@@ -53,14 +53,21 @@ BEGIN
             RESIGNAL;
         END;
     START TRANSACTION;
-    if (select count(id) from cfe_18.capture_def_x_flow_targets where capture_def_id = capture_id = 0) then
+
+    if(tx_id) is null then
+        set @time = (select max(transaction_id) from mysql.transaction_registry);
+    else
+        set @time=tx_id;
+    end if;
+
+    if ((select count(id) from cfe_18.capture_def_x_flow_targets for system_time as of transaction @time where capture_def_id = capture_id) = 0) then
         SELECT JSON_OBJECT('id', capture_id, 'message', 'Capture storage does not exist with given ID') into @cs;
         signal sqlstate '45000' set message_text = @cs;
     else
         select s.storage_name as storage_name, cdxft.flow_target_id as storage_id, cdxft.capture_def_id as capture_id
-        from capture_def_x_flow_targets cdxft
-                 inner join flow.flow_targets ft on cdxft.flow_target_id = ft.storage_id
-                 inner join flow.storages s on ft.storage_id = s.id
+        from capture_def_x_flow_targets for system_time as of transaction @time cdxft
+                 inner join flow.flow_targets for system_time as of transaction @time ft on cdxft.flow_target_id = ft.storage_id
+                 inner join flow.storages for system_time as of transaction @time s on ft.storage_id = s.id
         where cdxft.capture_def_id = capture_id;
     end if;
     COMMIT;

@@ -97,9 +97,9 @@ public class HostMetaController {
                     content = @Content),
             @ApiResponse(responseCode = "500", description = "Internal server error, contact admin", content = @Content)
     })
-    public ResponseEntity<?> getHostMeta(@PathVariable("id") int id) {
+    public ResponseEntity<?> getHostMeta(@PathVariable("id") int id, @RequestParam(required = false) Integer version) {
         try {
-            List<HostMeta> hm = hostMetaMapper.getHostMetaById(id);
+            List<HostMeta> hm = hostMetaMapper.getHostMetaById(id,version);
             return new ResponseEntity<>(hm, HttpStatus.OK);
         } catch (Exception ex) {
             JSONObject jsonErr = new JSONObject();
@@ -128,8 +128,8 @@ public class HostMetaController {
                     content = {@Content(mediaType = "application/json",
                             schema = @Schema(implementation = HostMeta.class))})
     })
-    public List<HostMeta> getAllHostMeta() {
-        return hostMetaMapper.getAllHostMeta();
+    public List<HostMeta> getAllHostMeta(@RequestParam(required = false) Integer version) {
+        return hostMetaMapper.getAllHostMeta(version);
     }
 
     // GET ALL IP Addresses
@@ -140,8 +140,8 @@ public class HostMetaController {
                     content = {@Content(mediaType = "application/json",
                             schema = @Schema(implementation = IPAddress.class))})
     })
-    public List<IPAddress> getAllHostMetaIp() {
-        return hostMetaMapper.getAllHostMetaIp();
+    public List<IPAddress> getAllHostMetaIp(@RequestParam(required = false) Integer version) {
+        return hostMetaMapper.getAllHostMetaIp(version);
     }
 
 
@@ -153,8 +153,8 @@ public class HostMetaController {
                     content = {@Content(mediaType = "application/json",
                             schema = @Schema(implementation = InterfaceType.class))})
     })
-    public List<InterfaceType> getAllHostMetaInterface() {
-        return hostMetaMapper.getAllHostMetaInterface();
+    public List<InterfaceType> getAllHostMetaInterface(@RequestParam(required = false) Integer version) {
+        return hostMetaMapper.getAllHostMetaInterface(version);
     }
 
     @RequestMapping(method = RequestMethod.PUT, path = "/meta", produces = "application/json")

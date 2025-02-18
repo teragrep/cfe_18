@@ -45,13 +45,18 @@
  */
 use cfe_18;
 DELIMITER //
-CREATE OR REPLACE PROCEDURE retrieve_all_captures()
+CREATE OR REPLACE PROCEDURE retrieve_all_captures(tx_id int)
 BEGIN
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
         BEGIN
             ROLLBACK;
             RESIGNAL;
         end;
+        if(tx_id) is null then
+             set @time = (select max(transaction_id) from mysql.transaction_registry);
+        else
+             set @time=tx_id;
+        end if;
     select cd.id                     as captureID,
            a.app                     as application,
            c.category                as category,
@@ -66,23 +71,23 @@ BEGIN
            cmf.tagPath               as tagpath,
            cmf.capturePath           as capturepath,
            pt.type_name              as processing_type
-    from cfe_18.capture_definition cd
-             inner join application a on cd.application_id = a.id
-             inner join category c on cd.category_id = c.id
-             inner join captureSourcetype cS on cd.captureSourcetype_id = cS.id
-             inner join captureIndex cI on cd.captureIndex_id = cI.id
-             inner join retentionTime rT on cd.retentionTime_id = rT.id
-             inner join tags t on cd.tag_id = t.id
-             inner join flow.flows f on cd.flow_id = f.id
-             inner join flow.capture_sink cas on cd.flow_id = cas.flow_id and cd.L7_id = cas.L7_id
-             inner join flow.L7 L7 on cd.L7_id = L7.id
-             left join capture_type ct on cd.capture_type_id = ct.id
-             left join capture_def_group_x_capture_def cdgxcd
+    from cfe_18.capture_definition for system_time as of transaction @time cd
+             inner join application for system_time as of transaction @time a on cd.application_id = a.id
+             inner join category for system_time as of transaction @time c on cd.category_id = c.id
+             inner join captureSourcetype for system_time as of transaction @time cS on cd.captureSourcetype_id = cS.id
+             inner join captureIndex for system_time as of transaction @time cI on cd.captureIndex_id = cI.id
+             inner join retentionTime for system_time as of transaction @time rT on cd.retentionTime_id = rT.id
+             inner join tags for system_time as of transaction @time t on cd.tag_id = t.id
+             inner join flow.flows for system_time as of transaction @time f on cd.flow_id = f.id
+             inner join flow.capture_sink for system_time as of transaction @time cas on cd.flow_id = cas.flow_id and cd.L7_id = cas.L7_id
+             inner join flow.L7 for system_time as of transaction @time L7 on cd.L7_id = L7.id
+             left join capture_type for system_time as of transaction @time ct on cd.capture_type_id = ct.id
+             left join capture_def_group_x_capture_def for system_time as of transaction @time cdgxcd
                        on cd.id = cdgxcd.capture_def_id and cd.capture_type = cdgxcd.capture_type and
                           t.id = cdgxcd.tag_id
-             left join capture_def_group cg on cdgxcd.capture_def_group_id = cg.id
-             left join capture_meta_file cmf on ct.id = cmf.id and ct.capture_type = cmf.capture_type
-             left join processing_type pt on cmf.processing_type_id = pt.id;
+             left join capture_def_group for system_time as of transaction @time cg on cdgxcd.capture_def_group_id = cg.id
+             left join capture_meta_file for system_time as of transaction @time cmf on ct.id = cmf.id and ct.capture_type = cmf.capture_type
+             left join processing_type for system_time as of transaction @time pt on cmf.processing_type_id = pt.id;
 end;
 //
 DELIMITER ;

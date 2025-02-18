@@ -128,8 +128,9 @@ public class ProcedureCaptureGroupTest extends DBUnitbase {
      */
     public void testRetrieveCaptureGroup() throws Exception {
         List<Integer> actualList = new ArrayList<>();
-        CallableStatement stmnt = conn.prepareCall("{CALL cfe_18.retrieve_capture_group_details(?)}");
+        CallableStatement stmnt = conn.prepareCall("{CALL cfe_18.retrieve_capture_group_details(?,?)}");
         stmnt.setString(1, "capturegroup1");
+        stmnt.setString(2, null);
         ResultSet rs = stmnt.executeQuery();
         while (rs.next()) {
             actualList.add(rs.getInt("capture_definition_id"));
@@ -149,8 +150,9 @@ public class ProcedureCaptureGroupTest extends DBUnitbase {
      */
     public void testCaptureGroupIsMissing() throws Exception {
         SQLException state = Assertions.assertThrows(SQLException.class, () -> {
-            CallableStatement stmnt = conn.prepareCall("{CALL cfe_18.retrieve_capture_group_details(?)}");
+            CallableStatement stmnt = conn.prepareCall("{CALL cfe_18.retrieve_capture_group_details(?,?)}");
             stmnt.setString(1, "groupThatDontExist");
+            stmnt.setString(2, null);
             stmnt.execute();
         });
         Assertions.assertEquals("45000", state.getSQLState());

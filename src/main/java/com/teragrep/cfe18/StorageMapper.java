@@ -61,15 +61,15 @@ public interface StorageMapper {
 
     Storage addStorage(String cfe_type, String storage_name);
 
-    List<FlowStorage> retrieveFlowStorages(String flow);
+    List<FlowStorage> retrieveFlowStorages(String flow,Integer version);
 
-    List<FlowStorage> getAllFlowStorage();
+    List<FlowStorage> getAllFlowStorage(Integer version);
 
-    List<CaptureStorage> retrieveCaptureStorages(int capture_id);
+    List<CaptureStorage> retrieveCaptureStorages(int capture_id,Integer version);
 
-    List<CaptureStorage> getAllCaptureStorage();
+    List<CaptureStorage> getAllCaptureStorage(Integer version);
 
-    List<Storage> getStorages();
+    List<Storage> getStorages(Integer version);
 
     Storage deleteStorage(int id);
 

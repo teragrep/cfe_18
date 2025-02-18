@@ -134,8 +134,9 @@ public class ProcedureHostAddCfeFileTest extends DBUnitbase {
     This test is retrieving relp based host
 */
     public void testProcedureRetrieveRelpHost() throws Exception {
-        CallableStatement stmnt = conn.prepareCall("{CALL cfe_00.retrieve_host_details(?)}");
+        CallableStatement stmnt = conn.prepareCall("{CALL cfe_00.retrieve_host_details(?,?)}");
         stmnt.setInt(1, 25);
+        stmnt.setString(2, null);
         ResultSet rs = stmnt.executeQuery();
         rs.next();
         Assertions.assertEquals(25, rs.getInt("host_id"));
@@ -148,8 +149,9 @@ public class ProcedureHostAddCfeFileTest extends DBUnitbase {
     This test is retrieving cfe hub
 */
     public void testProcedureRetrieveHub() throws Exception {
-        CallableStatement stmnt = conn.prepareCall("{CALL location.retrieve_cfe_hub_details(?)}");
+        CallableStatement stmnt = conn.prepareCall("{CALL location.retrieve_cfe_hub_details(?,?)}");
         stmnt.setInt(1, 1);
+        stmnt.setString(2, null);
         ResultSet rs = stmnt.executeQuery();
         rs.next();
         Assertions.assertEquals(1, rs.getInt("hub_id"));
@@ -184,8 +186,9 @@ public class ProcedureHostAddCfeFileTest extends DBUnitbase {
      */
     public void testProcedureRetrieveHostWithoutMeta() throws Exception {
         SQLException state = Assertions.assertThrows(SQLException.class, () -> {
-            CallableStatement stmnt = conn.prepareCall("{CALL location.retrieve_host_details(?)}");
+            CallableStatement stmnt = conn.prepareCall("{CALL location.retrieve_host_details(?,?)}");
             stmnt.setInt(1, 1);
+            stmnt.setString(2, null);
             stmnt.execute();
         });
         Assertions.assertEquals("42000", state.getSQLState());

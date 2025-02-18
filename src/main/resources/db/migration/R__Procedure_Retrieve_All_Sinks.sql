@@ -45,21 +45,26 @@
  */
 use flow;
 DELIMITER //
-CREATE OR REPLACE PROCEDURE retrieve_all_sinks()
+CREATE OR REPLACE PROCEDURE retrieve_all_sinks(tx_id int)
 BEGIN
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
         BEGIN
             ROLLBACK;
             RESIGNAL;
         end;
+        if(tx_id) is null then
+             set @time = (select max(transaction_id) from mysql.transaction_registry);
+        else
+             set @time=tx_id;
+        end if;
     select cs.id          as id,
            cs.ip_address  as ip,
            cs.sink_port   as port,
            L.app_protocol as protocol,
            f.name         as flow
-    from flow.capture_sink cs
-             inner join L7 L on cs.L7_id = L.id
-             inner join flows f on cs.flow_id = f.id;
+    from flow.capture_sink for system_time as of transaction @time cs
+             inner join L7 for system_time as of transaction @time L on cs.L7_id = L.id
+             inner join flows for system_time as of transaction @time f on cs.flow_id = f.id;
 
 end;
 //

@@ -49,22 +49,29 @@ create table storages
     id           int auto_increment primary key,
     storage_name varchar(255) unique not null,
     cfe_type     varchar(6)          not null check (cfe_type in ('cfe_10', 'cfe_11', 'cfe_12', 'cfe_19', 'cfe_23', 'cfe_04')),
-    unique KEY (id, cfe_type)
-);
+    unique KEY (id, cfe_type),
+    start_trxid BIGINT UNSIGNED GENERATED ALWAYS AS ROW START INVISIBLE,
+    end_trxid BIGINT UNSIGNED GENERATED ALWAYS AS ROW END INVISIBLE,
+    PERIOD FOR SYSTEM_TIME(start_trxid, end_trxid)
+) WITH SYSTEM VERSIONING;
 
 create table L7
 (
     id           int auto_increment primary key,
-    app_protocol varchar(64) unique not null
-);
+    app_protocol varchar(64) unique not null,
+    start_trxid BIGINT UNSIGNED GENERATED ALWAYS AS ROW START INVISIBLE,
+    end_trxid BIGINT UNSIGNED GENERATED ALWAYS AS ROW END INVISIBLE,
+    PERIOD FOR SYSTEM_TIME(start_trxid, end_trxid)
+) WITH SYSTEM VERSIONING;
 
 create table flows
 (
     id   int auto_increment primary key,
-    name varchar(255) unique not null
-
-
-);
+    name varchar(255) unique not null,
+    start_trxid BIGINT UNSIGNED GENERATED ALWAYS AS ROW START INVISIBLE,
+    end_trxid BIGINT UNSIGNED GENERATED ALWAYS AS ROW END INVISIBLE,
+    PERIOD FOR SYSTEM_TIME(start_trxid, end_trxid)
+) WITH SYSTEM VERSIONING;
 
 create table capture_sink
 (
@@ -75,8 +82,11 @@ create table capture_sink
     sink_port  varchar(5)  not null,
     constraint ´L7_id_TO_L7´ foreign key (L7_id) references L7 (id),
     constraint foreign key (flow_id) references flows (id),
-    unique key (flow_id, L7_id)
-);
+    unique key (flow_id, L7_id),
+    start_trxid BIGINT UNSIGNED GENERATED ALWAYS AS ROW START INVISIBLE,
+    end_trxid BIGINT UNSIGNED GENERATED ALWAYS AS ROW END INVISIBLE,
+    PERIOD FOR SYSTEM_TIME(start_trxid, end_trxid)
+) WITH SYSTEM VERSIONING;
 
 
 
@@ -85,52 +95,73 @@ create table cfe_10
     id       int primary key,
     cfe_type varchar(6) not null check (cfe_type = 'cfe_10'),
     spool    varchar(50),
-    constraint ´storagesToCfe_10´ foreign key (id, cfe_type) references storages (id, cfe_type) on delete cascade
-);
+    constraint ´storagesToCfe_10´ foreign key (id, cfe_type) references storages (id, cfe_type) on delete cascade,
+    start_trxid BIGINT UNSIGNED GENERATED ALWAYS AS ROW START INVISIBLE,
+    end_trxid BIGINT UNSIGNED GENERATED ALWAYS AS ROW END INVISIBLE,
+    PERIOD FOR SYSTEM_TIME(start_trxid, end_trxid)
+) WITH SYSTEM VERSIONING;
 
 create table cfe_11
 (
     id         int primary key,
     cfe_type   varchar(6) not null check (cfe_type = 'cfe_11'),
     inspection varchar(50),
-    constraint ´storagesToCfe_11´ foreign key (id, cfe_type) references storages (id, cfe_type) on delete cascade
-);
+    constraint ´storagesToCfe_11´ foreign key (id, cfe_type) references storages (id, cfe_type) on delete cascade,
+    start_trxid BIGINT UNSIGNED GENERATED ALWAYS AS ROW START INVISIBLE,
+    end_trxid BIGINT UNSIGNED GENERATED ALWAYS AS ROW END INVISIBLE,
+    PERIOD FOR SYSTEM_TIME(start_trxid, end_trxid)
+) WITH SYSTEM VERSIONING;
 
 create table cfe_12
 (
     id       int primary key,
     cfe_type varchar(6) not null check (cfe_type = 'cfe_12'),
-    constraint ´storagesToCfe_12´ foreign key (id, cfe_type) references storages (id, cfe_type) on delete cascade
-);
+    constraint ´storagesToCfe_12´ foreign key (id, cfe_type) references storages (id, cfe_type) on delete cascade,
+    start_trxid BIGINT UNSIGNED GENERATED ALWAYS AS ROW START INVISIBLE,
+    end_trxid BIGINT UNSIGNED GENERATED ALWAYS AS ROW END INVISIBLE,
+    PERIOD FOR SYSTEM_TIME(start_trxid, end_trxid)
+) WITH SYSTEM VERSIONING;
 
 create table cfe_04
 (
     id       int primary key,
     cfe_type varchar(6) not null check (cfe_type = 'cfe_04'),
-    constraint ´storagesToCfe_04´ foreign key (id, cfe_type) references storages (id, cfe_type) on delete cascade
-);
+    constraint ´storagesToCfe_04´ foreign key (id, cfe_type) references storages (id, cfe_type) on delete cascade,
+    start_trxid BIGINT UNSIGNED GENERATED ALWAYS AS ROW START INVISIBLE,
+    end_trxid BIGINT UNSIGNED GENERATED ALWAYS AS ROW END INVISIBLE,
+    PERIOD FOR SYSTEM_TIME(start_trxid, end_trxid)
+) WITH SYSTEM VERSIONING;
 
 create table cfe_19
 (
     id       int primary key,
     cfe_type varchar(6) not null check (cfe_type = 'cfe_19'),
-    constraint ´storagesToCfe_19´ foreign key (id, cfe_type) references storages (id, cfe_type) on delete cascade
-);
+    constraint ´storagesToCfe_19´ foreign key (id, cfe_type) references storages (id, cfe_type) on delete cascade,
+    start_trxid BIGINT UNSIGNED GENERATED ALWAYS AS ROW START INVISIBLE,
+    end_trxid BIGINT UNSIGNED GENERATED ALWAYS AS ROW END INVISIBLE,
+    PERIOD FOR SYSTEM_TIME(start_trxid, end_trxid)
+) WITH SYSTEM VERSIONING;
 
 create table cfe_23
 (
     id       int primary key,
     cfe_type varchar(6) not null check (cfe_type = 'cfe_23'),
-    constraint ´storagesToCfe_23´ foreign key (id, cfe_type) references storages (id, cfe_type) on delete cascade
-);
+    constraint ´storagesToCfe_23´ foreign key (id, cfe_type) references storages (id, cfe_type) on delete cascade,
+    start_trxid BIGINT UNSIGNED GENERATED ALWAYS AS ROW START INVISIBLE,
+    end_trxid BIGINT UNSIGNED GENERATED ALWAYS AS ROW END INVISIBLE,
+    PERIOD FOR SYSTEM_TIME(start_trxid, end_trxid)
+) WITH SYSTEM VERSIONING;
 
 
 create table routers
 (
     id      int auto_increment primary key,
     flow_id int not null,
-    constraint ´routerToFlow´ foreign key (flow_id) references flows (id)
-);
+    constraint ´routerToFlow´ foreign key (flow_id) references flows (id),
+    start_trxid BIGINT UNSIGNED GENERATED ALWAYS AS ROW START INVISIBLE,
+    end_trxid BIGINT UNSIGNED GENERATED ALWAYS AS ROW END INVISIBLE,
+    PERIOD FOR SYSTEM_TIME(start_trxid, end_trxid)
+) WITH SYSTEM VERSIONING;
 
 create table flow_targets
 (
@@ -143,9 +174,11 @@ create table flow_targets
                                              'cfe_23', 'cfe_04')),
     constraint ´flow_idToFlows´ foreign key (flow_id) references flows (id),
     constraint ´storage_idToStorage´ foreign key (storage_id, storage_type) references storages (id, cfe_type),
-    unique key (flow_id, storage_id)
-);
-
+    unique key (flow_id, storage_id),
+    start_trxid BIGINT UNSIGNED GENERATED ALWAYS AS ROW START INVISIBLE,
+    end_trxid BIGINT UNSIGNED GENERATED ALWAYS AS ROW END INVISIBLE,
+    PERIOD FOR SYSTEM_TIME(start_trxid, end_trxid)
+) WITH SYSTEM VERSIONING;
 
 
 

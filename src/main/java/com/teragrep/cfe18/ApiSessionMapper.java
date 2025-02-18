@@ -1,5 +1,5 @@
 /*
- * Integration main data management for Teragrep
+ * Main data management system (MDMS) cfe_18
  * Copyright (C) 2021  Suomen Kanuuna Oy
  *
  * This program is free software: you can redistribute it and/or modify
@@ -45,23 +45,11 @@
  */
 package com.teragrep.cfe18;
 
-import com.teragrep.cfe18.handlers.entities.FileCaptureMeta;
 import org.apache.ibatis.annotations.Mapper;
 
-import java.util.List;
-
 @Mapper
-public interface FileCaptureMetaMapper {
-    FileCaptureMeta getProcessingTypeByName(String name,Integer version);
+public interface ApiSessionMapper {
 
-    FileCaptureMeta addNewProcessingType(
-            String Template,
-            String rule,
-            String name,
-            String inputtype,
-            String inputvalue);
+    int getSession();
+}
 
-    List<FileCaptureMeta> getAllProcessingType(Integer version);
-
-    FileCaptureMeta deleteProcessingType(String name);
-};

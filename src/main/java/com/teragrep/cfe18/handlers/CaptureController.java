@@ -101,9 +101,9 @@ public class CaptureController {
                     content = @Content),
             @ApiResponse(responseCode = "500", description = "Internal server error, contact admin", content = @Content)
     })
-    public ResponseEntity<?> getResultsFile(@PathVariable("id") int id) {
+    public ResponseEntity<?> getResultsFile(@PathVariable("id") int id, @RequestParam(required = false) Integer version) {
         try {
-            CaptureFile c = captureMapper.getCaptureFileById(id);
+            CaptureFile c = captureMapper.getCaptureFileById(id,version);
             if (c.getCaptureType() == CaptureFile.CaptureType.cfe) {
                 return new ResponseEntity<>(c, HttpStatus.OK);
             } else {
@@ -139,9 +139,9 @@ public class CaptureController {
                     content = @Content),
             @ApiResponse(responseCode = "500", description = "Internal server error, contact admin", content = @Content)
     })
-    public ResponseEntity<?> getResultsRelp(@PathVariable("id") int id) {
+    public ResponseEntity<?> getResultsRelp(@PathVariable("id") int id, @RequestParam(required = false) Integer version) {
         try {
-            CaptureRelp c = captureMapper.getCaptureRelpById(id);
+            CaptureRelp c = captureMapper.getCaptureRelpById(id,version);
             if (c.getCaptureType() == CaptureRelp.CaptureType.relp) {
                 return new ResponseEntity<>(c, HttpStatus.OK);
             } else {
@@ -177,8 +177,8 @@ public class CaptureController {
                     content = {@Content(mediaType = "application/json",
                             schema = @Schema(implementation = CaptureFile.class))}),
     })
-    public List<CaptureFile> getAllCapture() {
-        return captureMapper.getAllCapture();
+    public List<CaptureFile> getAllCapture(@RequestParam(required = false) Integer version) {
+        return captureMapper.getAllCapture(version);
     }
 
 

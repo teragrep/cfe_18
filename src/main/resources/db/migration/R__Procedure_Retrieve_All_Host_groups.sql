@@ -45,21 +45,26 @@
  */
 use location;
 DELIMITER //
-CREATE OR REPLACE PROCEDURE retrieve_all_host_groups()
+CREATE OR REPLACE PROCEDURE retrieve_all_host_groups(tx_id int)
 BEGIN
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
         BEGIN
             ROLLBACK;
             RESIGNAL;
         end;
+        if(tx_id) is null then
+             set @time = (select max(transaction_id) from mysql.transaction_registry);
+        else
+             set @time=tx_id;
+        end if;
     select hg.id        as host_group_id,
            hg.groupName as host_group_name,
            hg.host_type as host_group_type,
            h.id         as host_id,
            h.MD5        as host_md5
-    from location.host_group hg
-             inner join location.host_group_x_host hgxh on hg.id = hgxh.host_group_id
-             inner join location.host h on hgxh.host_id = h.id;
+    from location.host_group for system_time as of transaction @time hg
+             inner join location.host_group_x_host for system_time as of transaction @time hgxh on hg.id = hgxh.host_group_id
+             inner join location.host for system_time as of transaction @time h on hgxh.host_id = h.id;
 end;
 //
 DELIMITER ;

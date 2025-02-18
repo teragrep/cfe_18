@@ -140,8 +140,9 @@ public class ProcedureHostGroupFileTest extends DBUnitbase {
     public void testRetrieveHostGroupDetails() throws Exception {
         List<Integer> host_id = new ArrayList<>();
         List<String> md5 = new ArrayList<>();
-        CallableStatement stmnt = conn.prepareCall("{CALL location.retrieve_host_group_details(?)}");
+        CallableStatement stmnt = conn.prepareCall("{CALL location.retrieve_host_group_details(?,?)}");
         stmnt.setString(1, "host_group_1");
+        stmnt.setString(2, null);
         ResultSet rs = stmnt.executeQuery();
         while (rs.next()) {
             host_id.add(rs.getInt("host_id"));

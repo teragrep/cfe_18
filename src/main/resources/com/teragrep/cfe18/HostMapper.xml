@@ -6,7 +6,7 @@
 
     <!-- Get host file by ID-->
     <select id="getHostFileById" resultMap="HostFile" statementType="CALLABLE">
-        {CALL cfe_00.retrieve_host_details(#{param1})}
+        {CALL cfe_00.retrieve_host_details(#{param1},#{param2})}
     </select>
     <resultMap type="com.teragrep.cfe18.handlers.entities.HostFile" id="HostFile">
         <result property="id" column="host_id"/>
@@ -32,7 +32,7 @@
 
     <!-- Get relp host by ID-->
     <select id="getHostRelpById" resultMap="HostRelp" statementType="CALLABLE">
-        {CALL cfe_00.retrieve_host_details(#{param1})}
+        {CALL cfe_00.retrieve_host_details(#{param1},#{param2})}
     </select>
     <resultMap type="com.teragrep.cfe18.handlers.entities.HostRelp" id="HostRelp">
         <result property="id" column="host_id"/>
@@ -54,7 +54,7 @@
 
     <!-- GET ALL Host -->
     <select id="getAllHost" resultMap="allHost" statementType="CALLABLE">
-        {CALL location.retrieve_all_hosts()}
+        {CALL location.retrieve_all_hosts(#{param1})}
     </select>
     <resultMap id="allHost" type="com.teragrep.cfe18.handlers.entities.HostFile">
         <result property="id" column="host_id"/>

@@ -97,9 +97,9 @@ public class HostController {
                     content = @Content),
             @ApiResponse(responseCode = "500", description = "Internal server error, contact admin", content = @Content)
     })
-    public ResponseEntity<?> getHostFile(@PathVariable("id") int id) {
+    public ResponseEntity<?> getHostFile(@PathVariable("id") int id, @RequestParam(required = false) Integer version) {
         try {
-            HostFile hf = hostMapper.getHostFileById(id);
+            HostFile hf = hostMapper.getHostFileById(id,version);
             if (hf.getHost_type().equals("cfe"))
                 return new ResponseEntity<>(hf, HttpStatus.OK);
             else {
@@ -140,9 +140,9 @@ public class HostController {
                     content = @Content),
             @ApiResponse(responseCode = "500", description = "Internal server error, contact admin", content = @Content)
     })
-    public ResponseEntity<?> getHostRelp(@PathVariable("id") int id) {
+    public ResponseEntity<?> getHostRelp(@PathVariable("id") int id, @RequestParam(required = false) Integer version) {
         try {
-            HostRelp hr = hostMapper.getHostRelpById(id);
+            HostRelp hr = hostMapper.getHostRelpById(id,version);
             if (hr.getHostType().equals("relp"))
                 return new ResponseEntity<>(hr, HttpStatus.OK);
             else {
@@ -176,8 +176,8 @@ public class HostController {
                     content = {@Content(mediaType = "application/json",
                             schema = @Schema(implementation = HostFile.class))})
     })
-    public List<HostFile> getAllHost() {
-        return hostMapper.getAllHost();
+    public List<HostFile> getAllHost(@RequestParam(required = false) Integer version) {
+        return hostMapper.getAllHost(version);
     }
 
 

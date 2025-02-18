@@ -92,12 +92,12 @@ public class CaptureGroupController {
             @ApiResponse(responseCode = "400", description = "Capture group does not exist or there are no captures linked to the group",
                     content = @Content)
     })
-    public ResponseEntity<?> getResults(@PathVariable("name") String name) {
+    public ResponseEntity<?> getResults(@PathVariable("name") String name, @RequestParam(required = false) Integer version) {
         JSONObject jsonErr = new JSONObject();
         jsonErr.put("id", 0);
         jsonErr.put("message", "Unexpected error");
         try {
-            List<CaptureGroup> cg = captureGroupMapper.getCaptureGroupByName(name);
+            List<CaptureGroup> cg = captureGroupMapper.getCaptureGroupByName(name,version);
             if (cg.isEmpty()) {
                 throw new Exception("Empty group");
             } else {
@@ -126,8 +126,8 @@ public class CaptureGroupController {
             @ApiResponse(responseCode = "200", description = "Found capture groups",
                     content = {@Content(mediaType = "application/json",
                             schema = @Schema(implementation = CaptureGroup.class))})})
-    public List<CaptureGroup> getAllCaptureGroup() {
-        return captureGroupMapper.getAllCaptureGroup();
+    public List<CaptureGroup> getAllCaptureGroup(@RequestParam(required = false) Integer version) {
+        return captureGroupMapper.getAllCaptureGroup(version);
     }
 
 

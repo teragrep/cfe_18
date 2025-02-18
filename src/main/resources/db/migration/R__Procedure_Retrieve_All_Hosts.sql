@@ -45,13 +45,18 @@
  */
 use location;
 DELIMITER //
-CREATE OR REPLACE PROCEDURE retrieve_all_hosts()
+CREATE OR REPLACE PROCEDURE retrieve_all_hosts(tx_id int)
 BEGIN
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
         BEGIN
             ROLLBACK;
             RESIGNAL;
         end;
+        if(tx_id) is null then
+             set @time = (select max(transaction_id) from mysql.transaction_registry);
+        else
+             set @time=tx_id;
+        end if;
     select h.id        as host_id,
            h.fqhost    as host_fq,
            h.md5       as host_md5,
@@ -60,11 +65,11 @@ BEGIN
            hm.id       as host_meta_id,
            h3.fqhost   as hub_fq,
            h2.id       as hub_id
-    from location.host h
-             left join cfe_03.host_meta hm on h.id = hm.host_id
-             left join cfe_00.host_type_cfe htc on h.id = htc.host_id
-             left join cfe_00.hubs h2 on htc.hub_id = h2.id
-             left join location.host h3 on h2.host_id = h3.id;
+    from location.host for system_time as of transaction @time h
+             left join cfe_03.host_meta for system_time as of transaction @time hm on h.id = hm.host_id
+             left join cfe_00.host_type_cfe for system_time as of transaction @time htc on h.id = htc.host_id
+             left join cfe_00.hubs for system_time as of transaction @time h2 on htc.hub_id = h2.id
+             left join location.host for system_time as of transaction @time h3 on h2.host_id = h3.id;
 end;
 //
 DELIMITER ;

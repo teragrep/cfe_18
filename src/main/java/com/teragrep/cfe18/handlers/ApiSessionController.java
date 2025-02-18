@@ -1,5 +1,5 @@
 /*
- * Integration main data management for Teragrep
+ * Main data management system (MDMS) cfe_18
  * Copyright (C) 2021  Suomen Kanuuna Oy
  *
  * This program is free software: you can redistribute it and/or modify
@@ -43,25 +43,35 @@
  * Teragrep, the applicable Commercial License may apply to this file if you as
  * a licensee so wish it.
  */
-package com.teragrep.cfe18;
+package com.teragrep.cfe18.handlers;
 
-import com.teragrep.cfe18.handlers.entities.FileCaptureMeta;
-import org.apache.ibatis.annotations.Mapper;
+import com.teragrep.cfe18.ApiSessionMapper;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import org.mybatis.spring.SqlSessionTemplate;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
+import javax.sql.DataSource;
 
-@Mapper
-public interface FileCaptureMetaMapper {
-    FileCaptureMeta getProcessingTypeByName(String name,Integer version);
+@RestController
+@RequestMapping(path="/version")
+@SecurityRequirement(name="api")
+public class ApiSessionController {
 
-    FileCaptureMeta addNewProcessingType(
-            String Template,
-            String rule,
-            String name,
-            String inputtype,
-            String inputvalue);
+    @Autowired
+    DataSource dataSource;
 
-    List<FileCaptureMeta> getAllProcessingType(Integer version);
+    @Autowired
+    SqlSessionTemplate sqlSessionTemplate;
 
-    FileCaptureMeta deleteProcessingType(String name);
-};
+    @Autowired
+    ApiSessionMapper apiSessionMapper;
+
+    @RequestMapping(path = "", method = RequestMethod.GET)
+    public int version(){
+        return apiSessionMapper.getSession();
+    }
+
+}

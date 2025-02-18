@@ -95,11 +95,11 @@ public class SinkController {
                     content = @Content),
             @ApiResponse(responseCode = "500", description = "Internal server error, contact admin", content = @Content)
     })
-    public ResponseEntity<?> getSink(@PathVariable("id") int id) {
+    public ResponseEntity<?> getSink(@PathVariable("id") int id, @RequestParam(required = false) Integer version) {
         JSONObject jsonErr = new JSONObject();
         jsonErr.put("id", id);
         try {
-            Sink s = sinkMapper.getSinkById(id);
+            Sink s = sinkMapper.getSinkById(id,version);
             return new ResponseEntity<>(s, HttpStatus.OK);
         } catch (Exception ex) {
             final Throwable cause = ex.getCause();
@@ -124,8 +124,8 @@ public class SinkController {
                     content = {@Content(mediaType = "application/json",
                             schema = @Schema(implementation = Sink.class))})
     })
-    public List<Sink> getAllSink() {
-        return sinkMapper.getAllSinks();
+    public List<Sink> getAllSink(@RequestParam(required = false) Integer version) {
+        return sinkMapper.getAllSinks(version);
     }
 
 

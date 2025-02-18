@@ -45,7 +45,7 @@
  */
 use location;
 DELIMITER //
-CREATE OR REPLACE PROCEDURE retrieve_cfe_hub_details(proc_hub_id int)
+CREATE OR REPLACE PROCEDURE retrieve_cfe_hub_details(proc_hub_id int,tx_id int)
 BEGIN
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
         BEGIN
@@ -53,7 +53,12 @@ BEGIN
             RESIGNAL;
         END;
     START TRANSACTION;
-    if (select id from cfe_00.hubs where id = proc_hub_id) is null then
+            if(tx_id) is null then
+             set @time = (select max(transaction_id) from mysql.transaction_registry);
+        else
+             set @time=tx_id;
+        end if;
+    if (select id from cfe_00.hubs for system_time as of transaction @time where id = proc_hub_id) is null then
         SELECT JSON_OBJECT('id', proc_hub_id, 'message', 'Hub does not exist with given ID') into @hub;
         signal sqlstate '45000' set message_text = @hub;
     end if;
@@ -62,8 +67,8 @@ BEGIN
            h.fqhost   as hub_fq_host,
            hu.ip      as ip,
            h.md5      as md5
-    from cfe_00.hubs hu
-             inner join host h on hu.host_id = h.id
+    from cfe_00.hubs for system_time as of transaction @time hu
+             inner join location.host for system_time as of transaction @time h on hu.host_id = h.id
     where hu.id = proc_hub_id;
     COMMIT;
 END;

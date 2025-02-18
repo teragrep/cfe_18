@@ -47,13 +47,19 @@ use cfe_18;
 
 create table capture_meta_key (
     meta_key_id int auto_increment primary key,
-    meta_key_name varchar(1024)
-);
+    meta_key_name varchar(1024),
+    start_trxid BIGINT UNSIGNED GENERATED ALWAYS AS ROW START INVISIBLE,
+    end_trxid BIGINT UNSIGNED GENERATED ALWAYS AS ROW END INVISIBLE,
+    PERIOD FOR SYSTEM_TIME(start_trxid, end_trxid)
+) WITH SYSTEM VERSIONING;
 
 create table capture_meta (
   capture_id int not null,
   meta_key_id int not null,
   meta_value varchar(1024),
   constraint foreign key (capture_id) references capture_definition(id),
-  constraint  foreign key (meta_key_id) references  capture_meta_key(meta_key_id)
-);
+  constraint  foreign key (meta_key_id) references  capture_meta_key(meta_key_id),
+  start_trxid BIGINT UNSIGNED GENERATED ALWAYS AS ROW START INVISIBLE,
+  end_trxid BIGINT UNSIGNED GENERATED ALWAYS AS ROW END INVISIBLE,
+  PERIOD FOR SYSTEM_TIME(start_trxid, end_trxid)
+) WITH SYSTEM VERSIONING;

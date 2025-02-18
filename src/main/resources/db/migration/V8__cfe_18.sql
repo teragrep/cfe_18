@@ -49,36 +49,51 @@ create table inputtype
 (
     id        int auto_increment primary key,
     inputtype varchar(20) not null check (inputtype in ('regex', 'newline')),
-    unique key (id, inputtype)
-);
+    unique key (id, inputtype),
+    start_trxid BIGINT UNSIGNED GENERATED ALWAYS AS ROW START INVISIBLE,
+    end_trxid BIGINT UNSIGNED GENERATED ALWAYS AS ROW END INVISIBLE,
+    PERIOD FOR SYSTEM_TIME(start_trxid, end_trxid)
+) WITH SYSTEM VERSIONING;
 
 create table regex
 (
     id        int primary key,
     regex     varchar(255) not null,
     inputtype varchar(20)  not null check (inputtype = 'regex'),
-    constraint inputTypeRegex foreign key (id, inputtype) references inputtype (id, inputtype)
-);
+    constraint inputTypeRegex foreign key (id, inputtype) references inputtype (id, inputtype),
+    start_trxid BIGINT UNSIGNED GENERATED ALWAYS AS ROW START INVISIBLE,
+    end_trxid BIGINT UNSIGNED GENERATED ALWAYS AS ROW END INVISIBLE,
+    PERIOD FOR SYSTEM_TIME(start_trxid, end_trxid)
+) WITH SYSTEM VERSIONING;
 
 create table newline
 (
     id        int primary key,
     newline   varchar(255) not null,
     inputtype varchar(20)  not null check (inputtype = 'newline'),
-    constraint inputTypeNewline foreign key (id, inputtype) references inputtype (id, inputtype)
-);
+    constraint inputTypeNewline foreign key (id, inputtype) references inputtype (id, inputtype),
+    start_trxid BIGINT UNSIGNED GENERATED ALWAYS AS ROW START INVISIBLE,
+    end_trxid BIGINT UNSIGNED GENERATED ALWAYS AS ROW END INVISIBLE,
+    PERIOD FOR SYSTEM_TIME(start_trxid, end_trxid)
+) WITH SYSTEM VERSIONING;
 
 create table ruleset
 (
     id   int auto_increment primary key,
-    rule varchar(1000) not null unique
-);
+    rule varchar(1000) not null unique,
+    start_trxid BIGINT UNSIGNED GENERATED ALWAYS AS ROW START INVISIBLE,
+    end_trxid BIGINT UNSIGNED GENERATED ALWAYS AS ROW END INVISIBLE,
+    PERIOD FOR SYSTEM_TIME(start_trxid, end_trxid)
+) WITH SYSTEM VERSIONING;
 
 create table templates
 (
     id       int auto_increment primary key,
-    template varchar(255) not null unique
-);
+    template varchar(255) not null unique,
+    start_trxid BIGINT UNSIGNED GENERATED ALWAYS AS ROW START INVISIBLE,
+    end_trxid BIGINT UNSIGNED GENERATED ALWAYS AS ROW END INVISIBLE,
+    PERIOD FOR SYSTEM_TIME(start_trxid, end_trxid)
+) WITH SYSTEM VERSIONING;
 
 create table capture_type
 (
@@ -86,42 +101,65 @@ create table capture_type
     capture_type varchar(64) not null check (capture_type in
                                              ('aws', 'manual', 'cfe', 'windows', 'hec',
                                               'azure', 'relp')),
-    unique key (id, capture_type)
-);
+    unique key (id, capture_type),
+    start_trxid BIGINT UNSIGNED GENERATED ALWAYS AS ROW START INVISIBLE,
+    end_trxid BIGINT UNSIGNED GENERATED ALWAYS AS ROW END INVISIBLE,
+    PERIOD FOR SYSTEM_TIME(start_trxid, end_trxid)
+) WITH SYSTEM VERSIONING;
 
 create table application
 (
     id  int auto_increment primary key,
-    app varchar(48) not null unique
-);
+    app varchar(48) not null unique,
+    start_trxid BIGINT UNSIGNED GENERATED ALWAYS AS ROW START INVISIBLE,
+    end_trxid BIGINT UNSIGNED GENERATED ALWAYS AS ROW END INVISIBLE,
+    PERIOD FOR SYSTEM_TIME(start_trxid, end_trxid)
+) WITH SYSTEM VERSIONING;
 
 create table retentionTime
 (
     id        int auto_increment primary key,
-    retention varchar(255) not null unique
-);
+    retention varchar(255) not null unique,
+    start_trxid BIGINT UNSIGNED GENERATED ALWAYS AS ROW START INVISIBLE,
+    end_trxid BIGINT UNSIGNED GENERATED ALWAYS AS ROW END INVISIBLE,
+    PERIOD FOR SYSTEM_TIME(start_trxid, end_trxid)
+) WITH SYSTEM VERSIONING;
 
 create table tags
 (
     id  int auto_increment primary key,
-    tag varchar(48) not null unique
-);
+    tag varchar(48) not null unique,
+    start_trxid BIGINT UNSIGNED GENERATED ALWAYS AS ROW START INVISIBLE,
+    end_trxid BIGINT UNSIGNED GENERATED ALWAYS AS ROW END INVISIBLE,
+    PERIOD FOR SYSTEM_TIME(start_trxid, end_trxid)
+) WITH SYSTEM VERSIONING;
 
 create table captureIndex
 (
     id           int auto_increment primary key,
-    captureIndex varchar(48) not null unique
-);
+    captureIndex varchar(48) not null unique,
+    start_trxid BIGINT UNSIGNED GENERATED ALWAYS AS ROW START INVISIBLE,
+    end_trxid BIGINT UNSIGNED GENERATED ALWAYS AS ROW END INVISIBLE,
+    PERIOD FOR SYSTEM_TIME(start_trxid, end_trxid)
+) WITH SYSTEM VERSIONING;
+
 create table captureSourcetype
 (
     id                int auto_increment primary key,
-    captureSourceType varchar(255) not null unique
-);
+    captureSourceType varchar(255) not null unique,
+    start_trxid BIGINT UNSIGNED GENERATED ALWAYS AS ROW START INVISIBLE,
+    end_trxid BIGINT UNSIGNED GENERATED ALWAYS AS ROW END INVISIBLE,
+    PERIOD FOR SYSTEM_TIME(start_trxid, end_trxid)
+) WITH SYSTEM VERSIONING;
+
 create table category
 (
     id       int auto_increment primary key,
-    category varchar(48) not null unique
-);
+    category varchar(48) not null unique,
+    start_trxid BIGINT UNSIGNED GENERATED ALWAYS AS ROW START INVISIBLE,
+    end_trxid BIGINT UNSIGNED GENERATED ALWAYS AS ROW END INVISIBLE,
+    PERIOD FOR SYSTEM_TIME(start_trxid, end_trxid)
+) WITH SYSTEM VERSIONING;
 
 
 create table capture_definition
@@ -151,8 +189,11 @@ create table capture_definition
     unique key (id, tag_id),
     unique key (id, flow_id),
     unique key (id, capture_type_id),
-    index (flow_id)
-);
+    index (flow_id),
+    start_trxid BIGINT UNSIGNED GENERATED ALWAYS AS ROW START INVISIBLE,
+    end_trxid BIGINT UNSIGNED GENERATED ALWAYS AS ROW END INVISIBLE,
+    PERIOD FOR SYSTEM_TIME(start_trxid, end_trxid)
+) WITH SYSTEM VERSIONING;
 
 
 
@@ -167,9 +208,11 @@ create table cfe_18.processing_type
     constraint ´ruleset´ foreign key (ruleset_id) references ruleset (id),
     constraint ´template´ foreign key (template_id) references templates (id),
     index (type_name),
-    unique (inputtype_id, ruleset_id, template_id, type_name)
-
-);
+    unique (inputtype_id, ruleset_id, template_id, type_name),
+    start_trxid BIGINT UNSIGNED GENERATED ALWAYS AS ROW START INVISIBLE,
+    end_trxid BIGINT UNSIGNED GENERATED ALWAYS AS ROW END INVISIBLE,
+    PERIOD FOR SYSTEM_TIME(start_trxid, end_trxid)
+) WITH SYSTEM VERSIONING;
 
 create table capture_meta_file
 (
@@ -179,8 +222,11 @@ create table capture_meta_file
     processing_type_id int          not null,
     capture_type       varchar(64)  not null check (capture_type = 'cfe'),
     constraint captureTypeCfe foreign key (id, capture_type) references capture_type (id, capture_type) on delete cascade,
-    constraint metaFileToMetaType foreign key (processing_type_id) references processing_type (id)
-);
+    constraint metaFileToMetaType foreign key (processing_type_id) references processing_type (id),
+    start_trxid BIGINT UNSIGNED GENERATED ALWAYS AS ROW START INVISIBLE,
+    end_trxid BIGINT UNSIGNED GENERATED ALWAYS AS ROW END INVISIBLE,
+    PERIOD FOR SYSTEM_TIME(start_trxid, end_trxid)
+) WITH SYSTEM VERSIONING;
 
 create table capture_meta_aws
 (
@@ -188,16 +234,21 @@ create table capture_meta_aws
     kinesis_name  varchar(255) not null,
     capture_group varchar(255) not null,
     capture_type  varchar(64)  not null check (capture_type = 'aws'),
-    constraint captureTypeAws foreign key (id, capture_type) references capture_type (id, capture_type)
-);
+    constraint captureTypeAws foreign key (id, capture_type) references capture_type (id, capture_type),
+    start_trxid BIGINT UNSIGNED GENERATED ALWAYS AS ROW START INVISIBLE,
+    end_trxid BIGINT UNSIGNED GENERATED ALWAYS AS ROW END INVISIBLE,
+    PERIOD FOR SYSTEM_TIME(start_trxid, end_trxid)
+) WITH SYSTEM VERSIONING;
 
 create table capture_meta_metrics
 (
     id           int auto_increment primary key,
     capture_type varchar(64) not null check (capture_type = 'metrics'),
-    constraint captureTypeMetrics foreign key (id, capture_type) references capture_type (id, capture_type)
-
-);
+    constraint captureTypeMetrics foreign key (id, capture_type) references capture_type (id, capture_type),
+    start_trxid BIGINT UNSIGNED GENERATED ALWAYS AS ROW START INVISIBLE,
+    end_trxid BIGINT UNSIGNED GENERATED ALWAYS AS ROW END INVISIBLE,
+    PERIOD FOR SYSTEM_TIME(start_trxid, end_trxid)
+) WITH SYSTEM VERSIONING;
 
 create table capture_def_group
 (
@@ -206,8 +257,11 @@ create table capture_def_group
     capture_type           varchar(64)        not null check (capture_type in
                                                               ('aws', 'manual', 'cfe', 'windows', 'hec', 'azure',
                                                                'relp')),
-    unique (id, capture_type)
-);
+    unique (id, capture_type),
+    start_trxid BIGINT UNSIGNED GENERATED ALWAYS AS ROW START INVISIBLE,
+    end_trxid BIGINT UNSIGNED GENERATED ALWAYS AS ROW END INVISIBLE,
+    PERIOD FOR SYSTEM_TIME(start_trxid, end_trxid)
+) WITH SYSTEM VERSIONING;
 
 
 create table capture_def_group_x_capture_def
@@ -223,8 +277,11 @@ create table capture_def_group_x_capture_def
     constraint captureTypeToCaptureGroup foreign key (capture_def_group_id, capture_type) references cfe_18.capture_def_group (id, capture_type) on delete cascade,
     unique key (capture_def_group_id, capture_def_id),
     unique key (capture_def_group_id, tag_id),
-    index (capture_type, capture_def_group_id)
-);
+    index (capture_type, capture_def_group_id),
+    start_trxid BIGINT UNSIGNED GENERATED ALWAYS AS ROW START INVISIBLE,
+    end_trxid BIGINT UNSIGNED GENERATED ALWAYS AS ROW END INVISIBLE,
+    PERIOD FOR SYSTEM_TIME(start_trxid, end_trxid)
+) WITH SYSTEM VERSIONING;
 
 
 create table host_groups_x_capture_def_group
@@ -234,8 +291,11 @@ create table host_groups_x_capture_def_group
     capture_group_id int not null,
     constraint host_group_id_TO_host_group foreign key (host_group_id) references location.host_group (id),
     constraint ´capture_id_to_junction´ foreign key (capture_group_id) references capture_def_group (id),
-    unique key (host_group_id, capture_group_id)
-);
+    unique key (host_group_id, capture_group_id),
+    start_trxid BIGINT UNSIGNED GENERATED ALWAYS AS ROW START INVISIBLE,
+    end_trxid BIGINT UNSIGNED GENERATED ALWAYS AS ROW END INVISIBLE,
+    PERIOD FOR SYSTEM_TIME(start_trxid, end_trxid)
+) WITH SYSTEM VERSIONING;
 
 
 
@@ -247,6 +307,9 @@ create table capture_def_x_flow_targets
     flow_target_id int not null,
     constraint ´target_id_TO_flow_targets´ foreign key (flow_id, flow_target_id) references flow.flow_targets (flow_id, storage_id),
     constraint ´capture_def_id_TO_capture_definition´ foreign key (flow_id, capture_def_id) references cfe_18.capture_definition (flow_id, id) on delete cascade,
-    unique (capture_def_id, flow_id, flow_target_id)
-);
+    unique (capture_def_id, flow_id, flow_target_id),
+    start_trxid BIGINT UNSIGNED GENERATED ALWAYS AS ROW START INVISIBLE,
+    end_trxid BIGINT UNSIGNED GENERATED ALWAYS AS ROW END INVISIBLE,
+    PERIOD FOR SYSTEM_TIME(start_trxid, end_trxid)
+) WITH SYSTEM VERSIONING;
 

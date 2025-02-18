@@ -6,7 +6,7 @@
 
     <!-- Fetch host group by name -->
     <select id="getHostGroupByName" resultMap="HostGroupByName" statementType="CALLABLE">
-        {CALL location.retrieve_host_group_details(#{host_group_name})}
+        {CALL location.retrieve_host_group_details(#{param1},#{param2})}
     </select>
     <resultMap type="com.teragrep.cfe18.handlers.entities.HostGroup" id="HostGroupByName">
         <result property="md5" column="MD5"/>
@@ -30,7 +30,7 @@
 
     <!-- GET ALL Host Groups -->
     <select id="getAllHostGroup" resultMap="allHostGroup" statementType="CALLABLE">
-        {CALL location.retrieve_all_host_groups()}
+        {CALL location.retrieve_all_host_groups(#{param1})}
     </select>
     <resultMap id="allHostGroup" type="com.teragrep.cfe18.handlers.entities.HostGroup">
         <result property="id" column="host_group_id"/>

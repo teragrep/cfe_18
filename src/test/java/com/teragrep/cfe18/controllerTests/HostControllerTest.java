@@ -543,8 +543,8 @@ public class HostControllerTest extends TestSpringBootInformation {
         hub1.setHub_fq("hubfq");
 
         expectedListFile.add(host);
-        expectedListFile.add(relpHost);
         expectedListFile.add(hub1);
+        expectedListFile.add(relpHost);
         String expectedJson = gson.toJson(expectedListFile);
 
         // Asserting get request

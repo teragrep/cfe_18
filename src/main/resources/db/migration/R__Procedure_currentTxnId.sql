@@ -1,5 +1,5 @@
 /*
- * Integration main data management for Teragrep
+ * Main data management system (MDMS) cfe_18
  * Copyright (C) 2021  Suomen Kanuuna Oy
  *
  * This program is free software: you can redistribute it and/or modify
@@ -43,25 +43,13 @@
  * Teragrep, the applicable Commercial License may apply to this file if you as
  * a licensee so wish it.
  */
-package com.teragrep.cfe18;
-
-import com.teragrep.cfe18.handlers.entities.FileCaptureMeta;
-import org.apache.ibatis.annotations.Mapper;
-
-import java.util.List;
-
-@Mapper
-public interface FileCaptureMetaMapper {
-    FileCaptureMeta getProcessingTypeByName(String name,Integer version);
-
-    FileCaptureMeta addNewProcessingType(
-            String Template,
-            String rule,
-            String name,
-            String inputtype,
-            String inputvalue);
-
-    List<FileCaptureMeta> getAllProcessingType(Integer version);
-
-    FileCaptureMeta deleteProcessingType(String name);
-};
+use cfe_18;
+DELIMITER //
+CREATE OR REPLACE PROCEDURE current_txn_id()
+BEGIN
+    START TRANSACTION;
+        select max(transaction_id) as tx_id from mysql.transaction_registry;
+    COMMIT;
+END;
+//
+DELIMITER ;

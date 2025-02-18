@@ -45,7 +45,7 @@
  */
 use flow;
 DELIMITER //
-CREATE OR REPLACE PROCEDURE retrieve_flow_storages(flow varchar(255))
+CREATE OR REPLACE PROCEDURE retrieve_flow_storages(flow varchar(255),tx_id int)
 BEGIN
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
         BEGIN
@@ -53,7 +53,12 @@ BEGIN
             RESIGNAL;
         END;
     START TRANSACTION;
-    if (select id from flows where name = flow) is null then
+            if(tx_id) is null then
+             set @time = (select max(transaction_id) from mysql.transaction_registry);
+        else
+             set @time=tx_id;
+    end if;
+    if (select id from flows for system_time as of transaction @time where name = flow) is null then
         SELECT JSON_OBJECT('id', NULL, 'message', 'Flow does not exist') into @fs;
         signal sqlstate '45000' set message_text = @fs;
     else
@@ -62,9 +67,9 @@ BEGIN
                ft.storage_type as storage_type,
                ft.id           as last,
                s.id            as storage_id
-        from flow.flow_targets ft
-                 inner join flows f on ft.flow_id = f.id
-                 left join storages s on ft.storage_id = s.id
+        from flow.flow_targets for system_time as of transaction @time ft
+                 inner join flows for system_time as of transaction @time f on ft.flow_id = f.id
+                 left join storages for system_time as of transaction @time s on ft.storage_id = s.id
         where flow_id = f.id
           and f.name = flow;
     end if;

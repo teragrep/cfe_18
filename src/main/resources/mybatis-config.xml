@@ -12,5 +12,6 @@
         <mapper resource="com/teragrep/cfe18/HostMapper.xml"/>
         <mapper resource="com/teragrep/cfe18/HostMetaMapper.xml"/>
         <mapper resource="com/teragrep/cfe18/CaptureMetaMapper.xml"/>
+        <mapper resource="com/teragrep/cfe18/ApiSessionMapper.xml"/>
     </mappers>
 </configuration>
