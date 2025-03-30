@@ -53,15 +53,15 @@ BEGIN
             RESIGNAL;
         END;
     START TRANSACTION;
-    if (select c.id
-        from flow.cfe_04_transforms c
-        where c.id = transforms_id) is null then
+    if (select id
+        from flow.cfe_04_transforms
+        where id = transforms_id) is null then
         SELECT JSON_OBJECT('id', null, 'message', 'Transform record does not exist') into @c4t;
         signal sqlstate '45000' set message_text = @c4t;
     end if;
     delete
-    from flow.cfe_04_transforms c
-    where c.id = transforms_id;
+    from flow.cfe_04_transforms
+    where id = transforms_id;
     -- Return the ID of deleted row as signal
     select transforms_id as id;
     COMMIT;
