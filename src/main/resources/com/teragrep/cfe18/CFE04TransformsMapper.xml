@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.teragrep.cfe18.ApiSessionMapper">
+
+    <!-- GET ALL -->
+    <select id="getSession" resultMap="versionNumber" statementType="CALLABLE">
+        {CALL cfe_18.current_txn_id()}
+    </select>
+    <resultMap id="versionNumber" type="Integer">
+        <result property="version" column="tx_id"/>
+    </resultMap>
+
+
+</mapper>
+

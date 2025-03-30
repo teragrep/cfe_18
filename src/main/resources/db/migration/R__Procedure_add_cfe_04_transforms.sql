@@ -1,13 +1,13 @@
 use flow;
 DELIMITER //
-CREATE OR REPLACE PROCEDURE add_new_cfe_04_transforms(cfe_04_id int,
-                                                     name varchar(255),
-                                                     write_meta boolean,
-                                                     write_default boolean,
-                                                     default_value varchar(255),
-                                                     destination_key varchar(255),
-                                                     regex varchar(255),
-                                                     format varchar(255))
+CREATE OR REPLACE PROCEDURE add_new_cfe_04_transforms(p_cfe_04_id int,
+                                                      p_name varchar(255),
+                                                      p_write_meta boolean,
+                                                      p_write_default boolean,
+                                                      p_default_value varchar(255),
+                                                      p_destination_key varchar(255),
+                                                      p_regex varchar(255),
+                                                      p_format varchar(255))
 BEGIN
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
         BEGIN
@@ -16,31 +16,31 @@ BEGIN
         END;
     START TRANSACTION;
     -- check if row exists before inserting new one, if so then just return that ID
-    IF(select id from cfe_04_transforms t where t.cfe_04_id=cfe_04_id
-                                            AND t.name=name
-                                            AND t.write_meta=write_meta
-                                            AND t.write_default=write_default
-                                            AND t.default_value=default_value
-                                            AND t.destination_key=destination_key
-                                            AND t.regex=regex
-                                            AND t.format=format) IS NOT NULL THEN
+    IF((select count(id) from flow.cfe_04_transforms t where t.cfe_04_id=p_cfe_04_id
+                                            AND t.name=p_name
+                                            AND t.write_meta=p_write_meta
+                                            AND t.write_default=p_write_default
+                                            AND t.default_value=p_default_value
+                                            AND t.destination_key=p_destination_key
+                                            AND t.regex=p_regex
+                                            AND t.format=p_format)>0) THEN
 
-        select id from cfe_04_transforms t where t.cfe_04_id=cfe_04_id
-                                            AND t.name=name
-                                            AND t.write_meta=write_meta
-                                            AND t.write_default=write_default
-                                            AND t.default_value=default_value
-                                            AND t.destination_key=destination_key
-                                            AND t.regex=regex
-                                            AND t.format=format;
+        select t.id from flow.cfe_04_transforms t where t.cfe_04_id=p_cfe_04_id
+                                            AND t.name=p_name
+                                            AND t.write_meta=p_write_meta
+                                            AND t.write_default=p_write_default
+                                            AND t.default_value=p_default_value
+                                            AND t.destination_key=p_destination_key
+                                            AND t.regex=p_regex
+                                            AND t.format=p_format;
+        ELSE
+            insert into flow.cfe_04_transforms(cfe_04_id, name, write_meta, write_default, default_value, destination_key, regex, format)
+            values(p_cfe_04_id,p_name,p_write_meta,p_write_default,p_default_value,p_destination_key,p_regex,p_format);
 
+            -- returns ID of new row
+            select last_insert_id() as id;
     END IF;
 
-    insert into cfe_04_transforms(cfe_04_id, name, write_meta, write_default, default_value, destination_key, regex, format)
-        values(cfe_04_id,name,write_meta,write_default,default_value,destination_key,regex,format);
-
-    -- returns ID of new row
-    select last_insert_id() as id;
 
     COMMIT;
 END;
