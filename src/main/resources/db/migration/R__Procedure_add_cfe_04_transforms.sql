@@ -25,7 +25,7 @@ BEGIN
                                             AND t.regex=p_regex
                                             AND t.format=p_format)>0) THEN
 
-        select t.id from flow.cfe_04_transforms t where t.cfe_04_id=p_cfe_04_id
+        select t.id as id from flow.cfe_04_transforms t where t.cfe_04_id=p_cfe_04_id
                                             AND t.name=p_name
                                             AND t.write_meta=p_write_meta
                                             AND t.write_default=p_write_default
