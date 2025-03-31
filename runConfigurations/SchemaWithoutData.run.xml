@@ -74,6 +74,8 @@
     <script-file value="$PROJECT_DIR$/src/main/resources/db/migration/R__Procedure_Retrieve_All_Capture_metas.sql" />
     <script-file value="$PROJECT_DIR$/src/main/resources/db/migration/R__Procedure_add_cfe_04_transforms.sql" />
     <script-file value="$PROJECT_DIR$/src/main/resources/db/migration/R__Procedure_Retrieve_All_cfe_04_transforms.sql" />
+    <script-file value="$PROJECT_DIR$/src/main/resources/db/migration/R__Procedure_Retrieve_transforms_for_cfe_04.sql" />
+    <script-file value="$PROJECT_DIR$/src/main/resources/db/migration/R__Procedure_Remove_cfe_04_transforms.sql" />
     <script-mode>FILE</script-mode>
     <data-source id="75d30341-17bd-4dce-8efc-451abfa760eb" />
     <method v="2" />
