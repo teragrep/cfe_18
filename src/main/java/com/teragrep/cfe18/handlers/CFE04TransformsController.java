@@ -103,8 +103,6 @@ public class CFE04TransformsController {
             @ApiResponse(responseCode = "200", description = "cfe_04 transforms retrieved",
                     content = {@Content(mediaType = "application/json",
                             schema = @Schema(implementation = CFE04Transforms.class))}),
-            @ApiResponse(responseCode = "400", description = "cfe_04 transforms does not exist with the given ID",
-                    content = @Content),
             @ApiResponse(responseCode = "500", description = "Internal server error, contact admin", content = @Content)
     })
     public ResponseEntity<?> getCfe04Transforms(@PathVariable Integer id, @RequestParam(required = false) Integer version) {
@@ -189,7 +187,7 @@ public class CFE04TransformsController {
                     content = @Content),
             @ApiResponse(responseCode = "500", description = "Internal server error, contact admin", content = @Content)
     })
-    public ResponseEntity<String> removeCfe04Transforms( @PathVariable("id") int id) {
+    public ResponseEntity<String> removeCfe04Transforms( @PathVariable("id") Integer id) {
         LOGGER.info("Deleting cfe_04 transforms with id <[{}]>", id);
         JSONObject jsonErr = new JSONObject();
         jsonErr.put("id", id);
