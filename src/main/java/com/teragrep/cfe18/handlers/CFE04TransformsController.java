@@ -53,6 +53,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import org.apache.ibatis.jdbc.SQL;
 import org.json.JSONObject;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.slf4j.Logger;
@@ -157,10 +158,23 @@ public class CFE04TransformsController {
             jsonObject.put("message", "New cfe_04 transforms created");
             return new ResponseEntity<>(jsonObject.toString(), HttpStatus.CREATED);
         } catch (RuntimeException ex) {
-            JSONObject jsonErr = new JSONObject();
-            jsonErr.put("id", newCfe04Transforms.getId());
-            jsonErr.put("message", ex.getCause().toString());
-            return new ResponseEntity<>(jsonErr.toString(), HttpStatus.BAD_REQUEST);
+            final Throwable cause = ex.getCause();
+            // 1452-23000
+            if(cause instanceof SQLException) {
+                int error = ((SQLException) cause).getErrorCode();
+                String state = error + "-" + ((SQLException) cause).getSQLState();
+                JSONObject jsonErr = new JSONObject();
+                jsonErr.put("id", newCfe04Transforms.getId());
+                if (state.equals("1452-23000")) {
+                    jsonErr.put("message", "CFE_04 is missing with the given ID");
+                }
+                else {
+                    jsonErr.put("message", "Error unrecognized, contact admin");
+                }
+                return new ResponseEntity<>(jsonErr.toString(), HttpStatus.BAD_REQUEST);
+            }
+            return new ResponseEntity<>("Unexpected error", HttpStatus.INTERNAL_SERVER_ERROR);
+
         }
     }
 
