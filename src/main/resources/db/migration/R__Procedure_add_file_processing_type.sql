@@ -100,50 +100,43 @@ BEGIN
         select id into @TemplateId from cfe_18.templates where template = meta_template;
     end if;
 
-    if (SELECT id
-        from processing_type
-        where inputtype_id = @InputId
-          and template_id = @TemplateId
-          and ruleset_id = @RuleId) is null then
-        insert into cfe_18.processing_type(inputtype_id, ruleset_id, template_id, type_name)
-        values (@InputId, @RuleId, @TemplateId, meta_rule_name);
-        select meta_rule_name as name;
-    elseif (SELECT pt.id
-            from processing_type pt
-                     INNER JOIN ruleset r ON pt.ruleset_id = r.id
-                     INNER JOIN templates t ON pt.template_id = t.id
-                     INNER JOIN inputtype i ON pt.inputtype_id = i.id
-                     LEFT JOIN regex r2 ON i.id = r2.id AND i.inputtype = r2.inputtype
-                     LEFT JOIN newline n ON i.id = n.id AND i.inputtype = n.inputtype
-            WHERE (t.template = meta_template
-                AND r.rule = meta_rule
-                AND ((i.inputtype = 'regex' AND r2.regex = inputvalue) OR
-                     (i.inputtype = 'newline' AND n.newline = inputvalue)) AND pt.type_name = meta_rule_name
-                      )) is null then
-        select pt.type_name as name
-        from processing_type pt
-                 INNER JOIN ruleset r ON pt.ruleset_id = r.id
-                 INNER JOIN templates t ON pt.template_id = t.id
-                 INNER JOIN inputtype i ON pt.inputtype_id = i.id
-                 LEFT JOIN regex r2 ON i.id = r2.id AND i.inputtype = r2.inputtype
-                 LEFT JOIN newline n ON i.id = n.id AND i.inputtype = n.inputtype
-        WHERE (t.template = meta_template
-            AND r.rule = meta_rule
-            AND ((i.inputtype = 'regex' AND r2.regex = inputvalue) OR
-                 (i.inputtype = 'newline' AND n.newline = inputvalue)));
-    else
-        SELECT pt2.type_name as name
-        from processing_type pt2
-                 INNER JOIN ruleset r ON pt2.ruleset_id = r.id
-                 INNER JOIN templates t ON pt2.template_id = t.id
-                 INNER JOIN inputtype i ON pt2.inputtype_id = i.id
-                 LEFT JOIN regex r2 ON i.id = r2.id AND i.inputtype = r2.inputtype
-                 LEFT JOIN newline n ON i.id = n.id AND i.inputtype = n.inputtype
-        WHERE (t.template = meta_template
-            AND r.rule = meta_rule
-            AND ((i.inputtype = 'regex' AND r2.regex = inputvalue) OR
-                 (i.inputtype = 'newline' AND n.newline = inputvalue))
-                  );
+    -- generate new name in case name is already reserved
+        set @tempName = inputvalue+meta_rule+meta_template;
+
+    -- check if row exists with the same name
+    if ((select count(id) from cfe_18.processing_type pt where pt.type_name=meta_rule_name)>0) then
+        -- check if values are also same
+        if((select count(id) from cfe_18.processing_type pt
+                             where inputtype_id=@InputId
+                               and ruleset_id=@RuleId
+                               and template_id=@TemplateId)>0) then
+        -- return the name of that row
+            select pt.type_name as name from cfe_18.processing_type pt where
+                   inputtype_id=@InputId and
+                   ruleset_id=@RuleId and
+                   template_id=@TemplateId;
+
+            -- in this case name was same but values different. Generate new name and insert values
+            else
+            insert into cfe_18.processing_type(inputtype_id, ruleset_id, template_id, type_name)
+            values (@InputId, @RuleId, @TemplateId, @tempName);
+            select @tempName as name;
+
+        end if;
+        -- Here name is different but values are same so we return the real name
+        elseif((select count(id) from cfe_18.processing_type pt
+                             where inputtype_id=@InputId
+                               and ruleset_id=@RuleId
+                               and template_id=@TemplateId)>0) then
+        select pt.type_name as name from cfe_18.processing_type pt where inputtype_id=@InputId
+                               and ruleset_id=@RuleId
+                               and template_id=@TemplateId;
+        -- else name is different and values are different. Just insert new row
+        else
+                    insert into cfe_18.processing_type(inputtype_id, ruleset_id, template_id, type_name)
+            values (@InputId, @RuleId, @TemplateId, meta_rule_name);
+            select meta_rule_name as name;
+
     end if;
 
 end;
