@@ -100,9 +100,6 @@ BEGIN
         select id into @TemplateId from cfe_18.templates where template = meta_template;
     end if;
 
-    -- generate new name in case name is already reserved
-        set @tempName = inputvalue+meta_rule+meta_template;
-
     -- check if row exists with the same name
     if ((select count(id) from cfe_18.processing_type pt where pt.type_name=meta_rule_name)>0) then
         -- check if values are also same
@@ -118,6 +115,9 @@ BEGIN
 
             -- in this case name was same but values different. Generate new name and insert values
             else
+
+    -- generate new name in case name is already reserved
+            set @tempName = concat(meta_rule_name,(select max(transaction_id) from mysql.transaction_registry));
             insert into cfe_18.processing_type(inputtype_id, ruleset_id, template_id, type_name)
             values (@InputId, @RuleId, @TemplateId, @tempName);
             select @tempName as name;
