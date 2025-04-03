@@ -1,5 +1,5 @@
 /*
- * Main data management system (MDMS) cfe_18
+ * Integration main data management for Teragrep
  * Copyright (C) 2021  Suomen Kanuuna Oy
  *
  * This program is free software: you can redistribute it and/or modify
