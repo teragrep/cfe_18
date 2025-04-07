@@ -21,7 +21,7 @@ ${cfe_18_address}/host/hub
   "ip" : "127.0.0.1"
 }
 ----
-WARNING: md5 field has a required length of [.underline]#*32*# characters
+WARNING: md5 field has a required length of *32* characters
 
 === Response
 ==== Successful request
