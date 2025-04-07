@@ -7,3 +7,4 @@
 . link:hub.adoc[Hub/s]
 . link:captureMeta.adoc[Capture metadata]
 . link:flow.adoc[Flows]
+. link:sink.adoc[Sinks]

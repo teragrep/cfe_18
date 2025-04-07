@@ -1,0 +1,86 @@
+= Flow
+:toc:
+:toclevels: 4
+
+== How?
+
+=== Destination
+
+[source]
+----
+${cfe_18_address}/sink/details
+----
+'''
+
+=== Request
+
+[source,json]
+----
+{
+  "flow": "flowName",
+  "ip_address": "127.0.0.1",
+  "port": "12345",
+  "protocol": "https"
+}
+----
+'''
+
+=== Response
+==== Successful request
+....
+HTTP Response code: 201
+....
+[source,json]
+----
+{
+  "id": 123,
+  "message": "New sink created"
+}
+----
+
+==== Failed requests
+===== Flow and protocol combination duplicate
+....
+HTTP Response code: 400
+....
+[source,json]
+----
+{
+  "id": 123,
+  "message": "Flow and protocol combination already exists"
+}
+----
+
+===== Port length is over 5 characters long
+....
+HTTP Response code: 400
+....
+[source,json]
+----
+{
+  "id": 123,
+  "message": "Port length exceeded"
+}
+----
+
+===== Unknown error
+If something else goes wrong
+....
+HTTP Response code: 500
+....
+[source,json]
+----
+{
+  "id": 0,
+  "message": "Unexpected error"
+}
+----
+
+== Why?
+* Sinks are used to indicate the first forwarding point of the Capture
+** Protocol refers to Application Layer protocol (L7 OSI model), which is being used to forward Capture
+* These are required before inserting a Capture, since it needs to be linked to a Capture using both:
+** Flow name
+** Protocol name
+* That combination is why duplicate Flow and Protocol combinations are not allowed
+
