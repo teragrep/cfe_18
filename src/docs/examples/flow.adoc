@@ -1,0 +1,53 @@
+= Flow
+:toc:
+:toclevels: 4
+
+== How?
+
+=== Destination
+
+[source]
+----
+${cfe_18_address}/flow
+----
+'''
+
+=== Request
+
+[source,json]
+----
+{
+  "name": "flowName"
+}
+----
+'''
+
+=== Response
+==== Successful request
+....
+HTTP Response code: 201
+....
+[source,json]
+----
+{
+  "id": 123,
+  "message": "new flow added with the name = flowName"
+}
+----
+
+==== Failed request
+....
+HTTP Response code: 400
+....
+[source,json]
+----
+{
+  "id": 123,
+  "message": "..."
+}
+----
+
+== Why?
+* Flow dictates which [.underline]#pipeline# a certain capture lives in
+* These are required before inserting a Capture, since it needs to be linked to a Flow
+
