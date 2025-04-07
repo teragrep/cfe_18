@@ -5,5 +5,5 @@
 
 == Order of usage
 . link:hub.adoc[Hub/s]
-. Two
+. link:captureMeta.adoc[Capture metadata]
 . Three
