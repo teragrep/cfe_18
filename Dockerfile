@@ -9,7 +9,7 @@ RUN useradd -r -m -U -d /opt/tomcat -s /bin/false tomcat
 USER tomcat
 
 ENV TOMCAT_MAJOR 9
-ENV TOMCAT_VERSION 9.0.98
+ENV TOMCAT_VERSION 9.0.102
 ENV CATALINA_HOME /opt/tomcat/apache-tomcat-${TOMCAT_VERSION}/
 RUN mkdir -p "${CATALINA_HOME}"
 WORKDIR ${CATALINA_HOME}
