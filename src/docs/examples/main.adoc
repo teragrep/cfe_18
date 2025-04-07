@@ -1,0 +1,9 @@
+= Start Here
+:toc:
+:icons: font
+:url-quickref: https://docs.asciidoctor.org/asciidoc/latest/syntax-quick-reference/
+
+== Order of usage
+. link:hub.adoc[Hub/s]
+. Two
+. Three

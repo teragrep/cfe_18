@@ -1,0 +1,52 @@
+= Hub
+:toc:
+:toclevels: 4
+
+== How?
+
+=== Destination
+
+[source]
+----
+${cfe_18_address}/host/hub
+----
+
+=== Request
+
+[source,json]
+----
+{
+  "fqHost": "hqHostName",
+  "md5": "12345678901234567890123456789012",
+  "ip" : "127.0.0.1"
+}
+----
+WARNING: md5 field has a required length of [.underline]#*32*# characters
+
+=== Response
+==== Successful request
+....
+HTTP Response code: 201
+....
+[source,json]
+----
+{
+  "id": 123,
+  "message": "New hub created"
+}
+----
+
+==== Failed request
+....
+HTTP Response code: 400
+....
+[source,json]
+----
+{
+  "id": 123,
+  "message": "ID,MD5 or fqhost already exists"
+}
+----
+
+== Why?
+
