@@ -49,6 +49,7 @@ jobs:
         mysql -u root -h127.0.0.1 -p'root' -P${MARIADB_PORT} <<< "grant all privileges on cfe_00.* to testuser@'%' identified by 'testpass';"
         mysql -u root -h127.0.0.1 -p'root' -P${MARIADB_PORT} <<< "grant all privileges on flow.* to testuser@'%' identified by 'testpass';"
         mysql -u root -h127.0.0.1 -p'root' -P${MARIADB_PORT} <<< "grant all privileges on location.* to testuser@'%' identified by 'testpass';"
+        mysql -u root -h127.0.0.1 -p'root' -P${MARIADB_PORT} <<< "grant all privileges on mysql.transaction_registry to testuser@'%' identified by 'testpass';"
         echo "Flushing privileges"
         mysql -u root -h127.0.0.1 -p'root' -P${MARIADB_PORT} <<< "flush privileges;"
 
