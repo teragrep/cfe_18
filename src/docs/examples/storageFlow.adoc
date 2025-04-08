@@ -1,0 +1,73 @@
+= Storage Flow
+:toc:
+:toclevels: 4
+
+== How?
+
+=== Destination
+
+[source]
+----
+${cfe_18_address}/storage/flow
+----
+'''
+
+=== Request
+
+[source,json]
+----
+{
+  "flow": "flowName",
+  "storage_id": 123
+}
+----
+
+* `flow` should be a name of an added link:flow.adoc[flow]
+* `storage_id` should be the response ID from link:storage.adoc[Storage]
+
+'''
+=== Response
+==== Successful request
+....
+HTTP Response code: 201
+....
+[source,json]
+----
+{
+  "id": 123,
+  "message": "New flow storage created"
+}
+----
+
+==== Failed requests
+
+===== Flow does not exist
+A link:flow.adoc[flow] does not exist with the name in the request
+....
+HTTP Response code: 400
+....
+[source,json]
+----
+{
+  "id": 123,
+  "message": "flow does not exist"
+}
+----
+
+===== Storage is not valid
+A link:storage.adoc[storage] does not exist with the id in the request
+....
+HTTP Response code: 400
+....
+[source,json]
+----
+{
+  "id": 123,
+  "message": "Storage is not valid"
+}
+----
+
+== Why?
+* Links a link:storage.adoc[storage] to a link:flow.adoc[flow]
+* This link is necessary, since a single storage can have multiple flows delivering events to it
+
