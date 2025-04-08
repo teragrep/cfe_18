@@ -11,4 +11,4 @@
 . Captures
 .. link:fileCaptureDefinition.adoc[file-based captures]
 .. link:relpCaptureDefinition.adoc[RELP-based captures]
-
+. link:storage.adoc[Storages]
