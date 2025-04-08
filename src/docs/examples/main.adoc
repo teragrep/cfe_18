@@ -8,3 +8,7 @@
 . link:captureMeta.adoc[Capture metadata]
 . link:flow.adoc[Flows]
 . link:sink.adoc[Sinks]
+. Captures
+.. link:fileCaptureDefinition.adoc[file-based captures]
+.. link:relpCaptureDefinition.adoc[RELP-based captures]
+
