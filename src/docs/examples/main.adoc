@@ -9,8 +9,9 @@
 . link:flow.adoc[Flows]
 . link:sink.adoc[Sinks]
 . Captures
-.. link:fileCaptureDefinition.adoc[file-based captures]
-.. link:relpCaptureDefinition.adoc[RELP-based captures]
+.. CaptureDefinition
+... link:fileCaptureDefinition.adoc[file-based captures]
+... link:relpCaptureDefinition.adoc[RELP-based captures]
 .. link:storage.adoc[Storages]
 .. link:storageFlow.adoc[Connect Storages to Flows]
 .. link:storageCapture.adoc[Connect Storages to Captures]
