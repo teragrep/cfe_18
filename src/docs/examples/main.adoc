@@ -19,4 +19,5 @@
 . Hosts
 .. Host
 ... link:host/hostFile.adoc[file-based Host]
+.... link:host/hostMeta.adoc[Metadata for file-based Host]
 ... link:host/hostRelp.adoc[RELP-based Host]
