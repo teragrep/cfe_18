@@ -13,6 +13,7 @@ ${cfe_18_address}/host/hub
 ----
 '''
 
+[#_request]
 === Request
 
 [source,json]

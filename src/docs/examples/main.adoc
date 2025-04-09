@@ -16,3 +16,7 @@
 .. link:storageFlow.adoc[Connect Storages to Flows]
 .. link:storageCapture.adoc[Connect Storages to Captures]
 .. link:captureGroup.adoc[Capture Group]
+. Hosts
+.. Host
+... link:host/hostFile.adoc[file-based Host]
+... link:host/hostRelp.adoc[RELP-based Host]

@@ -1,0 +1,76 @@
+= File-based Host
+:toc:
+:toclevels: 4
+:icons: font
+
+== How?
+
+=== Destination
+[source]
+----
+${cfe_18_address}/host/relp
+----
+'''
+
+=== Request
+
+[source,json]
+----
+{
+  "md5": "12345678901234567890123456789012",
+  "fqHost": "fqHostFromTheHost"
+}
+----
+* `md5` is gotten from the Host configuration
+* `fqHost` is gotten from the Host configuration
+
+WARNING: A RELP-based Host does not contain a Hub, unlike link:hostFile.adoc[a file-based Host].
+
+'''
+
+=== Response
+==== Successful request
+....
+HTTP Response code: 201
+....
+[source,json]
+----
+{
+  "id": 123,
+  "message": "New host created with relp type"
+}
+----
+
+==== Failed requests
+
+===== ID, MD5 or fqHost already exists
+As all Hosts are found in a single table, there is a chance that a Host might already exist there, but not in the file-based Hosts table.
+If that ID from the "global" Hosts table, MD5 or the fqHost is already found in the file-based Hosts table, that will end up in this error.
+....
+HTTP Response code: 400
+....
+[source,json]
+----
+{
+  "message": "ID,MD5 or fqhost already exists"
+}
+----
+
+===== Unexpected error
+....
+HTTP Response code: 500
+....
+[source,json]
+----
+{
+  "id": 123,
+  "message": "Unexpected error"
+}
+----
+
+== Why?
+* A Host determines where a particular Capture needs to be gathered from
+** This is linked via "Host Group X Capture Group" link, where:
+*** Let's say that a Host Group contains 3 Hosts, and a Capture Group contains 3 Captures.
+*** All the 3 captures are to be found in *all* the Hosts
+
