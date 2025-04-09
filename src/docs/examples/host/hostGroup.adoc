@@ -1,0 +1,70 @@
+= Host Group
+:toc:
+:toclevels: 4
+:icons: font
+
+== How?
+
+=== Destination
+[source]
+----
+${cfe_18_address}/host/group
+----
+'''
+
+=== Request
+
+[source,json]
+----
+{
+  "host_id": 123,
+  "host_group_name": "HostGroup1"
+}
+----
+* `host_id` is gotten from a Host
+* `host_group_name` should be a unique name for a group
+
+'''
+
+=== Response
+==== Successful request
+....
+HTTP Response code: 201
+....
+[source,json]
+----
+{
+  "host_group_id": 123,
+  "message": "New host group created with name = HostGroup1"
+}
+----
+
+==== Failed requests
+===== Host does not exist
+....
+HTTP Response code: 400
+....
+[source,json]
+----
+{
+  "id": 123,
+  "message": "Host does not exist"
+}
+----
+
+===== Type mismatch
+If the Host that needs to be added to a Host Group does not have the same type as the Group. For example, a RELP-based Host is tried to be added to a file-based Host Group.
+....
+HTTP Response code: 400
+....
+[source,json]
+----
+{
+  "id": 123,
+  "message": "Type mismatch between host group and host"
+}
+----
+
+== Why?
+* To determine which Hosts belong to the same group
+
