@@ -45,15 +45,14 @@
  */
 package com.teragrep.cfe18.handlers;
 
-import com.teragrep.cfe18.CFE04TransformsMapper;
-import com.teragrep.cfe18.handlers.entities.CFE04Transforms;
+import com.teragrep.cfe18.Cfe04TransformsMapper;
+import com.teragrep.cfe18.handlers.entities.Cfe04Transforms;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
-import org.apache.ibatis.jdbc.SQL;
 import org.json.JSONObject;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.slf4j.Logger;
@@ -71,9 +70,9 @@ import java.util.List;
 @RestController
 @RequestMapping(path="/storage/cfe04/transforms")
 @SecurityRequirement(name="api")
-public class CFE04TransformsController {
+public class Cfe04TransformsController {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(CFE04TransformsController.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(Cfe04TransformsController.class);
 
     @Autowired
     DataSource dataSource;
@@ -82,32 +81,32 @@ public class CFE04TransformsController {
     SqlSessionTemplate sqlSessionTemplate;
 
     @Autowired
-    CFE04TransformsMapper cfe04TransformsMapper;
+    Cfe04TransformsMapper cfe04TransformsMapper;
 
     // Fetch all storages
-    @RequestMapping(path = "", method = RequestMethod.GET, produces = "application/json")
+    @RequestMapping(method = RequestMethod.GET, produces = "application/json")
     @Operation(summary = "Fetch all cfe04 transform details", description = "Will return empty list if there are no transforms to fetch")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "CFE04 transforms fetched",
+            @ApiResponse(responseCode = "200", description = "Cfe04 transforms fetched",
                     content = {@Content(mediaType = "application/json",
-                            schema = @Schema(implementation = CFE04Transforms.class))})
+                            schema = @Schema(implementation = Cfe04Transforms.class))})
     })
-    public List<CFE04Transforms> getTransforms(@RequestParam(required = false) Integer version) {
-        return cfe04TransformsMapper.getAllTransforms(version);
+    public List<Cfe04Transforms> getAllCfe04Transforms(@RequestParam(required = false) Integer version) {
+        return cfe04TransformsMapper.getAllCfe04Transforms(version);
     }
 
-    // Fetch transforms for cfe_04 via CFE_04 ID
+    // Fetch transforms for cfe_04 via Cfe_04 ID
     @RequestMapping(path = "/{id}", method = RequestMethod.GET, produces = "application/json")
     @Operation(summary = "Fetch transforms for cfe_04 via cfe_04 ID")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "cfe_04 transforms retrieved",
                     content = {@Content(mediaType = "application/json",
-                            schema = @Schema(implementation = CFE04Transforms.class))}),
+                            schema = @Schema(implementation = Cfe04Transforms.class))}),
             @ApiResponse(responseCode = "500", description = "Internal server error, contact admin", content = @Content)
     })
-    public ResponseEntity<?> getCfe04Transforms(@PathVariable Integer id, @RequestParam(required = false) Integer version) {
+    public ResponseEntity<?> getTransformsByCfe04Id(@PathVariable Integer id, @RequestParam(required = false) Integer version) {
         try {
-            List<CFE04Transforms> cfe04Transforms = cfe04TransformsMapper.getCFE04TransformsById(id,version);
+            List<Cfe04Transforms> cfe04Transforms = cfe04TransformsMapper.getCfe04TransformsById(id,version);
             return new ResponseEntity<>(cfe04Transforms, HttpStatus.OK);
         } catch (Exception ex) {
             JSONObject jsonErr = new JSONObject();
@@ -128,20 +127,20 @@ public class CFE04TransformsController {
 
 
     // New transforms for cfe_04
-    @RequestMapping(path = "", method = RequestMethod.PUT, produces = "application/json")
+    @RequestMapping(method = RequestMethod.PUT, produces = "application/json")
     @Operation(summary = "Insert new transforms for cfe_04")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "New cfe_04 transforms created",
                     content = {@Content(mediaType = "application/json",
-                            schema = @Schema(implementation = CFE04Transforms.class))}),
+                            schema = @Schema(implementation = Cfe04Transforms.class))}),
             @ApiResponse(responseCode = "400", description = "SQL Constraint error",
                     content = @Content),
             @ApiResponse(responseCode = "500", description = "Internal server error, contact admin", content = @Content)
     })
-    public ResponseEntity<String> addNewCFE04Transforms(@RequestBody CFE04Transforms newCfe04Transforms) {
+    public ResponseEntity<String> addNewCfe04Transforms(@RequestBody Cfe04Transforms newCfe04Transforms) {
         LOGGER.info("About to insert <[{}]>",newCfe04Transforms);
         try {
-            CFE04Transforms cfe04Transforms = cfe04TransformsMapper.addNewCFE04Transforms(
+            Cfe04Transforms cfe04Transforms = cfe04TransformsMapper.addNewCfe04Transforms(
                     newCfe04Transforms.getCfe04Id(),
                     newCfe04Transforms.getName(),
                     newCfe04Transforms.isWriteMeta(),
@@ -164,7 +163,7 @@ public class CFE04TransformsController {
                 JSONObject jsonErr = new JSONObject();
                 jsonErr.put("id", newCfe04Transforms.getId());
                 if (state.equals("1452-23000")) {
-                    jsonErr.put("message", "CFE_04 is missing with the given ID");
+                    jsonErr.put("message", "Cfe_04 is missing with the given ID");
                 }
                 else {
                     jsonErr.put("message", "Error unrecognized, contact admin");
@@ -182,7 +181,7 @@ public class CFE04TransformsController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Transform deleted",
                     content = {@Content(mediaType = "application/json",
-                            schema = @Schema(implementation = CFE04Transforms.class))}),
+                            schema = @Schema(implementation = Cfe04Transforms.class))}),
             @ApiResponse(responseCode = "400", description = "Cfe_04 transform does not exist",
                     content = @Content),
             @ApiResponse(responseCode = "500", description = "Internal server error, contact admin", content = @Content)
@@ -192,7 +191,7 @@ public class CFE04TransformsController {
         JSONObject jsonErr = new JSONObject();
         jsonErr.put("id", id);
         try {
-            cfe04TransformsMapper.deleteCFE04TransformsById(id);
+            cfe04TransformsMapper.deleteCfe04TransformsById(id);
             JSONObject j = new JSONObject();
             j.put("id", id);
             j.put("message", "cfe_04 transforms with id of " + id + " deleted.");

@@ -45,17 +45,17 @@
  */
 package com.teragrep.cfe18;
 
-import com.teragrep.cfe18.handlers.entities.CFE04Transforms;
+import com.teragrep.cfe18.handlers.entities.Cfe04Transforms;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
 
 @Mapper
-public interface CFE04TransformsMapper {
+public interface Cfe04TransformsMapper {
 
-     List<CFE04Transforms> getAllTransforms(Integer version);
+     List<Cfe04Transforms> getAllCfe04Transforms(Integer version);
 
-     CFE04Transforms addNewCFE04Transforms(
+     Cfe04Transforms addNewCfe04Transforms(
                                                Integer cfe04Id,
                                                String name,
                                                Boolean writeMeta,
@@ -65,7 +65,7 @@ public interface CFE04TransformsMapper {
                                                String regex,
                                                String format);
 
-     List<CFE04Transforms> getCFE04TransformsById(Integer id, Integer version);
+     List<Cfe04Transforms> getCfe04TransformsById(Integer id, Integer version);
 
-     CFE04Transforms deleteCFE04TransformsById(Integer id);
+     Cfe04Transforms deleteCfe04TransformsById(Integer id);
 }
