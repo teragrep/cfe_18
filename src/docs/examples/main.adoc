@@ -13,3 +13,4 @@
 .. link:relpCaptureDefinition.adoc[RELP-based captures]
 . link:storage.adoc[Storages]
 . link:storageFlow.adoc[Connect Storages to Flows]
+. link:storageCapture.adoc[Connect Storages to Captures]
