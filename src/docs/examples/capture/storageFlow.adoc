@@ -22,7 +22,7 @@ ${cfe_18_address}/storage/flow
 }
 ----
 
-* `flow` should be a name of an added link:flow.adoc[flow]
+* `flow` should be a name of an added link:../flow.adoc[flow]
 * `storage_id` should be the response ID from link:storage.adoc[Storage]
 
 '''
@@ -42,7 +42,7 @@ HTTP Response code: 201
 ==== Failed requests
 
 ===== Flow does not exist
-A link:flow.adoc[flow] does not exist with the name in the request
+A link:../flow.adoc[flow] does not exist with the name in the request
 ....
 HTTP Response code: 400
 ....
@@ -68,6 +68,6 @@ HTTP Response code: 400
 ----
 
 == Why?
-* Links a link:storage.adoc[storage] to a link:flow.adoc[flow]
+* Links a link:storage.adoc[storage] to a link:../flow.adoc[flow]
 * This link is necessary, since a single storage can have multiple flows delivering events to it
 

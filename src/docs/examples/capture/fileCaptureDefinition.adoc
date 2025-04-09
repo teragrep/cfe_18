@@ -8,7 +8,7 @@
 === Destination
 [source]
 ----
-${cfe_18_address}/capture/relp
+${cfe_18_address}/capture/file
 ----
 '''
 
@@ -24,9 +24,14 @@ ${cfe_18_address}/capture/relp
   "source_type": "Source",
   "category": "Category_3",
   "flow": "flowName",
-  "protocol": "https"
+  "protocol": "https",
+  "processing_type": "CaptureMeta1",
+  "capture_path": "/opt/teragrep/capture-example-01/log_file.log",
+  "tag_path": "/opt/teragrep/capture-example-01/log_file.log"
 }
 ----
+WARNING: Tag needs to be calculated from the tag_path using link:tag.adoc[a predetermined algorithm]
+
 '''
 
 === Response
@@ -43,6 +48,19 @@ HTTP Response code: 201
 ----
 
 ==== Failed requests
+===== Tag_path and tag mismatch
+If the tag is not constructed using link:tag.adoc[the required algorithm]
+....
+HTTP Response code: 400
+....
+[source,json]
+----
+{
+  "id": 123,
+  "message": "Tag mismatches with the given tag_path"
+}
+----
+
 ===== Protocol is missing
 If the protocol sent in the request is not found
 ....
@@ -55,7 +73,7 @@ HTTP Response code: 400
   "message": "L7 is missing"
 }
 ----
-Reason: link:flow.adoc[flow] was probably not added successfully
+Reason: link:../flow.adoc[flow] was probably not added successfully
 
 ===== Flow is missing
 If the flow (name) sent in the request is not found
@@ -69,9 +87,9 @@ HTTP Response code: 400
   "message": "Flow is missing"
 }
 ----
-Reason: link:flow.adoc[flow] was probably not added successfully
+Reason: link:../flow.adoc[flow] was probably not added successfully
 
 == Why?
-* To determine log capture for RELP-based integration
-** See link:fileCaptureDefinition.adoc[fileCaptureDefinition.adoc] for file-based Captures
+* To determine log capture for file-based integration
+** See link:relpCaptureDefinition.adoc[relpCaptureDefinition.adoc] for RELP-based Captures
 

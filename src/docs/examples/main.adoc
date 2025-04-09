@@ -5,17 +5,17 @@
 
 == Order of usage
 . link:hub.adoc[Hub/s]
-. link:captureMeta.adoc[Capture metadata]
+. link:capture/captureMeta.adoc[Capture metadata]
 . link:flow.adoc[Flows]
 . link:sink.adoc[Sinks]
 . Captures
 .. CaptureDefinition
-... link:fileCaptureDefinition.adoc[file-based captures]
-... link:relpCaptureDefinition.adoc[RELP-based captures]
-.. link:storage.adoc[Storages]
-.. link:storageFlow.adoc[Connect Storages to Flows]
-.. link:storageCapture.adoc[Connect Storages to Captures]
-.. link:captureGroup.adoc[Capture Group]
+... link:capture/fileCaptureDefinition.adoc[file-based captures]
+... link:capture/relpCaptureDefinition.adoc[RELP-based captures]
+.. link:capture/storage.adoc[Storages]
+.. link:capture/storageFlow.adoc[Connect Storages to Flows]
+.. link:capture/storageCapture.adoc[Connect Storages to Captures]
+.. link:capture/captureGroup.adoc[Capture Group]
 . Hosts
 .. Host
 ... link:host/hostFile.adoc[file-based Host]
