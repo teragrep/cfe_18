@@ -80,9 +80,10 @@ HTTP Response code: 500
 }
 ----
 
+[#_why]
 == Why?
 * A Host determines where a particular Capture needs to be gathered from
-** This is linked via "Host Group X Capture Group" link, where:
+** This is linked via link:../linkage.adoc["Host Group X Capture Group" link], where:
 *** Let's say that a Host Group contains 3 Hosts, and a Capture Group contains 3 Captures.
 *** All the 3 captures are to be found in *all* the Hosts
 

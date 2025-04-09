@@ -24,3 +24,4 @@
 ..... link:host/hostMetaInterface.adoc[HostMeta interfaces]
 ... link:host/hostRelp.adoc[RELP-based Host]
 .. link:host/hostGroup.adoc[Host Group]
+. link:linkage.adoc[Linking Host and Capture Groups]
