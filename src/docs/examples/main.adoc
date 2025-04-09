@@ -20,4 +20,6 @@
 .. Host
 ... link:host/hostFile.adoc[file-based Host]
 .... link:host/hostMeta.adoc[Metadata for file-based Host]
+..... link:host/hostMetaIP.adoc[HostMeta IP addresses]
+..... link:host/hostMetaInterface.adoc[HostMeta interfaces]
 ... link:host/hostRelp.adoc[RELP-based Host]

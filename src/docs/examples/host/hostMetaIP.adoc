@@ -1,0 +1,57 @@
+= IP addresses for Host metadata
+:toc:
+:toclevels: 4
+:icons: font
+
+== How?
+
+=== Destination
+[source]
+----
+${cfe_18_address}/host/meta/ip
+----
+'''
+
+=== Request
+
+[source,json]
+----
+{
+  "ipAddress": "127.0.0.1",
+  "host_meta_id": 123
+}
+----
+* `host_meta_id` is gotten from the response of a link:hostMeta.adoc[Host Metadata] request
+
+'''
+
+=== Response
+==== Successful request
+....
+HTTP Response code: 201
+....
+[source,json]
+----
+{
+  "id": 123,
+  "message": "New ip address created for host_meta"
+}
+----
+
+==== Failed request
+===== Host metadata does not exist
+If link:hostMeta.adoc[host metadata] is not inserted before inserting IP addresses, this error will be returned.
+....
+HTTP Response code: 400
+....
+[source,json]
+----
+{
+  "id": 123,
+  "message": "Given id for host meta does not exist"
+}
+----
+
+== Why?
+* Provides a way to add multiple IP addresses for a single link:hostMeta.adoc[hostMeta].
+
