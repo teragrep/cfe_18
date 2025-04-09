@@ -47,7 +47,7 @@ package com.teragrep.cfe18.controllerTests;
 
 
 import com.google.gson.Gson;
-import com.teragrep.cfe18.handlers.entities.CFE04Transforms;
+import com.teragrep.cfe18.handlers.entities.Cfe04Transforms;
 import com.teragrep.cfe18.handlers.entities.Storage;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -66,7 +66,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.context.annotation.Description;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -77,7 +76,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @ExtendWith(MigrateDatabaseExtension.class)
-public class CFE04TransformsControllerTest extends TestSpringBootInformation{
+public class Cfe04TransformsControllerTest extends TestSpringBootInformation{
 
 
     Gson gson = new Gson();
@@ -89,7 +88,7 @@ public class CFE04TransformsControllerTest extends TestSpringBootInformation{
     @Test
     @Order(1)
     @Description("Tests successful add of cfe_04 transform")
-    public void testAddCFE04Transforms() {
+    public void testAddCfe04Transforms() {
 
         // Insert base cfe_04 storage first
         Storage storage = new Storage();
@@ -114,7 +113,7 @@ public class CFE04TransformsControllerTest extends TestSpringBootInformation{
 
 
 
-        CFE04Transforms cfe04Transforms = new CFE04Transforms();
+        Cfe04Transforms cfe04Transforms = new Cfe04Transforms();
         cfe04Transforms.setCfe04Id(1);
         cfe04Transforms.setName("transform1");
         cfe04Transforms.setWriteMeta(true);
@@ -150,14 +149,16 @@ public class CFE04TransformsControllerTest extends TestSpringBootInformation{
         JSONObject responseAsJson = Assertions.assertDoesNotThrow(() -> new JSONObject(responseString));
         // Creating expected message as JSON Object from the data that was sent towards endpoint
         String expected = "New cfe_04 transforms created";
-
+        int expectedId = 1;
         // Creating string from Json that was given as a response
         String actual = Assertions.assertDoesNotThrow(() ->  responseAsJson.get("message").toString());
+        int actualId = Assertions.assertDoesNotThrow(() ->  responseAsJson.getInt("id"));
 
         // Assertions
         assertThat(
                 response.getStatusLine().getStatusCode(),
                 equalTo(HttpStatus.SC_CREATED));
+        assertEquals(expectedId, actualId);
         assertEquals(expected, actual);
 
 
@@ -166,8 +167,8 @@ public class CFE04TransformsControllerTest extends TestSpringBootInformation{
     @Test
     @Order(2)
     @Description("Tests adding cfe_04 transform for a cfe_04 that does not exist")
-    public void testAddCFE04TransformsMissingCFE04(){
-         CFE04Transforms cfe04Transforms = new CFE04Transforms();
+    public void testAddCfe04TransformsMissingCfe04(){
+         Cfe04Transforms cfe04Transforms = new Cfe04Transforms();
         cfe04Transforms.setCfe04Id(500);
         cfe04Transforms.setName("transform1");
         cfe04Transforms.setWriteMeta(true);
@@ -202,25 +203,28 @@ public class CFE04TransformsControllerTest extends TestSpringBootInformation{
         // Parsin respponse as JSONObject
         JSONObject responseAsJson = Assertions.assertDoesNotThrow(() -> new JSONObject(responseString));
         // Creating expected message as JSON Object from the data that was sent towards endpoint
-        String expected = "CFE_04 is missing with the given ID";
+        String expected = "Cfe_04 is missing with the given ID";
+        int expectedId = 0;
 
         // Creating string from Json that was given as a response
         String actual = Assertions.assertDoesNotThrow(() ->  responseAsJson.get("message").toString());
+        int actualId = Assertions.assertDoesNotThrow(() ->  responseAsJson.getInt("id"));
 
         // Assertions
         assertThat(
                 response.getStatusLine().getStatusCode(),
                 equalTo(HttpStatus.SC_BAD_REQUEST));
+        assertEquals(expectedId, actualId);
         assertEquals(expected, actual);
     }
 
     @Test
     @Order(3)
     @Description("Tests that ALL cfe_04 transforms can be fetched")
-    public void testGetALLCFE04Transforms() {
+    public void testGetALLCfe04Transforms() {
 
 
-        CFE04Transforms cfe04Transforms2 = new CFE04Transforms();
+        Cfe04Transforms cfe04Transforms2 = new Cfe04Transforms();
         cfe04Transforms2.setId(1);
         cfe04Transforms2.setCfe04Id(1);
         cfe04Transforms2.setName("transform1");
@@ -233,7 +237,7 @@ public class CFE04TransformsControllerTest extends TestSpringBootInformation{
 
 
 
-        CFE04Transforms cfe04Transforms = new CFE04Transforms();
+        Cfe04Transforms cfe04Transforms = new Cfe04Transforms();
         cfe04Transforms.setId(3);
         cfe04Transforms.setCfe04Id(1);
         cfe04Transforms.setName("transform2");
@@ -261,7 +265,7 @@ public class CFE04TransformsControllerTest extends TestSpringBootInformation{
                 HttpClientBuilder.create().build().execute(request));
 
 
-        ArrayList<CFE04Transforms> expected = new ArrayList<>();
+        ArrayList<Cfe04Transforms> expected = new ArrayList<>();
         expected.add(cfe04Transforms2);
         expected.add(cfe04Transforms);
 
@@ -289,8 +293,8 @@ public class CFE04TransformsControllerTest extends TestSpringBootInformation{
     @Test
     @Order(4)
     @Description("Tests that endpoint is idempotent. First unit test adds same transform as this one. Should return same output")
-    public void testIdempotentCFE04Transforms() {
-        CFE04Transforms cfe04Transforms = new CFE04Transforms();
+    public void testIdempotentCfe04Transforms() {
+        Cfe04Transforms cfe04Transforms = new Cfe04Transforms();
         cfe04Transforms.setCfe04Id(1);
         cfe04Transforms.setName("transform1");
         cfe04Transforms.setWriteMeta(true);
@@ -326,14 +330,17 @@ public class CFE04TransformsControllerTest extends TestSpringBootInformation{
         JSONObject responseAsJson = Assertions.assertDoesNotThrow(() -> new JSONObject(responseString));
         // Creating expected message as JSON Object from the data that was sent towards endpoint
         String expected = "New cfe_04 transforms created";
+        int expectedId = 1;
 
         // Creating string from Json that was given as a response
         String actual = Assertions.assertDoesNotThrow(() ->  responseAsJson.get("message").toString());
+        int actualId = Assertions.assertDoesNotThrow(() ->  responseAsJson.getInt("id"));
 
         // Assertions
         assertThat(
                 response.getStatusLine().getStatusCode(),
                 equalTo(HttpStatus.SC_CREATED));
+        assertEquals(expectedId, actualId);
         assertEquals(expected, actual);
 
     }
@@ -341,7 +348,7 @@ public class CFE04TransformsControllerTest extends TestSpringBootInformation{
     @Test
     @Order(5)
     @Description("Tests delete endpoint successfully")
-    public void testDeleteCFE04Transforms() {
+    public void testDeleteCfe04Transforms() {
         HttpDelete delete = new HttpDelete("http://localhost:" + port + "/storage/cfe04/transforms/"+1);
 
         // Header
@@ -359,21 +366,24 @@ public class CFE04TransformsControllerTest extends TestSpringBootInformation{
 
         // Creating string from Json that was given as a response
         String actual = Assertions.assertDoesNotThrow(() ->  responseAsJson.get("message").toString());
+        int actualId = Assertions.assertDoesNotThrow(() ->  responseAsJson.getInt("id"));
 
         // Creating expected message as JSON Object from the data that was sent towards endpoint
         String expected = "cfe_04 transforms with id of 1 deleted.";
+        int expectedId = 1;
 
         assertThat(deleteResponse.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_OK));
+        assertEquals(expectedId, actualId);
         assertEquals(expected, actual);
 
     }
 
     @Test
     @Order(6)
-    @Description("Tests that records for one CFE_04 can successfully be fetched")
-    public void testGetCFE04TransformsForOneCFE04() {
-        ArrayList<CFE04Transforms> cfe04TransformsList = new ArrayList<>();
-        CFE04Transforms cfe04Transforms = new CFE04Transforms();
+    @Description("Tests that records for one Cfe_04 can successfully be fetched")
+    public void testGetCfe04TransformsForOneCfe04() {
+        ArrayList<Cfe04Transforms> cfe04TransformsList = new ArrayList<>();
+        Cfe04Transforms cfe04Transforms = new Cfe04Transforms();
         cfe04Transforms.setId(3);
         cfe04Transforms.setCfe04Id(1);
         cfe04Transforms.setName("transform2");
@@ -384,8 +394,8 @@ public class CFE04TransformsControllerTest extends TestSpringBootInformation{
         cfe04Transforms.setRegex("regex");
         cfe04Transforms.setFormat("format");
         cfe04TransformsList.add(cfe04Transforms);
-        String json = gson.toJson(cfe04TransformsList);
-        // Fetching all capture metas
+        String expectedJson = gson.toJson(cfe04TransformsList);
+
         HttpGet requestGet = new HttpGet("http://localhost:" + port + "/storage/cfe04/transforms/"+1 );
 
         requestGet.setHeader("Authorization", "Bearer " + token);
@@ -400,7 +410,7 @@ public class CFE04TransformsControllerTest extends TestSpringBootInformation{
         assertThat(
                 responseGet.getStatusLine().getStatusCode(),
                 equalTo(HttpStatus.SC_OK));
-        assertEquals(json, responseStringGet);
+        assertEquals(expectedJson, responseStringGet);
     }
 
 
@@ -408,7 +418,7 @@ public class CFE04TransformsControllerTest extends TestSpringBootInformation{
     @Test
     @Order(7)
     @Description("Tests that something cant be deleted if does not exist")
-    public void testDeleteCFE04TransformsInvalidCFE04() {
+    public void testDeleteCfe04TransformsInvalidCfe04() {
         HttpDelete delete = new HttpDelete("http://localhost:" + port + "/storage/cfe04/transforms/"+12222);
 
         // Header
