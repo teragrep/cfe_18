@@ -1,0 +1,87 @@
+= Linkage
+:toc:
+:toclevels: 4
+:icons: font
+
+== How?
+
+=== Destination
+
+[source]
+----
+${cfe_18_address}/capture/groups/linkage
+----
+'''
+
+[#_request]
+=== Request
+
+[source,json]
+----
+{
+  "host_group_id": 123,
+  "capture_group_id": 123
+}
+----
+* `host_group_id` is gotten from the response of link:host/hostGroup.adoc[Host Group]
+* `capture_group_id` is gotten from the response of link:capture/captureGroup.adoc[Capture Group]
+
+'''
+
+=== Response
+==== Successful request
+....
+HTTP Response code: 201
+....
+[source,json]
+----
+{
+  "id": 123,
+  "message": "New linkage created for groups = CaptureGroup1 and HostGroup1"
+}
+----
+NOTE: The response returns the *names* of the Groups that are linked
+
+==== Failed requests
+===== Type mismatch
+Capture and Host Groups are not of the same type (RELP or file)
+....
+HTTP Response code: 400
+....
+[source,json]
+----
+{
+  "id": 123,
+  "message": " type mismatch between host group and capture group"
+}
+----
+
+===== Host Group does not exist
+....
+HTTP Response code: 400
+....
+[source,json]
+----
+{
+  "id": 123,
+  "message": " HOST group does not exist"
+}
+----
+
+===== Capture Group does not exist
+....
+HTTP Response code: 400
+....
+[source,json]
+----
+{
+  "id": 123,
+  "message": " CAPTURE group does not exist"
+}
+----
+
+== Why?
+
+* Provides a way to link Host Groups and Capture Groups
+* This determines where a particular Capture needs to be gathered from
+* See link:host/hostFile.adoc#_why[hostFile reasoning] for exact reason

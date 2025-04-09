@@ -1,0 +1,31 @@
+= Calculating the tag
+
+The tag is calculated from a Capture's tag_path using MD5 hashing.
+
+Using an imaginary tag_path of:
+
+[source, bash]
+----
+/opt/teragrep/capture-example-01/log_file.log
+----
+
+The expected MD5 hash of that string is:
+`79822d06c9af7e23f33fb4488c55760c`.
+
+Only the first 8 characters matter for the tag, so now we're left with: `79822d06`.
+
+After this, the string after the last instance of the character `/` is separated, in this example this would be `log_file.log`.
+
+* If the substring is *shorter or equal* to 23 characters, it is appended to the shortened MD5 hash using a dash:
++
+[source,bash]
+----
+79822d06-log_file.log
+----
+
+* If the substring is longer than that, for example `log_file_that_is_super_long.log` (31 characters long), only the first 23 characters are used for appending:
++
+[source,bash]
+----
+79822d06-log_file_that_is_super_
+----

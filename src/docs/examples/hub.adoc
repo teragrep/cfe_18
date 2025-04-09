@@ -1,0 +1,62 @@
+= Hub
+:toc:
+:toclevels: 4
+:icons: font
+
+== How?
+
+=== Destination
+
+[source]
+----
+${cfe_18_address}/host/hub
+----
+'''
+
+[#_request]
+=== Request
+
+[source,json]
+----
+{
+  "fqHost": "hqHostName",
+  "md5": "12345678901234567890123456789012",
+  "ip" : "127.0.0.1"
+}
+----
+WARNING: md5 field has a required length of *32* characters
+
+'''
+
+=== Response
+==== Successful request
+....
+HTTP Response code: 201
+....
+[source,json]
+----
+{
+  "id": 123,
+  "message": "New hub created"
+}
+----
+
+==== Failed request
+....
+HTTP Response code: 400
+....
+[source,json]
+----
+{
+  "id": 123,
+  "message": "ID,MD5 or fqhost already exists"
+}
+----
+
+== Why?
+
+* Hubs are the first resource that should be ingested.
+* All file-based hosts require a [.underline]#hub# to attach to.
+* When a hub is created:
+** A Host is created
+** Then that host is promoted to a hub

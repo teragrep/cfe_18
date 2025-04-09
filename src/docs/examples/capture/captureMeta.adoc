@@ -1,0 +1,85 @@
+= Capture Meta
+:toc:
+:toclevels: 4
+:icons: font
+
+== How?
+
+=== Destination
+
+[source]
+----
+${cfe_18_address}/file/capture/meta/rule
+----
+'''
+
+=== Request
+
+[source,json]
+----
+{
+  "inputtype": "inputType1",
+  "inputvalue": "123456",
+  "ruleset": "RuleNumber1",
+  "name": "CaptureMeta1",
+  "template": "template1"
+}
+----
+'''
+
+=== Response
+==== Successful request
+....
+HTTP Response code: 201
+....
+[source,json]
+----
+{
+  "id": null,
+  "message": "New processing type created with the name = CaptureMeta1"
+}
+----
+
+==== Failed requests
+
+===== Duplicate record
+....
+HTTP Response code: 400
+....
+[source,json]
+----
+{
+  "id": 0,
+  "message": "FileCaptureMeta name already exists with different values"
+}
+----
+
+===== Null value
+If one of the values in the JSON request is `null`
+....
+HTTP Response code: 400
+....
+[source,json]
+----
+{
+  "id": 0,
+  "message": "NO NULLS ALLOWED"
+}
+----
+
+===== Unknown error
+If something else goes wrong
+....
+HTTP Response code: 500
+....
+[source,json]
+----
+{
+  "id": 0,
+  "message": "Unexpected error"
+}
+----
+
+== Why?
+* (file)CaptureMeta provides metadata for Captures
+* Needs to be inserted before the Captures, so that the ID for the CaptureMeta can be linked to a Capture

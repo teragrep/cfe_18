@@ -1,0 +1,82 @@
+= Storage
+:toc:
+:toclevels: 4
+:icons: font
+
+== How?
+
+=== Destination
+[source]
+----
+${cfe_18_address}/storage
+----
+'''
+
+=== Request
+
+[source,json]
+----
+{
+  "cfe_type": "cfe_23",
+  "target_name": "storage_name"
+}
+----
+[#Allowed-CFE-types]
+[IMPORTANT]
+====
+Allowed values for cfe_type are:
+
+* cfe_04
+* cfe_10
+* cfe_11
+* cfe_12
+* cfe_19
+* cfe_23
+
+See: <<Storage type is not allowed>>
+====
+'''
+
+=== Response
+==== Successful request
+....
+HTTP Response code: 201
+....
+[source,json]
+----
+{
+  "id": 123,
+  "message": "New storage created"
+}
+----
+
+==== Failed requests
+===== Storage type is not allowed
+If the cfe_type is not one of link:#Allowed-CFE-types[allowed CFE types]
+....
+HTTP Response code: 400
+....
+[source,json]
+----
+{
+  "id": 123,
+  "message": "Storage type is not valid"
+}
+----
+
+===== Duplicate target name
+If there is a Storage with the same name as the `target_name`
+....
+HTTP Response code: 400
+....
+[source,json]
+----
+{
+  "id": 123,
+  "message": "Target name already exists"
+}
+----
+
+== Why?
+* Storage defines the location where captures are stored for longer periods of time
+

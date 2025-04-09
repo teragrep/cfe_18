@@ -1,0 +1,77 @@
+= Storage Capture
+:toc:
+:toclevels: 4
+
+== How?
+
+=== Destination
+
+[source]
+----
+${cfe_18_address}/storage/capture
+----
+'''
+
+=== Request
+
+[source,json]
+----
+{
+  "capture_id": 123,
+  "storage_id": 123
+}
+----
+
+* `capture_id` should be an ID from the response of an added capture (link:relpCaptureDefinition.adoc[relp-based] or link:fileCaptureDefinition.adoc[file-based])
+* `storage_id` should be the response ID from link:storage.adoc[Storage]
+
+'''
+=== Response
+==== Successful request
+....
+HTTP Response code: 201
+....
+[source,json]
+----
+{
+  "id": 123,
+  "message": "New flow storage created"
+}
+----
+
+==== Failed requests
+
+===== Capture does not exist
+A capture does not exist with the id in the request
+....
+HTTP Response code: 400
+....
+[source,json]
+----
+{
+  "id": 123,
+  "message": "Capture does not exist with given ID"
+}
+----
+How to fix: add a capture (link:relpCaptureDefinition.adoc[relp-based] or link:fileCaptureDefinition.adoc[file-based])
+
+===== Flow Storage does not exist
+A Storage does not exist with the id in the request
+....
+HTTP Response code: 400
+....
+[source,json]
+----
+{
+  "id": 123,
+  "message": "Storage does not exist"
+}
+----
+How to fix: add a link:storageFlow.adoc[flow Storage]
+
+== Why?
+* Links a link:storage.adoc[storage] to a capture (link:relpCaptureDefinition.adoc[relp-based] or link:fileCaptureDefinition.adoc[file-based])
+* A capture can have multiple different Storages, but not many of the same type
+
+
+

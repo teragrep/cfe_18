@@ -1,0 +1,86 @@
+= Metadata for Host
+:toc:
+:toclevels: 4
+:icons: font
+
+== How?
+
+=== Destination
+[source]
+----
+${cfe_18_address}/host/meta
+----
+'''
+
+=== Request
+
+[source,json]
+----
+{
+  "os": "Operating System",
+  "arch": "Architecture",
+  "release_version": "1.1.1",
+  "flavor": "Delicious",
+  "hostname": "HostName-123",
+  "host_id": 123
+}
+----
+* `host_id` is gotten from the response of a link:hostFile.adoc[Host]
+
+'''
+
+=== Response
+==== Successful request
+....
+HTTP Response code: 201
+....
+[source,json]
+----
+{
+  "id": 123,
+  "message": "New host meta added for host"
+}
+----
+
+==== Failed requests
+===== Host does not exist
+If link:../hub.adoc[hubs] are not inserted before inserting Hosts, this error will be returned.
+....
+HTTP Response code: 400
+....
+[source,json]
+----
+{
+  "id": 123,
+  "message": "Host does not exist"
+}
+----
+
+===== Host metadata exists with different data
+If a Host has metadata already, but does not match the currently added metadata.
+....
+HTTP Response code: 400
+....
+[source,json]
+----
+{
+  "id": 123,
+  "message": "Host meta already exists with different values"
+}
+----
+
+===== One of the values is NULL
+....
+HTTP Response code: 400
+....
+[source,json]
+----
+{
+  "id": 123,
+  "message": "NO NULLS ALLOWED"
+}
+----
+
+== Why?
+* HostMeta provides additional metadata *only for: link:hostFile.adoc[file-based Hosts]*
+

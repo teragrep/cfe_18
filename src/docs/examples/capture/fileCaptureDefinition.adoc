@@ -1,0 +1,95 @@
+= Capture Definition
+:toc:
+:toclevels: 4
+:icons: font
+
+== How?
+
+=== Destination
+[source]
+----
+${cfe_18_address}/capture/file
+----
+'''
+
+=== Request
+
+[source,json]
+----
+{
+  "tag": "79822d06-log_file.log",
+  "application": "Application",
+  "index": "Index1",
+  "retention_time": "30",
+  "source_type": "Source",
+  "category": "Category_3",
+  "flow": "flowName",
+  "protocol": "https",
+  "processing_type": "CaptureMeta1",
+  "capture_path": "/opt/teragrep/capture-example-01/log_file.log",
+  "tag_path": "/opt/teragrep/capture-example-01/log_file.log"
+}
+----
+WARNING: Tag needs to be calculated from the tag_path using link:tag.adoc[a predetermined algorithm]
+
+'''
+
+=== Response
+==== Successful request
+....
+HTTP Response code: 201
+....
+[source,json]
+----
+{
+  "id": 123,
+  "message": "New capture created"
+}
+----
+
+==== Failed requests
+===== Tag_path and tag mismatch
+If the tag is not constructed using link:tag.adoc[the required algorithm]
+....
+HTTP Response code: 400
+....
+[source,json]
+----
+{
+  "id": 123,
+  "message": "Tag mismatches with the given tag_path"
+}
+----
+
+===== Protocol is missing
+If the protocol sent in the request is not found
+....
+HTTP Response code: 400
+....
+[source,json]
+----
+{
+  "id": 123,
+  "message": "L7 is missing"
+}
+----
+Reason: link:../flow.adoc[flow] was probably not added successfully
+
+===== Flow is missing
+If the flow (name) sent in the request is not found
+....
+HTTP Response code: 400
+....
+[source,json]
+----
+{
+  "id": 123,
+  "message": "Flow is missing"
+}
+----
+Reason: link:../flow.adoc[flow] was probably not added successfully
+
+== Why?
+* To determine log capture for file-based integration
+** See link:relpCaptureDefinition.adoc[relpCaptureDefinition.adoc] for RELP-based Captures
+

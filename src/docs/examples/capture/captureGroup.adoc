@@ -1,0 +1,81 @@
+= Capture Group
+:toc:
+:toclevels: 4
+:icons: font
+
+== How?
+
+=== Destination
+[source]
+----
+${cfe_18_address}/capture/group
+----
+'''
+
+=== Request
+
+[source,json]
+----
+{
+  "capture_definition_id": 123,
+  "capture_def_group_name": "CaptureGroup1"
+}
+----
+* `capture_definition_id` is gotten from a capture
+* `capture_def_group_name` should be a unique name for a group
+
+'''
+
+=== Response
+==== Successful request
+....
+HTTP Response code: 201
+....
+[source,json]
+----
+{
+  "capture_group_id": 123,
+  "message": "New capture group created with name = CaptureGroup1"
+}
+----
+
+==== Failed requests
+===== Capture does not exist
+....
+HTTP Response code: 400
+....
+[source,json]
+----
+{
+  "message": "Capture does not exist"
+}
+----
+
+===== Type mismatch
+If the capture that needs to be added to a Capture Group does not have the same type as the Group. For example, a RELP-based capture is tried to be added to a CFE-based Capture Group.
+....
+HTTP Response code: 400
+....
+[source,json]
+----
+{
+  "message": "Type mismatch between capture group and capture"
+}
+----
+
+===== Tag already exists
+If the tag already exists in one of the Captures in the Capture Group
+....
+HTTP Response code: 400
+....
+[source,json]
+----
+{
+  "id": 123,
+  "message": "Tag already exists within given group"
+}
+----
+
+== Why?
+* To determine which Captures belong to the same group
+
