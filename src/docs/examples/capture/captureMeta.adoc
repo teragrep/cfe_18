@@ -41,7 +41,7 @@ Teragrep, the applicable Commercial License may apply to this file if you as
 a licensee so wish it.
 ////
 
-= Capture Meta
+= Example API calls for integration
 :toc:
 :toclevels: 4
 :icons: font
@@ -124,5 +124,5 @@ HTTP Response code: 500
 ----
 
 == Why?
-* (file)CaptureMeta provides metadata for Captures
-* Needs to be inserted before the Captures, so that the ID for the CaptureMeta can be linked to a Capture
+* CaptureMeta provides metadata for link:fileCaptureDefinition.adoc[file-based captures]
+* Needs to be inserted before the Captures, so that the ID for the CaptureMeta can be linked to a link:fileCaptureDefinition.adoc[Capture]

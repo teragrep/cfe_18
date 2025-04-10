@@ -47,10 +47,10 @@ a licensee so wish it.
 :url-quickref: https://docs.asciidoctor.org/asciidoc/latest/syntax-quick-reference/
 
 . link:hub.adoc[Hub/s]
-. link:capture/captureMeta.adoc[Capture metadata]
 . link:flow.adoc[Flows]
 . link:sink.adoc[Sinks]
 . Captures
+.. link:capture/captureMeta.adoc[Capture metadata for file-based captures]
 .. CaptureDefinition
 ... link:capture/fileCaptureDefinition.adoc[file-based captures]
 ... link:capture/relpCaptureDefinition.adoc[RELP-based captures]
