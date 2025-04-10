@@ -41,12 +41,11 @@ Teragrep, the applicable Commercial License may apply to this file if you as
 a licensee so wish it.
 ////
 
-= Start Here
+= Example API calls for integration
 :toc:
 :icons: font
 :url-quickref: https://docs.asciidoctor.org/asciidoc/latest/syntax-quick-reference/
 
-== Order of usage
 . link:hub.adoc[Hub/s]
 . link:capture/captureMeta.adoc[Capture metadata]
 . link:flow.adoc[Flows]
