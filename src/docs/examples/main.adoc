@@ -46,7 +46,6 @@ a licensee so wish it.
 :icons: font
 :url-quickref: https://docs.asciidoctor.org/asciidoc/latest/syntax-quick-reference/
 
-. link:hub.adoc[Hub/s]
 . link:flow.adoc[Flows]
 . link:sink.adoc[Sinks]
 . Captures
@@ -60,10 +59,11 @@ a licensee so wish it.
 .. link:capture/captureGroup.adoc[Capture Group]
 . Hosts
 .. Host
-... link:host/hostFile.adoc[file-based Host]
-.... link:host/hostMeta.adoc[Metadata for file-based Host]
-..... link:host/hostMetaIP.adoc[HostMeta IP addresses]
-..... link:host/hostMetaInterface.adoc[HostMeta interfaces]
+... link:host/hub.adoc[Hub/s]
+.... link:host/hostFile.adoc[file-based Host]
+..... link:host/hostMeta.adoc[Metadata for file-based Host]
+...... link:host/hostMetaIP.adoc[HostMeta IP addresses]
+...... link:host/hostMetaInterface.adoc[HostMeta interfaces]
 ... link:host/hostRelp.adoc[RELP-based Host]
 .. link:host/hostGroup.adoc[Host Group]
 . link:linkage.adoc[Linking Host and Capture Groups]
