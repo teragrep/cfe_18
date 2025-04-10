@@ -49,7 +49,7 @@ a licensee so wish it.
 . link:flow.adoc[Flows]
 . link:sink.adoc[Sinks]
 . Captures
-.. link:capture/fileCaptureMeta.adoc[Capture metadata for file-based captures]
+.. link:capture/fileCaptureMeta.adoc[File processing instructions for file-based CaptureDefinitions]
 .. CaptureDefinition
 ... link:capture/fileCaptureDefinition.adoc[file-based captures]
 ... link:capture/relpCaptureDefinition.adoc[RELP-based captures]

@@ -41,7 +41,7 @@ Teragrep, the applicable Commercial License may apply to this file if you as
 a licensee so wish it.
 ////
 
-= Capture meta for file-based Captures
+= File processing instructions for file-based Capture Definitions
 :toc:
 :toclevels: 4
 :icons: font
@@ -124,5 +124,5 @@ HTTP Response code: 500
 ----
 
 == Why?
-* fileCaptureMeta provides metadata for link:fileCaptureDefinition.adoc[file-based captures]
+* fileCaptureMeta provides metadata for link:fileCaptureDefinition.adoc[file-based captures], how to process them
 * Needs to be inserted before the Captures, so that the ID for the CaptureMeta can be linked to a link:fileCaptureDefinition.adoc[Capture]
