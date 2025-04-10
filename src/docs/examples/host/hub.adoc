@@ -98,8 +98,8 @@ HTTP Response code: 400
 
 == Why?
 
-* Hubs are the first resource that should be ingested.
+* Hubs are a requirement for adding link:host/hostFile.adoc[file-based Hosts]
 * All file-based hosts require a [.underline]#hub# to attach to.
 * When a hub is created:
-** A Host is created
+** A file-based Host is created
 ** Then that host is promoted to a hub

@@ -67,7 +67,7 @@ ${cfe_18_address}/host/file
 ----
 * `md5` is gotten from the Host configuration
 * `fqHost` is gotten from the Host configuration
-* `hub_fq` should be a "fqHost" from link:../hub.adoc#_request[a hub]
+* `hub_fq` should be a "fqHost" from link:hub.adoc#_request[a hub]
 
 '''
 
@@ -86,7 +86,7 @@ HTTP Response code: 201
 
 ==== Failed requests
 ===== Hub does not exist
-If link:../hub.adoc[hubs] are not inserted before inserting Hosts, this error will be returned.
+If link:hub.adoc[hubs] are not inserted before inserting Hosts, this error will be returned.
 ....
 HTTP Response code: 400
 ....
