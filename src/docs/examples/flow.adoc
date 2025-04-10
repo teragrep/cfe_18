@@ -51,7 +51,7 @@ a licensee so wish it.
 
 [source]
 ----
-${cfe_18_address}/flow
+PUT ${cfe_18_address}/flow
 ----
 '''
 

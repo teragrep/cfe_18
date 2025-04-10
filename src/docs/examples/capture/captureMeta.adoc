@@ -52,7 +52,7 @@ a licensee so wish it.
 
 [source]
 ----
-${cfe_18_address}/file/capture/meta/rule
+PUT ${cfe_18_address}/file/capture/meta/rule
 ----
 '''
 
