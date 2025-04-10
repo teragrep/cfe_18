@@ -45,9 +45,8 @@
  */
 package com.teragrep.cfe18.handlers;
 
-import com.teragrep.cfe18.FileCaptureMetaMapper;
-import com.teragrep.cfe18.handlers.entities.CaptureGroup;
-import com.teragrep.cfe18.handlers.entities.FileCaptureMeta;
+import com.teragrep.cfe18.FileProcessingTypeMapper;
+import com.teragrep.cfe18.handlers.entities.FileProcessing;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.json.JSONObject;
 import io.swagger.v3.oas.annotations.Operation;
@@ -71,8 +70,8 @@ import java.util.List;
 @RestController
 @RequestMapping(path = "file/capture")
 @SecurityRequirement(name = "api")
-public class FileCaptureMetaController {
-    private static final Logger LOGGER = LoggerFactory.getLogger(FileCaptureMetaController.class);
+public class FileProcessingTypeController {
+    private static final Logger LOGGER = LoggerFactory.getLogger(FileProcessingTypeController.class);
 
     @Autowired
     DataSource dataSource;
@@ -81,22 +80,22 @@ public class FileCaptureMetaController {
     SqlSessionTemplate sqlSessionTemplate;
 
     @Autowired
-    FileCaptureMetaMapper fileCaptureMetaMapper;
+    FileProcessingTypeMapper fileProcessingTypeMapper;
 
 
     @RequestMapping(path = "/meta/{name}", method = RequestMethod.GET, produces = "application/json")
-    @Operation(summary = "Fetch processing type by name")
+    @Operation(summary = "Fetch file processing type by name")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Processing type retrieved",
+            @ApiResponse(responseCode = "200", description = "File processing type retrieved",
                     content = {@Content(mediaType = "application/json",
-                            schema = @Schema(implementation = FileCaptureMeta.class))}),
+                            schema = @Schema(implementation = FileProcessing.class))}),
             @ApiResponse(responseCode = "400", description = "Processing type does not exist with the given name",
                     content = @Content),
             @ApiResponse(responseCode = "500", description = "Internal server error, contact admin", content = @Content)
                 })
-    public ResponseEntity<?> getProcessingType(@PathVariable("name") String name, @RequestParam(required = false) Integer version) {
+    public ResponseEntity<?> getFileProcessingTypeByName(@PathVariable("name") String name, @RequestParam(required = false) Integer version) {
         try {
-            FileCaptureMeta fc = fileCaptureMetaMapper.getProcessingTypeByName(name,version);
+            FileProcessing fc = fileProcessingTypeMapper.getFileProcessingTypeByName(name,version);
             return new ResponseEntity<>(fc, HttpStatus.OK);
         } catch (Exception ex) {
             JSONObject jsonErr = new JSONObject();
@@ -119,42 +118,42 @@ public class FileCaptureMetaController {
 
     // Get ALL endpoint
     @RequestMapping(path = "/meta/", method = RequestMethod.GET, produces = "application/json")
-    @Operation(summary = "Fetch all processing types", description = "Will return empty list if there are no processing types to fetch")
+    @Operation(summary = "Fetch all file processing types", description = "Will return empty list if there are no file processing types to fetch")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Processing types fetched",
+            @ApiResponse(responseCode = "200", description = "File processing types fetched",
                     content = {@Content(mediaType = "application/json",
-                            schema = @Schema(implementation = FileCaptureMeta.class))})
+                            schema = @Schema(implementation = FileProcessing.class))})
                 })
-    public List<FileCaptureMeta> getAllProcessingType(@RequestParam(required = false) Integer version) {
-        return fileCaptureMetaMapper.getAllProcessingType(version);
+    public List<FileProcessing> getAllFileProcessingTypes(@RequestParam(required = false) Integer version) {
+        return fileProcessingTypeMapper.getAllFileProcessingTypes(version);
     }
 
 
     @RequestMapping(path = "/meta/rule", method = RequestMethod.PUT, produces = "application/json")
-    @Operation(summary = "Insert processing type for file based capture")
+    @Operation(summary = "Insert file processing type for file based capture")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "201", description = "New processing type created",
+            @ApiResponse(responseCode = "201", description = "New file processing type created",
                     content = {@Content(mediaType = "application/json",
-                            schema = @Schema(implementation = FileCaptureMeta.class))}),
-            @ApiResponse(responseCode = "400", description = "Similar processing type already exists with same values but different name OR Null value was inserted",
+                            schema = @Schema(implementation = FileProcessing.class))}),
+            @ApiResponse(responseCode = "400", description = "Similar file processing type already exists with same values but different name OR Null value was inserted",
                     content = @Content),
             @ApiResponse(responseCode = "500", description = "Internal server error, contact admin", content = @Content)
     })
-    public ResponseEntity<String> newFileMeta(@RequestBody FileCaptureMeta newFileCaptureMeta) {
-        LOGGER.info("About to insert <[{}]>",newFileCaptureMeta);
+    public ResponseEntity<String> newFileProcessingType(@RequestBody FileProcessing newFileProcessing) {
+        LOGGER.info("About to insert <[{}]>", newFileProcessing);
         try {
-            FileCaptureMeta n = fileCaptureMetaMapper.addNewProcessingType(
-                    newFileCaptureMeta.getTemplate(),
-                    newFileCaptureMeta.getRuleset(),
-                    newFileCaptureMeta.getName(),
-                    newFileCaptureMeta.getInputtype().toString(),
-                    newFileCaptureMeta.getInputvalue());
+            FileProcessing n = fileProcessingTypeMapper.addNewFileProcessingType(
+                    newFileProcessing.getTemplate(),
+                    newFileProcessing.getRuleset(),
+                    newFileProcessing.getName(),
+                    newFileProcessing.getInputtype().toString(),
+                    newFileProcessing.getInputvalue());
             LOGGER.debug("Values returned <[{}]>",n);
             JSONObject jsonObject = new JSONObject();
             // ID is never returned from database so null should suffice.
             String v = null;
             jsonObject.put("id", v);
-            jsonObject.put("message", "New processing type created with the name = " + n.getName());
+            jsonObject.put("message", "New file processing type created with the name = " + n.getName());
 
             return new ResponseEntity<>(jsonObject.toString(), HttpStatus.CREATED);
         } catch (RuntimeException ex) {
@@ -173,7 +172,7 @@ public class FileCaptureMetaController {
                 // Link error with state to get accurate error status
                 String state = error + "-" + ((SQLException) cause).getSQLState();
                 if (state.equals("1062-23000")) {
-                    jsonErr.put("message", "FileCaptureMeta name already exists with different values");
+                    jsonErr.put("message", "File processing type name already exists with different values");
                 }
                 return new ResponseEntity<>(jsonErr.toString(), HttpStatus.BAD_REQUEST);
             }
@@ -184,24 +183,24 @@ public class FileCaptureMetaController {
 
     // Delete
     @RequestMapping(path = "meta/{name}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
-    @Operation(summary = "Delete processing type")
+    @Operation(summary = "Delete file processing type")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Processing type deleted",
+            @ApiResponse(responseCode = "200", description = "File processing type deleted",
                     content = {@Content(mediaType = "application/json",
-                            schema = @Schema(implementation = FileCaptureMeta.class))}),
-            @ApiResponse(responseCode = "400", description = "Processing type is being used OR Processing type does not exist",
+                            schema = @Schema(implementation = FileProcessing.class))}),
+            @ApiResponse(responseCode = "400", description = "File processing type is being used OR file processing type does not exist",
                     content = @Content),
             @ApiResponse(responseCode = "500", description = "Internal server error, contact admin", content = @Content)
     })
-    public ResponseEntity<String> removeProcessingType(@PathVariable("name") String name) {
-        LOGGER.info("Deleting processing type  <[{}]>",name);
+    public ResponseEntity<String> removeFileProcessingType(@PathVariable("name") String name) {
+        LOGGER.info("Deleting file processing type  <[{}]>",name);
         JSONObject jsonErr = new JSONObject();
         jsonErr.put("id", 0);
         try {
-            fileCaptureMetaMapper.deleteProcessingType(name);
+            fileProcessingTypeMapper.deleteFileProcessingType(name);
             JSONObject j = new JSONObject();
             j.put("id", 0);
-            j.put("message", "Processing type " + name + " deleted.");
+            j.put("message", "File processing type " + name + " deleted.");
             return new ResponseEntity<>(j.toString(), HttpStatus.OK);
         } catch (Exception ex) {
             final Throwable cause = ex.getCause();

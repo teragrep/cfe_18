@@ -46,7 +46,6 @@
 package com.teragrep.cfe18.handlers;
 
 import com.teragrep.cfe18.FlowMapper;
-import com.teragrep.cfe18.handlers.entities.FileCaptureMeta;
 import com.teragrep.cfe18.handlers.entities.Flow;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;

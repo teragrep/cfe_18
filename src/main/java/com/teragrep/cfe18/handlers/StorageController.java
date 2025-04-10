@@ -47,7 +47,7 @@ package com.teragrep.cfe18.handlers;
 
 import com.teragrep.cfe18.StorageMapper;
 import com.teragrep.cfe18.handlers.entities.CaptureStorage;
-import com.teragrep.cfe18.handlers.entities.FileCaptureMeta;
+import com.teragrep.cfe18.handlers.entities.FileProcessing;
 import com.teragrep.cfe18.handlers.entities.FlowStorage;
 import com.teragrep.cfe18.handlers.entities.Storage;
 import io.swagger.v3.oas.annotations.Operation;
@@ -380,7 +380,7 @@ public class StorageController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Capture storage deleted",
                     content = {@Content(mediaType = "application/json",
-                            schema = @Schema(implementation = FileCaptureMeta.class))}),
+                            schema = @Schema(implementation = FileProcessing.class))}),
             @ApiResponse(responseCode = "400", description = "Capture storage is being used OR Capture storage does not exist",
                     content = @Content),
             @ApiResponse(responseCode = "500", description = "Internal server error, contact admin", content = @Content)

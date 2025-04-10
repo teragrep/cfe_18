@@ -43,81 +43,25 @@
  * Teragrep, the applicable Commercial License may apply to this file if you as
  * a licensee so wish it.
  */
-package com.teragrep.cfe18.handlers.entities;
+package com.teragrep.cfe18;
 
-import io.swagger.v3.oas.annotations.media.Schema;
+import com.teragrep.cfe18.handlers.entities.FileProcessing;
+import org.apache.ibatis.annotations.Mapper;
 
-public class FileCaptureMeta {
-    public enum InputType {
-        regex, newline
-    }
+import java.util.List;
 
-    private InputType inputtype;
-    private String inputvalue;
-    private String ruleset;
-    private String name;
-    private String template;
-    @Schema(accessMode = Schema.AccessMode.READ_ONLY)
-    private Integer id;
+@Mapper
+public interface FileProcessingTypeMapper {
+    FileProcessing getFileProcessingTypeByName(String name, Integer version);
 
-    public InputType getInputtype() {
-        return inputtype;
-    }
+    FileProcessing addNewFileProcessingType(
+            String template,
+            String rule,
+            String name,
+            String inputtype,
+            String inputvalue);
 
-    public void setInputtype(InputType inputtype) {
-        this.inputtype = inputtype;
-    }
+    List<FileProcessing> getAllFileProcessingTypes(Integer version);
 
-    public String getInputvalue() {
-        return inputvalue;
-    }
-
-    public void setInputvalue(String inputvalue) {
-        this.inputvalue = inputvalue;
-    }
-
-    public String getRuleset() {
-        return ruleset;
-    }
-
-    public void setRuleset(String ruleset) {
-        this.ruleset = ruleset;
-    }
-
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getTemplate() {
-        return template;
-    }
-
-    public void setTemplate(String template) {
-        this.template = template;
-    }
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    @Override
-    public String toString() {
-        return "FileCaptureMeta{" +
-                "inputtype=" + inputtype +
-                ", inputvalue='" + inputvalue + '\'' +
-                ", ruleset='" + ruleset + '\'' +
-                ", name='" + name + '\'' +
-                ", template='" + template + '\'' +
-                ", id=" + id +
-                '}';
-    }
-}
+    FileProcessing deleteFileProcessingType(String name);
+};

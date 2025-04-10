@@ -87,8 +87,8 @@ public class CaptureControllerTest extends TestSpringBootInformation {
         // Capture needs processing_type and capture_sink before it can be inserted.
 
         // Filecapturemeta
-        FileCaptureMeta file = new FileCaptureMeta();
-        file.setInputtype(FileCaptureMeta.InputType.regex);
+        FileProcessing file = new FileProcessing();
+        file.setInputtype(FileProcessing.InputType.regex);
         file.setInputvalue("capregex");
         file.setRuleset("capruleset");
         file.setName("capname");
