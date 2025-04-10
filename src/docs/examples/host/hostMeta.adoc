@@ -87,7 +87,7 @@ HTTP Response code: 201
 
 ==== Failed requests
 ===== Host does not exist
-If link:../hub.adoc[hubs] are not inserted before inserting Hosts, this error will be returned.
+If link:hub.adoc[hubs] are not inserted before inserting Hosts, this error will be returned.
 ....
 HTTP Response code: 400
 ....
