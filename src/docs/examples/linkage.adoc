@@ -52,7 +52,7 @@ a licensee so wish it.
 
 [source]
 ----
-${cfe_18_address}/capture/groups/linkage
+PUT ${cfe_18_address}/capture/groups/linkage
 ----
 '''
 
