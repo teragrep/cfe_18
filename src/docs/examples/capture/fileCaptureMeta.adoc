@@ -41,30 +41,88 @@ Teragrep, the applicable Commercial License may apply to this file if you as
 a licensee so wish it.
 ////
 
-= Example API calls for integration
+= Capture meta for file-based Captures
 :toc:
+:toclevels: 4
 :icons: font
-:url-quickref: https://docs.asciidoctor.org/asciidoc/latest/syntax-quick-reference/
 
-. link:flow.adoc[Flows]
-. link:sink.adoc[Sinks]
-. Captures
-.. link:capture/fileCaptureMeta.adoc[Capture metadata for file-based captures]
-.. CaptureDefinition
-... link:capture/fileCaptureDefinition.adoc[file-based captures]
-... link:capture/relpCaptureDefinition.adoc[RELP-based captures]
-.. link:capture/captureMeta.adoc[Key-value based metadata for Capture Definitions]
-.. link:capture/storage.adoc[Storages]
-.. link:capture/storageFlow.adoc[Connect Storages to Flows]
-.. link:capture/storageCapture.adoc[Connect Storages to Captures]
-.. link:capture/captureGroup.adoc[Capture Group]
-. Hosts
-.. Host
-... link:host/hub.adoc[Hub/s]
-.... link:host/hostFile.adoc[file-based Host]
-..... link:host/hostMeta.adoc[Metadata for file-based Host]
-...... link:host/hostMetaIP.adoc[HostMeta IP addresses]
-...... link:host/hostMetaInterface.adoc[HostMeta interfaces]
-... link:host/hostRelp.adoc[RELP-based Host]
-.. link:host/hostGroup.adoc[Host Group]
-. link:linkage.adoc[Linking Host and Capture Groups]
+== How?
+
+=== Destination
+
+[source]
+----
+PUT ${cfe_18_address}/file/capture/meta/rule
+----
+'''
+
+=== Request
+
+[source,json]
+----
+{
+  "inputtype": "inputType1",
+  "inputvalue": "123456",
+  "ruleset": "RuleNumber1",
+  "name": "CaptureMeta1",
+  "template": "template1"
+}
+----
+'''
+
+=== Response
+==== Successful request
+....
+HTTP Response code: 201
+....
+[source,json]
+----
+{
+  "id": null,
+  "message": "New processing type created with the name = CaptureMeta1"
+}
+----
+
+==== Failed requests
+
+===== Duplicate record
+....
+HTTP Response code: 400
+....
+[source,json]
+----
+{
+  "id": 0,
+  "message": "FileCaptureMeta name already exists with different values"
+}
+----
+
+===== Null value
+If one of the values in the JSON request is `null`
+....
+HTTP Response code: 400
+....
+[source,json]
+----
+{
+  "id": 0,
+  "message": "NO NULLS ALLOWED"
+}
+----
+
+===== Unknown error
+If something else goes wrong
+....
+HTTP Response code: 500
+....
+[source,json]
+----
+{
+  "id": 0,
+  "message": "Unexpected error"
+}
+----
+
+== Why?
+* fileCaptureMeta provides metadata for link:fileCaptureDefinition.adoc[file-based captures]
+* Needs to be inserted before the Captures, so that the ID for the CaptureMeta can be linked to a link:fileCaptureDefinition.adoc[Capture]

@@ -52,7 +52,7 @@ a licensee so wish it.
 
 [source]
 ----
-PUT ${cfe_18_address}/file/capture/meta/rule
+PUT ${cfe_18_address}/capture/meta
 ----
 '''
 
@@ -61,13 +61,13 @@ PUT ${cfe_18_address}/file/capture/meta/rule
 [source,json]
 ----
 {
-  "inputtype": "inputType1",
-  "inputvalue": "123456",
-  "ruleset": "RuleNumber1",
-  "name": "CaptureMeta1",
-  "template": "template1"
+  "capture_id": 123,
+  "capture_meta_key": "key",
+  "capture_meta_value": "value"
 }
 ----
+* Max length for `capture_meta_key` *and* `capture_meta_value` is 1024 characters
+
 '''
 
 === Response
@@ -78,14 +78,14 @@ HTTP Response code: 201
 [source,json]
 ----
 {
-  "id": null,
-  "message": "New processing type created with the name = CaptureMeta1"
+  "id": 123,
+  "message": "New capture meta created for = 123"
 }
 ----
 
 ==== Failed requests
 
-===== Duplicate record
+===== Capture does not exist
 ....
 HTTP Response code: 400
 ....
@@ -93,20 +93,7 @@ HTTP Response code: 400
 ----
 {
   "id": 0,
-  "message": "FileCaptureMeta name already exists with different values"
-}
-----
-
-===== Null value
-If one of the values in the JSON request is `null`
-....
-HTTP Response code: 400
-....
-[source,json]
-----
-{
-  "id": 0,
-  "message": "NO NULLS ALLOWED"
+  "message": "Capture does not exist with given ID"
 }
 ----
 
@@ -124,5 +111,7 @@ HTTP Response code: 500
 ----
 
 == Why?
-* CaptureMeta provides metadata for link:fileCaptureDefinition.adoc[file-based captures]
-* Needs to be inserted before the Captures, so that the ID for the CaptureMeta can be linked to a link:fileCaptureDefinition.adoc[Capture]
+* Capable of storing metadata value of Capture Definition in a key value pair manner
+* Inserted after a Capture Definition, since this takes a Capture Definition ID as an argument
+* Only one key-value mapped metadata can be inserted per request
+
