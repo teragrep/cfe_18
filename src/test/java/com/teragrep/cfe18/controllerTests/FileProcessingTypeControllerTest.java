@@ -48,7 +48,7 @@ package com.teragrep.cfe18.controllerTests;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.teragrep.cfe18.handlers.entities.CaptureFile;
-import com.teragrep.cfe18.handlers.entities.FileCaptureMeta;
+import com.teragrep.cfe18.handlers.entities.FileProcessing;
 import com.teragrep.cfe18.handlers.entities.Flow;
 import com.teragrep.cfe18.handlers.entities.Sink;
 import org.apache.http.HttpEntity;
@@ -77,7 +77,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @ExtendWith(MigrateDatabaseExtension.class)
-public class FileCaptureMetaControllerTest extends TestSpringBootInformation {
+public class FileProcessingTypeControllerTest extends TestSpringBootInformation {
 
     Gson gson = new Gson();
 
@@ -88,11 +88,11 @@ public class FileCaptureMetaControllerTest extends TestSpringBootInformation {
     // Testing if processing type can be added via endpoint
 
     @Test
-    public void testProcessingType() throws Exception {
+    public void testFileProcessingType() throws Exception {
 
 
-        FileCaptureMeta file = new FileCaptureMeta();
-        file.setInputtype(FileCaptureMeta.InputType.regex);
+        FileProcessing file = new FileProcessing();
+        file.setInputtype(FileProcessing.InputType.regex);
         file.setInputvalue("normalregex");
         file.setRuleset("ruleset1");
         file.setName("name1");
@@ -127,24 +127,51 @@ public class FileCaptureMetaControllerTest extends TestSpringBootInformation {
         JSONObject responseAsJson = new JSONObject(responseString);
 
         // Creating expected message as JSON Object from the data that was sent towards endpoint
-        String expected = "New processing type created with the name = " + file.getName();
+        String expected = "New file processing type created with the name = " + file.getName();
 
         // Creating string from Json that was given as a response
         String actual = responseAsJson.get("message").toString();
 
         // Assertions
+        assertEquals(expected, actual);
         assertThat(
                 httpResponse.getStatusLine().getStatusCode(),
                 equalTo(HttpStatus.SC_CREATED));
-        assertEquals(expected, actual);
 
     }
 
     // When getting the values back it should have ID carried with the object created.
     @Test
-    public void testGetProcessingType() throws Exception {
-        FileCaptureMeta file = new FileCaptureMeta();
-        file.setInputtype(FileCaptureMeta.InputType.regex);
+    public void testGetFileProcessingTypeByName() throws Exception {
+
+        FileProcessing file2 = new FileProcessing();
+        file2.setInputtype(FileProcessing.InputType.regex);
+        file2.setInputvalue("normalregex");
+        file2.setRuleset("ruleset1");
+        file2.setName("name1");
+        file2.setTemplate("regex.moustache");
+
+
+        String json2 = gson.toJson(file2);
+
+
+        // forms the json to requestEntity
+        StringEntity requestEntity = new StringEntity(
+                String.valueOf(json2),
+                ContentType.APPLICATION_JSON);
+
+        // Creates the request
+        HttpPut request = new HttpPut("http://localhost:" + port + "/file/capture/meta/rule");
+        // set requestEntity to the put request
+        request.setEntity(requestEntity);
+        // Header
+        request.setHeader("Authorization", "Bearer " + token);
+
+        // Get the response from endpoint
+        HttpResponse httpResponse = HttpClientBuilder.create().build().execute(request);
+
+        FileProcessing file = new FileProcessing();
+        file.setInputtype(FileProcessing.InputType.regex);
         file.setInputvalue("normalregex");
         file.setRuleset("ruleset1");
         file.setName("name1");
@@ -154,7 +181,7 @@ public class FileCaptureMetaControllerTest extends TestSpringBootInformation {
         String json = gson.toJson(file);
 
         // Asserting get request
-        HttpGet requestGet = new HttpGet("http://localhost:" + port + "/file/capture/meta/name1");
+        HttpGet requestGet = new HttpGet("http://localhost:" + port + "/file/capture/meta/"+"name1");
 
         requestGet.setHeader("Authorization", "Bearer " + token);
 
@@ -164,26 +191,25 @@ public class FileCaptureMetaControllerTest extends TestSpringBootInformation {
 
         String responseStringGet = EntityUtils.toString(entityGet, "UTF-8");
 
-        assertThat(responseGet.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_OK));
         assertEquals(json, responseStringGet);
+        assertThat(responseGet.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_OK));
     }
 
 
     @Test
-    public void testGetAllProcessingTypes() throws Exception {
+    public void testGetAllFileProcessingTypesTypes() throws Exception {
         GsonBuilder gson2 = new GsonBuilder().serializeNulls();
         Gson real = gson2.create();
         // Declare list of expected values
-        ArrayList<FileCaptureMeta> expected = new ArrayList<>();
+        ArrayList<FileProcessing> expected = new ArrayList<>();
 
         // add another piece of data so that
-        FileCaptureMeta file1 = new FileCaptureMeta();
-        file1.setInputtype(FileCaptureMeta.InputType.regex);
+        FileProcessing file1 = new FileProcessing();
+        file1.setInputtype(FileProcessing.InputType.regex);
         file1.setInputvalue("test");
         file1.setRuleset("test");
         file1.setName("test");
         file1.setTemplate("test");
-        file1.setId(null);
         String json1 = real.toJson(file1);
 
 
@@ -203,13 +229,12 @@ public class FileCaptureMetaControllerTest extends TestSpringBootInformation {
         HttpClientBuilder.create().build().execute(request);
 
 
-        FileCaptureMeta file2 = new FileCaptureMeta();
-        file2.setInputtype(FileCaptureMeta.InputType.regex);
+        FileProcessing file2 = new FileProcessing();
+        file2.setInputtype(FileProcessing.InputType.regex);
         file2.setInputvalue("normalregex");
         file2.setRuleset("ruleset1");
         file2.setName("name1");
         file2.setTemplate("regex.moustache");
-        file2.setId(null);
 
         // add the expected values to json
         expected.add(file2);
@@ -255,7 +280,7 @@ public class FileCaptureMetaControllerTest extends TestSpringBootInformation {
         String actual = responseAsJson.get("message").toString();
 
         // Creating expected message as JSON Object from the data that was sent towards endpoint
-        String expected = "Processing type name1 deleted.";
+        String expected = "File processing type name1 deleted.";
 
         assertThat(deleteResponse.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_OK));
         assertEquals(expected, actual);

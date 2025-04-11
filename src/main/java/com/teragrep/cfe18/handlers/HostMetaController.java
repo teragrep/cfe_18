@@ -47,7 +47,6 @@ package com.teragrep.cfe18.handlers;
 
 
 import com.teragrep.cfe18.HostMetaMapper;
-import com.teragrep.cfe18.handlers.entities.FileCaptureMeta;
 import com.teragrep.cfe18.handlers.entities.HostMeta;
 import com.teragrep.cfe18.handlers.entities.InterfaceType;
 import com.teragrep.cfe18.handlers.entities.IPAddress;

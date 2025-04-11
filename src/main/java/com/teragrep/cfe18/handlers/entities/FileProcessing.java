@@ -43,25 +43,81 @@
  * Teragrep, the applicable Commercial License may apply to this file if you as
  * a licensee so wish it.
  */
-package com.teragrep.cfe18;
+package com.teragrep.cfe18.handlers.entities;
 
-import com.teragrep.cfe18.handlers.entities.FileCaptureMeta;
-import org.apache.ibatis.annotations.Mapper;
+import io.swagger.v3.oas.annotations.media.Schema;
 
-import java.util.List;
+public class FileProcessing {
+    public enum InputType {
+        regex, newline
+    }
 
-@Mapper
-public interface FileCaptureMetaMapper {
-    FileCaptureMeta getProcessingTypeByName(String name,Integer version);
+    private InputType inputtype;
+    private String inputvalue;
+    private String ruleset;
+    private String name;
+    private String template;
+    @Schema(accessMode = Schema.AccessMode.READ_ONLY)
+    private Integer id;
 
-    FileCaptureMeta addNewProcessingType(
-            String Template,
-            String rule,
-            String name,
-            String inputtype,
-            String inputvalue);
+    public InputType getInputtype() {
+        return inputtype;
+    }
 
-    List<FileCaptureMeta> getAllProcessingType(Integer version);
+    public void setInputtype(InputType inputtype) {
+        this.inputtype = inputtype;
+    }
 
-    FileCaptureMeta deleteProcessingType(String name);
-};
+    public String getInputvalue() {
+        return inputvalue;
+    }
+
+    public void setInputvalue(String inputvalue) {
+        this.inputvalue = inputvalue;
+    }
+
+    public String getRuleset() {
+        return ruleset;
+    }
+
+    public void setRuleset(String ruleset) {
+        this.ruleset = ruleset;
+    }
+
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getTemplate() {
+        return template;
+    }
+
+    public void setTemplate(String template) {
+        this.template = template;
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    @Override
+    public String toString() {
+        return "FileProcessing{" +
+                "inputtype=" + inputtype +
+                ", inputvalue='" + inputvalue + '\'' +
+                ", ruleset='" + ruleset + '\'' +
+                ", name='" + name + '\'' +
+                ", template='" + template + '\'' +
+                ", id=" + id +
+                '}';
+    }
+}
