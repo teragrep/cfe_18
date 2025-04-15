@@ -107,35 +107,36 @@ BEGIN
                              where inputtype_id=@InputId
                                and ruleset_id=@RuleId
                                and template_id=@TemplateId)>0) then
-        -- return the name of that row
+            -- return the name of that row
             select pt.type_name as name from cfe_18.processing_type pt where
                    inputtype_id=@InputId and
                    ruleset_id=@RuleId and
                    template_id=@TemplateId;
 
-            -- in this case name was same but values different. Generate new name and insert values
-            else
-
-    -- generate new name in case name is already reserved
+        -- in this case name was same but values different. Generate new name and insert values
+        else
+            -- generate new name in case name is already reserved
             set @tempName = concat(meta_rule_name,(select max(transaction_id) from mysql.transaction_registry));
             insert into cfe_18.processing_type(inputtype_id, ruleset_id, template_id, type_name)
             values (@InputId, @RuleId, @TemplateId, @tempName);
             select @tempName as name;
 
         end if;
+
         -- Here name is different but values are same so we return the real name
-        elseif((select count(id) from cfe_18.processing_type pt
-                             where inputtype_id=@InputId
-                               and ruleset_id=@RuleId
-                               and template_id=@TemplateId)>0) then
-        select pt.type_name as name from cfe_18.processing_type pt where inputtype_id=@InputId
-                               and ruleset_id=@RuleId
-                               and template_id=@TemplateId;
-        -- else name is different and values are different. Just insert new row
-        else
-                    insert into cfe_18.processing_type(inputtype_id, ruleset_id, template_id, type_name)
-            values (@InputId, @RuleId, @TemplateId, meta_rule_name);
-            select meta_rule_name as name;
+    elseif((select count(id) from cfe_18.processing_type pt
+                         where inputtype_id=@InputId
+                            and ruleset_id=@RuleId
+                            and template_id=@TemplateId)>0) then
+    select pt.type_name as name from cfe_18.processing_type pt
+                         where inputtype_id=@InputId
+                            and ruleset_id=@RuleId
+                            and template_id=@TemplateId;
+    -- else name is different and values are different. Just insert new row
+    else
+        insert into cfe_18.processing_type(inputtype_id, ruleset_id, template_id, type_name)
+        values (@InputId, @RuleId, @TemplateId, meta_rule_name);
+        select meta_rule_name as name;
 
     end if;
 
