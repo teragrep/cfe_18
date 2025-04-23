@@ -43,94 +43,29 @@
  * Teragrep, the applicable Commercial License may apply to this file if you as
  * a licensee so wish it.
  */
-package com.teragrep.cfe18.handlers.entities;
+package com.teragrep.cfe18;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-import io.swagger.v3.oas.annotations.media.Schema;
+import com.teragrep.cfe18.handlers.entities.Cfe04Transform;
+import org.apache.ibatis.annotations.Mapper;
 
-@JsonInclude(JsonInclude.Include.NON_NULL)
-public class Cfe04Transforms {
+import java.util.List;
 
-    @Schema(accessMode = Schema.AccessMode.READ_ONLY)
-    private int id;
-    private int cfe04Id;
-    private String name;
-    private boolean writeMeta;
-    private boolean writeDefault;
-    private String defaultValue;
-    private String destinationKey;
-    private String regex;
-    private String format;
+@Mapper
+public interface Cfe04TransformMapper {
 
-    public int getId() {
-        return id;
-    }
+     List<Cfe04Transform> getAllCfe04Transforms(Integer version);
 
-    public void setId(int id) {
-        this.id = id;
-    }
+     Cfe04Transform addNewCfe04Transform(
+                                               Integer cfe04Id,
+                                               String name,
+                                               Boolean writeMeta,
+                                               Boolean writeDefault,
+                                               String defaultValue,
+                                               String destinationKey,
+                                               String regex,
+                                               String format);
 
-    public int getCfe04Id() {
-        return cfe04Id;
-    }
+     List<Cfe04Transform> getCfe04TransformById(Integer id, Integer version);
 
-    public void setCfe04Id(int cfe04Id) {
-        this.cfe04Id = cfe04Id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public boolean isWriteMeta() {
-        return writeMeta;
-    }
-
-    public void setWriteMeta(boolean writeMeta) {
-        this.writeMeta = writeMeta;
-    }
-
-    public boolean isWriteDefault() {
-        return writeDefault;
-    }
-
-    public void setWriteDefault(boolean writeDefault) {
-        this.writeDefault = writeDefault;
-    }
-
-    public String getDefaultValue() {
-        return defaultValue;
-    }
-
-    public void setDefaultValue(String defaultValue) {
-        this.defaultValue = defaultValue;
-    }
-
-    public String getDestinationKey() {
-        return destinationKey;
-    }
-
-    public void setDestinationKey(String destinationKey) {
-        this.destinationKey = destinationKey;
-    }
-
-    public String getRegex() {
-        return regex;
-    }
-
-    public void setRegex(String regex) {
-        this.regex = regex;
-    }
-
-    public String getFormat() {
-        return format;
-    }
-
-    public void setFormat(String format) {
-        this.format = format;
-    }
+     Cfe04Transform deleteCfe04TransformById(Integer id);
 }

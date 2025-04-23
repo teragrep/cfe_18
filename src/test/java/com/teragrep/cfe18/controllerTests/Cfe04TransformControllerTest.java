@@ -47,7 +47,7 @@ package com.teragrep.cfe18.controllerTests;
 
 
 import com.google.gson.Gson;
-import com.teragrep.cfe18.handlers.entities.Cfe04Transforms;
+import com.teragrep.cfe18.handlers.entities.Cfe04Transform;
 import com.teragrep.cfe18.handlers.entities.Storage;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -76,7 +76,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @ExtendWith(MigrateDatabaseExtension.class)
-public class Cfe04TransformsControllerTest extends TestSpringBootInformation{
+public class Cfe04TransformControllerTest extends TestSpringBootInformation{
 
 
     Gson gson = new Gson();
@@ -113,16 +113,16 @@ public class Cfe04TransformsControllerTest extends TestSpringBootInformation{
 
 
 
-        Cfe04Transforms cfe04Transforms = new Cfe04Transforms();
-        cfe04Transforms.setCfe04Id(1);
-        cfe04Transforms.setName("transform1");
-        cfe04Transforms.setWriteMeta(true);
-        cfe04Transforms.setWriteDefault(true);
-        cfe04Transforms.setDefaultValue("default");
-        cfe04Transforms.setDestinationKey("destKey");
-        cfe04Transforms.setRegex("regex");
-        cfe04Transforms.setFormat("format");
-        String json = gson.toJson(cfe04Transforms);
+        Cfe04Transform cfe04Transform = new Cfe04Transform();
+        cfe04Transform.setCfe04Id(1);
+        cfe04Transform.setName("transform1");
+        cfe04Transform.setWriteMeta(true);
+        cfe04Transform.setWriteDefault(true);
+        cfe04Transform.setDefaultValue("default");
+        cfe04Transform.setDestinationKey("destKey");
+        cfe04Transform.setRegex("regex");
+        cfe04Transform.setFormat("format");
+        String json = gson.toJson(cfe04Transform);
 
         // forms the json to requestEntity
         StringEntity requestEntity = new StringEntity(
@@ -168,16 +168,16 @@ public class Cfe04TransformsControllerTest extends TestSpringBootInformation{
     @Order(2)
     @Description("Tests adding cfe_04 transform for a cfe_04 that does not exist")
     public void testAddCfe04TransformsMissingCfe04(){
-         Cfe04Transforms cfe04Transforms = new Cfe04Transforms();
-        cfe04Transforms.setCfe04Id(500);
-        cfe04Transforms.setName("transform1");
-        cfe04Transforms.setWriteMeta(true);
-        cfe04Transforms.setWriteDefault(true);
-        cfe04Transforms.setDefaultValue("default");
-        cfe04Transforms.setDestinationKey("destKey");
-        cfe04Transforms.setRegex("regex");
-        cfe04Transforms.setFormat("format");
-        String json = gson.toJson(cfe04Transforms);
+         Cfe04Transform cfe04Transform = new Cfe04Transform();
+        cfe04Transform.setCfe04Id(500);
+        cfe04Transform.setName("transform1");
+        cfe04Transform.setWriteMeta(true);
+        cfe04Transform.setWriteDefault(true);
+        cfe04Transform.setDefaultValue("default");
+        cfe04Transform.setDestinationKey("destKey");
+        cfe04Transform.setRegex("regex");
+        cfe04Transform.setFormat("format");
+        String json = gson.toJson(cfe04Transform);
 
         // forms the json to requestEntity
         StringEntity requestEntity = new StringEntity(
@@ -224,30 +224,30 @@ public class Cfe04TransformsControllerTest extends TestSpringBootInformation{
     public void testGetALLCfe04Transforms() {
 
 
-        Cfe04Transforms cfe04Transforms2 = new Cfe04Transforms();
-        cfe04Transforms2.setId(1);
-        cfe04Transforms2.setCfe04Id(1);
-        cfe04Transforms2.setName("transform1");
-        cfe04Transforms2.setWriteMeta(true);
-        cfe04Transforms2.setWriteDefault(true);
-        cfe04Transforms2.setDefaultValue("default");
-        cfe04Transforms2.setDestinationKey("destKey");
-        cfe04Transforms2.setRegex("regex");
-        cfe04Transforms2.setFormat("format");
+        Cfe04Transform cfe04Transform2 = new Cfe04Transform();
+        cfe04Transform2.setId(1);
+        cfe04Transform2.setCfe04Id(1);
+        cfe04Transform2.setName("transform1");
+        cfe04Transform2.setWriteMeta(true);
+        cfe04Transform2.setWriteDefault(true);
+        cfe04Transform2.setDefaultValue("default");
+        cfe04Transform2.setDestinationKey("destKey");
+        cfe04Transform2.setRegex("regex");
+        cfe04Transform2.setFormat("format");
 
 
 
-        Cfe04Transforms cfe04Transforms = new Cfe04Transforms();
-        cfe04Transforms.setId(3);
-        cfe04Transforms.setCfe04Id(1);
-        cfe04Transforms.setName("transform2");
-        cfe04Transforms.setWriteMeta(false);
-        cfe04Transforms.setWriteDefault(true);
-        cfe04Transforms.setDefaultValue("default");
-        cfe04Transforms.setDestinationKey("destKey");
-        cfe04Transforms.setRegex("regex");
-        cfe04Transforms.setFormat("format");
-        String json = gson.toJson(cfe04Transforms);
+        Cfe04Transform cfe04Transform = new Cfe04Transform();
+        cfe04Transform.setId(3);
+        cfe04Transform.setCfe04Id(1);
+        cfe04Transform.setName("transform2");
+        cfe04Transform.setWriteMeta(false);
+        cfe04Transform.setWriteDefault(true);
+        cfe04Transform.setDefaultValue("default");
+        cfe04Transform.setDestinationKey("destKey");
+        cfe04Transform.setRegex("regex");
+        cfe04Transform.setFormat("format");
+        String json = gson.toJson(cfe04Transform);
 
         // forms the json to requestEntity
         StringEntity requestEntity = new StringEntity(
@@ -265,9 +265,9 @@ public class Cfe04TransformsControllerTest extends TestSpringBootInformation{
                 HttpClientBuilder.create().build().execute(request));
 
 
-        ArrayList<Cfe04Transforms> expected = new ArrayList<>();
-        expected.add(cfe04Transforms2);
-        expected.add(cfe04Transforms);
+        ArrayList<Cfe04Transform> expected = new ArrayList<>();
+        expected.add(cfe04Transform2);
+        expected.add(cfe04Transform);
 
         String json2 = gson.toJson(expected);
         // Fetching all capture metas
@@ -294,16 +294,16 @@ public class Cfe04TransformsControllerTest extends TestSpringBootInformation{
     @Order(4)
     @Description("Tests that endpoint is idempotent. First unit test adds same transform as this one. Should return same output")
     public void testIdempotentCfe04Transforms() {
-        Cfe04Transforms cfe04Transforms = new Cfe04Transforms();
-        cfe04Transforms.setCfe04Id(1);
-        cfe04Transforms.setName("transform1");
-        cfe04Transforms.setWriteMeta(true);
-        cfe04Transforms.setWriteDefault(true);
-        cfe04Transforms.setDefaultValue("default");
-        cfe04Transforms.setDestinationKey("destKey");
-        cfe04Transforms.setRegex("regex");
-        cfe04Transforms.setFormat("format");
-        String json = gson.toJson(cfe04Transforms);
+        Cfe04Transform cfe04Transform = new Cfe04Transform();
+        cfe04Transform.setCfe04Id(1);
+        cfe04Transform.setName("transform1");
+        cfe04Transform.setWriteMeta(true);
+        cfe04Transform.setWriteDefault(true);
+        cfe04Transform.setDefaultValue("default");
+        cfe04Transform.setDestinationKey("destKey");
+        cfe04Transform.setRegex("regex");
+        cfe04Transform.setFormat("format");
+        String json = gson.toJson(cfe04Transform);
 
         // forms the json to requestEntity
         StringEntity requestEntity = new StringEntity(
@@ -382,19 +382,19 @@ public class Cfe04TransformsControllerTest extends TestSpringBootInformation{
     @Order(6)
     @Description("Tests that records for one Cfe_04 can successfully be fetched")
     public void testGetCfe04TransformsForOneCfe04() {
-        ArrayList<Cfe04Transforms> cfe04TransformsList = new ArrayList<>();
-        Cfe04Transforms cfe04Transforms = new Cfe04Transforms();
-        cfe04Transforms.setId(3);
-        cfe04Transforms.setCfe04Id(1);
-        cfe04Transforms.setName("transform2");
-        cfe04Transforms.setWriteMeta(false);
-        cfe04Transforms.setWriteDefault(true);
-        cfe04Transforms.setDefaultValue("default");
-        cfe04Transforms.setDestinationKey("destKey");
-        cfe04Transforms.setRegex("regex");
-        cfe04Transforms.setFormat("format");
-        cfe04TransformsList.add(cfe04Transforms);
-        String expectedJson = gson.toJson(cfe04TransformsList);
+        ArrayList<Cfe04Transform> cfe04TransformList = new ArrayList<>();
+        Cfe04Transform cfe04Transform = new Cfe04Transform();
+        cfe04Transform.setId(3);
+        cfe04Transform.setCfe04Id(1);
+        cfe04Transform.setName("transform2");
+        cfe04Transform.setWriteMeta(false);
+        cfe04Transform.setWriteDefault(true);
+        cfe04Transform.setDefaultValue("default");
+        cfe04Transform.setDestinationKey("destKey");
+        cfe04Transform.setRegex("regex");
+        cfe04Transform.setFormat("format");
+        cfe04TransformList.add(cfe04Transform);
+        String expectedJson = gson.toJson(cfe04TransformList);
 
         HttpGet requestGet = new HttpGet("http://localhost:" + port + "/storage/cfe04/transforms/"+1 );
 
