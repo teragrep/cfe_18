@@ -106,7 +106,7 @@ public class Cfe04TransformsController {
     })
     public ResponseEntity<?> getTransformsByCfe04Id(@PathVariable Integer id, @RequestParam(required = false) Integer version) {
         try {
-            List<Cfe04Transforms> cfe04Transforms = cfe04TransformsMapper.getCfe04TransformsById(id,version);
+            List<Cfe04Transforms> cfe04Transforms = cfe04TransformsMapper.getCfe04TransformById(id,version);
             return new ResponseEntity<>(cfe04Transforms, HttpStatus.OK);
         } catch (Exception ex) {
             JSONObject jsonErr = new JSONObject();
@@ -140,7 +140,7 @@ public class Cfe04TransformsController {
     public ResponseEntity<String> addNewCfe04Transforms(@RequestBody Cfe04Transforms newCfe04Transforms) {
         LOGGER.info("About to insert <[{}]>",newCfe04Transforms);
         try {
-            Cfe04Transforms cfe04Transforms = cfe04TransformsMapper.addNewCfe04Transforms(
+            Cfe04Transforms cfe04Transforms = cfe04TransformsMapper.addNewCfe04Transform(
                     newCfe04Transforms.getCfe04Id(),
                     newCfe04Transforms.getName(),
                     newCfe04Transforms.isWriteMeta(),
@@ -191,7 +191,7 @@ public class Cfe04TransformsController {
         JSONObject jsonErr = new JSONObject();
         jsonErr.put("id", id);
         try {
-            cfe04TransformsMapper.deleteCfe04TransformsById(id);
+            cfe04TransformsMapper.deleteCfe04TransformById(id);
             JSONObject j = new JSONObject();
             j.put("id", id);
             j.put("message", "cfe_04 transforms with id of " + id + " deleted.");

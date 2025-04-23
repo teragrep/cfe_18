@@ -5,7 +5,7 @@
 <mapper namespace="com.teragrep.cfe18.Cfe04TransformsMapper">
 
     <!-- PUT -->
-    <select id="addNewCfe04Transforms" resultMap="insertedID" statementType="CALLABLE">
+    <select id="addNewCfe04Transform" resultMap="insertedID" statementType="CALLABLE">
         {CALL
         flow.add_new_cfe_04_transforms(#{param1},#{param2},#{param3},#{param4},#{param5},#{param6},#{param7},#{param8})}
     </select>
@@ -14,7 +14,7 @@
     </resultMap>
 
     <!-- GET by transforms ID -->
-    <select id="getCfe04TransformsById" resultMap="CFE04TransformsById" statementType="CALLABLE">
+    <select id="getCfe04TransformById" resultMap="CFE04TransformsById" statementType="CALLABLE">
         {CALL flow.retrieve_cfe_04_transforms(#{param1},#{param2})}
     </select>
     <resultMap type="com.teragrep.cfe18.handlers.entities.Cfe04Transforms" id="CFE04TransformsById">
@@ -46,7 +46,7 @@
     </resultMap>
 
     <!-- DELETE -->
-    <select id="deleteCfe04TransformsById" statementType="CALLABLE" resultMap="id">
+    <select id="deleteCfe04TransformById" statementType="CALLABLE" resultMap="id">
         {CALL flow.remove_cfe_04_transforms(#{param1})}
     </select>
     <resultMap type="com.teragrep.cfe18.handlers.entities.Cfe04Transforms" id="id">

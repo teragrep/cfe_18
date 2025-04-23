@@ -55,7 +55,7 @@ public interface Cfe04TransformsMapper {
 
      List<Cfe04Transforms> getAllCfe04Transforms(Integer version);
 
-     Cfe04Transforms addNewCfe04Transforms(
+     Cfe04Transforms addNewCfe04Transform(
                                                Integer cfe04Id,
                                                String name,
                                                Boolean writeMeta,
@@ -65,7 +65,7 @@ public interface Cfe04TransformsMapper {
                                                String regex,
                                                String format);
 
-     List<Cfe04Transforms> getCfe04TransformsById(Integer id, Integer version);
+     List<Cfe04Transforms> getCfe04TransformById(Integer id, Integer version);
 
-     Cfe04Transforms deleteCfe04TransformsById(Integer id);
+     Cfe04Transforms deleteCfe04TransformById(Integer id);
 }
