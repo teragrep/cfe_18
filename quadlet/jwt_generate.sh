@@ -1,7 +1,7 @@
 #!/bin/bash
 
  # Generates public_key.pem for authentication
- # Echoes the bearer token when ran and provides public_key.pem in target folder
+ # Echoes the bearer token when ran and provides public_key.pem in target directory
  # Path to public_key.pem needs to be declared in application.properties
  # spring.security.oauth2.resourceserver.jwt.public-key-location=file:/absolute/path/in/os/public_key.pem
 
