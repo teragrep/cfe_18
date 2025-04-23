@@ -47,9 +47,7 @@ package com.teragrep.cfe18.handlers;
 
 import com.teragrep.cfe18.CaptureMetaMapper;
 import com.teragrep.cfe18.handlers.entities.CaptureMeta;
-import com.teragrep.cfe18.handlers.entities.CaptureMetaCaptureDetails;
-import com.teragrep.cfe18.handlers.entities.CaptureRelp;
-import com.teragrep.cfe18.handlers.entities.Flow;
+import com.teragrep.cfe18.handlers.entities.CaptureDefinition;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -215,7 +213,7 @@ public class CaptureMetaController {
     })
     public ResponseEntity<?> getApplicationMetaKeyValue(@PathVariable("key") String key, @PathVariable("value") String value,@RequestParam(required = false) Integer version) {
         try {
-            List<CaptureMetaCaptureDetails> am = captureMetaMapper.getCaptureMetaByKeyValue(key,value,version);
+            List<CaptureDefinition> am = captureMetaMapper.getCaptureMetaByKeyValue(key,value,version);
             return new ResponseEntity<>(am, HttpStatus.OK);
         } catch(Exception ex){
             JSONObject jsonErr = new JSONObject();

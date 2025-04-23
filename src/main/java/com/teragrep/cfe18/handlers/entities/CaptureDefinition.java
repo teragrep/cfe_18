@@ -45,7 +45,7 @@
  */
 package com.teragrep.cfe18.handlers.entities;
 
-public class CaptureMetaCaptureDetails {
+public final class CaptureDefinition {
     private int id;
     private String tag;
     private String sourcetype;

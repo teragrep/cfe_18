@@ -393,8 +393,8 @@ public class CaptureMetaControllerTest extends TestSpringBootInformation{
     @Order(6)
     public void testCaptureMetaKeyValue() {
         // expected capture
-        ArrayList<CaptureMetaCaptureDetails> expected = new ArrayList<>();
-        CaptureMetaCaptureDetails captureRelp = new CaptureMetaCaptureDetails();
+        ArrayList<CaptureDefinition> expected = new ArrayList<>();
+        CaptureDefinition captureRelp = new CaptureDefinition();
         captureRelp.setId(1);
         captureRelp.setTag("relpTag");
         captureRelp.setApplication("relp");
