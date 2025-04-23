@@ -94,7 +94,7 @@ public class CaptureMetaController {
             @ApiResponse(responseCode = "400", description = "Capture meta does not exist",
                     content = @Content)
     })
-    public ResponseEntity<?> getApplicationMeta(@PathVariable("capture_id") int capture_id, @RequestParam(required = false) Integer version) {
+    public ResponseEntity<?> getCaptureMeta(@PathVariable("capture_id") int capture_id, @RequestParam(required = false) Integer version) {
         try {
             List<CaptureMeta> am = captureMetaMapper.getCaptureMeta(capture_id,version);
             return new ResponseEntity<>(am, HttpStatus.OK);
@@ -211,7 +211,7 @@ public class CaptureMetaController {
             @ApiResponse(responseCode = "400", description = "Capture meta key or value does not exist",
                     content = @Content)
     })
-    public ResponseEntity<?> getApplicationMetaKeyValue(@PathVariable("key") String key, @PathVariable("value") String value,@RequestParam(required = false) Integer version) {
+    public ResponseEntity<?> getCaptureMetaKeyValue(@PathVariable("key") String key, @PathVariable("value") String value,@RequestParam(required = false) Integer version) {
         try {
             List<CaptureDefinition> am = captureMetaMapper.getCaptureMetaByKeyValue(key,value,version);
             return new ResponseEntity<>(am, HttpStatus.OK);
