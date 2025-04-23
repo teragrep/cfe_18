@@ -43,26 +43,52 @@
  * Teragrep, the applicable Commercial License may apply to this file if you as
  * a licensee so wish it.
  */
-package com.teragrep.cfe18;
+package com.teragrep.cfe18.handlers.entities;
 
-import com.teragrep.cfe18.handlers.entities.CaptureMeta;
-import com.teragrep.cfe18.handlers.entities.CaptureDefinition;
-import org.apache.ibatis.annotations.Mapper;
+public final class CaptureDefinition {
+    private int id;
+    private String tag;
+    private String sourcetype;
+    private String application;
+    private String captureIndex;
 
-import java.util.List;
+    public int getId() {
+        return id;
+    }
 
-@Mapper
-public interface CaptureMetaMapper {
-     CaptureMeta addNewCaptureMeta(
-             int capture_id,
-             String capture_meta_key,
-             String capture_meta_value);
+    public void setId(int id) {
+        this.id = id;
+    }
 
-     List<CaptureMeta> getCaptureMeta(int capture_id,Integer version);
+    public String getTag() {
+        return tag;
+    }
 
-     List<CaptureMeta> getAllCaptureMetas(Integer version);
+    public void setTag(String tag) {
+        this.tag = tag;
+    }
 
-     CaptureMeta deleteCaptureMeta(int capture_id);
+    public String getSourcetype() {
+        return sourcetype;
+    }
 
-     List<CaptureDefinition> getCaptureMetaByKeyValue(String key, String value, Integer version);
+    public void setSourcetype(String sourcetype) {
+        this.sourcetype = sourcetype;
+    }
+
+    public String getApplication() {
+        return application;
+    }
+
+    public void setApplication(String application) {
+        this.application = application;
+    }
+
+    public String getCaptureIndex() {
+        return captureIndex;
+    }
+
+    public void setCaptureIndex(String captureIndex) {
+        this.captureIndex = captureIndex;
+    }
 }

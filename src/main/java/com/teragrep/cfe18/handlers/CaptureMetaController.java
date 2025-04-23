@@ -47,7 +47,7 @@ package com.teragrep.cfe18.handlers;
 
 import com.teragrep.cfe18.CaptureMetaMapper;
 import com.teragrep.cfe18.handlers.entities.CaptureMeta;
-import com.teragrep.cfe18.handlers.entities.Flow;
+import com.teragrep.cfe18.handlers.entities.CaptureDefinition;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -94,7 +94,7 @@ public class CaptureMetaController {
             @ApiResponse(responseCode = "400", description = "Capture meta does not exist",
                     content = @Content)
     })
-    public ResponseEntity<?> getApplicationMeta(@PathVariable("capture_id") int capture_id, @RequestParam(required = false) Integer version) {
+    public ResponseEntity<?> getCaptureMeta(@PathVariable("capture_id") int capture_id, @RequestParam(required = false) Integer version) {
         try {
             List<CaptureMeta> am = captureMetaMapper.getCaptureMeta(capture_id,version);
             return new ResponseEntity<>(am, HttpStatus.OK);
@@ -200,5 +200,35 @@ public class CaptureMetaController {
 
     }
 
+
+    // Key value fetch
+    @RequestMapping(path="/{key}/{value}",method= RequestMethod.GET, produces="application/json")
+    @Operation(summary = "Fetch capture definitions by key and value")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Found the capture definitions",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = CaptureMeta.class))}),
+            @ApiResponse(responseCode = "400", description = "Capture meta key or value does not exist",
+                    content = @Content)
+    })
+    public ResponseEntity<?> getCaptureMetaKeyValue(@PathVariable("key") String key, @PathVariable("value") String value,@RequestParam(required = false) Integer version) {
+        try {
+            List<CaptureDefinition> am = captureMetaMapper.getCaptureMetaByKeyValue(key,value,version);
+            return new ResponseEntity<>(am, HttpStatus.OK);
+        } catch(Exception ex){
+            JSONObject jsonErr = new JSONObject();
+            LOGGER.error(ex.getMessage());
+            final Throwable cause = ex.getCause();
+            if (cause instanceof SQLException) {
+                LOGGER.error((cause).getMessage());
+                String state = ((SQLException) cause).getSQLState();
+                if (state.equals("42000")) {
+                    jsonErr.put("message", "No such key value pair exists");
+                    return new ResponseEntity<>(jsonErr.toString(), HttpStatus.BAD_REQUEST);
+                }
+            }
+            return new ResponseEntity<>("Unexpected error", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 
 }
