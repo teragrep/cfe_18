@@ -154,7 +154,6 @@ public class FileProcessingTypeController {
             return new ResponseEntity<>(jsonObject.toString(), HttpStatus.CREATED);
         } catch (RuntimeException ex) {
             JSONObject jsonErr = new JSONObject();
-            jsonErr.put("id", newFileProcessing.getId());
             LOGGER.error(ex.getMessage());
             if (ex instanceof NullPointerException) {
                 LOGGER.error(ex.getMessage());
