@@ -110,7 +110,6 @@ public class StorageController {
                 String state = ((SQLException) cause).getSQLState();
                 if (state.equals("45000")) {
                     JSONObject jsonErr = new JSONObject();
-                    jsonErr.put("id", 0);
                     jsonErr.put("message", "Record does not exist with the given flow");
                     return new ResponseEntity<>(jsonErr.toString(), HttpStatus.BAD_REQUEST);
                 }

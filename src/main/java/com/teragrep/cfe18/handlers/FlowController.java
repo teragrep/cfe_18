@@ -139,12 +139,10 @@ public class FlowController {
         try {
             flowMapper.deleteFlow(name);
             JSONObject j = new JSONObject();
-            j.put("id", 0);
             j.put("message", "flow " + name + " deleted.");
             return new ResponseEntity<>(j.toString(), HttpStatus.OK);
         } catch (Exception ex) {
             JSONObject jsonErr = new JSONObject();
-            jsonErr.put("id", 0);
             final Throwable cause = ex.getCause();
             if (cause instanceof SQLException) {
                 LOGGER.error((cause).getMessage());
@@ -156,7 +154,7 @@ public class FlowController {
                 }
                 return new ResponseEntity<>(jsonErr.toString(), HttpStatus.BAD_REQUEST);
             }
-            return new ResponseEntity<>("Unexpected error", HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 }

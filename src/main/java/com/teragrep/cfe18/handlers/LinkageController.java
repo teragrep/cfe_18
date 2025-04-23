@@ -103,7 +103,6 @@ public class LinkageController {
             final Throwable cause = ex.getCause();
             if (cause instanceof SQLException) {
                 JSONObject jsonErr = new JSONObject();
-                jsonErr.put("id", 0);
                 LOGGER.error((cause).getMessage());
                 String state = ((SQLException) cause).getSQLState();
                 if (state.equals("45000")) {

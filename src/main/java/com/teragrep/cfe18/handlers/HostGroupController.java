@@ -97,7 +97,6 @@ public class HostGroupController {
     })
     public ResponseEntity<?> getResults(@PathVariable("name") String name, @RequestParam(required = false) Integer version) {
         JSONObject jsonErr = new JSONObject();
-        jsonErr.put("id", 0);
         try {
             List<HostGroup> hg = hostGroupMapper.getHostGroupByName(name,version);
             return new ResponseEntity<>(hg, HttpStatus.OK);
@@ -186,11 +185,9 @@ public class HostGroupController {
     public ResponseEntity<String> removeHost(@PathVariable("name") String name) {
         LOGGER.info("Deleting Host Group <[{}]>", name);
         JSONObject jsonErr = new JSONObject();
-        jsonErr.put("id", 0);
         try {
             hostGroupMapper.deleteHostGroup(name);
             JSONObject j = new JSONObject();
-            j.put("id", 0);
             j.put("message", "Host Group " + name + " deleted.");
             return new ResponseEntity<>(j.toString(), HttpStatus.OK);
         } catch (Exception ex) {
