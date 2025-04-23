@@ -14,7 +14,7 @@
     </resultMap>
 
     <!-- GET by transforms ID -->
-    <select id="getCfe04TransformById" resultMap="CFE04TransformsById" statementType="CALLABLE">
+    <select id="getAllTransformsForCfe04Id" resultMap="CFE04TransformsById" statementType="CALLABLE">
         {CALL flow.retrieve_cfe_04_transforms(#{param1},#{param2})}
     </select>
     <resultMap type="com.teragrep.cfe18.handlers.entities.Cfe04Transform" id="CFE04TransformsById">
