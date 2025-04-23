@@ -47,6 +47,7 @@ package com.teragrep.cfe18.handlers;
 
 import com.teragrep.cfe18.CaptureMetaMapper;
 import com.teragrep.cfe18.handlers.entities.CaptureMeta;
+import com.teragrep.cfe18.handlers.entities.CaptureMetaCaptureDetails;
 import com.teragrep.cfe18.handlers.entities.CaptureRelp;
 import com.teragrep.cfe18.handlers.entities.Flow;
 import io.swagger.v3.oas.annotations.Operation;
@@ -212,19 +213,19 @@ public class CaptureMetaController {
             @ApiResponse(responseCode = "400", description = "Capture meta key or value does not exist",
                     content = @Content)
     })
-    public ResponseEntity<?> getApplicationMetaKeyValue(@PathVariable("key") String key, @PathVariable("value") String value) {
+    public ResponseEntity<?> getApplicationMetaKeyValue(@PathVariable("key") String key, @PathVariable("value") String value,@RequestParam(required = false) Integer version) {
         try {
-            // Using CaptureRelp is sufficient here since we are only returning capture definition details.
-            List<CaptureRelp> am = captureMetaMapper.getCaptureMetaByKeyValue(key,value);
+            List<CaptureMetaCaptureDetails> am = captureMetaMapper.getCaptureMetaByKeyValue(key,value,version);
             return new ResponseEntity<>(am, HttpStatus.OK);
         } catch(Exception ex){
             JSONObject jsonErr = new JSONObject();
+            LOGGER.error(ex.getMessage());
             final Throwable cause = ex.getCause();
             if (cause instanceof SQLException) {
                 LOGGER.error((cause).getMessage());
                 String state = ((SQLException) cause).getSQLState();
                 if (state.equals("42000")) {
-                    jsonErr.put("message", "Capture meta KEY or VALUE does not exist with given parameters");
+                    jsonErr.put("message", "No such key value pair exists");
                     return new ResponseEntity<>(jsonErr.toString(), HttpStatus.BAD_REQUEST);
                 }
             }

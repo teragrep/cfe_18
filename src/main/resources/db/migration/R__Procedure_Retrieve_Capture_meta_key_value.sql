@@ -1,5 +1,5 @@
-    /*
- * Main data management system (MDMS) cfe_18
+/*
+ * Integration main data management for Teragrep
  * Copyright (C) 2021  Suomen Kanuuna Oy
  *
  * This program is free software: you can redistribute it and/or modify
@@ -45,7 +45,7 @@
  */
  use cfe_18;
 DELIMITER //
-CREATE OR REPLACE PROCEDURE retrieve_capture_meta_key_value(meta_key varchar(1024),meta_value varchar(1024))
+CREATE OR REPLACE PROCEDURE retrieve_capture_meta_key_value(meta_key varchar(1024),meta_value varchar(1024),tx_id int)
 BEGIN
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
         BEGIN
@@ -53,15 +53,18 @@ BEGIN
             RESIGNAL;
         END;
     START TRANSACTION;
-    -- check for existence of capture meta value before attempting retrieval. Throws custom error.
-        if((select count(cmk.meta_key_name) from cfe_18.capture_meta_key cmk where cmk.meta_key_name=meta_key)=0) then
+
+    if(tx_id) is null then
+        set @time = (select max(transaction_id) from mysql.transaction_registry);
+    else
+        set @time=tx_id;
+    end if;
+
+        if((select count(c.meta_key_name) from cfe_18.capture_meta_key for system_time as of transaction @time c
+                                          inner join cfe_18.capture_meta for system_time as of transaction @time cm
+                                          where c.meta_key_name=meta_key AND cm.meta_value=meta_value)=0) then
             -- standardized JSON error response
-            SELECT JSON_OBJECT('id', 0, 'message', 'Capture meta KEY does not exist with given KEY value') into @nokey;
-            signal sqlstate '42000' set message_text = @nokey;
-    -- check for existence of capture meta key before attempting retrieval. Throws custom error.
-        elseif((select count(cm.meta_value) from cfe_18.capture_meta cm where cm.meta_value=meta_value)=0) then
-             -- standardized JSON error response
-            SELECT JSON_OBJECT('id', 0, 'message', 'Capture meta VALUE does not exist with given meta VALUE') into @nokey;
+            SELECT JSON_OBJECT('id', 0, 'message', 'No such key value pair exists') into @nokey;
             signal sqlstate '42000' set message_text = @nokey;
         end if;
     -- return list of capture_definitions which are linked to the given key value pair.
@@ -70,13 +73,13 @@ BEGIN
                cS.captureSourceType as sourcetype,
                a.app as application,
                cI.captureIndex as captureIndex
-        from cfe_18.capture_definition cd
-            inner join capture_meta c on cd.id = c.capture_id
-            inner join capture_meta_key cmk on c.meta_key_id = cmk.meta_key_id
-            inner join tags t on cd.tag_id=t.id
-            inner join captureSourcetype cS on cd.captureSourcetype_id = cS.id
-            inner join application a on cd.application_id = a.id
-            inner join captureIndex cI  on cd.captureIndex_id = cI.id
+        from cfe_18.capture_definition for system_time as of transaction @time cd
+            inner join capture_meta for system_time as of transaction @time c on cd.id = c.capture_id
+            inner join capture_meta_key for system_time as of transaction @time cmk on c.meta_key_id = cmk.meta_key_id
+            inner join tags for system_time as of transaction @time t on cd.tag_id=t.id
+            inner join captureSourcetype for system_time as of transaction @time cS on cd.captureSourcetype_id = cS.id
+            inner join application for system_time as of transaction @time a on cd.application_id = a.id
+            inner join captureIndex for system_time as of transaction @time cI  on cd.captureIndex_id = cI.id
                  WHERE c.meta_value=meta_value AND
                       cmk.meta_key_name=meta_key;
 

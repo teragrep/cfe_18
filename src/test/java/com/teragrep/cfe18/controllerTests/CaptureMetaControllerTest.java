@@ -393,13 +393,13 @@ public class CaptureMetaControllerTest extends TestSpringBootInformation{
     @Order(6)
     public void testCaptureMetaKeyValue() {
         // expected capture
-        ArrayList<CaptureRelp> expected = new ArrayList<>();
-        CaptureRelp captureRelp = new CaptureRelp();
+        ArrayList<CaptureMetaCaptureDetails> expected = new ArrayList<>();
+        CaptureMetaCaptureDetails captureRelp = new CaptureMetaCaptureDetails();
         captureRelp.setId(1);
         captureRelp.setTag("relpTag");
         captureRelp.setApplication("relp");
-        captureRelp.setIndex("audit_relp");
-        captureRelp.setSource_type("relpsource1");
+        captureRelp.setCaptureIndex("audit_relp");
+        captureRelp.setSourcetype("relpsource1");
         expected.add(captureRelp);
         String jsonFile = gson.toJson(expected);
 
@@ -441,7 +441,7 @@ public class CaptureMetaControllerTest extends TestSpringBootInformation{
         // Creating string from Json that was given as a response
         String actual = Assertions.assertDoesNotThrow(() ->  responseAsJson.get("message").toString());
 
-        String expected = "Capture meta KEY or VALUE does not exist with given parameters";
+        String expected = "No such key value pair exists";
         // Assertions
         assertEquals(expected, actual);
         assertThat(
@@ -469,7 +469,7 @@ public class CaptureMetaControllerTest extends TestSpringBootInformation{
         // Creating string from Json that was given as a response
         String actual = Assertions.assertDoesNotThrow(() ->  responseAsJson.get("message").toString());
 
-        String expected = "Capture meta KEY or VALUE does not exist with given parameters";
+        String expected = "No such key value pair exists";
         // Assertions
         assertEquals(expected, actual);
         assertThat(
