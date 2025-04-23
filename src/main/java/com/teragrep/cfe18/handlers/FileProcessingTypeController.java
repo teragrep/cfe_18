@@ -99,7 +99,6 @@ public class FileProcessingTypeController {
             return new ResponseEntity<>(fc, HttpStatus.OK);
         } catch (Exception ex) {
             JSONObject jsonErr = new JSONObject();
-            jsonErr.put("id", 0);
             final Throwable cause = ex.getCause();
             if (cause instanceof SQLException) {
                 LOGGER.error((cause).getMessage());
@@ -150,15 +149,12 @@ public class FileProcessingTypeController {
                     newFileProcessing.getInputvalue());
             LOGGER.debug("Values returned <[{}]>",n);
             JSONObject jsonObject = new JSONObject();
-            // ID is never returned from database so null should suffice.
-            String v = null;
-            jsonObject.put("id", v);
             jsonObject.put("message", "New file processing type created with the name = " + n.getName());
 
             return new ResponseEntity<>(jsonObject.toString(), HttpStatus.CREATED);
         } catch (RuntimeException ex) {
             JSONObject jsonErr = new JSONObject();
-            jsonErr.put("id", newFileCaptureMeta.getId());
+            jsonErr.put("id", newFileProcessing.getId());
             LOGGER.error(ex.getMessage());
             if (ex instanceof NullPointerException) {
                 LOGGER.error(ex.getMessage());
@@ -195,12 +191,9 @@ public class FileProcessingTypeController {
     public ResponseEntity<String> removeFileProcessingType(@PathVariable("name") String name) {
         LOGGER.info("Deleting file processing type  <[{}]>",name);
         JSONObject jsonErr = new JSONObject();
-        jsonErr.put("id", 0);
         try {
             fileProcessingTypeMapper.deleteFileProcessingType(name);
             JSONObject j = new JSONObject();
-            // Can't be assigned ID since fetch happens through name.
-            j.put("id", 0);
             j.put("message", "File processing type " + name + " deleted.");
             return new ResponseEntity<>(j.toString(), HttpStatus.OK);
         } catch (Exception ex) {

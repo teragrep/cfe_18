@@ -139,14 +139,10 @@ public class FlowController {
         try {
             flowMapper.deleteFlow(name);
             JSONObject j = new JSONObject();
-            // Can't be assigned ID since fetch happens through name.
-            j.put("id", 0);
             j.put("message", "flow " + name + " deleted.");
             return new ResponseEntity<>(j.toString(), HttpStatus.OK);
         } catch (Exception ex) {
             JSONObject jsonErr = new JSONObject();
-            // Can't be assigned ID since fetch happens through name.
-            jsonErr.put("id", 0);
             final Throwable cause = ex.getCause();
             if (cause instanceof SQLException) {
                 LOGGER.error((cause).getMessage());
