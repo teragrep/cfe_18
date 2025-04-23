@@ -203,7 +203,7 @@ public class Cfe04TransformControllerTest extends TestSpringBootInformation{
         // Parsin respponse as JSONObject
         JSONObject responseAsJson = Assertions.assertDoesNotThrow(() -> new JSONObject(responseString));
         // Creating expected message as JSON Object from the data that was sent towards endpoint
-        String expected = "Cfe_04 is missing with the given ID";
+        String expected = "No such cfe_04 id";
         int expectedId = 0;
 
         // Creating string from Json that was given as a response

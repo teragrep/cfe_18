@@ -47,7 +47,7 @@
 
     <!-- DELETE -->
     <select id="deleteCfe04TransformById" statementType="CALLABLE" resultMap="id">
-        {CALL flow.remove_cfe_04_transforms(#{param1})}
+        {CALL flow.delete_cfe_04_transforms(#{param1})}
     </select>
     <resultMap type="com.teragrep.cfe18.handlers.entities.Cfe04Transform" id="id">
         <result column="id" property="id"/>

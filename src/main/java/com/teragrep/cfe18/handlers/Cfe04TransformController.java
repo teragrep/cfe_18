@@ -163,7 +163,7 @@ public class Cfe04TransformController {
                 JSONObject jsonErr = new JSONObject();
                 jsonErr.put("id", newCfe04Transform.getId());
                 if (state.equals("1452-23000")) {
-                    jsonErr.put("message", "Cfe_04 is missing with the given ID");
+                    jsonErr.put("message", "No such cfe_04 id");
                 }
                 else {
                     jsonErr.put("message", "Error unrecognized, contact admin");
@@ -186,7 +186,7 @@ public class Cfe04TransformController {
                     content = @Content),
             @ApiResponse(responseCode = "500", description = "Internal server error, contact admin", content = @Content)
     })
-    public ResponseEntity<String> removeCfe04Transform(@PathVariable("id") Integer id) {
+    public ResponseEntity<String> deleteCfe04Transform(@PathVariable("id") Integer id) {
         LOGGER.info("Deleting cfe_04 transforms with id <[{}]>", id);
         JSONObject jsonErr = new JSONObject();
         jsonErr.put("id", id);
