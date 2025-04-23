@@ -106,7 +106,7 @@ public class Cfe04TransformController {
     })
     public ResponseEntity<?> getAllForCfe04Id(@PathVariable Integer id, @RequestParam(required = false) Integer version) {
         try {
-            List<Cfe04Transform> cfe04Transforms = cfe04TransformMapper.getCfe04TransformById(id,version);
+            List<Cfe04Transform> cfe04Transforms = cfe04TransformMapper.getAllTransformsForCfe04Id(id,version);
             return new ResponseEntity<>(cfe04Transforms, HttpStatus.OK);
         } catch (Exception ex) {
             JSONObject jsonErr = new JSONObject();

@@ -65,7 +65,13 @@ public interface Cfe04TransformMapper {
                                                String regex,
                                                String format);
 
-     List<Cfe04Transform> getCfe04TransformById(Integer id, Integer version);
+     /**
+      *
+      * @param id cfe04 id
+      * @param version Which point in time records want to be fetched at. NULL fetches latest
+      * @return Returns all transforms linked to Cfe04
+      */
+     List<Cfe04Transform> getAllTransformsForCfe04Id(Integer id, Integer version);
 
      Cfe04Transform deleteCfe04TransformById(Integer id);
 }
