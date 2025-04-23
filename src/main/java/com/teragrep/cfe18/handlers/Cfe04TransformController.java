@@ -104,7 +104,7 @@ public class Cfe04TransformController {
                             schema = @Schema(implementation = Cfe04Transform.class))}),
             @ApiResponse(responseCode = "500", description = "Internal server error, contact admin", content = @Content)
     })
-    public ResponseEntity<?> getTransformsByCfe04Id(@PathVariable Integer id, @RequestParam(required = false) Integer version) {
+    public ResponseEntity<?> getAllForCfe04Id(@PathVariable Integer id, @RequestParam(required = false) Integer version) {
         try {
             List<Cfe04Transform> cfe04Transforms = cfe04TransformMapper.getCfe04TransformById(id,version);
             return new ResponseEntity<>(cfe04Transforms, HttpStatus.OK);
@@ -137,7 +137,7 @@ public class Cfe04TransformController {
                     content = @Content),
             @ApiResponse(responseCode = "500", description = "Internal server error, contact admin", content = @Content)
     })
-    public ResponseEntity<String> addNewCfe04Transforms(@RequestBody Cfe04Transform newCfe04Transform) {
+    public ResponseEntity<String> addNewCfe04Transform(@RequestBody Cfe04Transform newCfe04Transform) {
         LOGGER.info("About to insert <[{}]>", newCfe04Transform);
         try {
             Cfe04Transform cfe04Transform = cfe04TransformMapper.addNewCfe04Transform(
@@ -186,7 +186,7 @@ public class Cfe04TransformController {
                     content = @Content),
             @ApiResponse(responseCode = "500", description = "Internal server error, contact admin", content = @Content)
     })
-    public ResponseEntity<String> removeCfe04Transforms( @PathVariable("id") Integer id) {
+    public ResponseEntity<String> removeCfe04Transform(@PathVariable("id") Integer id) {
         LOGGER.info("Deleting cfe_04 transforms with id <[{}]>", id);
         JSONObject jsonErr = new JSONObject();
         jsonErr.put("id", id);
