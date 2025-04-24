@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.teragrep.cfe18.Cfe04TransformMapper">
+
+    <!-- PUT -->
+    <select id="addNewCfe04Transform" resultMap="insertedID" statementType="CALLABLE">
+        {CALL
+        flow.add_new_cfe_04_transforms(#{param1},#{param2},#{param3},#{param4},#{param5},#{param6},#{param7},#{param8})}
+    </select>
+    <resultMap id="insertedID" type="com.teragrep.cfe18.handlers.entities.Cfe04Transform">
+        <result property="id" column="id"/>
+    </resultMap>
+
+    <!-- GET by transforms ID -->
+    <select id="getAllTransformsForCfe04Id" resultMap="CFE04TransformsById" statementType="CALLABLE">
+        {CALL flow.retrieve_cfe_04_transforms(#{param1},#{param2})}
+    </select>
+    <resultMap type="com.teragrep.cfe18.handlers.entities.Cfe04Transform" id="CFE04TransformsById">
+        <result column="id" property="id"/>
+        <result column="cfe_04_id" property="cfe04Id"/>
+        <result column="name" property="name"/>
+        <result column="write_meta" property="writeMeta"/>
+        <result column="write_default" property="writeDefault"/>
+        <result column="default_value" property="defaultValue"/>
+        <result column="destination_key" property="destinationKey"/>
+        <result column="regex" property="regex"/>
+        <result column="format" property="format"/>
+    </resultMap>
+
+    <!-- GET ALL -->
+    <select id="getAllCfe04Transforms" resultMap="allTransforms" statementType="CALLABLE">
+        {CALL flow.retrieve_all_cfe_04_transforms(#{param1})}
+    </select>
+    <resultMap type="com.teragrep.cfe18.handlers.entities.Cfe04Transform" id="allTransforms">
+        <result column="id" property="id"/>
+        <result column="cfe_04_id" property="cfe04Id"/>
+        <result column="name" property="name"/>
+        <result column="write_meta" property="writeMeta"/>
+        <result column="write_default" property="writeDefault"/>
+        <result column="default_value" property="defaultValue"/>
+        <result column="destination_key" property="destinationKey"/>
+        <result column="regex" property="regex"/>
+        <result column="format" property="format"/>
+    </resultMap>
+
+    <!-- DELETE -->
+    <select id="deleteCfe04TransformById" statementType="CALLABLE" resultMap="id">
+        {CALL flow.delete_cfe_04_transforms(#{param1})}
+    </select>
+    <resultMap type="com.teragrep.cfe18.handlers.entities.Cfe04Transform" id="id">
+        <result column="id" property="id"/>
+    </resultMap>
+
+</mapper>
+
