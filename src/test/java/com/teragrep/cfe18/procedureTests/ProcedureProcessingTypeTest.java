@@ -77,7 +77,7 @@ public class ProcedureProcessingTypeTest extends DBUnitbase {
         IDataSet expectedDataSet = new FlatXmlDataSetBuilder().build(new File("src/test/resources/XMLProcedureProcessingType/procedureProcessingTypeExpectedTestData1.xml"));
         ITable expectedTable = expectedDataSet.getTable("cfe_18.processing_type");
 
-        CallableStatement stmnt = conn.prepareCall("{CALL cfe_18.create_data_for_processing_type(?,?,?,?,?)}");
+        CallableStatement stmnt = conn.prepareCall("{CALL cfe_18.insert_file_processing_type(?,?,?,?,?)}");
 
         stmnt.setString(1, "TestTemplate1");
         stmnt.setString(2, "TestRule1");
@@ -99,7 +99,7 @@ public class ProcedureProcessingTypeTest extends DBUnitbase {
      */
     public void testProcessingTypeNullRegex() throws Exception {
         SQLException state = Assertions.assertThrows(SQLException.class, () -> {
-            CallableStatement stmnt = conn.prepareCall("{CALL cfe_18.create_data_for_processing_type(?,?,?,?,?)}");
+            CallableStatement stmnt = conn.prepareCall("{CALL cfe_18.insert_file_processing_type(?,?,?,?,?)}");
             stmnt.setString(1, "template1");
             stmnt.setString(2, "rul2");
             stmnt.setString(3, "nom1");
@@ -112,7 +112,7 @@ public class ProcedureProcessingTypeTest extends DBUnitbase {
 
     public void testProcessingTypeNullNewline() throws Exception {
         SQLException state = Assertions.assertThrows(SQLException.class, () -> {
-            CallableStatement stmnt = conn.prepareCall("{CALL cfe_18.create_data_for_processing_type(?,?,?,?,?)}");
+            CallableStatement stmnt = conn.prepareCall("{CALL cfe_18.insert_file_processing_type(?,?,?,?,?)}");
             stmnt.setString(1, "template1");
             stmnt.setString(2, "rul2");
             stmnt.setString(3, "nom1");
@@ -125,7 +125,7 @@ public class ProcedureProcessingTypeTest extends DBUnitbase {
 
     public void testProcessingTypeNullRuleset() throws Exception {
         SQLException state = Assertions.assertThrows(SQLException.class, () -> {
-            CallableStatement stmnt = conn.prepareCall("{CALL cfe_18.create_data_for_processing_type(?,?,?,?,?)}");
+            CallableStatement stmnt = conn.prepareCall("{CALL cfe_18.insert_file_processing_type(?,?,?,?,?)}");
             stmnt.setString(1, "template1");
             stmnt.setString(2, null);
             stmnt.setString(3, "nom1");
@@ -138,7 +138,7 @@ public class ProcedureProcessingTypeTest extends DBUnitbase {
 
     public void testProcessingTypeNullTemplate() throws Exception {
         SQLException state = Assertions.assertThrows(SQLException.class, () -> {
-            CallableStatement stmnt = conn.prepareCall("{CALL cfe_18.create_data_for_processing_type(?,?,?,?,?)}");
+            CallableStatement stmnt = conn.prepareCall("{CALL cfe_18.insert_file_processing_type(?,?,?,?,?)}");
             stmnt.setString(1, null);
             stmnt.setString(2, "rul2");
             stmnt.setString(3, "nom1");

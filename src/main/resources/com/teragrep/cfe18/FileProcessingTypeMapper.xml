@@ -20,7 +20,7 @@
     <!-- Insert new one -->
     <select id="addNewFileProcessingType" resultMap="insertedName" statementType="CALLABLE">
         {CALL
-        cfe_18.create_data_for_processing_type(#{arg0},#{arg1},#{arg2},#{arg3},#{arg4})}
+        cfe_18.insert_file_processing_type(#{arg0},#{arg1},#{arg2},#{arg3},#{arg4})}
     </select>
     <resultMap id="insertedName" type="com.teragrep.cfe18.handlers.entities.FileProcessing">
         <result property="name" column="name"/>

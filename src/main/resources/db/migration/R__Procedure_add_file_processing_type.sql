@@ -45,7 +45,7 @@
  */
 use cfe_18;
 DELIMITER //
-CREATE OR REPLACE PROCEDURE create_data_for_processing_type(meta_template varchar(255), meta_rule varchar(1000),
+CREATE OR REPLACE PROCEDURE insert_file_processing_type(meta_template_filename varchar(255), meta_rule varchar(1000),
                                                             meta_rule_name varchar(255),
                                                             inputtype varchar(20), inputvalue varchar(255)
 )
@@ -92,12 +92,12 @@ BEGIN
         select id into @RuleId from cfe_18.ruleset where rule = meta_rule;
     end if;
 
-    if (select id from cfe_18.templates where template = meta_template) is null then
+    if (select id from cfe_18.templates where template = meta_template_filename) is null then
         insert into cfe_18.templates(template)
-        values (meta_template);
+        values (meta_template_filename);
         select last_insert_id() into @TemplateId;
     else
-        select id into @TemplateId from cfe_18.templates where template = meta_template;
+        select id into @TemplateId from cfe_18.templates where template = meta_template_filename;
     end if;
 
     -- check if row exists with the same name
@@ -116,7 +116,7 @@ BEGIN
         -- in this case name was same but values different. Generate new name and insert values
         else
             -- generate new name in case name is already reserved
-            set @tempName = concat(meta_rule_name,(select max(transaction_id) from mysql.transaction_registry));
+            set @tempName = concat(@InputId,'_',@RuleId,'_',@RegexId,'_',@TemplateId);
             insert into cfe_18.processing_type(inputtype_id, ruleset_id, template_id, type_name)
             values (@InputId, @RuleId, @TemplateId, @tempName);
             select @tempName as name;
