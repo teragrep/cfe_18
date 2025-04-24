@@ -53,7 +53,7 @@ drop table cfe_18.regex;
 drop table cfe_18.inputtype;
 
 
-create table cfe_18.processing_type
+create table cfe_18.file_processing_type
 (
     id          int auto_increment primary key,
     name        varchar(48),
@@ -68,5 +68,5 @@ create table cfe_18.processing_type
     PERIOD FOR SYSTEM_TIME(start_trxid, end_trxid)
 ) WITH SYSTEM VERSIONING;
 
-alter table cfe_18.capture_meta_file add constraint metaFileToMetaType foreign key (processing_type_id) references processing_type (id);
+alter table cfe_18.capture_meta_file add constraint metaFileToMetaType foreign key (processing_type_id) references file_processing_type (id);
 

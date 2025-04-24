@@ -45,7 +45,7 @@
  */
 use cfe_18;
 DELIMITER //
-CREATE OR REPLACE PROCEDURE remove_processing_type(name varchar(256))
+CREATE OR REPLACE PROCEDURE delete_file_processing_type(id int)
 BEGIN
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
         BEGIN
@@ -53,12 +53,12 @@ BEGIN
             RESIGNAL;
         end;
     START TRANSACTION;
-    if (select type_name from cfe_18.processing_type where type_name = name) is null then
-        SELECT JSON_OBJECT('id', null, 'message', 'Processing type does not exist') into @pt;
+    if ((select count(id) from cfe_18.file_processing_type fpt where fpt.id=id)=0) then
+        SELECT JSON_OBJECT('id', id, 'message', 'File processing type does not exist') into @pt;
         signal sqlstate '45000' set message_text = @pt;
     end if;
 
-    delete from cfe_18.processing_type where type_name = name;
+    delete from cfe_18.file_processing_type fpt where fpt.id = id;
     COMMIT;
 end;
 //
