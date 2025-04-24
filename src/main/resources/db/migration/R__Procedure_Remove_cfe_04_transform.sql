@@ -45,7 +45,7 @@
  */
 use flow;
 DELIMITER //
-CREATE OR REPLACE PROCEDURE delete_cfe_04_transforms(transforms_id int)
+CREATE OR REPLACE PROCEDURE delete_cfe_04_transform(transforms_id int)
 BEGIN
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
         BEGIN
