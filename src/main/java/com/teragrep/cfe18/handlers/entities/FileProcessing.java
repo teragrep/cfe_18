@@ -52,13 +52,29 @@ public class FileProcessing {
         regex, newline
     }
 
+    @Schema(accessMode = Schema.AccessMode.READ_ONLY)
+    private Integer id;
+    private String name;
     private InputType inputtype;
     private String inputvalue;
     private String ruleset;
-    private String name;
     private String template;
-    @Schema(accessMode = Schema.AccessMode.READ_ONLY)
-    private Integer id;
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
 
     public InputType getInputtype() {
         return inputtype;
@@ -84,29 +100,12 @@ public class FileProcessing {
         this.ruleset = ruleset;
     }
 
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
     public String getTemplate() {
         return template;
     }
 
     public void setTemplate(String template) {
         this.template = template;
-    }
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
     }
 
     @Override
