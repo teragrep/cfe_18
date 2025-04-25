@@ -93,7 +93,7 @@ public class ProcedureCaptureMetaFileTest extends DBUnitbase {
         stmnt.setString(8, "flow1");
         stmnt.setString(9, "path/towards/folder/where/tag.tag");
         stmnt.setString(10, "PathToCapture");
-        stmnt.setString(11, "usesregex");
+        stmnt.setInt(11, 1);
         stmnt.execute();
 
         ITable actualTable = databaseConnection.createQueryTable("result", "select * from cfe_18.capture_definition");
@@ -119,7 +119,8 @@ public class ProcedureCaptureMetaFileTest extends DBUnitbase {
             stmnt.setString(8, "flow1");
             stmnt.setString(9, "FaultyTagPathTrigger");
             stmnt.setString(10, "PathToCapture");
-            stmnt.setString(11, "usesregex");
+            stmnt.setInt(11, 1);
+
             stmnt.execute();
         });
         Assertions.assertEquals("45000", state.getSQLState());
@@ -143,7 +144,8 @@ public class ProcedureCaptureMetaFileTest extends DBUnitbase {
         stmnt.setString(8, "flow1");
         stmnt.setString(9, "FaultyTagPathTrigger");
         stmnt.setString(10, "PathToCapture");
-        stmnt.setString(11, "usesregex");
+        stmnt.setInt(11, 1);
+
         stmnt.execute();
         ITable actualTable = databaseConnection.createQueryTable("result", "select * from cfe_18.tags");
 
@@ -172,7 +174,8 @@ public class ProcedureCaptureMetaFileTest extends DBUnitbase {
         stmnt.setString(8, "flow1");
         stmnt.setString(9, null);
         stmnt.setString(10, "PathToCapture");
-        stmnt.setString(11, "usesregex");
+        stmnt.setInt(11, 1);
+
         stmnt.execute();
 
         ITable actualTable = databaseConnection.createQueryTable("result", "select * from cfe_18.capture_definition");
@@ -225,7 +228,7 @@ public class ProcedureCaptureMetaFileTest extends DBUnitbase {
             stmnt.setString(8, "flow1");
             stmnt.setString(9, "path/towards/folder/where/tag.tag");
             stmnt.setString(10, "PathToCapture");
-            stmnt.setString(11, "ThisBreaksTheProcedure");
+            stmnt.setInt(11, 2222);
             stmnt.execute();
         });
         Assertions.assertEquals("42000", state.getSQLState());
@@ -247,7 +250,7 @@ public class ProcedureCaptureMetaFileTest extends DBUnitbase {
         ITable expectedTable6 = expectedDataSet.getTable("flow.L7");
         ITable expectedTable7 = expectedDataSet.getTable("flow.flows");
         ITable expectedTable8 = expectedDataSet.getTable("cfe_18.capture_meta_file");
-        ITable expectedTable9 = expectedDataSet.getTable("cfe_18.processing_type");
+        ITable expectedTable9 = expectedDataSet.getTable("cfe_18.file_processing_type");
 
         CallableStatement stmnt = conn.prepareCall("{call cfe_18.add_new_capture_file(?,?,?,?,?,?,?,?,?,?,?)}");
         stmnt.setString(1, "632db722-tag.tag");
@@ -260,7 +263,7 @@ public class ProcedureCaptureMetaFileTest extends DBUnitbase {
         stmnt.setString(8, "flow1");
         stmnt.setString(9, "path/towards/folder/where/tag.tag");
         stmnt.setString(10, "PathToCapture");
-        stmnt.setString(11, "usesregex");
+        stmnt.setInt(11, 1);
         stmnt.execute();
 
         ITable actualTable = databaseConnection.createQueryTable("result", "select * from cfe_18.tags");
@@ -272,7 +275,7 @@ public class ProcedureCaptureMetaFileTest extends DBUnitbase {
         ITable actualTable6 = databaseConnection.createQueryTable("result", "select * from flow.L7");
         ITable actualTable7 = databaseConnection.createQueryTable("result", "select * from flow.flows");
         ITable actualTable8 = databaseConnection.createQueryTable("result", "select * from cfe_18.capture_meta_file");
-        ITable actualTable9 = databaseConnection.createQueryTable("result", "select * from cfe_18.processing_type");
+        ITable actualTable9 = databaseConnection.createQueryTable("result", "select * from cfe_18.file_processing_type");
 
         Assertion.assertEqualsIgnoreCols(expectedTable, actualTable, new String[]{"id"});
         Assertion.assertEqualsIgnoreCols(expectedTable1, actualTable1, new String[]{"id"});
@@ -302,7 +305,7 @@ public class ProcedureCaptureMetaFileTest extends DBUnitbase {
         Assertions.assertEquals("P30D", rs.getString("retention_time"));
         Assertions.assertEquals("sourcetype1", rs.getString("source_type"));
         Assertions.assertEquals("audit", rs.getString("category"));
-        Assertions.assertEquals("usesregex", rs.getString("rule_name"));
+        Assertions.assertEquals(1, rs.getInt("processing_type_id"));
         Assertions.assertEquals("flow1", rs.getString("flow"));
         Assertions.assertEquals("prot1", rs.getString("protocol"));
         Assertions.assertEquals("capPathRegex", rs.getString("capture_path"));
@@ -325,7 +328,7 @@ public class ProcedureCaptureMetaFileTest extends DBUnitbase {
             stmnt.setString(8, "flow1");
             stmnt.setString(9, "path/towards/folder/where/tag.tag");
             stmnt.setString(10, "PathToCapture");
-            stmnt.setString(11, "ThisBreaksTheProcedure");
+            stmnt.setInt(11, 222);
             stmnt.execute();
         });
         Assertions.assertEquals("42000", state.getSQLState());
@@ -348,7 +351,7 @@ public class ProcedureCaptureMetaFileTest extends DBUnitbase {
             stmnt.setString(8, null);
             stmnt.setString(9, "path/towards/folder/where/tag.tag");
             stmnt.setString(10, "PathToCapture");
-            stmnt.setString(11, "ThisBreaksTheProcedure");
+            stmnt.setInt(11, 222);
             stmnt.execute();
         });
         Assertions.assertEquals("42000", state.getSQLState());

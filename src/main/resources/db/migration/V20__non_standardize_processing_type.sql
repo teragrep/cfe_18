@@ -43,80 +43,30 @@
  * Teragrep, the applicable Commercial License may apply to this file if you as
  * a licensee so wish it.
  */
-package com.teragrep.cfe18.handlers.entities;
+use cfe_18;
+alter table cfe_18.capture_meta_file drop constraint metaFileToMetaType;
+drop table cfe_18.processing_type;
+drop table cfe_18.templates;
+drop table cfe_18.ruleset;
+drop table cfe_18.newline;
+drop table cfe_18.regex;
+drop table cfe_18.inputtype;
 
-import io.swagger.v3.oas.annotations.media.Schema;
 
-public class FileProcessing {
-    public enum InputType {
-        regex, newline
-    }
+create table cfe_18.file_processing_type
+(
+    id          int auto_increment primary key,
+    name        varchar(48),
+    inputtype   enum('regex','newline') not null,
+    inputvalue  varchar(255) not null,
+    ruleset     varchar(1000) not null,
+    template    varchar(255) not null,
+    index (name),
+    unique (inputtype, inputvalue, ruleset, template, name),
+    start_trxid BIGINT UNSIGNED GENERATED ALWAYS AS ROW START INVISIBLE,
+    end_trxid BIGINT UNSIGNED GENERATED ALWAYS AS ROW END INVISIBLE,
+    PERIOD FOR SYSTEM_TIME(start_trxid, end_trxid)
+) WITH SYSTEM VERSIONING;
 
-    @Schema(accessMode = Schema.AccessMode.READ_ONLY)
-    private Integer id;
-    private String name;
-    private InputType inputtype;
-    private String inputvalue;
-    private String ruleset;
-    private String template;
+alter table cfe_18.capture_meta_file add constraint metaFileToMetaType foreign key (processing_type_id) references file_processing_type (id);
 
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public InputType getInputtype() {
-        return inputtype;
-    }
-
-    public void setInputtype(InputType inputtype) {
-        this.inputtype = inputtype;
-    }
-
-    public String getInputvalue() {
-        return inputvalue;
-    }
-
-    public void setInputvalue(String inputvalue) {
-        this.inputvalue = inputvalue;
-    }
-
-    public String getRuleset() {
-        return ruleset;
-    }
-
-    public void setRuleset(String ruleset) {
-        this.ruleset = ruleset;
-    }
-
-    public String getTemplate() {
-        return template;
-    }
-
-    public void setTemplate(String template) {
-        this.template = template;
-    }
-
-    @Override
-    public String toString() {
-        return "FileProcessing{" +
-                "inputtype=" + inputtype +
-                ", inputvalue='" + inputvalue + '\'' +
-                ", ruleset='" + ruleset + '\'' +
-                ", name='" + name + '\'' +
-                ", template='" + template + '\'' +
-                ", id=" + id +
-                '}';
-    }
-}

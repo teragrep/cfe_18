@@ -15,7 +15,7 @@
         <result property="retention_time" column="retention_time"/>
         <result property="source_type" column="source_type"/>
         <result property="category" column="category"/>
-        <result property="processing_type" column="rule_name"/>
+        <result property="processing_type_id" column="processing_type_id"/>
         <result property="flow" column="flow"/>
         <result property="protocol" column="protocol"/>
         <result property="capture_path" column="capture_path"/>
@@ -80,7 +80,7 @@
         <result property="captureGroup" column="groupName"/>
         <result property="tag_path" column="tagpath"/>
         <result property="capture_path" column="capturepath"/>
-        <result property="processing_type" column="processing_type"/>
+        <result property="processing_type_id" column="processing_type_id"/>
     </resultMap>
 
 

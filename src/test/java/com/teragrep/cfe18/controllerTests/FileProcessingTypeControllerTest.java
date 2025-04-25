@@ -88,6 +88,7 @@ public class FileProcessingTypeControllerTest extends TestSpringBootInformation 
     // Testing if processing type can be added via endpoint
 
     @Test
+    @Order(1)
     public void testFileProcessingType() throws Exception {
 
 
@@ -127,7 +128,7 @@ public class FileProcessingTypeControllerTest extends TestSpringBootInformation 
         JSONObject responseAsJson = new JSONObject(responseString);
 
         // Creating expected message as JSON Object from the data that was sent towards endpoint
-        String expected = "New file processing type created with the name = " + file.getName();
+        String expected = "New file processing type created";
 
         // Creating string from Json that was given as a response
         String actual = responseAsJson.get("message").toString();
@@ -142,6 +143,7 @@ public class FileProcessingTypeControllerTest extends TestSpringBootInformation 
 
     // When getting the values back it should have ID carried with the object created.
     @Test
+    @Order(2)
     public void testGetFileProcessingTypeByName() throws Exception {
 
         FileProcessing file2 = new FileProcessing();
@@ -167,8 +169,7 @@ public class FileProcessingTypeControllerTest extends TestSpringBootInformation 
         // Header
         request.setHeader("Authorization", "Bearer " + token);
 
-        // Get the response from endpoint
-        HttpResponse httpResponse = HttpClientBuilder.create().build().execute(request);
+        HttpClientBuilder.create().build().execute(request);
 
         FileProcessing file = new FileProcessing();
         file.setInputtype(FileProcessing.InputType.regex);
@@ -181,7 +182,7 @@ public class FileProcessingTypeControllerTest extends TestSpringBootInformation 
         String json = gson.toJson(file);
 
         // Asserting get request
-        HttpGet requestGet = new HttpGet("http://localhost:" + port + "/file/capture/meta/"+"name1");
+        HttpGet requestGet = new HttpGet("http://localhost:" + port + "/file/capture/meta/"+1);
 
         requestGet.setHeader("Authorization", "Bearer " + token);
 
@@ -197,6 +198,7 @@ public class FileProcessingTypeControllerTest extends TestSpringBootInformation 
 
 
     @Test
+    @Order(3)
     public void testGetAllFileProcessingTypesTypes() throws Exception {
         GsonBuilder gson2 = new GsonBuilder().serializeNulls();
         Gson real = gson2.create();
@@ -205,6 +207,7 @@ public class FileProcessingTypeControllerTest extends TestSpringBootInformation 
 
         // add another piece of data so that
         FileProcessing file1 = new FileProcessing();
+        file1.setId(2);
         file1.setInputtype(FileProcessing.InputType.regex);
         file1.setInputvalue("test");
         file1.setRuleset("test");
@@ -230,6 +233,7 @@ public class FileProcessingTypeControllerTest extends TestSpringBootInformation 
 
 
         FileProcessing file2 = new FileProcessing();
+        file2.setId(1);
         file2.setInputtype(FileProcessing.InputType.regex);
         file2.setInputvalue("normalregex");
         file2.setRuleset("ruleset1");
@@ -260,9 +264,10 @@ public class FileProcessingTypeControllerTest extends TestSpringBootInformation 
 
     // Delete endpoint tests
     @Test
+    @Order(4)
     public void testDeleteProcessingType() throws Exception {
 
-        HttpDelete delete = new HttpDelete("http://localhost:" + port + "/file/capture/meta/name1");
+        HttpDelete delete = new HttpDelete("http://localhost:" + port + "/file/capture/meta/"+2);
 
         // Header
         delete.setHeader("Authorization", "Bearer " + token);
@@ -280,17 +285,18 @@ public class FileProcessingTypeControllerTest extends TestSpringBootInformation 
         String actual = responseAsJson.get("message").toString();
 
         // Creating expected message as JSON Object from the data that was sent towards endpoint
-        String expected = "File processing type name1 deleted.";
+        String expected = "File processing type deleted.";
 
-        assertThat(deleteResponse.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_OK));
         assertEquals(expected, actual);
+        assertThat(deleteResponse.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_OK));
 
     }
 
     @Test
+    @Order(5)
     public void testDeleteNonExistentProcessingType() throws Exception {
 
-        HttpDelete delete = new HttpDelete("http://localhost:" + port + "/file/capture/meta/processingtypethatdoesntexist");
+        HttpDelete delete = new HttpDelete("http://localhost:" + port + "/file/capture/meta/"+2222);
 
         // Header
         delete.setHeader("Authorization", "Bearer " + token);
@@ -316,6 +322,7 @@ public class FileProcessingTypeControllerTest extends TestSpringBootInformation 
     }
 
     @Test
+    @Order(6)
     public void testDeleteProcessingTypeInUse() throws Exception {
         // add flow and sink
 
@@ -374,7 +381,7 @@ public class FileProcessingTypeControllerTest extends TestSpringBootInformation 
         captureFile.setFlow("capflow");
         captureFile.setTag_path("tagpath1");
         captureFile.setCapture_path("capturepath1");
-        captureFile.setProcessing_type("test");
+        captureFile.setProcessing_type_id(1);
 
         String jsonFile = gson.toJson(captureFile);
 
@@ -393,7 +400,7 @@ public class FileProcessingTypeControllerTest extends TestSpringBootInformation 
         // Get the response from endpoint
         HttpClientBuilder.create().build().execute(request3);
 
-        HttpDelete delete = new HttpDelete("http://localhost:" + port + "/file/capture/meta/test");
+        HttpDelete delete = new HttpDelete("http://localhost:" + port + "/file/capture/meta/"+1);
 
         // Header
         delete.setHeader("Authorization", "Bearer " + token);
@@ -413,8 +420,8 @@ public class FileProcessingTypeControllerTest extends TestSpringBootInformation 
         // Creating expected message as JSON Object from the data that was sent towards endpoint
         String expected = "Is in use";
 
-        assertThat(deleteResponse.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_BAD_REQUEST));
         assertEquals(expected, actual);
+        assertThat(deleteResponse.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_BAD_REQUEST));
 
     }
 

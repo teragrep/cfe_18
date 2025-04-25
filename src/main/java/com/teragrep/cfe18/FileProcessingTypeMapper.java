@@ -52,16 +52,16 @@ import java.util.List;
 
 @Mapper
 public interface FileProcessingTypeMapper {
-    FileProcessing getFileProcessingTypeByName(String name, Integer version);
+    FileProcessing get(int id, Integer version);
 
-    FileProcessing addNewFileProcessingType(
+    FileProcessing create(
             String template,
             String rule,
             String name,
             String inputtype,
             String inputvalue);
 
-    List<FileProcessing> getAllFileProcessingTypes(Integer version);
+    List<FileProcessing> getAll(Integer version);
 
-    FileProcessing deleteFileProcessingType(String name);
+    FileProcessing delete(int id);
 };

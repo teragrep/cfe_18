@@ -75,7 +75,7 @@ public class ProcedureProcessingTypeTest extends DBUnitbase {
     public void testProcessingTypeAcceptInsert() throws Exception {
         // Gets the expected dataset
         IDataSet expectedDataSet = new FlatXmlDataSetBuilder().build(new File("src/test/resources/XMLProcedureProcessingType/procedureProcessingTypeExpectedTestData1.xml"));
-        ITable expectedTable = expectedDataSet.getTable("cfe_18.processing_type");
+        ITable expectedTable = expectedDataSet.getTable("cfe_18.file_processing_type");
 
         CallableStatement stmnt = conn.prepareCall("{CALL cfe_18.insert_file_processing_type(?,?,?,?,?)}");
 
@@ -86,7 +86,7 @@ public class ProcedureProcessingTypeTest extends DBUnitbase {
         stmnt.setString(5, "TestRegex2");
         stmnt.execute();
 
-        ITable actualTable = databaseConnection.createQueryTable("result", "select * from cfe_18.processing_type");
+        ITable actualTable = databaseConnection.createQueryTable("result", "select * from cfe_18.file_processing_type");
 
         Assertion.assertEqualsIgnoreCols(expectedTable, actualTable, new String[]{"ruleset_id", "template_id"});
 
@@ -94,7 +94,7 @@ public class ProcedureProcessingTypeTest extends DBUnitbase {
 
 
     /*
-    4 of the tests need to be written for when there is a null value included. Processing_type does not allow null values.
+    4 of the tests need to be written for when there is a null value included. file_processing_type does not allow null values.
      next 4 tests are for checking if one of the values inserted was null
      */
     public void testProcessingTypeNullRegex() throws Exception {
@@ -154,8 +154,8 @@ public class ProcedureProcessingTypeTest extends DBUnitbase {
     Checks if the values inserted from XML correspond to the values fetch via procedure call.
      */
     public void testProcessingTypeRetrieveByName() throws Exception {
-        CallableStatement stmnt = conn.prepareCall("{CALL cfe_18.retrieve_processing_type_by_name(?,?)}");
-        stmnt.setString(1, "name1");
+        CallableStatement stmnt = conn.prepareCall("{CALL cfe_18.select_file_processing_type(?,?)}");
+        stmnt.setInt(1, 1);
         stmnt.setString(2, null);
         ResultSet rs = stmnt.executeQuery();
         rs.next();

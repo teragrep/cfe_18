@@ -50,7 +50,7 @@ CREATE OR REPLACE PROCEDURE add_new_capture_file(meta_tag varchar(48), retention
                                                  capture_index varchar(48), source_type varchar(255),
                                                  app_protoc varchar(64), flow varchar(255),
                                                  tag_path varchar(255), capture_path varchar(255),
-                                                 processing_type varchar(48))
+                                                 file_processing_id int)
 
 
 BEGIN
@@ -61,11 +61,11 @@ BEGIN
         END;
     start transaction;
 
-    if (select id from cfe_18.processing_type where type_name = processing_type) is null then
+    if ((select count(id) from cfe_18.file_processing_type where id = file_processing_id)=0) then
         SELECT JSON_OBJECT('id', NULL, 'message', 'Processing type does not exist') into @pt;
         signal sqlstate '42000' set message_text = @pt;
     else
-        select id into @Processing_id from cfe_18.processing_type where type_name = processing_type;
+        select id into @Processing_id from cfe_18.file_processing_type where id = file_processing_id;
     end if;
 
     -- Check if tag_path matches with tag

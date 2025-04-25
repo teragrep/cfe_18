@@ -48,6 +48,7 @@ package com.teragrep.cfe18.handlers;
 import com.teragrep.cfe18.FileProcessingTypeMapper;
 import com.teragrep.cfe18.handlers.entities.FileProcessing;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import org.apache.commons.lang3.EnumUtils;
 import org.json.JSONObject;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -83,19 +84,19 @@ public class FileProcessingTypeController {
     FileProcessingTypeMapper fileProcessingTypeMapper;
 
 
-    @RequestMapping(path = "/meta/{name}", method = RequestMethod.GET, produces = "application/json")
-    @Operation(summary = "Fetch file processing type by name")
+    @RequestMapping(path = "/meta/{id}", method = RequestMethod.GET, produces = "application/json")
+    @Operation(summary = "Fetch file processing type by id")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "File processing type retrieved",
                     content = {@Content(mediaType = "application/json",
                             schema = @Schema(implementation = FileProcessing.class))}),
-            @ApiResponse(responseCode = "400", description = "Processing type does not exist with the given name",
+            @ApiResponse(responseCode = "400", description = "File processing type does not exist with the given id",
                     content = @Content),
             @ApiResponse(responseCode = "500", description = "Internal server error, contact admin", content = @Content)
                 })
-    public ResponseEntity<?> getFileProcessingTypeByName(@PathVariable("name") String name, @RequestParam(required = false) Integer version) {
+    public ResponseEntity<?> get(@PathVariable("id") int id, @RequestParam(required = false) Integer version) {
         try {
-            FileProcessing fc = fileProcessingTypeMapper.getFileProcessingTypeByName(name,version);
+            FileProcessing fc = fileProcessingTypeMapper.get(id,version);
             return new ResponseEntity<>(fc, HttpStatus.OK);
         } catch (Exception ex) {
             JSONObject jsonErr = new JSONObject();
@@ -104,9 +105,9 @@ public class FileProcessingTypeController {
                 LOGGER.error((cause).getMessage());
                 String state = ((SQLException) cause).getSQLState();
                 // fail-safe if SQL error but not 45000 type
-                jsonErr.put("message", state);
+                jsonErr.put("id", id);
                 if (state.equals("45000")) {
-                    jsonErr.put("message", "Record does not exist with the given name");
+                    jsonErr.put("message", "Record does not exist with the given id");
                 }
                 return new ResponseEntity<>(jsonErr.toString(), HttpStatus.BAD_REQUEST);
             }
@@ -123,8 +124,8 @@ public class FileProcessingTypeController {
                     content = {@Content(mediaType = "application/json",
                             schema = @Schema(implementation = FileProcessing.class))})
                 })
-    public List<FileProcessing> getAllFileProcessingTypes(@RequestParam(required = false) Integer version) {
-        return fileProcessingTypeMapper.getAllFileProcessingTypes(version);
+    public List<FileProcessing> getAll(@RequestParam(required = false) Integer version) {
+        return fileProcessingTypeMapper.getAll(version);
     }
 
 
@@ -134,14 +135,14 @@ public class FileProcessingTypeController {
             @ApiResponse(responseCode = "201", description = "New file processing type created",
                     content = {@Content(mediaType = "application/json",
                             schema = @Schema(implementation = FileProcessing.class))}),
-            @ApiResponse(responseCode = "400", description = "Similar file processing type already exists with same values but different name OR Null value was inserted",
+            @ApiResponse(responseCode = "400", description = "Inputvalue must be regex or newline",
                     content = @Content),
             @ApiResponse(responseCode = "500", description = "Internal server error, contact admin", content = @Content)
     })
-    public ResponseEntity<String> newFileProcessingType(@RequestBody FileProcessing newFileProcessing) {
+    public ResponseEntity<String> create(@RequestBody FileProcessing newFileProcessing) {
         LOGGER.info("About to insert <[{}]>", newFileProcessing);
         try {
-            FileProcessing n = fileProcessingTypeMapper.addNewFileProcessingType(
+            FileProcessing n = fileProcessingTypeMapper.create(
                     newFileProcessing.getTemplate(),
                     newFileProcessing.getRuleset(),
                     newFileProcessing.getName(),
@@ -149,35 +150,19 @@ public class FileProcessingTypeController {
                     newFileProcessing.getInputvalue());
             LOGGER.debug("Values returned <[{}]>",n);
             JSONObject jsonObject = new JSONObject();
-            jsonObject.put("message", "New file processing type created with the name = " + n.getName());
+            jsonObject.put("id", n.getId());
+            jsonObject.put("message", "New file processing type created");
 
             return new ResponseEntity<>(jsonObject.toString(), HttpStatus.CREATED);
         } catch (RuntimeException ex) {
-            JSONObject jsonErr = new JSONObject();
             LOGGER.error(ex.getMessage());
-            if (ex instanceof NullPointerException) {
-                LOGGER.error(ex.getMessage());
-                return new ResponseEntity<>("NO NULLS ALLOWED", HttpStatus.BAD_REQUEST);
-            }
-            final Throwable cause = ex.getCause();
-            if (cause instanceof SQLException) {
-
-                // Get specific error type
-                int error = ((SQLException) cause).getErrorCode();
-                // Link error with state to get accurate error status
-                String state = error + "-" + ((SQLException) cause).getSQLState();
-                if (state.equals("1062-23000")) {
-                    jsonErr.put("message", "File processing type name already exists with different values");
-                }
-                return new ResponseEntity<>(jsonErr.toString(), HttpStatus.BAD_REQUEST);
-            }
             return new ResponseEntity<>("Unexpected error", HttpStatus.INTERNAL_SERVER_ERROR);
 
         }
     }
 
     // Delete
-    @RequestMapping(path = "meta/{name}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(path = "meta/{id}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
     @Operation(summary = "Delete file processing type")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "File processing type deleted",
@@ -187,13 +172,14 @@ public class FileProcessingTypeController {
                     content = @Content),
             @ApiResponse(responseCode = "500", description = "Internal server error, contact admin", content = @Content)
     })
-    public ResponseEntity<String> removeFileProcessingType(@PathVariable("name") String name) {
-        LOGGER.info("Deleting file processing type  <[{}]>",name);
+    public ResponseEntity<String> delete(@PathVariable("id") int id) {
+        LOGGER.info("Deleting file processing type  <[{}]>",id);
         JSONObject jsonErr = new JSONObject();
         try {
-            fileProcessingTypeMapper.deleteFileProcessingType(name);
+            FileProcessing fp = fileProcessingTypeMapper.delete(id);
             JSONObject j = new JSONObject();
-            j.put("message", "File processing type " + name + " deleted.");
+            j.put("id", fp.getId());
+            j.put("message", "File processing type deleted.");
             return new ResponseEntity<>(j.toString(), HttpStatus.OK);
         } catch (Exception ex) {
             final Throwable cause = ex.getCause();
@@ -201,8 +187,10 @@ public class FileProcessingTypeController {
                 LOGGER.error((cause).getMessage());
                 String state = ((SQLException) cause).getSQLState();
                 if (state.equals("23000")) {
+                    jsonErr.put("id", id);
                     jsonErr.put("message", "Is in use");
                 } else if (state.equals("45000")) {
+                    jsonErr.put("id", id);
                     jsonErr.put("message", "Record does not exist");
                 }
                 return new ResponseEntity<>(jsonErr.toString(), HttpStatus.BAD_REQUEST);

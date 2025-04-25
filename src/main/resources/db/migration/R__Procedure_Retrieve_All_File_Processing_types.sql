@@ -45,7 +45,7 @@
  */
 use cfe_18;
 DELIMITER //
-CREATE OR REPLACE PROCEDURE retrieve_all_processing_types(tx_id int)
+CREATE OR REPLACE PROCEDURE select_all_file_processing_types(tx_id int)
 BEGIN
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
         BEGIN
@@ -57,17 +57,15 @@ BEGIN
         else
              set @time=tx_id;
         end if;
-    select pt.type_name                 as name,
-           i.inputtype                  as inputtype,
-           coalesce(r.regex, n.newline) as inputvalue,
-           r2.rule                      as ruleset,
-           t.template                   as template
-    from cfe_18.processing_type for system_time as of transaction @time pt
-             inner join inputtype for system_time as of transaction @time i on pt.inputtype_id = i.id
-             LEFT JOIN regex for system_time as of transaction @time r ON i.id = r.id AND i.inputtype = r.inputtype
-             LEFT JOIN newline for system_time as of transaction @time n ON i.id = n.id AND i.inputtype = n.inputtype
-             inner join ruleset for system_time as of transaction @time r2 on pt.ruleset_id = r2.id
-             inner join templates for system_time as of transaction @time t on pt.template_id = t.id;
+
+         select id          as id,
+                name        as name,
+                inputtype   as inputtype,
+                inputvalue  as inputvalue,
+                ruleset     as ruleset,
+                template    as template
+        from cfe_18.file_processing_type for system_time as of transaction @time;
+
 end;
 //
 DELIMITER ;

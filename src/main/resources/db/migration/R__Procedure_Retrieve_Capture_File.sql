@@ -74,7 +74,7 @@ BEGIN
                rT.retention         as retention_time,
                cS.captureSourceType as source_type,
                c2.category          as category,
-               pt.type_name         as rule_name,
+               pt.id                as processing_type_id,
                f.name               as flow,
                L.app_protocol       as protocol,
                cmf.capturePath      as capture_path,
@@ -91,7 +91,7 @@ BEGIN
                  inner join flow.L7 for system_time as of transaction @time L on c.L7_id = L.id
                  inner join capture_type for system_time as of transaction @time ct on c.capture_type_id = ct.id
                  inner join capture_meta_file for system_time as of transaction @time cmf on ct.id = cmf.id
-                 inner join processing_type for system_time as of transaction @time pt on cmf.processing_type_id = pt.id
+                 inner join file_processing_type for system_time as of transaction @time pt on cmf.processing_type_id = pt.id
         where c.id = proc_id
           and t.id = c.tag_id
           and a.id = c.application_id

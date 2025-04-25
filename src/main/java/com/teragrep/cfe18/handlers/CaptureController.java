@@ -205,7 +205,7 @@ public class CaptureController {
                     newCapture.getFlow(),
                     newCapture.getTag_path(),
                     newCapture.getCapture_path(),
-                    newCapture.getProcessing_type());
+                    newCapture.getProcessing_type_id());
             LOGGER.debug("Values returned <[{}]>",c);
             JSONObject jsonObjectFile = new JSONObject();
             jsonObjectFile.put("id", c.getId());
