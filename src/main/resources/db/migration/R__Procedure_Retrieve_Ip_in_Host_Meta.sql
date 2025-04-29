@@ -43,23 +43,34 @@
  * Teragrep, the applicable Commercial License may apply to this file if you as
  * a licensee so wish it.
  */
-use flow;
+USE cfe_03;
 DELIMITER //
-CREATE OR REPLACE PROCEDURE retrieve_storages(tx_id int)
+CREATE OR REPLACE PROCEDURE select_ip_in_meta(proc_host_meta_id INT, tx_id INT)
 BEGIN
+
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
         BEGIN
             ROLLBACK;
             RESIGNAL;
-        end;
-    if(tx_id) is null then
-        set @time = (select max(transaction_id) from mysql.transaction_registry);
-    else
-        set @time=tx_id;
-    end if;
-    select s.storage_name as storage_name, s.cfe_type as storage_type, s.id as storage_id
-    from flow.storages for system_time as of transaction @time s;
-end;
+        END;
+    START TRANSACTION;
+    IF (tx_id) IS NULL THEN
+        SET @time = (SELECT MAX(transaction_id) FROM mysql.transaction_registry);
+    ELSE
+        SET @time = tx_id;
+    END IF;
+    IF ((SELECT COUNT(id) FROM host_meta FOR SYSTEM_TIME AS OF TRANSACTION @time WHERE id = proc_host_meta_id) = 0)
+    THEN
+        SELECT JSON_OBJECT('id', proc_host_meta_id, 'message', 'Host metadata does not exist')
+        INTO @hmd;
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = @hmd;
+    END IF;
 
-//
-DELIMITER ;
+    SELECT ia.ip_address AS ip_address,
+           hmxi.host_meta_id as host_meta_id
+    FROM cfe_03.ip_addresses ia
+             INNER JOIN host_meta_x_ip hmxi ON ia.id = hmxi.ip_id
+    WHERE hmxi.host_meta_id = proc_host_meta_id;
+    COMMIT;
+
+END;

@@ -45,7 +45,7 @@
  */
 USE cfe_18;
 DELIMITER //
-CREATE OR REPLACE PROCEDURE retrieve_capture_group_details(grp_name varchar(255),tx_id int)
+CREATE OR REPLACE PROCEDURE select_capture_group(capture_group_id INT, tx_id INT)
 BEGIN
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
         BEGIN
@@ -54,30 +54,24 @@ BEGIN
         END;
     START TRANSACTION;
 
-    if(tx_id) is null then
-         set @time = (select max(transaction_id) from mysql.transaction_registry);
-    else
-         set @time=tx_id;
-    end if;
+    IF (tx_id) IS NULL THEN
+        SET @time = (SELECT MAX(transaction_id) FROM mysql.transaction_registry);
+    ELSE
+        SET @time = tx_id;
+    END IF;
 
-    if (select capture_def_group.capture_def_group_name
-        from capture_def_group for system_time as of transaction @time
-        where capture_def_group.capture_def_group_name = grp_name) is null then
-        SELECT JSON_OBJECT('id', NULL, 'message', 'capture group not found') into @gc;
-        signal sqlstate '45000' set message_text = @gc;
-    end if;
+    IF ((SELECT COUNT(cdg.id)
+         FROM capture_def_group FOR SYSTEM_TIME AS OF TRANSACTION @time cdg
+         WHERE cdg.id = capture_group_id) = 0) THEN
+        SELECT JSON_OBJECT('id', capture_group_id, 'message', 'Capture group not found') INTO @gc;
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = @gc;
+    END IF;
 
-
-    select cdg.capture_def_group_name as group_name,
-           cd.id                      as capture_definition_id,
-           cdgxcd.capture_type        as capture_type,
-           cdg.id                     as capture_group_id
-    from cfe_18.capture_def_group for system_time as of transaction @time cdg
-             inner join capture_def_group_x_capture_def for system_time as of transaction @time cdgxcd on cdg.id = cdgxcd.capture_def_group_id
-             inner join capture_definition for system_time as of transaction @time cd on cdgxcd.capture_def_id = cd.id and cdgxcd.tag_id = cd.tag_id
-    where capture_def_group_name = grp_name
-      and cd.id = cdgxcd.capture_def_id
-      and cd.tag_id = cdgxcd.tag_id;
+    SELECT cdg.id                     AS id,
+           cdg.capture_def_group_name AS group_name,
+           cdg.capture_type           AS capture_type
+    FROM cfe_18.capture_def_group FOR SYSTEM_TIME AS OF TRANSACTION @time cdg
+    WHERE cdg.id = capture_group_id;
     COMMIT;
 END;
 //

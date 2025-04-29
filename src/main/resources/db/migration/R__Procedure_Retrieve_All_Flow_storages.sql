@@ -43,28 +43,28 @@
  * Teragrep, the applicable Commercial License may apply to this file if you as
  * a licensee so wish it.
  */
-use flow;
+USE flow;
 DELIMITER //
-CREATE OR REPLACE PROCEDURE retrieve_all_flow_storages(tx_id int)
+CREATE OR REPLACE PROCEDURE select_all_flow_storages(tx_id INT)
 BEGIN
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
         BEGIN
             ROLLBACK;
             RESIGNAL;
-        end;
-    if(tx_id) is null then
-         set @time = (select max(transaction_id) from mysql.transaction_registry);
-    else
-         set @time=tx_id;
-    end if;
-    select ft.id          as id,
-           f.name         as flow,
-           s.storage_name as storage_name,
-           s.cfe_type     as storage_type,
-           ft.storage_id  as storage_id
-    from flow.flows for system_time as of transaction @time f
-             inner join flow_targets for system_time as of transaction @time ft on f.id = ft.flow_id
-             inner join storages for system_time as of transaction @time s on ft.storage_id = s.id;
-end;
+        END;
+    IF (tx_id) IS NULL THEN
+        SET @time = (SELECT MAX(transaction_id) FROM mysql.transaction_registry);
+    ELSE
+        SET @time = tx_id;
+    END IF;
+    SELECT ft.id          AS id,
+           f.name         AS flow,
+           ft.storage_id  AS storage_id,
+           s.storage_name AS storage_name,
+           s.cfe_type     AS storage_type
+    FROM flow.flows FOR SYSTEM_TIME AS OF TRANSACTION @time f
+             INNER JOIN flow_targets FOR SYSTEM_TIME AS OF TRANSACTION @time ft ON f.id = ft.flow_id
+             INNER JOIN storages FOR SYSTEM_TIME AS OF TRANSACTION @time s ON ft.storage_id = s.id;
+END;
 //
 DELIMITER ;

@@ -43,27 +43,27 @@
  * Teragrep, the applicable Commercial License may apply to this file if you as
  * a licensee so wish it.
  */
-use cfe_18;
+USE cfe_18;
 DELIMITER //
-CREATE OR REPLACE PROCEDURE retrieve_all_capture_storages(tx_id int)
+CREATE OR REPLACE PROCEDURE select_all_capture_storages(tx_id INT)
 BEGIN
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
         BEGIN
             ROLLBACK;
             RESIGNAL;
         END;
-        if(tx_id) is null then
-             set @time = (select max(transaction_id) from mysql.transaction_registry);
-        else
-             set @time=tx_id;
-        end if;
-    select cdxft.capture_def_id as capture_id,
-           cdxft.flow_target_id as storage_id,
-           s.storage_name       as storage_name
-    from capture_def_x_flow_targets for system_time as of transaction @time cdxft
-             inner join flow.flow_targets for system_time as of transaction @time ft
-                        on cdxft.flow_id = ft.flow_id and cdxft.flow_target_id = ft.storage_id
-             inner join flow.storages for system_time as of transaction @time s on ft.storage_id = s.id;
+    IF (tx_id) IS NULL THEN
+        SET @time = (SELECT MAX(transaction_id) FROM mysql.transaction_registry);
+    ELSE
+        SET @time = tx_id;
+    END IF;
+    SELECT cdxft.capture_def_id AS capture_id,
+           cdxft.flow_target_id AS storage_id,
+           s.storage_name       AS storage_name
+    FROM capture_def_x_flow_targets FOR SYSTEM_TIME AS OF TRANSACTION @time cdxft
+             INNER JOIN flow.flow_targets FOR SYSTEM_TIME AS OF TRANSACTION @time ft
+                        ON cdxft.flow_id = ft.flow_id AND cdxft.flow_target_id = ft.storage_id
+             INNER JOIN flow.storages FOR SYSTEM_TIME AS OF TRANSACTION @time s ON ft.storage_id = s.id;
 
 END;
 

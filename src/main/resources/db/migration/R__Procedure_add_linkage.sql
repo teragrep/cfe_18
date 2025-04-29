@@ -43,9 +43,9 @@
  * Teragrep, the applicable Commercial License may apply to this file if you as
  * a licensee so wish it.
  */
-USE cfe_03;
+USE cfe_18;
 DELIMITER //
-CREATE OR REPLACE PROCEDURE add_ip_address(p_host_meta_id int, ip_add varchar(255))
+CREATE OR REPLACE PROCEDURE insert_g_x_g(proc_host_group_id INT, proc_capture_group_id INT)
 BEGIN
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
         BEGIN
@@ -54,24 +54,53 @@ BEGIN
         END;
     START TRANSACTION;
 
-    if (select id from host_meta where id = p_host_meta_id) is null then
-        SELECT JSON_OBJECT('id', p_host_meta_id, 'message', 'Given id for host meta does not exist') into @hmid;
-        signal sqlstate '45000' set message_text = @hmid;
-    end if;
-    if (select id from ip_addresses where ip_address = ip_add) is null then
-        insert into cfe_03.ip_addresses(ip_address)
-        values (ip_add);
-        select last_insert_id() into @ip_id;
-    else
-        select id into @ip_id from ip_addresses where ip_address = ip_add;
-    end if;
+    -- check if types match
+    IF ((SELECT DISTINCT capture_type
+         FROM cfe_18.capture_def_group_x_capture_def
+         WHERE capture_def_group_id = proc_capture_group_id)
+        != (SELECT DISTINCT host_type FROM location.host_group_x_host WHERE host_group_id = proc_host_group_id)) THEN
 
-    if (select id from cfe_03.host_meta_x_ip where host_meta_id = p_host_meta_id and ip_id = @ip_id) is null then
-        insert into cfe_03.host_meta_x_ip(host_meta_id, ip_id)
-        values (p_host_meta_id, @ip_id);
-    end if;
-    select p_host_meta_id as last;
+            SELECT JSON_OBJECT('id', proc_capture_group_id, 'message', ' type mismatch between host group and capture group') INTO @gxg;
+            SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = @gxg;
+    END IF;
+
+    --  Check if host group exists before junction
+    IF ((SELECT COUNT(host_group_id)
+         FROM location.host_group_x_host
+         WHERE host_group_id = proc_host_group_id) = 0) THEN
+
+            SELECT JSON_OBJECT('id', proc_capture_group_id, 'message', ' HOST group does not exist') INTO @gxgh;
+            SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = @gxgh;
+    END IF;
+
+    --  Check if capture group exists before junction
+    IF ((SELECT COUNT(capture_def_group_id)
+         FROM cfe_18.capture_def_group_x_capture_def
+         WHERE capture_def_group_id = proc_capture_group_id) = 0) THEN
+
+            SELECT JSON_OBJECT('id', proc_capture_group_id, 'message', ' CAPTURE group does not exist') INTO @gxgc;
+            SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = @gxgc;
+    END IF;
+
+    --  Insert into junction table
+    IF ((SELECT COUNT(id)
+         FROM cfe_18.host_groups_x_capture_def_group
+         WHERE host_group_id = proc_host_group_id
+           AND capture_group_id = proc_capture_group_id) = 0) THEN
+
+        INSERT INTO cfe_18.host_groups_x_capture_def_group(host_group_id, capture_group_id)
+        VALUES (proc_host_group_id, proc_capture_group_id);
+        -- return ID
+        SELECT LAST_INSERT_ID() AS id;
+    ELSE
+        -- return ID
+        SELECT hgxcdg.id AS id
+        FROM cfe_18.host_groups_x_capture_def_group hgxcdg
+        WHERE hgxcdg.capture_group_id = proc_capture_group_id
+          AND hgxcdg.host_group_id = proc_host_group_id;
+    END IF;
     COMMIT;
 END;
+
 //
 DELIMITER ;

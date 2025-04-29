@@ -43,30 +43,30 @@
  * Teragrep, the applicable Commercial License may apply to this file if you as
  * a licensee so wish it.
  */
-use cfe_18;
+USE cfe_18;
 DELIMITER //
-CREATE OR REPLACE PROCEDURE select_all_file_processing_types(tx_id int)
+CREATE OR REPLACE PROCEDURE select_all_file_processing_types(tx_id INT)
 BEGIN
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
         BEGIN
             ROLLBACK;
             RESIGNAL;
-        end;
-        if(tx_id) is null then
-             set @time = (select max(transaction_id) from mysql.transaction_registry);
-        else
-             set @time=tx_id;
-        end if;
+        END;
+    IF (tx_id) IS NULL THEN
+        SET @time = (SELECT MAX(transaction_id) FROM mysql.transaction_registry);
+    ELSE
+        SET @time = tx_id;
+    END IF;
 
-         select id          as id,
-                name        as name,
-                inputtype   as inputtype,
-                inputvalue  as inputvalue,
-                ruleset     as ruleset,
-                template    as template
-        from cfe_18.file_processing_type for system_time as of transaction @time;
+    SELECT id         AS id,
+           name       AS name,
+           inputtype  AS inputtype,
+           inputvalue AS inputvalue,
+           ruleset    AS ruleset,
+           template   AS template
+    FROM cfe_18.file_processing_type FOR SYSTEM_TIME AS OF TRANSACTION @time;
 
-end;
+END;
 //
 DELIMITER ;
 

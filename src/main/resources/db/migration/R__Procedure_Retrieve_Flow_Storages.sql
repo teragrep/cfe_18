@@ -43,9 +43,9 @@
  * Teragrep, the applicable Commercial License may apply to this file if you as
  * a licensee so wish it.
  */
-use flow;
+USE flow;
 DELIMITER //
-CREATE OR REPLACE PROCEDURE retrieve_flow_storages(flow varchar(255),tx_id int)
+CREATE OR REPLACE PROCEDURE select_flow_storages(flow_id INT, tx_id INT)
 BEGIN
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
         BEGIN
@@ -53,26 +53,25 @@ BEGIN
             RESIGNAL;
         END;
     START TRANSACTION;
-            if(tx_id) is null then
-             set @time = (select max(transaction_id) from mysql.transaction_registry);
-        else
-             set @time=tx_id;
-    end if;
-    if (select id from flows for system_time as of transaction @time where name = flow) is null then
-        SELECT JSON_OBJECT('id', NULL, 'message', 'Flow does not exist') into @fs;
-        signal sqlstate '45000' set message_text = @fs;
-    else
-        select s.storage_name  as target,
-               f.name          as flow,
-               ft.storage_type as storage_type,
-               ft.id           as last,
-               s.id            as storage_id
-        from flow.flow_targets for system_time as of transaction @time ft
-                 inner join flows for system_time as of transaction @time f on ft.flow_id = f.id
-                 left join storages for system_time as of transaction @time s on ft.storage_id = s.id
-        where flow_id = f.id
-          and f.name = flow;
-    end if;
+    IF (tx_id) IS NULL THEN
+        SET @time = (SELECT MAX(transaction_id) FROM mysql.transaction_registry);
+    ELSE
+        SET @time = tx_id;
+    END IF;
+    IF ((SELECT count(id) FROM flows FOR SYSTEM_TIME AS OF TRANSACTION @time WHERE id = flow_id) = 0) THEN
+        SELECT JSON_OBJECT('id', flow_id, 'message', 'Flow does not exist') INTO @fs;
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = @fs;
+    ELSE
+        SELECT ft.id           AS id,
+               f.name          AS flow,
+               s.id            AS storage_id,
+               s.storage_name  AS storage_name,
+               ft.storage_type AS storage_type
+        FROM flow.flow_targets FOR SYSTEM_TIME AS OF TRANSACTION @time ft
+                 INNER JOIN flows FOR SYSTEM_TIME AS OF TRANSACTION @time f ON ft.flow_id = f.id
+                 LEFT JOIN storages FOR SYSTEM_TIME AS OF TRANSACTION @time s ON ft.storage_id = s.id
+        WHERE f.id = flow_id;
+    END IF;
     COMMIT;
 END;
 //

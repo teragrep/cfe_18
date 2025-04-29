@@ -43,31 +43,31 @@
  * Teragrep, the applicable Commercial License may apply to this file if you as
  * a licensee so wish it.
  */
-use flow;
+USE flow;
 DELIMITER //
-CREATE OR REPLACE PROCEDURE retrieve_all_cfe_04_transforms(tx_id int)
+CREATE OR REPLACE PROCEDURE select_all_cfe_04_transforms(tx_id INT)
 BEGIN
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
         BEGIN
             ROLLBACK;
             RESIGNAL;
         END;
-        if(tx_id) is null then
-             set @time = (select max(transaction_id) from mysql.transaction_registry);
-        else
-             set @time=tx_id;
-        end if;
+    IF (tx_id) IS NULL THEN
+        SET @time = (SELECT MAX(transaction_id) FROM mysql.transaction_registry);
+    ELSE
+        SET @time = tx_id;
+    END IF;
 
-        select t.id                 as id,
-               t.cfe_04_id          as cfe_04_id,
-               t.name               as name,
-               t.write_meta         as write_meta,
-               t.write_default      as write_default,
-               t.default_value      as default_value,
-               t.destination_key    as destination_key,
-               t.regex              as regex,
-               t.format             as format
-        from flow.cfe_04_transforms for system_time as of transaction @time t;
+    SELECT t.id              AS id,
+           t.cfe_04_id       AS cfe_04_id,
+           t.name            AS name,
+           t.write_meta      AS write_meta,
+           t.write_default   AS write_default,
+           t.default_value   AS default_value,
+           t.destination_key AS destination_key,
+           t.regex           AS regex,
+           t.format          AS format
+    FROM flow.cfe_04_transforms FOR SYSTEM_TIME AS OF TRANSACTION @time t;
 
 END;
 //

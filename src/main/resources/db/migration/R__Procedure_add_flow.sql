@@ -43,9 +43,9 @@
  * Teragrep, the applicable Commercial License may apply to this file if you as
  * a licensee so wish it.
  */
-use flow;
+USE flow;
 DELIMITER //
-CREATE OR REPLACE PROCEDURE add_flow(flowname varchar(255))
+CREATE OR REPLACE PROCEDURE insert_flow(flowname VARCHAR(255))
 BEGIN
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
         BEGIN
@@ -53,12 +53,12 @@ BEGIN
             RESIGNAL;
         END;
     START TRANSACTION;
-    if (select id from flow.flows where name = flowname) is null then
-        insert into flow.flows(name) values (flowname);
-        select flowname as name, last_insert_id() as last;
-    else
-        select name as name, id as last from flow.flows where flowname = name;
-    end if;
+    IF ((SELECT COUNT(id) FROM flow.flows WHERE name = flowname) = 0) THEN
+        INSERT INTO flow.flows(name) VALUES (flowname);
+        SELECT LAST_INSERT_ID() AS id;
+    ELSE
+        SELECT id AS id FROM flow.flows WHERE flowname = name;
+    END IF;
     COMMIT;
 END;
 //

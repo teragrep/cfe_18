@@ -43,12 +43,12 @@
  * Teragrep, the applicable Commercial License may apply to this file if you as
  * a licensee so wish it.
  */
-use cfe_18;
+USE cfe_18;
 DELIMITER //
 CREATE OR REPLACE PROCEDURE current_txn_id()
 BEGIN
     START TRANSACTION;
-        select max(transaction_id) as tx_id from mysql.transaction_registry;
+    SELECT MAX(transaction_id) AS tx_id FROM mysql.transaction_registry;
     COMMIT;
 END;
 //

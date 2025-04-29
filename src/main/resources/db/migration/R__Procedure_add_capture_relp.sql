@@ -43,12 +43,12 @@
  * Teragrep, the applicable Commercial License may apply to this file if you as
  * a licensee so wish it.
  */
-use cfe_18;
+USE cfe_18;
 DELIMITER //
-CREATE OR REPLACE PROCEDURE add_new_capture_relp(meta_tag varchar(48), retention_time varchar(255),
-                                                 meta_category varchar(48), application varchar(48),
-                                                 capture_index varchar(48), source_type varchar(255),
-                                                 app_protoc varchar(64), flow varchar(255))
+CREATE OR REPLACE PROCEDURE insert_relp_capture(meta_tag VARCHAR(48), retention_time VARCHAR(255),
+                                                meta_category VARCHAR(48), application VARCHAR(48),
+                                                capture_index VARCHAR(48), source_type VARCHAR(255),
+                                                app_protoc VARCHAR(64), flow VARCHAR(255))
 BEGIN
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
         BEGIN
@@ -58,105 +58,104 @@ BEGIN
     START TRANSACTION;
 
 
-    if (select id from cfe_18.captureSourcetype where captureSourceType = source_type) is null then
-        insert into cfe_18.captureSourcetype(captureSourceType)
-        values (source_type);
-        select last_insert_id() into @SourceId;
-    else
-        select id into @SourceId from cfe_18.captureSourcetype where captureSourceType = source_type;
-    end if;
+    IF ((SELECT COUNT(id) FROM cfe_18.captureSourcetype WHERE captureSourceType = source_type) = 0) THEN
+        INSERT INTO cfe_18.captureSourcetype(captureSourceType)
+        VALUES (source_type);
+        SELECT LAST_INSERT_ID() INTO @SourceId;
+    ELSE
+        SELECT id INTO @SourceId FROM cfe_18.captureSourcetype WHERE captureSourceType = source_type;
+    END IF;
 
-    if (select id from cfe_18.captureIndex where captureIndex = capture_index) is null then
-        insert into cfe_18.captureIndex(captureIndex)
-        values (capture_index);
-        select last_insert_id() into @IndexId;
-    else
-        select id into @IndexId from cfe_18.captureIndex where captureIndex = capture_index;
-    end if;
+    IF ((SELECT COUNT(id) FROM cfe_18.captureIndex WHERE captureIndex = capture_index) = 0) THEN
+        INSERT INTO cfe_18.captureIndex(captureIndex)
+        VALUES (capture_index);
+        SELECT LAST_INSERT_ID() INTO @IndexId;
+    ELSE
+        SELECT id INTO @IndexId FROM cfe_18.captureIndex WHERE captureIndex = capture_index;
+    END IF;
 
+    IF ((SELECT COUNT(id) FROM cfe_18.application WHERE app = application) = 0) THEN
+        INSERT INTO cfe_18.application(app)
+        VALUES (application);
+        SELECT LAST_INSERT_ID() INTO @ApplicationId;
+    ELSE
+        SELECT id INTO @ApplicationId FROM cfe_18.application WHERE app = application;
+    END IF;
 
-    if (select id from cfe_18.application where app = application) is null then
-        insert into cfe_18.application(app)
-        values (application);
-        select last_insert_id() into @ApplicationId;
-    else
-        select id into @ApplicationId from cfe_18.application where app = application;
-    end if;
+    IF ((SELECT COUNT(id) FROM cfe_18.retentionTime WHERE retention = retention_time) = 0) THEN
+        INSERT INTO cfe_18.retentionTime(retention)
+        VALUES (retention_time);
+        SELECT LAST_INSERT_ID() INTO @RetentionId;
+    ELSE
+        SELECT id INTO @RetentionId FROM cfe_18.retentionTime WHERE retention = retention_time;
+    END IF;
 
-    if (select id from cfe_18.retentionTime where retention = retention_time) is null then
-        insert into cfe_18.retentionTime(retention)
-        values (retention_time);
-        select last_insert_id() into @RetentionId;
-    else
-        select id into @RetentionId from cfe_18.retentionTime where retention = retention_time;
-    end if;
+    IF ((SELECT COUNT(id) FROM cfe_18.category WHERE category = meta_category) = 0) THEN
+        INSERT INTO cfe_18.category(category)
+        VALUES (meta_category);
+        SELECT LAST_INSERT_ID() INTO @CategoryId;
+    ELSE
+        SELECT id INTO @CategoryId FROM cfe_18.category WHERE category = meta_category;
+    END IF;
 
-    if (select id from cfe_18.category where category = meta_category) is null then
-        insert into cfe_18.category(category)
-        values (meta_category);
-        select last_insert_id() into @CategoryId;
-    else
-        select id into @CategoryId from cfe_18.category where category = meta_category;
-    end if;
+    IF ((SELECT COUNT(id) FROM cfe_18.tags WHERE tag = meta_tag) = 0) THEN
+        INSERT INTO cfe_18.tags(tag) VALUES (meta_tag);
+        SELECT LAST_INSERT_ID() INTO @TagId;
+    ELSE
+        SELECT id INTO @TagId FROM cfe_18.tags WHERE tag = meta_tag;
+    END IF;
 
-    if (select id from cfe_18.tags where tag = meta_tag) is null then
-        insert into cfe_18.tags(tag)
-        values (meta_tag);
-        select last_insert_id() into @TagId;
-    else
-        select id into @TagId from cfe_18.tags where tag = meta_tag;
-    end if;
+    IF ((SELECT COUNT(id) FROM flow.L7 WHERE app_protocol = app_protoc) = 0) THEN
+        SELECT JSON_OBJECT('id', NULL, 'message', 'L7 is missing') INTO @L7;
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = @L7;
+    ELSE
+        SELECT id INTO @L7Id FROM flow.L7 WHERE app_protocol = app_protoc;
+    END IF;
 
+    IF ((SELECT COUNT(id) FROM flow.flows WHERE name = flow) = 0) THEN
+        SELECT JSON_OBJECT('id', NULL, 'message', 'Flow is missing') INTO @Flow;
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = @Flow;
+    ELSE
+        SELECT id INTO @FlowId FROM flow.flows WHERE name = flow;
+    END IF;
 
-    if ((select count(id) from flow.L7 where app_protocol = app_protoc) = 0) then
-        SELECT JSON_OBJECT('id', null, 'message', 'L7 is missing') into @L7;
-        signal sqlstate '45000' set message_text = @L7;
-    else
-        select id into @L7Id from flow.L7 where app_protocol = app_protoc;
-    end if;
-
-    if ((select count(id) from flow.flows where name = flow) = 0) then
-        SELECT JSON_OBJECT('id', null, 'message', 'Flow is missing') into @Flow;
-        signal sqlstate '45000' set message_text = @Flow;
-    else
-        select id into @FlowId from flow.flows where name = flow;
-    end if;
-
-    if (select id
-        from cfe_18.capture_definition
-        where captureIndex_id = @IndexId
-          and captureSourcetype_id = @SourceId
-          and application_id = @ApplicationId
-          and retentionTime_id = @RetentionId
-          and category_id = @CategoryId
-          and tag_id = @TagId
-          and L7_id = @L7Id
-          and flow_id = @FlowId
-          and capture_type = 'relp') is not null then
-        select id
-        into @c_id
-        from cfe_18.capture_definition
-        where captureIndex_id = @IndexId
-          and captureSourcetype_id = @SourceId
-          and application_id = @ApplicationId
-          and retentionTime_id = @RetentionId
-          and category_id = @CategoryId
-          and tag_id = @TagId
-          and L7_id = @L7Id
-          and flow_id = @FlowId
-          and capture_type = 'relp';
-        select @c_id as last;
-    else
-        insert into cfe_18.capture_type(capture_type) values ('relp');
-        select last_insert_id() into @TypeId;
-        insert into cfe_18.capture_definition(tag_id, application_id, captureIndex_id, retentionTime_id,
+    -- if capture exists
+    IF ((SELECT COUNT(id)
+         FROM cfe_18.capture_definition
+         WHERE captureIndex_id = @IndexId
+           AND captureSourcetype_id = @SourceId
+           AND application_id = @ApplicationId
+           AND retentionTime_id = @RetentionId
+           AND category_id = @CategoryId
+           AND tag_id = @TagId
+           AND L7_id = @L7Id
+           AND flow_id = @FlowId
+           AND capture_type = 'relp') > 0) THEN
+        -- return ID
+        SELECT id
+                   AS id
+        FROM cfe_18.capture_definition
+        WHERE captureIndex_id = @IndexId
+          AND captureSourcetype_id = @SourceId
+          AND application_id = @ApplicationId
+          AND retentionTime_id = @RetentionId
+          AND category_id = @CategoryId
+          AND tag_id = @TagId
+          AND L7_id = @L7Id
+          AND flow_id = @FlowId
+          AND capture_type = 'relp';
+        -- else insert new capture record
+    ELSE
+        INSERT INTO cfe_18.capture_type(capture_type) VALUES ('relp');
+        SELECT LAST_INSERT_ID() INTO @TypeId;
+        INSERT INTO cfe_18.capture_definition(tag_id, application_id, captureIndex_id, retentionTime_id,
                                               captureSourcetype_id, category_id, capture_type, capture_type_id, L7_id,
                                               flow_id)
-        values (@TagId, @ApplicationId, @IndexId, @RetentionId, @SourceId, @CategoryId, 'relp', @TypeId, @L7Id,
+        VALUES (@TagId, @ApplicationId, @IndexId, @RetentionId, @SourceId, @CategoryId, 'relp', @TypeId, @L7Id,
                 @FlowId);
-        select last_insert_id() into @c_id;
-    end if;
-    select @c_id as last;
+        -- return ID
+        SELECT LAST_INSERT_ID() AS id;
+    END IF;
     COMMIT;
 END;
 //

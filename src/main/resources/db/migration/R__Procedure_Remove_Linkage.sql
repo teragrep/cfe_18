@@ -43,9 +43,9 @@
  * Teragrep, the applicable Commercial License may apply to this file if you as
  * a licensee so wish it.
  */
-use cfe_03;
+USE cfe_18;
 DELIMITER //
-CREATE OR REPLACE PROCEDURE add_interface(p_interface varchar(255), p_host_meta_id int)
+CREATE OR REPLACE PROCEDURE delete_linkage(linkage_id INT)
 BEGIN
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
         BEGIN
@@ -53,28 +53,14 @@ BEGIN
             RESIGNAL;
         END;
     START TRANSACTION;
-
-    if (select id from host_meta where id = p_host_meta_id) is null then
-        SELECT JSON_OBJECT('id', p_host_meta_id, 'message', 'Given id for host meta does not exist') into @hmid;
-        signal sqlstate '45000' set message_text = @hmid;
-    end if;
-    if (select id from interfaces where interface = p_interface) is null then
-        insert into interfaces(interface)
-        values (p_interface);
-        select last_insert_id() into @InterfaceID;
-    else
-        select id into @InterfaceID from interfaces where interface = p_interface;
-    end if;
-
-    if (select id
-        from host_meta_x_interface
-        where host_meta_id = p_host_meta_id
-          and interface_id = @InterfaceID) is null then
-        insert into host_meta_x_interface(host_meta_id, interface_id)
-        values (p_host_meta_id, @InterfaceID);
-    end if;
-    select p_host_meta_id as last;
+    IF ((SELECT COUNT(id) FROM cfe_18.host_groups_x_capture_def_group WHERE id = linkage_id) = 0) THEN
+        SELECT JSON_OBJECT('id', linkage_id, 'message', 'Linkage does not exist') INTO @l;
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = @l;
+    END IF;
+    DELETE FROM cfe_18.host_groups_x_capture_def_group WHERE id = linkage_id;
     COMMIT;
+
 END;
+
 //
 DELIMITER ;

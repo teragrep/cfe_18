@@ -43,9 +43,9 @@
  * Teragrep, the applicable Commercial License may apply to this file if you as
  * a licensee so wish it.
  */
-use flow;
+USE flow;
 DELIMITER //
-CREATE OR REPLACE PROCEDURE delete_cfe_04_transform(transforms_id int)
+CREATE OR REPLACE PROCEDURE delete_cfe_04_transform(transform_id INT)
 BEGIN
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
         BEGIN
@@ -53,20 +53,17 @@ BEGIN
             RESIGNAL;
         END;
     START TRANSACTION;
-    if (select id
-        from flow.cfe_04_transforms
-        where id = transforms_id) is null then
-        SELECT JSON_OBJECT('id', null, 'message', 'Transform record does not exist') into @c4t;
-        signal sqlstate '45000' set message_text = @c4t;
-    end if;
-    delete
-    from flow.cfe_04_transforms
-    where id = transforms_id;
-    -- Return the ID of deleted row as signal
-    select transforms_id as id;
+    IF ((SELECT COUNT(id)
+         FROM flow.cfe_04_transforms
+         WHERE id = transform_id) = 0) THEN
+        SELECT JSON_OBJECT('id', transform_id, 'message', 'Transform does not exist') INTO @c4t;
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = @c4t;
+    END IF;
+    DELETE
+    FROM flow.cfe_04_transforms
+    WHERE id = transform_id;
     COMMIT;
+
 END;
-
-
 //
 DELIMITER ;

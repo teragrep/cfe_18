@@ -43,9 +43,9 @@
  * Teragrep, the applicable Commercial License may apply to this file if you as
  * a licensee so wish it.
  */
-use flow;
+USE flow;
 DELIMITER //
-CREATE OR REPLACE PROCEDURE add_storage_for_capture(capture_id int, storage_id int)
+CREATE OR REPLACE PROCEDURE insert_capture_storage(capture_id INT, storage_id INT)
 BEGIN
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
         BEGIN
@@ -54,27 +54,26 @@ BEGIN
         END;
     START TRANSACTION;
 
-    if (select id from cfe_18.capture_definition where id = capture_id) is null then
-        signal sqlstate '42000' set message_text = 'Capture does not exist with given ID';
-    end if;
+    IF ((SELECT COUNT(id) FROM cfe_18.capture_definition WHERE id = capture_id) = 0) THEN
+        SELECT JSON_OBJECT('id', capture_id, 'message', 'Capture does not exist') INTO @csid;
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = @csid;
+    END IF;
 
-    select flow_id into @FlowId from cfe_18.capture_definition where id = capture_id;
-
-    if (select id
-        from cfe_18.capture_def_x_flow_targets
-        where capture_def_id = capture_id
-          and flow_id = @FlowId
-          and flow_target_id = storage_id) is null then
-        insert into cfe_18.capture_def_x_flow_targets(capture_def_id, flow_id, flow_target_id)
+    IF ((SELECT COUNT(id)
+         FROM cfe_18.capture_def_x_flow_targets
+         WHERE capture_def_id = capture_id
+           AND flow_id = (SELECT flow_id FROM cfe_18.capture_definition c WHERE c.id = capture_id)
+           AND flow_target_id = storage_id) = 0) THEN
+        INSERT INTO cfe_18.capture_def_x_flow_targets(capture_def_id, flow_id, flow_target_id)
         VALUES (capture_id, @FlowId, storage_id);
-        select last_insert_id() as last;
-    else
-        select id as last
-        from cfe_18.capture_def_x_flow_targets
-        where capture_def_id = capture_id
-          and flow_id = @FlowId
-          and flow_target_id = storage_id;
-    end if;
+        SELECT capture_id AS id;
+    ELSE
+        SELECT capture_def_id AS id
+        FROM cfe_18.capture_def_x_flow_targets
+        WHERE capture_def_id = capture_id
+          AND flow_id = (SELECT flow_id FROM cfe_18.capture_definition c WHERE c.id = capture_id)
+          AND flow_target_id = storage_id;
+    END IF;
     COMMIT;
 END;
 //

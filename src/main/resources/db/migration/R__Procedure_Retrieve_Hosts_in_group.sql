@@ -43,9 +43,9 @@
  * Teragrep, the applicable Commercial License may apply to this file if you as
  * a licensee so wish it.
  */
-use location;
+USE location;
 DELIMITER //
-CREATE OR REPLACE PROCEDURE remove_host(proc_host_id int)
+CREATE OR REPLACE PROCEDURE select_hosts_in_group(host_group_id INT, tx_id INT)
 BEGIN
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
         BEGIN
@@ -53,13 +53,24 @@ BEGIN
             RESIGNAL;
         END;
     START TRANSACTION;
-    if (select id from location.host where id = proc_host_id) is null then
-        SELECT JSON_OBJECT('id', null, 'message', 'Host does not exist') into @h;
-        signal sqlstate '45000' set message_text = @h;
-    end if;
-    delete from location.host where id = proc_host_id;
+    IF (tx_id) IS NULL THEN
+        SET @time = (SELECT MAX(transaction_id) FROM mysql.transaction_registry);
+    ELSE
+        SET @time = tx_id;
+    END IF;
+    IF ((SELECT COUNT(hg.id)
+         FROM location.host_group FOR SYSTEM_TIME AS OF TRANSACTION @time hg
+         WHERE hg.id = host_group_id) = 0) THEN
+        SELECT JSON_OBJECT('id', host_group_id, 'message', 'Host group not found') INTO @hg;
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = @hg;
+    END IF;
+
+    SELECT h.id AS host_id
+    FROM location.host FOR SYSTEM_TIME AS OF TRANSACTION @time h
+             INNER JOIN location.host_group_x_host FOR SYSTEM_TIME AS OF TRANSACTION @time hgxh ON h.id = hgxh.host_id
+             INNER JOIN location.host_group FOR SYSTEM_TIME AS OF TRANSACTION @time hg ON hgxh.host_group_id = hg.id
+    WHERE hg.id = host_group_id;
     COMMIT;
 END;
-
 //
 DELIMITER ;

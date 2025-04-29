@@ -43,9 +43,9 @@
  * Teragrep, the applicable Commercial License may apply to this file if you as
  * a licensee so wish it.
  */
-use location;
+USE location;
 DELIMITER //
-CREATE OR REPLACE PROCEDURE retrieve_host_group_details(grp_name varchar(255),tx_id int)
+CREATE OR REPLACE PROCEDURE select_host_group(host_group_id INT, tx_id INT)
 BEGIN
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
         BEGIN
@@ -53,24 +53,24 @@ BEGIN
             RESIGNAL;
         END;
     START TRANSACTION;
-            if(tx_id) is null then
-             set @time = (select max(transaction_id) from mysql.transaction_registry);
-        else
-             set @time=tx_id;
-        end if;
-    if (select distinct id from location.host_group for system_time as of transaction @time where groupName = grp_name) is null then
-        SELECT JSON_OBJECT('id', NULL, 'message', 'Host group does not exist.') into @hg;
-        signal sqlstate '45000' set message_text = @hg;
-    end if;
-    select h.MD5          as MD5,
-           h.id           as host_id,
-           hg.groupName   as group_name,
-           hgxh.host_type as host_type,
-           hg.id          as host_group_id
-    from location.host for system_time as of transaction @time h
-             inner join location.host_group_x_host for system_time as of transaction @time hgxh on h.id = hgxh.host_id
-             inner join location.host_group for system_time as of transaction @time hg on hgxh.host_group_id = hg.id
-    where hg.groupName = grp_name;
+    IF (tx_id) IS NULL THEN
+        SET @time = (SELECT MAX(transaction_id) FROM mysql.transaction_registry);
+    ELSE
+        SET @time = tx_id;
+    END IF;
+    
+    IF ((SELECT COUNT(id)
+         FROM location.host_group FOR SYSTEM_TIME AS OF TRANSACTION @time
+         WHERE id = host_group_id) = 0) THEN
+        SELECT JSON_OBJECT('id', host_group_id, 'message', 'Host group does not exist') INTO @hg;
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = @hg;
+    END IF;
+
+    SELECT hg.id        AS id,
+           hg.groupName AS group_name,
+           hg.host_type AS host_type
+    FROM location.host_group FOR SYSTEM_TIME AS OF TRANSACTION @time hg
+    WHERE hg.id = host_group_id;
     COMMIT;
 END;
 //

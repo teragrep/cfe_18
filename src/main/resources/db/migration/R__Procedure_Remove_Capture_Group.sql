@@ -43,9 +43,9 @@
  * Teragrep, the applicable Commercial License may apply to this file if you as
  * a licensee so wish it.
  */
-use cfe_18;
+USE cfe_18;
 DELIMITER //
-CREATE OR REPLACE PROCEDURE remove_capture_group(capture_group_name varchar(255))
+CREATE OR REPLACE PROCEDURE delete_capture_group(capture_group_id INT)
 BEGIN
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
         BEGIN
@@ -54,13 +54,14 @@ BEGIN
         END;
     START TRANSACTION;
 
-    if (select id from cfe_18.capture_def_group where capture_def_group_name = capture_group_name) is null then
-        SELECT JSON_OBJECT('id', null, 'message', 'Capture group does not exist') into @cg;
-        signal sqlstate '45000' set message_text = @cg;
-    end if;
+    IF ((SELECT COUNT(id) FROM cfe_18.capture_def_group WHERE id = capture_group_id) = 0) THEN
+        SELECT JSON_OBJECT('id', capture_group_id, 'message', 'Capture group does not exist') INTO @cg;
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = @cg;
+    END IF;
 
-    delete from cfe_18.capture_def_group where capture_def_group_name = capture_group_name;
+    DELETE FROM cfe_18.capture_def_group WHERE id = capture_group_id;
     COMMIT;
+
 END;
 //
 DELIMITER ;

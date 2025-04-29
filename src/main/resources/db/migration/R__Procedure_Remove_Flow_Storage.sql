@@ -43,9 +43,9 @@
  * Teragrep, the applicable Commercial License may apply to this file if you as
  * a licensee so wish it.
  */
-use flow;
+USE flow;
 DELIMITER //
-CREATE OR REPLACE PROCEDURE remove_flow_storage(proc_flow varchar(255), proc_storage_id int)
+CREATE OR REPLACE PROCEDURE delete_flow_storage(proc_flow_id INT, proc_storage_id INT)
 BEGIN
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
         BEGIN
@@ -53,13 +53,18 @@ BEGIN
             RESIGNAL;
         END;
     START TRANSACTION;
-    select id into @FlowId from flow.flows where name = proc_flow;
-    if (select id from flow.flow_targets where flow_id = @FlowId and storage_id = proc_storage_id) is null then
-        SELECT JSON_OBJECT('id', null, 'message', 'Flow storage does not exist') into @fs;
-        signal sqlstate '45000' set message_text = @fs;
-    end if;
-    delete from flow.flow_targets where storage_id = proc_storage_id and flow_id = @FlowId;
+
+    IF ((SELECT COUNT(id)
+         FROM flow.flow_targets ft
+         WHERE ft.flow_id = proc_flow_id
+           AND ft.storage_id = proc_storage_id) = 0) THEN
+        SELECT JSON_OBJECT('id', proc_flow_id, 'message', 'Flow storage does not exist') INTO @fs;
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = @fs;
+    END IF;
+    DELETE FROM flow.flow_targets WHERE storage_id = proc_storage_id AND flow_id = proc_flow_id;
+
     COMMIT;
+
 END;
 //
 DELIMITER ;

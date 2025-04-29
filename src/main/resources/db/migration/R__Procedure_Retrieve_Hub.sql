@@ -43,9 +43,9 @@
  * Teragrep, the applicable Commercial License may apply to this file if you as
  * a licensee so wish it.
  */
-use location;
+USE location;
 DELIMITER //
-CREATE OR REPLACE PROCEDURE retrieve_cfe_hub_details(proc_hub_id int,tx_id int)
+CREATE OR REPLACE PROCEDURE select_cfe_hub(proc_hub_id INT, tx_id INT)
 BEGIN
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
         BEGIN
@@ -53,23 +53,24 @@ BEGIN
             RESIGNAL;
         END;
     START TRANSACTION;
-            if(tx_id) is null then
-             set @time = (select max(transaction_id) from mysql.transaction_registry);
-        else
-             set @time=tx_id;
-        end if;
-    if (select id from cfe_00.hubs for system_time as of transaction @time where id = proc_hub_id) is null then
-        SELECT JSON_OBJECT('id', proc_hub_id, 'message', 'Hub does not exist with given ID') into @hub;
-        signal sqlstate '45000' set message_text = @hub;
-    end if;
-    select hu.id      as hub_id,
-           hu.host_id as host_id,
-           h.fqhost   as hub_fq_host,
-           hu.ip      as ip,
-           h.md5      as md5
-    from cfe_00.hubs for system_time as of transaction @time hu
-             inner join location.host for system_time as of transaction @time h on hu.host_id = h.id
-    where hu.id = proc_hub_id;
+    IF (tx_id) IS NULL THEN
+        SET @time = (SELECT MAX(transaction_id) FROM mysql.transaction_registry);
+    ELSE
+        SET @time = tx_id;
+    END IF;
+    IF ((SELECT COUNT(id) FROM cfe_00.hubs FOR SYSTEM_TIME AS OF TRANSACTION @time WHERE id = proc_hub_id) = 0) THEN
+        SELECT JSON_OBJECT('id', proc_hub_id, 'message', 'Hub does not exist with given ID') INTO @hub;
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = @hub;
+    END IF;
+
+    SELECT hu.id      AS id,
+           hu.host_id AS host_id,
+           h.fqhost   AS hub_fq_host,
+           hu.ip      AS ip,
+           h.md5      AS md5
+    FROM cfe_00.hubs FOR SYSTEM_TIME AS OF TRANSACTION @time hu
+             INNER JOIN location.host FOR SYSTEM_TIME AS OF TRANSACTION @time h ON hu.host_id = h.id
+    WHERE hu.id = proc_hub_id;
     COMMIT;
 END;
 //

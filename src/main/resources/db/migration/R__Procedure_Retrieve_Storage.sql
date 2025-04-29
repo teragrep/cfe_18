@@ -43,33 +43,26 @@
  * Teragrep, the applicable Commercial License may apply to this file if you as
  * a licensee so wish it.
  */
-use location;
+USE flow;
 DELIMITER //
-CREATE OR REPLACE PROCEDURE retrieve_all_hosts(tx_id int)
+CREATE OR REPLACE PROCEDURE select_storage(storage_id INT, tx_id INT)
 BEGIN
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
         BEGIN
             ROLLBACK;
             RESIGNAL;
-        end;
-        if(tx_id) is null then
-             set @time = (select max(transaction_id) from mysql.transaction_registry);
-        else
-             set @time=tx_id;
-        end if;
-    select h.id        as host_id,
-           h.fqhost    as host_fq,
-           h.md5       as host_md5,
-           h.host_type as host_type,
-           hm.hostname as hostname,
-           hm.id       as host_meta_id,
-           h3.fqhost   as hub_fq,
-           h2.id       as hub_id
-    from location.host for system_time as of transaction @time h
-             left join cfe_03.host_meta for system_time as of transaction @time hm on h.id = hm.host_id
-             left join cfe_00.host_type_cfe for system_time as of transaction @time htc on h.id = htc.host_id
-             left join cfe_00.hubs for system_time as of transaction @time h2 on htc.hub_id = h2.id
-             left join location.host for system_time as of transaction @time h3 on h2.host_id = h3.id;
-end;
+        END;
+    IF (tx_id) IS NULL THEN
+        SET @time = (SELECT MAX(transaction_id) FROM mysql.transaction_registry);
+    ELSE
+        SET @time = tx_id;
+    END IF;
+    SELECT s.id           AS id,
+           s.storage_name AS storage_name,
+           s.cfe_type     AS storage_type
+    FROM flow.storages FOR SYSTEM_TIME AS OF TRANSACTION @time s
+    WHERE id = storage_id;
+END;
+
 //
 DELIMITER ;

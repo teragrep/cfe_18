@@ -43,9 +43,9 @@
  * Teragrep, the applicable Commercial License may apply to this file if you as
  * a licensee so wish it.
  */
-use flow;
+USE flow;
 DELIMITER //
-CREATE OR REPLACE PROCEDURE retrieve_sink_by_id(proc_id int,tx_id int)
+CREATE OR REPLACE PROCEDURE select_sink(sink_id INT, tx_id INT)
 BEGIN
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
         BEGIN
@@ -53,25 +53,29 @@ BEGIN
             RESIGNAL;
         END;
     START TRANSACTION;
-            if(tx_id) is null then
-             set @time = (select max(transaction_id) from mysql.transaction_registry);
-        else
-             set @time=tx_id;
-        end if;
-    if (select id from capture_sink for system_time as of transaction @time where id = proc_id) is null then
-        SELECT JSON_OBJECT('id', proc_id, 'message', 'Sink does not exist') into @sink;
-        signal sqlstate '45000' set message_text = @sink;
-    end if;
-    select cs.ip_address  as ip,
-           cs.sink_port   as port,
-           L.app_protocol as protocol,
-           f.name         as flow
-    from capture_sink for system_time as of transaction @time cs
-             inner join L7 for system_time as of transaction @time L on cs.L7_id = L.id
-             inner join flows for system_time as of transaction @time f on cs.flow_id = f.id
-    where cs.id = proc_id
-      and L.id = cs.L7_id
-      and f.id = cs.flow_id;
+
+    IF (tx_id) IS NULL THEN
+        SET @time = (SELECT MAX(transaction_id) FROM mysql.transaction_registry);
+    ELSE
+        SET @time = tx_id;
+    END IF;
+
+    IF ((SELECT COUNT(id) FROM capture_sink FOR SYSTEM_TIME AS OF TRANSACTION @time WHERE id = sink_id) = 0) THEN
+        SELECT JSON_OBJECT('id', sink_id, 'message', 'Sink does not exist') INTO @sink;
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = @sink;
+    END IF;
+
+    SELECT cs.id          AS id,
+           cs.ip_address  AS ip,
+           cs.sink_port   AS port,
+           L.app_protocol AS protocol,
+           f.name         AS flow
+    FROM capture_sink FOR SYSTEM_TIME AS OF TRANSACTION @time cs
+             INNER JOIN L7 FOR SYSTEM_TIME AS OF TRANSACTION @time L ON cs.L7_id = L.id
+             INNER JOIN flows FOR SYSTEM_TIME AS OF TRANSACTION @time f ON cs.flow_id = f.id
+    WHERE cs.id = sink_id
+      AND L.id = cs.L7_id
+      AND f.id = cs.flow_id;
     COMMIT;
 END;
 //

@@ -43,9 +43,9 @@
  * Teragrep, the applicable Commercial License may apply to this file if you as
  * a licensee so wish it.
  */
-use cfe_03;
+USE cfe_03;
 DELIMITER //
-CREATE OR REPLACE PROCEDURE remove_hostmeta(proc_host_meta_id int)
+CREATE OR REPLACE PROCEDURE delete_host_meta(proc_host_meta_id INT)
 BEGIN
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
         BEGIN
@@ -53,12 +53,13 @@ BEGIN
             RESIGNAL;
         END;
     START TRANSACTION;
-    if (select id from cfe_03.host_meta where id = proc_host_meta_id) is null then
-        SELECT JSON_OBJECT('id', null, 'message', 'Hostmeta does not exist') into @hm;
-        signal sqlstate '45000' set message_text = @hm;
-    end if;
-    delete from cfe_03.host_meta where id = proc_host_meta_id;
+    IF ((SELECT COUNT(id) FROM cfe_03.host_meta WHERE id = proc_host_meta_id) = 0) THEN
+        SELECT JSON_OBJECT('id', proc_host_meta_id, 'message', 'Host meta does not exist') INTO @hm;
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = @hm;
+    END IF;
+    DELETE FROM cfe_03.host_meta WHERE id = proc_host_meta_id;
     COMMIT;
+
 END;
 //
 DELIMITER ;

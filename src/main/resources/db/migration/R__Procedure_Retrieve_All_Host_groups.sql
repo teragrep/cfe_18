@@ -43,28 +43,29 @@
  * Teragrep, the applicable Commercial License may apply to this file if you as
  * a licensee so wish it.
  */
-use location;
+USE location;
 DELIMITER //
-CREATE OR REPLACE PROCEDURE retrieve_all_host_groups(tx_id int)
+CREATE OR REPLACE PROCEDURE select_all_host_groups(tx_id INT)
 BEGIN
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
         BEGIN
             ROLLBACK;
             RESIGNAL;
-        end;
-        if(tx_id) is null then
-             set @time = (select max(transaction_id) from mysql.transaction_registry);
-        else
-             set @time=tx_id;
-        end if;
-    select hg.id        as host_group_id,
-           hg.groupName as host_group_name,
-           hg.host_type as host_group_type,
-           h.id         as host_id,
-           h.MD5        as host_md5
-    from location.host_group for system_time as of transaction @time hg
-             inner join location.host_group_x_host for system_time as of transaction @time hgxh on hg.id = hgxh.host_group_id
-             inner join location.host for system_time as of transaction @time h on hgxh.host_id = h.id;
-end;
+        END;
+    IF (tx_id) IS NULL THEN
+        SET @time = (SELECT MAX(transaction_id) FROM mysql.transaction_registry);
+    ELSE
+        SET @time = tx_id;
+    END IF;
+    SELECT hg.id        AS host_group_id,
+           hg.groupName AS host_group_name,
+           hg.host_type AS host_group_type,
+           h.id         AS host_id,
+           h.MD5        AS host_md5
+    FROM location.host_group FOR SYSTEM_TIME AS OF TRANSACTION @time hg
+             INNER JOIN location.host_group_x_host FOR SYSTEM_TIME AS OF TRANSACTION @time hgxh
+                        ON hg.id = hgxh.host_group_id
+             INNER JOIN location.host FOR SYSTEM_TIME AS OF TRANSACTION @time h ON hgxh.host_id = h.id;
+END;
 //
 DELIMITER ;

@@ -43,41 +43,43 @@
  * Teragrep, the applicable Commercial License may apply to this file if you as
  * a licensee so wish it.
  */
-use cfe_18;
+USE cfe_18;
 DELIMITER //
-CREATE OR REPLACE PROCEDURE insert_file_processing_type(template_filename varchar(255), rule varchar(1000),
-                                                            rule_name varchar(255),
-                                                            inputtype enum('regex','newline'), inputvalue varchar(255)
-)
+CREATE OR REPLACE PROCEDURE insert_file_processing_type(meta_template_filename VARCHAR(255), meta_rule VARCHAR(1000),
+                                                        meta_rule_name VARCHAR(255),
+                                                        meta_inputtype ENUM ('regex','newline'),
+                                                        meta_inputvalue VARCHAR(255))
 BEGIN
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
         BEGIN
             ROLLBACK;
             RESIGNAL;
-        end;
+        END;
 
     -- if record does not exist then insert new one
-    if((select count(id) from cfe_18.file_processing_type fpt
-                         where fpt.name=rule_name
-                           and fpt.inputtype=inputtype
-                           and fpt.inputvalue=inputvalue
-                           and fpt.ruleset=rule
-                           and fpt.template=template_filename)=0) then
+    IF ((SELECT COUNT(id)
+         FROM cfe_18.file_processing_type fpt
+         WHERE fpt.name = meta_rule_name
+           AND fpt.inputtype = meta_inputtype
+           AND fpt.inputvalue = meta_inputvalue
+           AND fpt.ruleset = meta_rule
+           AND fpt.template = meta_template_filename) = 0) THEN
 
-        insert into cfe_18.file_processing_type(name,inputtype,inputvalue,ruleset,template)
-        values (rule_name,inputtype,inputvalue,rule,template_filename);
-        select last_insert_id() as id;
+        INSERT INTO cfe_18.file_processing_type(name, inputtype, inputvalue, ruleset, template)
+        VALUES (meta_rule_name, meta_inputtype, meta_inputvalue, meta_rule, meta_template_filename);
+        SELECT LAST_INSERT_ID() AS id;
 
-    -- if record exists then select the ID
-    else
-        select id as id from cfe_18.file_processing_type fpt
-                         where fpt.name=rule_name
-                           and fpt.inputtype=inputtype
-                           and fpt.inputvalue=inputvalue
-                           and fpt.ruleset=rule
-                           and fpt.template=template_filename;
-    end if;
+        -- if record exists then select the ID
+    ELSE
+        SELECT id AS id
+        FROM cfe_18.file_processing_type fpt
+        WHERE fpt.name = meta_rule_name
+          AND fpt.inputtype = meta_inputtype
+          AND fpt.inputvalue = meta_inputvalue
+          AND fpt.ruleset = meta_rule
+          AND fpt.template = meta_template_filename;
+    END IF;
 
-end;
+END;
 //
 DELIMITER ;

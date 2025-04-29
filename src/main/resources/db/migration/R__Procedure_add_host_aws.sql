@@ -45,18 +45,38 @@
  */
 DELIMITER //
 
-CREATE OR REPLACE PROCEDURE host_add_aws(proc_id int, proc_MD5 varchar(32), proc_fqhost varchar(128),
-                                         proc_host_type varchar(20), proc_account BIGINT)
+CREATE OR REPLACE PROCEDURE insert_aws_host(proc_MD5 VARCHAR(32), proc_fqhost VARCHAR(128),
+                                            proc_host_type VARCHAR(20), proc_account_id BIGINT)
 BEGIN
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
         BEGIN
             ROLLBACK;
             RESIGNAL;
         END;
-    insert into location.host values (proc_id, proc_MD5, proc_fqhost, proc_host_type);
-    if proc_host_type = 'aws' then
-        insert into location.host_type_aws values (last_insert_id(), proc_account, 'aws');
-    end if;
+    START TRANSACTION;
+    IF ((SELECT COUNT(h.id)
+         FROM location.host h
+                  INNER JOIN location.host_type_aws hta ON hta.id = h.id
+         WHERE h.MD5 = proc_MD5
+           AND h.fqhost = proc_fqhost
+           AND h.host_type = proc_host_type
+           AND hta.accountId = proc_account_id) = 0) THEN
+        INSERT INTO location.host(MD5, fqhost, host_type) VALUES (proc_MD5, proc_fqhost, proc_host_type);
+        SELECT LAST_INSERT_ID() INTO @id;
+        INSERT INTO location.host_type_aws VALUES (LAST_INSERT_ID(), proc_account_id, 'aws');
+    ELSE
+        SELECT h.id
+        INTO @id
+        FROM location.host h
+                 INNER JOIN location.host_type_aws hta ON h.id = hta.id
+        WHERE h.MD5 = proc_MD5
+          AND h.fqhost = proc_fqhost
+          AND h.host_type = proc_host_type
+          AND hta.accountId = proc_account_id;
+    END IF;
+    COMMIT;
+    -- return ID
+    SELECT @id AS id;
 END;
 //
 DELIMITER ;

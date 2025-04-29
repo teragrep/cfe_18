@@ -43,31 +43,24 @@
  * Teragrep, the applicable Commercial License may apply to this file if you as
  * a licensee so wish it.
  */
-use cfe_18;
+USE cfe_18;
 DELIMITER //
-CREATE OR REPLACE PROCEDURE retrieve_all_linkages(tx_id int)
+CREATE OR REPLACE PROCEDURE select_all_linkages(tx_id INT)
 BEGIN
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
         BEGIN
             ROLLBACK;
             RESIGNAL;
-        end;
-        if(tx_id) is null then
-             set @time = (select max(transaction_id) from mysql.transaction_registry);
-        else
-             set @time=tx_id;
-        end if;
-    select hgxcdg.id                  as linkage_id,
-           cdg.id                     as capture_group_id,
-           cdg.capture_def_group_name as capture_group_name,
-           cdg.capture_type           as capture_type,
-           hg.id                      as host_group_id,
-           hg.groupName               as host_group_name,
-           hg.host_type               as host_type
-    from cfe_18.host_groups_x_capture_def_group for system_time as of transaction @time hgxcdg
-             inner join capture_def_group for system_time as of transaction @time cdg on hgxcdg.capture_group_id = cdg.id
-             inner join location.host_group for system_time as of transaction @time hg on hgxcdg.host_group_id = hg.id;
-
-end;
+        END;
+    IF (tx_id) IS NULL THEN
+        SET @time = (SELECT MAX(transaction_id) FROM mysql.transaction_registry);
+    ELSE
+        SET @time = tx_id;
+    END IF;
+    SELECT hgxcdg.id AS id,
+           hgxcdg.id AS host_group_id,
+           hgxcdg.id AS capture_group_id
+    FROM cfe_18.host_groups_x_capture_def_group FOR SYSTEM_TIME AS OF TRANSACTION @time hgxcdg;
+END;
 //
 DELIMITER ;

@@ -43,29 +43,31 @@
  * Teragrep, the applicable Commercial License may apply to this file if you as
  * a licensee so wish it.
  */
-use cfe_18;
+USE cfe_18;
 DELIMITER //
-CREATE OR REPLACE PROCEDURE retrieve_all_capture_groups(tx_id int)
+CREATE OR REPLACE PROCEDURE select_all_capture_groups(tx_id INT)
 BEGIN
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
         BEGIN
             ROLLBACK;
             RESIGNAL;
-        end;
-    if(tx_id) is null then
-        set @time = (select max(transaction_id) from mysql.transaction_registry);
-    else
-        set @time=tx_id;
-    end if;
-    select cdg.capture_def_group_name as group_name,
-           cdg.capture_type           as group_type,
-           t.tag                      as capture_tag,
-           cd.id                      as capture_id
-    from cfe_18.capture_def_group for system_time as of transaction @time cdg
-             inner join capture_def_group_x_capture_def for system_time as of transaction @time cdgxcd  on cdg.id = cdgxcd.capture_def_group_id
-             inner join capture_definition  for system_time as of transaction @time cd
-                        on cdgxcd.capture_def_id = cd.id and cdgxcd.capture_type = cd.capture_type
-             inner join tags for system_time as of transaction @time t  on cd.tag_id = t.id ;
-end;
+        END;
+    IF (tx_id) IS NULL THEN
+        SET @time = (SELECT MAX(transaction_id) FROM mysql.transaction_registry);
+    ELSE
+        SET @time = tx_id;
+    END IF;
+    SELECT cdg.id                     AS id,
+           cdg.capture_def_group_name AS group_name,
+           cdg.capture_type           AS group_type,
+           t.tag                      AS capture_tag,
+           cd.id                      AS capture_id
+    FROM cfe_18.capture_def_group FOR SYSTEM_TIME AS OF TRANSACTION @time cdg
+             INNER JOIN capture_def_group_x_capture_def FOR SYSTEM_TIME AS OF TRANSACTION @time cdgxcd
+                        ON cdg.id = cdgxcd.capture_def_group_id
+             INNER JOIN capture_definition FOR SYSTEM_TIME AS OF TRANSACTION @time cd
+                        ON cdgxcd.capture_def_id = cd.id AND cdgxcd.capture_type = cd.capture_type
+             INNER JOIN tags FOR SYSTEM_TIME AS OF TRANSACTION @time t ON cd.tag_id = t.id;
+END;
 //
 DELIMITER ;
