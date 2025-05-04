@@ -4,99 +4,131 @@
         "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.teragrep.cfe18.HostMetaMapper">
 
-    <!-- retrieve mapping for host meta -->
-    <select id="getHostMetaById" resultMap="HostMeta" statementType="CALLABLE">
-        {CALL cfe_03.retrieve_host_meta(#{param1},#{param2})}
+    <!-- insert                     ( p_arch VARCHAR(255), p_flavor VARCHAR(255),
+                                         p_hostname VARCHAR(255),
+                                         p_host_id INT, p_os VARCHAR(255),
+                                         p_release_ver VARCHAR(255) ) -->
+    <select id="create" resultMap="insertedID" statementType="CALLABLE">
+        {CALL cfe_03.insert_host_meta(#{param1},#{param2},#{param3},#{param4},#{param5},#{param6})}
     </select>
-    <resultMap type="com.teragrep.cfe18.handlers.entities.HostMeta" id="HostMeta">
-        <result property="id" column="host_meta_id"/>
-        <result property="arch" column="arch"/>
-        <result property="release_version" column="release_version"/>
-        <result property="flavor" column="flavor"/>
-        <result property="os" column="os"/>
-        <result property="interfaceType" column="interface"/>
-        <result property="ipAddress" column="ip_address"/>
-        <result property="hostname" column="hostname"/>
-        <result property="host_id" column="host_id"/>
+
+    <!-- insert                     ( p_interface VARCHAR(255) )-->
+    <select id="createInterface" resultMap="insertedID" statementType="CALLABLE">
+        {CALL cfe_03.insert_interface(#{param1})}
+    </select>
+
+    <!-- insert                     ( ip_add VARCHAR(255) ) -->
+    <select id="createIp" resultMap="insertedID" statementType="CALLABLE">
+        {CALL cfe_03.insert_ip_address(#{param1})}
+    </select>
+
+    <!-- insert link interface meta ( p_interface_id INT, p_hostmeta_id INT ) -->
+    <select id="createLinkInterface" resultMap="insertedID" statementType="CALLABLE">
+        {CALL cfe_03.insert_interface_to_hostmeta(#{param1},#{param2})}
+    </select>
+
+    <!-- insert link ip meta        ( p_ip_id INT, p_hostmeta_id INT ) -->
+    <select id="createLinkIp" resultMap="insertedID" statementType="CALLABLE">
+        {CALL cfe_03.insert_ip_address_to_hostmeta(#{param1},#{param2})}
+    </select>
+
+
+    <!-- get                        ( proc_host_meta_id INT, tx_id INT ) -->
+    <select id="getMeta" resultMap="HostMeta" statementType="CALLABLE">
+        {CALL cfe_03.select_host_meta(#{param1},#{param2})}
+    </select>
+    <resultMap id="HostMeta" type="com.teragrep.cfe18.handlers.entities.HostMeta">
+        <result property="id"               column="id"/>
+        <result property="arch"             column="arch"/>
+        <result property="releaseVersion"   column="release_version"/>
+        <result property="flavor"           column="flavor"/>
+        <result property="os"               column="os"/>
+        <result property="hostname"         column="hostname"/>
+        <result property="hostId"           column="host_id"/>
+    </resultMap>
+
+    <!-- get                        ( proc_host_meta_id INT, tx_id INT ) -->
+    <select id="getInterface" resultMap="interface" statementType="CALLABLE">
+        {CALL cfe_03.select_interface_in_meta(#{param1},#{param2})}
+    </select>
+    <resultMap id="interface" type="com.teragrep.cfe18.handlers.entities.InterfaceType">
+        <result property="interfaceType"    column="interface"/>
+        <result property="hostMetaId"       column="host_meta_id"/>
+    </resultMap>
+
+    <!-- get                        ( proc_host_meta_id INT, tx_id INT ) -->
+    <select id="getIp" resultMap="ip" statementType="CALLABLE">
+        {CALL cfe_03.select_ip_in_meta(#{param1},#{param2})}
+    </select>
+    <resultMap id="ip" type="com.teragrep.cfe18.handlers.entities.IPAddress">
+        <result property="ipAddress"        column="ip_address"/>
+        <result property="hostMetaId"       column="host_meta_id"/>
     </resultMap>
 
 
-    <!--select mapping for adding-->
-    <select id="addHostMeta" resultMap="insertedID" statementType="CALLABLE">
-        {CALL
-        cfe_03.add_host_meta_data(#{param1},#{param2},#{param3},#{param4},#{param5},#{param6})}
-    </select>
-    <resultMap id="insertedID" type="com.teragrep.cfe18.handlers.entities.HostMeta">
-        <result property="id" column="last"/>
-    </resultMap>
-
-
-    <!-- Insert new interface for host_meta -->
-    <select id="addInterface_type" resultMap="interfaceId" statementType="CALLABLE">
-        {CALL
-        cfe_03.add_interface(#{param1},#{param2})}
-    </select>
-    <resultMap id="interfaceId" type="com.teragrep.cfe18.handlers.entities.InterfaceType">
-        <result property="host_meta_id" column="last"/>
-    </resultMap>
-
-
-    <!-- Insert Ip address for host_meta -->
-    <select id="addIpAddress" resultMap="ipId" statementType="CALLABLE">
-        {CALL cfe_03.add_ip_address(#{param1},#{param2})}
-    </select>
-    <resultMap id="ipId" type="com.teragrep.cfe18.handlers.entities.IPAddress">
-        <result property="host_meta_id" column="last"/>
-    </resultMap>
-
-
-    <!-- Get ALL Host meta -->
-    <select id="getAllHostMeta" resultMap="allHostMeta" statementType="CALLABLE">
-        {CAll cfe_03.retrieve_all_host_metas(#{param1})}
+    <!-- Get ALL                    ( tx_id INT )-->
+    <select id="getAllMeta" resultMap="allHostMeta" statementType="CALLABLE">
+        {CAll cfe_03.select_all_host_metas(#{param1})}
     </select>
     <resultMap id="allHostMeta" type="com.teragrep.cfe18.handlers.entities.HostMeta">
-        <result property="id" column="host_meta_id"/>
-        <result property="host_id" column="host_id"/>
-        <result property="hostname" column="host_name"/>
-        <result property="os" column="os"/>
-        <result property="flavor" column="flavor"/>
-        <result property="arch" column="arch"/>
-        <result property="release_version" column="release_version"/>
+        <result property="id"               column="id"/>
+        <result property="arch"             column="arch"/>
+        <result property="releaseVersion"   column="release_version"/>
+        <result property="flavor"           column="flavor"/>
+        <result property="os"               column="os"/>
+        <result property="hostname"         column="hostname"/>
+        <result property="hostId"           column="host_id"/>
+    </resultMap>
+
+    <!-- Get ALL                    ( tx_id INT )-->
+    <select id="getAllInterface" resultMap="allInterface" statementType="CALLABLE">
+        {CAll cfe_03.select_all_interfaces(#{param1})}
+    </select>
+    <resultMap id="allInterface" type="com.teragrep.cfe18.handlers.entities.InterfaceType">
+        <result property="interfaceType"    column="interface"/>
+        <result property="hostMetaId"       column="host_meta_id"/>
+    </resultMap>
+
+    <!-- Get ALL                    ( tx_id INT )-->
+    <select id="getAllIp" resultMap="allIp" statementType="CALLABLE">
+        {CAll cfe_03.select_all_ip_addresses(#{param1})}
+    </select>
+    <resultMap id="allIp" type="com.teragrep.cfe18.handlers.entities.IPAddress">
+        <result property="ipAddress"        column="ip_address"/>
+        <result property="hostMetaId"       column="host_meta_id"/>
     </resultMap>
 
 
-    <!-- GET ALL Ip -->
-    <select id="getAllHostMetaIp" resultMap="allHostMetaIp" statementType="CALLABLE">
-        {CAll cfe_03.retrieve_all_host_ip_addresses(#{param1})}
-    </select>
-    <resultMap id="allHostMetaIp" type="com.teragrep.cfe18.handlers.entities.IPAddress">
-        <result property="ipAddress" column="ip_address"/>
-        <result property="host_meta_id" column="host_meta_id"/>
-    </resultMap>
-
-
-    <!-- GET ALL Interface -->
-    <select id="getAllHostMetaInterface" resultMap="allHostMetaInterface" statementType="CALLABLE">
-        {CAll cfe_03.retrieve_all_host_interfaces(#{param1})}
-    </select>
-    <resultMap id="allHostMetaInterface" type="com.teragrep.cfe18.handlers.entities.InterfaceType">
-        <result property="interfaceType" column="interface"/>
-        <result property="host_meta_id" column="host_meta_id"/>
-    </resultMap>
-
-
-    <!-- Delete -->
-    <select id="deleteIp" statementType="CALLABLE">
-        {CALL cfe_03.remove_hostmeta_ip(#{param1})}
+    <!-- Delete                     ( proc_host_meta_id INT )-->
+    <select id="delete" statementType="CALLABLE">
+        {CALL cfe_03.delete_host_meta(#{param1})}
     </select>
 
+    <!-- Delete                     ( proc_interface_id INT, proc_host_meta_id INT )-->
+    <select id="deleteLinkInterface" statementType="CALLABLE">
+        {CALL cfe_03.delete_interface_from_host_meta(#{param1},#{param2})}
+    </select>
+
+    <!-- Delete                     ( proc_ip_id INT, proc_host_meta_id INT )-->
+    <select id="deleteLinkIp" statementType="CALLABLE">
+        {CALL cfe_03.delete_ip_from_host_meta(#{param1},#{param2})}
+    </select>
+
+    <!-- Delete                     ( proc_interface_id INT )-->
     <select id="deleteInterface" statementType="CALLABLE">
-        {CALL cfe_03.remove_hostmeta_interface(#{param1})}
+        {CALL cfe_03.delete_interface(#{param1})}
     </select>
 
-    <select id="deleteHostmeta" statementType="CALLABLE">
-        {CALL cfe_03.remove_hostmeta(#{param1})}
+    <!-- Delete                     ( proc_ip_id INT )-->
+    <select id="deleteIp" statementType="CALLABLE">
+        {CALL cfe_03.delete_ip(#{param1})}
     </select>
+
+
+    <!-- ID return map -->
+    <resultMap id="insertedID" type="com.teragrep.cfe18.handlers.entities.HostMeta">
+        <result property="id"       column="id"/>
+    </resultMap>
 
 </mapper>
 
