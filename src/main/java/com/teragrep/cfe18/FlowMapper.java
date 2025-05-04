@@ -53,10 +53,10 @@ import java.util.List;
 
 @Mapper
 public interface FlowMapper {
-    Flow addNewFlow(String name);
+    Flow create(String name);
 
-    List<Flow> getAllFlow(Integer version);
+    List<Flow> getAll(Integer version);
 
-    Flow deleteFlow(String name);
+    Flow delete(String name);
 
 }

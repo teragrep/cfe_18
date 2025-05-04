@@ -52,13 +52,13 @@ import java.util.List;
 
 @Mapper
 public interface LinkageMapper {
-    List<Linkage> getLinkageByName(String name,Integer version);
 
-    Linkage addLinkage(
-            int host_group_id,
-            int capture_group_id);
 
-    List<Linkage> getAllLinkage(Integer version);
+    Linkage create(int hostGroupId, int captureGroupId);
 
-    Linkage deleteLinkage(int id);
+    Linkage get(int id,Integer version);
+
+    List<Linkage> getAll(Integer version);
+
+    Linkage delete(int id);
 }

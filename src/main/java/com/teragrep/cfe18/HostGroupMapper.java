@@ -53,14 +53,17 @@ import java.util.List;
 @Mapper
 public interface HostGroupMapper {
 
-    List<HostGroup> getHostGroupByName(String host_group_name,Integer version);
+    HostGroup create(String groupName, String type);
 
-    HostGroup addNewHostGroup(
-            int host_id,
-            String host_group_name
-    );
+    HostGroup create(int hostId, int id);
 
-    List<HostGroup> getAllHostGroup(Integer version);
+    HostGroup get(int id, Integer version);
 
-    HostGroup deleteHostGroup(String name);
+    List<HostGroup> getHosts(int id, Integer version);
+
+    List<HostGroup> getAll(Integer version);
+
+    HostGroup delete(int hostId, int id);
+
+    HostGroup delete(int id);
 }

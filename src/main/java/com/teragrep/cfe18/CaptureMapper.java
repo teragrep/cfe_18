@@ -45,6 +45,7 @@
  */
 package com.teragrep.cfe18;
 
+import com.teragrep.cfe18.handlers.entities.CaptureDefinition;
 import com.teragrep.cfe18.handlers.entities.CaptureFile;
 import com.teragrep.cfe18.handlers.entities.CaptureRelp;
 import org.apache.ibatis.annotations.Mapper;
@@ -53,34 +54,34 @@ import java.util.List;
 
 @Mapper
 public interface CaptureMapper {
-    CaptureFile getCaptureFileById(int id,Integer version);
 
-    CaptureRelp getCaptureRelpById(int id,Integer version);
+    CaptureFile create(String tag,
+                        String retention,
+                        String category,
+                        String application,
+                        String index,
+                        String sourcetype,
+                        String protocol,
+                        String flow,
+                        String tagPath,
+                        String capturePath,
+                        int fileProcessingTypeId);
 
-    CaptureFile addNewCaptureFile(String tag,
-                                  String retention,
-                                  String category,
-                                  String application,
-                                  String index,
-                                  String sourcetype,
-                                  String protocol,
-                                  String flow,
-                                  String tag_path,
-                                  String capture_path,
-                                  int processing_type_id);
-
-    CaptureRelp addNewCaptureRelp(String tag,
-                                  String retention,
-                                  String category,
-                                  String application,
-                                  String index,
-                                  String sourcetype,
-                                  String protocol,
-                                  String flow
+    CaptureRelp create(String tag,
+                        String retention,
+                        String category,
+                        String application,
+                        String index,
+                        String sourcetype,
+                        String protocol,
+                        String flow
     );
+    CaptureFile getCfe(int captureId,Integer version);
 
+    CaptureRelp getRelp(int captureId,Integer version);
 
-    List<CaptureFile> getAllCapture(Integer version);
+    List<CaptureFile> getAllCfe(Integer version);
+    List<CaptureRelp> getAllRelp(Integer version);
 
-    CaptureFile deleteCapture(int id);
+    CaptureDefinition deleteCapture(int captureId);
 }

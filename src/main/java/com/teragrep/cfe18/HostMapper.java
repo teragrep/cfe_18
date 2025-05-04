@@ -45,7 +45,7 @@
  */
 package com.teragrep.cfe18;
 
-import com.teragrep.cfe18.handlers.entities.HostFile;
+import com.teragrep.cfe18.handlers.entities.HostCfe;
 import com.teragrep.cfe18.handlers.entities.HostRelp;
 import org.apache.ibatis.annotations.Mapper;
 
@@ -54,22 +54,22 @@ import java.util.List;
 @Mapper
 public interface HostMapper {
 
-    HostFile getHostFileById(int host_meta_id,Integer version);
+    HostCfe getHostFileById(int hostMetaId, Integer version);
 
-    HostRelp getHostRelpById(int host_meta_id,Integer version);
+    HostRelp getHostRelpById(int hostMetaId,Integer version);
 
 
-    HostFile addHostFile(
+    HostCfe addHostFile(
             String md5,
             String FqHost,
-            String hub_fq);
+            String hubFq);
 
     HostRelp addHostRelp(
             String md5,
             String FqHost);
 
-    List<HostFile> getAllHost(Integer version);
+    List<HostCfe> getAllHost(Integer version);
 
-    HostFile deleteHost(int host_id);
+    HostCfe deleteHost(int hostId);
 
 }

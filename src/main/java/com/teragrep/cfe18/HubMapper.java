@@ -53,11 +53,11 @@ import java.util.List;
 @Mapper
 public interface HubMapper {
 
-    Hub getHubById(int hub_id,Integer version);
+    Hub create(String fqhost, String md5, String ip);
 
-    Hub addHub(String fqhost, String md5, String ip);
+    Hub get(int hubId,Integer version);
 
-    List<Hub> getAllHub(Integer version);
+    List<Hub> getAll(Integer version);
 
-    Hub deleteHub(int hub_id);
+    Hub deleteHub(int hubId);
 }
