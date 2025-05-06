@@ -54,7 +54,7 @@ import java.util.List;
 
 @Mapper
 public interface StorageMapper {
-    Storage create(String cfeType, String storageName);
+    Storage create(Storage.CfeType cfeType, String storageName);
 
     FlowStorage createFlowStorage(int flowId, int storageId);
 
@@ -62,7 +62,7 @@ public interface StorageMapper {
 
     Storage getStorage(int id, Integer version);
 
-    List<FlowStorage> getFlowStorage(int flowId, Integer version);
+    List<FlowStorage> getFlowStorages(int flowId, Integer version);
 
     List<CaptureStorage> getCaptureStorage(int captureId, Integer version);
 

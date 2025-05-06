@@ -83,64 +83,21 @@ public class Cfe04TransformController {
     @Autowired
     Cfe04TransformMapper cfe04TransformMapper;
 
-    // Fetch all storages
-    @RequestMapping(method = RequestMethod.GET, produces = "application/json")
-    @Operation(summary = "Fetch all cfe04 transform details", description = "Will return empty list if there are no transforms to fetch")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Cfe04 transforms fetched",
-                    content = {@Content(mediaType = "application/json",
-                            schema = @Schema(implementation = Cfe04Transform.class))})
-    })
-    public List<Cfe04Transform> getAllCfe04Transforms(@RequestParam(required = false) Integer version) {
-        return cfe04TransformMapper.getAllCfe04Transforms(version);
-    }
-
-    // Fetch transforms for cfe_04 via Cfe_04 ID
-    @RequestMapping(path = "/{id}", method = RequestMethod.GET, produces = "application/json")
-    @Operation(summary = "Fetch transforms for cfe_04 via cfe_04 ID")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "cfe_04 transforms retrieved",
-                    content = {@Content(mediaType = "application/json",
-                            schema = @Schema(implementation = Cfe04Transform.class))}),
-            @ApiResponse(responseCode = "500", description = "Internal server error, contact admin", content = @Content)
-    })
-    public ResponseEntity<?> getAllForCfe04Id(@PathVariable Integer id, @RequestParam(required = false) Integer version) {
-        try {
-            List<Cfe04Transform> cfe04Transforms = cfe04TransformMapper.getAllTransformsForCfe04Id(id,version);
-            return new ResponseEntity<>(cfe04Transforms, HttpStatus.OK);
-        } catch (Exception ex) {
-            JSONObject jsonErr = new JSONObject();
-            jsonErr.put("id", id);
-            final Throwable cause = ex.getCause();
-            LOGGER.error(cause.getMessage(), cause);
-            if (cause instanceof SQLException) {
-                LOGGER.error((cause).getMessage());
-                String state = ((SQLException) cause).getSQLState();
-                if (state.equals("45000")) {
-                    jsonErr.put("message", "Record does not exist with the given id");
-                    return new ResponseEntity<>(jsonErr.toString(), HttpStatus.BAD_REQUEST);
-                }
-            }
-            return new ResponseEntity<>("Unexpected error", HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
-
-
-    // New transforms for cfe_04
     @RequestMapping(method = RequestMethod.PUT, produces = "application/json")
-    @Operation(summary = "Insert new transforms for cfe_04")
+    @Operation(summary = "Create new transform for cfe04")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "201", description = "New cfe_04 transforms created",
+            @ApiResponse(responseCode = "201", description = "New cfe04 transform created",
                     content = {@Content(mediaType = "application/json",
                             schema = @Schema(implementation = Cfe04Transform.class))}),
             @ApiResponse(responseCode = "400", description = "SQL Constraint error",
                     content = @Content),
-            @ApiResponse(responseCode = "500", description = "Internal server error, contact admin", content = @Content)
-    })
-    public ResponseEntity<String> addNewCfe04Transform(@RequestBody Cfe04Transform newCfe04Transform) {
+            @ApiResponse(responseCode = "404", description = "Cfe04 does not exist",
+                    content = @Content),
+            @ApiResponse(responseCode = "500", description = "Internal server error, contact admin", content = @Content)})
+    public ResponseEntity<String> create(@RequestBody Cfe04Transform newCfe04Transform) {
         LOGGER.info("About to insert <[{}]>", newCfe04Transform);
         try {
-            Cfe04Transform cfe04Transform = cfe04TransformMapper.addNewCfe04Transform(
+            Cfe04Transform cfe04Transform = cfe04TransformMapper.create(
                     newCfe04Transform.getCfe04Id(),
                     newCfe04Transform.getName(),
                     newCfe04Transform.isWriteMeta(),
@@ -152,66 +109,104 @@ public class Cfe04TransformController {
             LOGGER.debug("Values returned <[{}]>", cfe04Transform);
             JSONObject jsonObject = new JSONObject();
             jsonObject.put("id", cfe04Transform.getId());
-            jsonObject.put("message", "New cfe_04 transforms created");
+            jsonObject.put("message", "New cfe04 transform  created");
             return new ResponseEntity<>(jsonObject.toString(), HttpStatus.CREATED);
         } catch (RuntimeException ex) {
+            JSONObject jsonErr = new JSONObject();
+            jsonErr.put("id", newCfe04Transform.getId());
+            jsonErr.put("message", ex.getCause().getMessage());
             final Throwable cause = ex.getCause();
-            // 1452-23000
             if(cause instanceof SQLException) {
                 int error = ((SQLException) cause).getErrorCode();
                 String state = error + "-" + ((SQLException) cause).getSQLState();
-                JSONObject jsonErr = new JSONObject();
-                jsonErr.put("id", newCfe04Transform.getId());
                 if (state.equals("1452-23000")) {
-                    jsonErr.put("message", "No such cfe_04 id");
+                    jsonErr.put("message", "Record does not exist");
+                    return new ResponseEntity<>(jsonErr.toString(), HttpStatus.NOT_FOUND);
                 }
-                else {
-                    jsonErr.put("message", "Error unrecognized, contact admin");
-                }
-                return new ResponseEntity<>(jsonErr.toString(), HttpStatus.BAD_REQUEST);
             }
-            return new ResponseEntity<>("Unexpected error", HttpStatus.INTERNAL_SERVER_ERROR);
-
+            return new ResponseEntity<>(jsonErr.toString(), HttpStatus.BAD_REQUEST);
         }
     }
 
-    // Delete cfe_04 transforms
-    @RequestMapping(path = "/{id}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
-    @Operation(summary = "Delete cfe_04 transform via transform ID")
+    @RequestMapping(path = "/{id}", method = RequestMethod.GET, produces = "application/json")
+    @Operation(summary = "Fetch transforms for cfe_04")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Transform deleted",
+            @ApiResponse(responseCode = "400", description = "SQL Constraint error",
+                    content = @Content),
+            @ApiResponse(responseCode = "404", description = "Transform does not exist",
+                    content = @Content),
+            @ApiResponse(responseCode = "200", description = "cfe_04 transforms retrieved",
                     content = {@Content(mediaType = "application/json",
                             schema = @Schema(implementation = Cfe04Transform.class))}),
-            @ApiResponse(responseCode = "400", description = "Cfe_04 transform does not exist",
-                    content = @Content),
             @ApiResponse(responseCode = "500", description = "Internal server error, contact admin", content = @Content)
     })
-    public ResponseEntity<String> deleteCfe04Transform(@PathVariable("id") Integer id) {
-        LOGGER.info("Deleting cfe_04 transforms with id <[{}]>", id);
-        JSONObject jsonErr = new JSONObject();
-        jsonErr.put("id", id);
+    public ResponseEntity<?> get(@PathVariable Integer id, @RequestParam(required = false) Integer version) {
         try {
-            cfe04TransformMapper.deleteCfe04TransformById(id);
+            List<Cfe04Transform> cfe04Transforms = cfe04TransformMapper.get(id,version);
+            return new ResponseEntity<>(cfe04Transforms, HttpStatus.OK);
+        } catch (RuntimeException ex) {
+            LOGGER.error(ex.getMessage());
+            JSONObject jsonErr = new JSONObject();
+            jsonErr.put("id", id);
+            jsonErr.put("message", ex.getCause().getMessage());
+            final Throwable cause = ex.getCause();
+            if (cause instanceof SQLException) {
+                String state = ((SQLException) cause).getSQLState();
+                if (state.equals("45000")) {
+                    jsonErr.put("message", "Record does not exist with the given id");
+                    return new ResponseEntity<>(jsonErr.toString(), HttpStatus.NOT_FOUND);
+                }
+            }
+            return new ResponseEntity<>(jsonErr.toString(), HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @RequestMapping(method = RequestMethod.GET, produces = "application/json")
+    @Operation(summary = "Fetch all cfe04 transforms", description = "Will return empty list if there are no transforms to fetch")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Successfully retrieved",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = Cfe04Transform.class))})})
+    public List<Cfe04Transform> getAll(@RequestParam(required = false) Integer version) {
+        return cfe04TransformMapper.getAll(version);
+    }
+
+    @RequestMapping(path = "/{id}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @Operation(summary = "Delete cfe04 transform")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Cfe04 transform deleted",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = Cfe04Transform.class))}),
+            @ApiResponse(responseCode = "400", description = "Cfe04 transform does not exist",
+                    content = @Content),
+            @ApiResponse(responseCode = "500", description = "Internal server error, contact admin", content = @Content)})
+    public ResponseEntity<String> delete(@PathVariable("id") Integer id) {
+        LOGGER.info("Deleting cfe_04 transforms with id <[{}]>", id);
+        try {
+            cfe04TransformMapper.delete(id);
             JSONObject j = new JSONObject();
             j.put("id", id);
-            j.put("message", "cfe_04 transforms with id of " + id + " deleted.");
+            j.put("message", "Cfe04 transform deleted");
             return new ResponseEntity<>(j.toString(), HttpStatus.OK);
-        } catch (Exception ex) {
+        } catch (RuntimeException ex) {
+            JSONObject jsonErr = new JSONObject();
+            jsonErr.put("id", id);
+            jsonErr.put("message", ex.getCause().getMessage());
             final Throwable cause = ex.getCause();
             if (cause instanceof SQLException) {
                 LOGGER.error((cause).getMessage());
                 String state = ((SQLException) cause).getSQLState();
                 if (state.equals("23000")) {
                     jsonErr.put("message", "Is in use");
+                    return new ResponseEntity<>(jsonErr.toString(), HttpStatus.BAD_REQUEST);
                 } else if (state.equals("45000")) {
                     jsonErr.put("message", "Record does not exist");
+                    return new ResponseEntity<>(jsonErr.toString(), HttpStatus.NOT_FOUND);
                 }
-                return new ResponseEntity<>(jsonErr.toString(), HttpStatus.BAD_REQUEST);
             }
-            return new ResponseEntity<>("Unexpected error", HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(jsonErr.toString(), HttpStatus.BAD_REQUEST);
         }
     }
-
-
-
 }
+
+

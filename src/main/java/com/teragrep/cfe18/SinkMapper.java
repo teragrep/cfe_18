@@ -52,7 +52,8 @@ import java.util.List;
 
 @Mapper
 public interface SinkMapper {
-    Sink create(String protocol, String ip, String port, String flow);
+
+    Sink create(String protocol, String ip, String port, int flowId);
 
     Sink get(int id, Integer version);
 

@@ -46,7 +46,7 @@
 package com.teragrep.cfe18.handlers;
 
 import com.teragrep.cfe18.HostMapper;
-import com.teragrep.cfe18.handlers.entities.HostFile;
+import com.teragrep.cfe18.handlers.entities.HostCfe;
 import com.teragrep.cfe18.handlers.entities.HostRelp;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -56,6 +56,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.json.JSONObject;
 import org.mybatis.spring.SqlSessionTemplate;
+import org.omg.SendingContext.RunTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -64,6 +65,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.persistence.PersistenceException;
 import javax.sql.DataSource;
 import java.sql.SQLException;
 import java.util.List;
@@ -84,163 +86,68 @@ public class HostController {
     @Autowired
     HostMapper hostMapper;
 
-
-    // Get host by id
-    @RequestMapping(path = "/file/{id}", method = RequestMethod.GET, produces = "application/json")
-    @Operation(summary = "Fetch file based host by ID")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "File based host retrieved",
-                    content = {@Content(mediaType = "application/json",
-                            schema = @Schema(implementation = HostFile.class))}),
-            @ApiResponse(responseCode = "400", description = "ID given does not match any host_id OR ID given directs to a hub based host OR ID given points to different type of host",
-                    content = @Content),
-            @ApiResponse(responseCode = "500", description = "Internal server error, contact admin", content = @Content)
-    })
-    public ResponseEntity<?> getHostFile(@PathVariable("id") int id, @RequestParam(required = false) Integer version) {
-        try {
-            HostFile hf = hostMapper.getHostFileById(id,version);
-            if (hf.getHost_type().equals("cfe"))
-                return new ResponseEntity<>(hf, HttpStatus.OK);
-            else {
-                throw new Exception("Different host_type");
-            }
-        } catch (Exception ex) {
-            JSONObject jsonErr = new JSONObject();
-            jsonErr.put("id", id);
-            jsonErr.put("message", "Unexpected error");
-            final Throwable cause = ex.getCause();
-            if (cause instanceof SQLException) {
-                LOGGER.error((cause).getMessage());
-                String state = ((SQLException) cause).getSQLState();
-                switch (state) {
-                    case "45000":
-                        jsonErr.put("message", "Record does not exist with the given host id");
-                        break;
-                    case "45100":
-                        jsonErr.put("message", "Host given is a hub");
-                        break;
-                }
-            } else if (ex.getMessage().equals("Different host_type")) {
-                LOGGER.error(ex.getMessage());
-                jsonErr.put("message", "host exists with different type");
-            }
-            return new ResponseEntity<>(jsonErr.toString(), HttpStatus.BAD_REQUEST);
-        }
-    }
-
-    // Get host by id
-    @RequestMapping(path = "/relp/{id}", method = RequestMethod.GET, produces = "application/json")
-    @Operation(summary = "Fetch relp based host by ID")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Relp based host retrieved",
-                    content = {@Content(mediaType = "application/json",
-                            schema = @Schema(implementation = HostRelp.class))}),
-            @ApiResponse(responseCode = "400", description = "ID given does not match any host_id OR ID given points to different type of host",
-                    content = @Content),
-            @ApiResponse(responseCode = "500", description = "Internal server error, contact admin", content = @Content)
-    })
-    public ResponseEntity<?> getHostRelp(@PathVariable("id") int id, @RequestParam(required = false) Integer version) {
-        try {
-            HostRelp hr = hostMapper.getHostRelpById(id,version);
-            if (hr.getHostType().equals("relp"))
-                return new ResponseEntity<>(hr, HttpStatus.OK);
-            else {
-                throw new Exception("Different host_type");
-            }
-        } catch (Exception ex) {
-            JSONObject jsonErr = new JSONObject();
-            jsonErr.put("id", id);
-            jsonErr.put("message", "Unexpected error");
-            final Throwable cause = ex.getCause();
-            if (cause instanceof SQLException) {
-                LOGGER.error((cause).getMessage());
-                String state = ((SQLException) cause).getSQLState();
-                if (state.equals("45000")) {
-                    jsonErr.put("message", "Record does not exist with the given host id");
-                }
-
-            } else if (ex.getMessage().equals("Different host_type")) {
-                LOGGER.error(ex.getMessage());
-                jsonErr.put("message", "host exists with different type");
-            }
-            return new ResponseEntity<>(jsonErr.toString(), HttpStatus.BAD_REQUEST);
-        }
-    }
-
-    // GET ALL hosts
-    @RequestMapping(path = "", method = RequestMethod.GET, produces = "application/json")
-    @Operation(summary = "Fetch all hosts", description = "Will return empty list if there are no hosts to fetch")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Hosts fetched",
-                    content = {@Content(mediaType = "application/json",
-                            schema = @Schema(implementation = HostFile.class))})
-    })
-    public List<HostFile> getAllHost(@RequestParam(required = false) Integer version) {
-        return hostMapper.getAllHost(version);
-    }
-
-
-    //Insert new host with cfe type
     @RequestMapping(path = "/file", method = RequestMethod.PUT, produces = "application/json")
-    @Operation(summary = "Insert file based host")
+    @Operation(summary = "Create file based host")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "New file based host created",
                     content = {@Content(mediaType = "application/json",
-                            schema = @Schema(implementation = HostFile.class))}),
-            @ApiResponse(responseCode = "400", description = "ID,MD5 or fqhost already exists OR Hub does not exist",
+                            schema = @Schema(implementation = HostCfe.class))}),
+            @ApiResponse(responseCode = "400", description = "ID,MD5 or fqhost already exists",
+                    content = @Content),
+            @ApiResponse(responseCode = "400", description = "Host exists for a different type or hub does not exist",
                     content = @Content),
             @ApiResponse(responseCode = "500", description = "Internal server error, contact admin", content = @Content)
     })
-    public ResponseEntity<String> newHostFile(@RequestBody HostFile newHostFile) {
-        LOGGER.info("About to insert <[{}]>",newHostFile);
+    public ResponseEntity<String> create(@RequestBody HostCfe newHostCfe) {
+        LOGGER.info("About to insert <[{}]>", newHostCfe);
         try {
-            HostFile hf = hostMapper.addHostFile(
-                    newHostFile.getMD5(),
-                    newHostFile.getFqHost(),
-                    newHostFile.getHub_fq());
-            LOGGER.debug("Values returned <[{}]>",hf);
+            HostCfe hf = hostMapper.createCfe(
+                    newHostCfe.getMd5(),
+                    newHostCfe.getFqHost(),
+                    newHostCfe.getHubFq());
+            LOGGER.debug("Values returned <[{}]>", hf);
             JSONObject jsonObject = new JSONObject();
             jsonObject.put("id", hf.getId());
-            jsonObject.put("message", "New host created with cfe type");
+            jsonObject.put("message", "New host created");
             return new ResponseEntity<>(jsonObject.toString(), HttpStatus.CREATED);
         } catch (RuntimeException ex) {
-            LOGGER.error(ex.getMessage());
             JSONObject jsonErr = new JSONObject();
-            jsonErr.put("id", newHostFile.getId());
+            jsonErr.put("id", newHostCfe.getId());
+            jsonErr.put("message", ex.getCause().getMessage());
             final Throwable cause = ex.getCause();
             if (cause instanceof SQLException) {
-                // Get specific error type
-                int error = ((SQLException) cause).getErrorCode();
-                // Link error with state to get accurate error status
-                String state = error + "-" + ((SQLException) cause).getSQLState();
-                if (state.equals("1062-23000")) {
+                String state = ((SQLException) cause).getSQLState();
+                if (state.equals("23000")) {
                     jsonErr.put("message", "ID,MD5 or fqhost already exists");
-                } else if (state.equals("1644-45000")) {
-                    jsonErr.put("message", "Hub does not exist");
+                    return new ResponseEntity<>(jsonErr.toString(), HttpStatus.BAD_REQUEST);
+                } else if (state.equals("45000")) {
+                    jsonErr.put("message", "Host exists for a different type or hub does not exist");
+                    return new ResponseEntity<>(jsonErr.toString(), HttpStatus.BAD_REQUEST);
                 }
-                return new ResponseEntity<>(jsonErr.toString(), HttpStatus.BAD_REQUEST);
             }
-            return new ResponseEntity<>("Unexpected error", HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(jsonErr.toString(), HttpStatus.BAD_REQUEST);
         }
     }
 
     @RequestMapping(path = "/relp", method = RequestMethod.PUT, produces = "application/json")
-    @Operation(summary = "Insert relp based host")
+    @Operation(summary = "Create relp based host")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "New relp based host created",
                     content = {@Content(mediaType = "application/json",
                             schema = @Schema(implementation = HostRelp.class))}),
             @ApiResponse(responseCode = "400", description = "ID,MD5 or fqhost already exists",
                     content = @Content),
+            @ApiResponse(responseCode = "400", description = "Host exists with different type",
+                    content = @Content),
             @ApiResponse(responseCode = "500", description = "Internal server error, contact admin", content = @Content)
     })
-    public ResponseEntity<String> newHostRelp(@RequestBody HostRelp newHostRelp) {
-        LOGGER.info("About to insert <[{}]>",newHostRelp);
+    public ResponseEntity<String> create(@RequestBody HostRelp newHostRelp) {
+        LOGGER.info("About to insert <[{}]>", newHostRelp);
         try {
-            HostRelp hr = hostMapper.addHostRelp(
+            HostRelp hr = hostMapper.createRelp(
                     newHostRelp.getMd5(),
                     newHostRelp.getFqHost());
-            LOGGER.debug("Values returned <[{}]>",hr);
+            LOGGER.debug("Values returned <[{}]>", hr);
             JSONObject jsonObject = new JSONObject();
             jsonObject.put("id", hr.getId());
             jsonObject.put("message", "New host created with relp type");
@@ -248,6 +155,7 @@ public class HostController {
         } catch (RuntimeException ex) {
             JSONObject jsonErr = new JSONObject();
             jsonErr.put("id", newHostRelp.getId());
+            jsonErr.put("message", ex.getCause().getMessage());
             final Throwable cause = ex.getCause();
             if (cause instanceof SQLException) {
                 LOGGER.error((cause).getMessage());
@@ -258,47 +166,177 @@ public class HostController {
                 if (state.equals("1062-23000")) {
                     jsonErr.put("message", "ID,MD5 or fqhost already exists");
                     return new ResponseEntity<>(jsonErr.toString(), HttpStatus.BAD_REQUEST);
+                }else if (state.equals("45000")) {
+                    jsonErr.put("message", "Host exists with different type");
+                    return new ResponseEntity<>(jsonErr.toString(), HttpStatus.BAD_REQUEST);
                 }
             }
-            return new ResponseEntity<>("Unexpected error", HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(jsonErr.toString(), HttpStatus.BAD_REQUEST);
         }
     }
 
-    // Delete
-    @RequestMapping(path = "/{id}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
-    @Operation(summary = "Delete host")
+    @RequestMapping(path = "/file/{id}", method = RequestMethod.GET, produces = "application/json")
+    @Operation(summary = "Fetch file based host by ID")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "File based host retrieved",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = HostCfe.class))}),
+            @ApiResponse(responseCode = "400", description = "ID given does not match any host_id OR ID given directs to a hub based host OR ID given points to different type of host",
+                    content = @Content),
+            @ApiResponse(responseCode = "500", description = "Internal server error, contact admin", content = @Content)
+    })
+    public ResponseEntity<?> getCfe(@PathVariable("id") int id, @RequestParam(required = false) Integer version) {
+        try {
+            HostCfe hf = hostMapper.getCfe(id,version);
+            return new ResponseEntity<>(hf, HttpStatus.OK);
+        } catch (RuntimeException ex) {
+            LOGGER.error(ex.getMessage());
+            JSONObject jsonErr = new JSONObject();
+            jsonErr.put("id", id);
+            jsonErr.put("message", ex.getCause().getMessage());
+            final Throwable cause = ex.getCause();
+            if (cause instanceof SQLException) {
+                LOGGER.error((cause).getMessage());
+                String state = ((SQLException) cause).getSQLState();
+                if (state.equals("45000")) {
+                    jsonErr.put("message", "Record does not exist OR host retrieved is a hub");
+                    return new ResponseEntity<>(jsonErr.toString(), HttpStatus.BAD_REQUEST);
+                }
+            }
+            return new ResponseEntity<>(jsonErr.toString(), HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @RequestMapping(path = "/relp/{id}", method = RequestMethod.GET, produces = "application/json")
+    @Operation(summary = "Fetch relp based host by ID")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Relp based host retrieved",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = HostRelp.class))}),
+            @ApiResponse(responseCode = "400", description = "Host does not exist",
+                    content = @Content),
+            @ApiResponse(responseCode = "500", description = "Internal server error, contact admin", content = @Content)
+    })
+    public ResponseEntity<?> getRelp(@PathVariable("id") int id, @RequestParam(required = false) Integer version) {
+        try {
+            HostRelp hr = hostMapper.getRelp(id,version);
+            return new ResponseEntity<>(hr, HttpStatus.OK);
+        } catch (Exception ex) {
+            JSONObject jsonErr = new JSONObject();
+            jsonErr.put("id", id);
+            jsonErr.put("message", ex.getCause().getMessage());
+            final Throwable cause = ex.getCause();
+            if (cause instanceof SQLException) {
+                LOGGER.error((cause).getMessage());
+                String state = ((SQLException) cause).getSQLState();
+                if (state.equals("45000")) {
+                    jsonErr.put("message", "Record does not exist");
+                    return new ResponseEntity<>(jsonErr.toString(), HttpStatus.NOT_FOUND);
+                }
+            }
+            return new ResponseEntity<>(jsonErr.toString(), HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @RequestMapping(path = "/cfe", method = RequestMethod.GET, produces = "application/json")
+    @Operation(summary = "Fetch all cfe hosts", description = "Will return empty list if there are no hosts to fetch")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Successfully retrieved",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = HostCfe.class))})
+    })
+    public List<HostCfe> getAllCfe(@RequestParam(required = false) Integer version) {
+        return hostMapper.getAllCfe(version);
+    }
+
+    @RequestMapping(path = "/relp", method = RequestMethod.GET, produces = "application/json")
+    @Operation(summary = "Fetch all relp hosts", description = "Will return empty list if there are no hosts to fetch")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Successfully retrieved",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = HostRelp.class))})
+    })
+    public List<HostRelp> getAllRelp(@RequestParam(required = false) Integer version) {
+        return hostMapper.getAllRelp(version);
+    }
+
+    @RequestMapping(path = "/cfe/{id}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @Operation(summary = "Delete cfe host")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Host deleted",
                     content = {@Content(mediaType = "application/json",
-                            schema = @Schema(implementation = HostFile.class))}),
+                            schema = @Schema(implementation = HostCfe.class))}),
             @ApiResponse(responseCode = "400", description = "Host is being used OR Host does not exist",
                     content = @Content),
             @ApiResponse(responseCode = "500", description = "Internal server error, contact admin", content = @Content)
     })
-    public ResponseEntity<String> removeHost(@PathVariable("id") int id) {
+    public ResponseEntity<String> deleteCfe(@PathVariable("id") int id) {
         LOGGER.info("Deleting Host  <[{}]>",id);
-        JSONObject jsonErr = new JSONObject();
-        jsonErr.put("id", id);
         try {
-            hostMapper.deleteHost(id);
+            hostMapper.deleteCfe(id);
             JSONObject j = new JSONObject();
             j.put("id", id);
-            j.put("message", "Host with id =  " + id + " deleted.");
+            j.put("message", "Host deleted");
             return new ResponseEntity<>(j.toString(), HttpStatus.OK);
-        } catch (Exception ex) {
+        } catch (RuntimeException ex) {
+            JSONObject jsonErr = new JSONObject();
+            jsonErr.put("id", id);
+            jsonErr.put("messgae", ex.getCause().getMessage());
             final Throwable cause = ex.getCause();
             if (cause instanceof SQLException) {
                 LOGGER.error((cause).getMessage());
                 String state = ((SQLException) cause).getSQLState();
                 if (state.equals("23000")) {
                     jsonErr.put("message", "Is in use");
+                    return new ResponseEntity<>(jsonErr.toString(), HttpStatus.BAD_REQUEST);
                 } else if (state.equals("45000")) {
                     jsonErr.put("message", "Record does not exist");
+                    return new ResponseEntity<>(jsonErr.toString(), HttpStatus.NOT_FOUND);
                 }
-                return new ResponseEntity<>(jsonErr.toString(), HttpStatus.BAD_REQUEST);
             }
-            return new ResponseEntity<>("Unexpected error", HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(jsonErr.toString(), HttpStatus.BAD_REQUEST);
 
         }
     }
+
+    @RequestMapping(path = "/relp/{id}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @Operation(summary = "Delete relp host")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Host deleted",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = HostRelp.class))}),
+            @ApiResponse(responseCode = "400", description = "Host is being used OR Host does not exist",
+                    content = @Content),
+            @ApiResponse(responseCode = "500", description = "Internal server error, contact admin", content = @Content)
+    })
+    public ResponseEntity<String> deleteRelp(@PathVariable("id") int id) {
+        LOGGER.info("Deleting Host  <[{}]>",id);
+
+        try {
+            hostMapper.deleteRelp(id);
+            JSONObject j = new JSONObject();
+            j.put("id", id);
+            j.put("message", "Host deleted");
+            return new ResponseEntity<>(j.toString(), HttpStatus.OK);
+        } catch (RuntimeException ex) {
+            JSONObject jsonErr = new JSONObject();
+            jsonErr.put("id", id);
+            jsonErr.put("message", ex.getCause().getMessage());
+            final Throwable cause = ex.getCause();
+            if (cause instanceof SQLException) {
+                LOGGER.error((cause).getMessage());
+                String state = ((SQLException) cause).getSQLState();
+                if (state.equals("23000")) {
+                    jsonErr.put("message", "Is in use");
+                    return new ResponseEntity<>(jsonErr.toString(), HttpStatus.BAD_REQUEST);
+                } else if (state.equals("45000")) {
+                    jsonErr.put("message", "Record does not exist");
+                    return new ResponseEntity<>(jsonErr.toString(), HttpStatus.NOT_FOUND);
+                }
+            }
+            return new ResponseEntity<>(jsonErr.toString(), HttpStatus.BAD_REQUEST);
+        }
+    }
 }
+
+

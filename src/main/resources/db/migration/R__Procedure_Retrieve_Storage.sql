@@ -57,6 +57,12 @@ BEGIN
     ELSE
         SET @time = tx_id;
     END IF;
+
+    IF ((SELECT COUNT(id) FROM flow.storages WHERE id = storage_id) = 0) THEN
+        SELECT JSON_OBJECT('id', storage_id, 'message', 'Storage does not exist') INTO @pt;
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = @pt;
+    END IF;
+
     SELECT s.id           AS id,
            s.storage_name AS storage_name,
            s.cfe_type     AS storage_type

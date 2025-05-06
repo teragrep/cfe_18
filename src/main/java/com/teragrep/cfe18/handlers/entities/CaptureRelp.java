@@ -57,15 +57,15 @@ public class CaptureRelp {
     @Schema(accessMode = Schema.AccessMode.READ_ONLY)
     private Integer id;
     private String tag;
-    private String retention_time;
-    private String category;
     private String application;
     private String index;
-    private String source_type;
-    private String protocol;
+    private String retentionTime;
+    private String sourceType;
+    private String category;
     private String flow;
+    private String protocol;
     @Schema(accessMode = Schema.AccessMode.READ_ONLY)
-    private CaptureType captureType;
+    private CaptureType type;
 
     public Integer getId() {
         return id;
@@ -100,19 +100,19 @@ public class CaptureRelp {
     }
 
     public String getRetention_time() {
-        return retention_time;
+        return retentionTime;
     }
 
     public void setRetention_time(String retention_time) {
-        this.retention_time = retention_time;
+        this.retentionTime = retention_time;
     }
 
     public String getSource_type() {
-        return source_type;
+        return sourceType;
     }
 
     public void setSource_type(String source_type) {
-        this.source_type = source_type;
+        this.sourceType = source_type;
     }
 
     public String getProtocol() {
@@ -140,11 +140,11 @@ public class CaptureRelp {
     }
 
     public CaptureType getCaptureType() {
-        return captureType;
+        return type;
     }
 
     public void setCaptureType(CaptureType captureType) {
-        this.captureType = captureType;
+        this.type = captureType;
     }
 
     @Override
@@ -152,14 +152,14 @@ public class CaptureRelp {
         return "CaptureRelp{" +
                 "id=" + id +
                 ", tag='" + tag + '\'' +
-                ", retention_time='" + retention_time + '\'' +
+                ", retention_time='" + retentionTime + '\'' +
                 ", category='" + category + '\'' +
                 ", application='" + application + '\'' +
                 ", index='" + index + '\'' +
-                ", source_type='" + source_type + '\'' +
+                ", source_type='" + sourceType + '\'' +
                 ", protocol='" + protocol + '\'' +
                 ", flow='" + flow + '\'' +
-                ", captureType=" + captureType +
+                ", captureType=" + type +
                 '}';
     }
 }

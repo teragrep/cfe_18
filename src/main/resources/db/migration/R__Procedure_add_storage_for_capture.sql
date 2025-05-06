@@ -59,6 +59,12 @@ BEGIN
         SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = @csid;
     END IF;
 
+    IF ((SELECT COUNT(id) FROM flow.flow_targets ft WHERE ft.storage_id = storage_id) = 0) THEN
+        SELECT JSON_OBJECT('id', storage_id, 'message', 'Flow storage does not exist') INTO @ftid;
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = @ftid;
+    END IF;
+
+
     IF ((SELECT COUNT(id)
          FROM cfe_18.capture_def_x_flow_targets
          WHERE capture_def_id = capture_id

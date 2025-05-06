@@ -60,13 +60,15 @@ BEGIN
     START TRANSACTION;
 
     -- check if capture_definition ID is valid
-    IF ((SELECT COUNT(id) FROM cfe_18.capture_definition WHERE id = capture_id) = 0) THEN
-        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Capture does not exist';
+    IF ((SELECT COUNT(c.id) FROM cfe_18.capture_definition c WHERE c.id = capture_id) = 0) THEN
+        SELECT JSON_OBJECT('id', capture_id, 'message', 'Capture does not exist') INTO @capture;
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = @capture;
     END IF;
 
     -- check if capture_group ID is valid
-    IF ((SELECT COUNT(id) FROM cfe_18.capture_def_group WHERE id = capture_group_id) = 0) THEN
-        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Capture Group does not exist';
+    IF ((SELECT COUNT(cdg.id) FROM cfe_18.capture_def_group cdg WHERE cdg.id = capture_group_id) = 0) THEN
+        SELECT JSON_OBJECT('id', capture_group_id, 'message', 'Group does not exist') INTO @group;
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = @group;
     END IF;
 
     -- check if types match. Select given capture and type while subquerying capture groups type to see if they match.
@@ -75,7 +77,8 @@ BEGIN
          FROM cfe_18.capture_definition c
          WHERE c.capture_type = (SELECT capture_type FROM cfe_18.capture_def_group cdg WHERE cdg.id = capture_group_id)
            AND c.id = capture_id) = 0) THEN
-        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Type mismatch between capture and group';
+        SELECT JSON_OBJECT('id', capture_group_id, 'message', 'Type mismatch between capture and group') INTO @mismatch;
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = @mismatch;
     END IF;
 
     -- if record does not exist

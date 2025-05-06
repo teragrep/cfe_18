@@ -53,9 +53,9 @@ import java.util.List;
 @Mapper
 public interface CaptureGroupMapper {
 
-    CaptureGroup create(String groupName, String type);
+    CaptureGroup create(String groupName, CaptureGroup.groupType type);
 
-    CaptureGroup create(int captureId, int id);
+    CaptureGroup createLink(int captureId, int id);
 
     CaptureGroup get(int id,Integer version);
 
@@ -65,5 +65,5 @@ public interface CaptureGroupMapper {
 
     CaptureGroup delete(int id);
 
-    CaptureGroup delete(int captureId, int id);
+    CaptureGroup deleteCapture(int captureId, int id);
 }

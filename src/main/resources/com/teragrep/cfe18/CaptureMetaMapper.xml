@@ -36,14 +36,14 @@
 
 
     <!-- delete             ( capture_id INT ) -->
-    <select id="delete" resultMap="removeCaptureMeta" statementType="CALLABLE">
+    <select id="delete" statementType="CALLABLE">
         {CALL
         cfe_18.delete_capture_meta(#{param1})}
     </select>
 
 
     <!-- get key value      ( meta_key VARCHAR(1024), meta_value VARCHAR(1024), tx_id INT )  -->
-    <select id="get" resultMap="keyValue" statementType="CALLABLE">
+    <select id="getKeyValue" resultMap="keyValue" statementType="CALLABLE">
         {CALL cfe_18.select_capture_meta_key_value(#{param1},#{param2},#{param3})}
     </select>
     <resultMap id="keyValue" type="com.teragrep.cfe18.handlers.entities.CaptureDefinition">

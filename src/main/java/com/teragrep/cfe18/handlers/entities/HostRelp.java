@@ -53,23 +53,15 @@ public class HostRelp {
     private int id;
     private String md5;
     private String fqHost;
-    @Schema(accessMode = Schema.AccessMode.READ_ONLY)
-    private String hostType;
+    private String hostName;
+    private int hostMetaId;
 
-    public String getHostType() {
-        return hostType;
+    public int getId() {
+        return id;
     }
 
-    public void setHostType(String hostType) {
-        this.hostType = hostType;
-    }
-
-    public String getFqHost() {
-        return fqHost;
-    }
-
-    public void setFqHost(String fqHost) {
-        this.fqHost = fqHost;
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getMd5() {
@@ -80,12 +72,28 @@ public class HostRelp {
         this.md5 = md5;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public String getFqHost() {
+        return fqHost;
     }
 
-    public int getId() {
-        return id;
+    public void setFqHost(String fqHost) {
+        this.fqHost = fqHost;
+    }
+
+    public String getHostName() {
+        return hostName;
+    }
+
+    public void setHostName(String hostName) {
+        this.hostName = hostName;
+    }
+
+    public int getHostMetaId() {
+        return hostMetaId;
+    }
+
+    public void setHostMetaId(int hostMetaId) {
+        this.hostMetaId = hostMetaId;
     }
 
     @Override
@@ -94,7 +102,8 @@ public class HostRelp {
                 "id=" + id +
                 ", md5='" + md5 + '\'' +
                 ", fqHost='" + fqHost + '\'' +
-                ", hostType='" + hostType + '\'' +
+                ", hostName='" + hostName + '\'' +
+                ", hostMetaId=" + hostMetaId +
                 '}';
     }
 }

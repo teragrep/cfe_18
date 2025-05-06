@@ -54,22 +54,26 @@ import java.util.List;
 @Mapper
 public interface HostMapper {
 
-    HostCfe getHostFileById(int hostMetaId, Integer version);
 
-    HostRelp getHostRelpById(int hostMetaId,Integer version);
-
-
-    HostCfe addHostFile(
+    HostCfe createCfe(
             String md5,
             String FqHost,
             String hubFq);
 
-    HostRelp addHostRelp(
+    HostRelp createRelp(
             String md5,
             String FqHost);
 
-    List<HostCfe> getAllHost(Integer version);
 
-    HostCfe deleteHost(int hostId);
+    HostCfe getCfe(int id, Integer version);
+
+    HostRelp getRelp(int id,Integer version);
+
+
+    List<HostCfe> getAllCfe(Integer version);
+    List<HostRelp> getAllRelp(Integer version);
+
+    HostCfe deleteCfe(int hostId);
+    HostRelp deleteRelp(int hostId);
 
 }

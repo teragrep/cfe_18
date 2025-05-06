@@ -85,99 +85,26 @@ public class HostMetaController {
     @Autowired
     HostMetaMapper hostMetaMapper;
 
-
-    @RequestMapping(path = "/meta/{id}", method = RequestMethod.GET, produces = "application/json")
-    @Operation(summary = "Fetch host meta by id")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Host meta retrieved",
-                    content = {@Content(mediaType = "application/json",
-                            schema = @Schema(implementation = HostMeta.class))}),
-            @ApiResponse(responseCode = "400", description = "Host meta does not exist with the given host_meta_id OR IP and/or Interface is missing",
-                    content = @Content),
-            @ApiResponse(responseCode = "500", description = "Internal server error, contact admin", content = @Content)
-    })
-    public ResponseEntity<?> getHostMeta(@PathVariable("id") int id, @RequestParam(required = false) Integer version) {
-        try {
-            List<HostMeta> hm = hostMetaMapper.getHostMetaById(id,version);
-            return new ResponseEntity<>(hm, HttpStatus.OK);
-        } catch (Exception ex) {
-            JSONObject jsonErr = new JSONObject();
-            jsonErr.put("id", id);
-            final Throwable cause = ex.getCause();
-            if (cause instanceof SQLException) {
-                LOGGER.error((cause).getMessage());
-                String state = ((SQLException) cause).getSQLState();
-                if (state.equals("45000")) {
-                    jsonErr.put("message", "Record does not exist with the given host_meta_id");
-                } else if (state.equals("45100")) {
-                    jsonErr.put("message", "IP and/or Interface is missing");
-                }
-                return new ResponseEntity<>(jsonErr.toString(), HttpStatus.BAD_REQUEST);
-            }
-            return new ResponseEntity<>("Unexpected error", HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
-
-
-    // GET ALL Hostmeta. IP and Interface excluded.
-    @RequestMapping(path = "/meta", method = RequestMethod.GET, produces = "application/json")
-    @Operation(summary = "Fetch all host metas. No IP or Interface included", description = "Will return empty list if there are no host metas to fetch")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "host metas fetched",
-                    content = {@Content(mediaType = "application/json",
-                            schema = @Schema(implementation = HostMeta.class))})
-    })
-    public List<HostMeta> getAllHostMeta(@RequestParam(required = false) Integer version) {
-        return hostMetaMapper.getAllHostMeta(version);
-    }
-
-    // GET ALL IP Addresses
-    @RequestMapping(path = "/meta/ip", method = RequestMethod.GET, produces = "application/json")
-    @Operation(summary = "Fetch all IP addresses", description = "Will return empty list if there are no IP addresses to fetch")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "IP addresses fetched",
-                    content = {@Content(mediaType = "application/json",
-                            schema = @Schema(implementation = IPAddress.class))})
-    })
-    public List<IPAddress> getAllHostMetaIp(@RequestParam(required = false) Integer version) {
-        return hostMetaMapper.getAllHostMetaIp(version);
-    }
-
-
-    // GET ALL Interfaces
-    @RequestMapping(path = "/meta/interface", method = RequestMethod.GET, produces = "application/json")
-    @Operation(summary = "Fetch all interface types", description = "Will return empty list if there are no interface types to fetch")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Interface types fetched",
-                    content = {@Content(mediaType = "application/json",
-                            schema = @Schema(implementation = InterfaceType.class))})
-    })
-    public List<InterfaceType> getAllHostMetaInterface(@RequestParam(required = false) Integer version) {
-        return hostMetaMapper.getAllHostMetaInterface(version);
-    }
-
     @RequestMapping(method = RequestMethod.PUT, path = "/meta", produces = "application/json")
-    @Operation(summary = "Insert new host meta. IP and Interface excluded.")
+    @Operation(summary = "Create new host meta")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "New host meta created",
                     content = {@Content(mediaType = "application/json",
                             schema = @Schema(implementation = HostMeta.class))}),
-            @ApiResponse(responseCode = "400", description = "Nulls are not allowed",
-                    content = @Content),
             @ApiResponse(responseCode = "500", description = "Internal server error, contact admin", content = @Content)
     })
-    public ResponseEntity<String> addHostMeta(@RequestBody HostMeta newHostMeta) {
-        LOGGER.info("About to insert <[{}]>",newHostMeta);
+    public ResponseEntity<String> create(@RequestBody HostMeta newHostMeta) {
+        LOGGER.info("About to insert <[{}]>", newHostMeta);
         try {
-            HostMeta hm = hostMetaMapper.addHostMeta(
+            HostMeta hm = hostMetaMapper.create(
                     newHostMeta.getArch(),
                     newHostMeta.getFlavor(),
                     newHostMeta.getHostname(),
-                    newHostMeta.getHost_id(),
+                    newHostMeta.getHostId(),
                     newHostMeta.getOs(),
-                    newHostMeta.getRelease_version()
+                    newHostMeta.getReleaseVersion()
             );
-            LOGGER.debug("Values returned <[{}]>",hm);
+            LOGGER.debug("Values returned <[{}]>", hm);
             JSONObject jsonObject = new JSONObject();
             jsonObject.put("id", hm.getId());
             jsonObject.put("message", "New host meta added for host");
@@ -186,113 +113,357 @@ public class HostMetaController {
             JSONObject jsonErr = new JSONObject();
             jsonErr.put("id", newHostMeta.getId());
             jsonErr.put("message", ex.getCause().toString());
-            if (ex instanceof NullPointerException) {
-                jsonErr.put("message", "NO NULLS ALLOWED");
-                LOGGER.error(ex.getMessage());
+            return new ResponseEntity<>(jsonErr.toString(), HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @RequestMapping(method = RequestMethod.PUT, path = "/meta/interface", produces = "application/json")
+    @Operation(summary = "Create interface type")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "New interface created",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = InterfaceType.class))}),
+            @ApiResponse(responseCode = "500", description = "Internal server error, contact admin", content = @Content)
+    })
+    public ResponseEntity<String> createInterface(@RequestBody InterfaceType newInterfaceType) {
+        LOGGER.info("About to insert <[{}]>", newInterfaceType);
+        try {
+            InterfaceType it = hostMetaMapper.createInterface(newInterfaceType.getInterfaceType());
+            LOGGER.debug("Values returned <[{}]>", it);
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("id", it.getId());
+            jsonObject.put("message", "New interface created");
+            return new ResponseEntity<>(jsonObject.toString(), HttpStatus.CREATED);
+        } catch (RuntimeException ex) {
+            JSONObject jsonErr = new JSONObject();
+            jsonErr.put("id", newInterfaceType.getId());
+            jsonErr.put("message", ex.getCause().getMessage());
+            return new ResponseEntity<>(jsonErr.toString(), HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @RequestMapping(method = RequestMethod.PUT, path = "/meta/{interfaceId}/{Id}", produces = "application/json")
+    @Operation(summary = "Link interface to hostmeta")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "Interface linked to hostmeta",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = InterfaceType.class))}),
+            @ApiResponse(responseCode = "400", description = "Interface OR hostmeta does not exist",
+                    content = @Content),
+            @ApiResponse(responseCode = "500", description = "Internal server error, contact admin", content = @Content)})
+    public ResponseEntity<String> createInterfaceLink(@PathVariable("interfaceId")int interfaceId, @PathVariable("Id")int id) {
+        LOGGER.info("About to insert <[{}]>", interfaceId);
+        try {
+            InterfaceType it = hostMetaMapper.createLinkInterface(interfaceId, id);
+            LOGGER.debug("Values returned <[{}]>", it);
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("id", interfaceId);
+            jsonObject.put("message", "Interface linked to hostMeta");
+            return new ResponseEntity<>(jsonObject.toString(), HttpStatus.CREATED);
+        } catch (RuntimeException ex) {
+            JSONObject jsonErr = new JSONObject();
+            jsonErr.put("id", interfaceId);
+            jsonErr.put("message", ex.getCause().getMessage());
+            final Throwable cause = ex.getCause();
+            if (cause instanceof SQLException) {
+                LOGGER.error((cause).getMessage());
+                String state = ((SQLException) cause).getSQLState();
+                if (state.equals("45000")) {
+                    jsonErr.put("message", "Record does not exist");
+                    return new ResponseEntity<>(jsonErr.toString(), HttpStatus.NOT_FOUND);
+                }
             }
             return new ResponseEntity<>(jsonErr.toString(), HttpStatus.BAD_REQUEST);
         }
     }
 
-
-    // new interface for host metadata
-    @RequestMapping(method = RequestMethod.PUT, path = "/meta/interface", produces = "application/json")
-    @Operation(summary = "Insert interface type")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "201", description = "New interface type created",
-                    content = {@Content(mediaType = "application/json",
-                            schema = @Schema(implementation = InterfaceType.class))}),
-            @ApiResponse(responseCode = "400", description = "SQL Constraint error",
-                    content = @Content),
-            @ApiResponse(responseCode = "500", description = "Internal server error, contact admin", content = @Content)
-    })
-    public ResponseEntity<String> addInterface_type(@RequestBody InterfaceType newInterfaceType) {
-        LOGGER.info("About to insert <[{}]>",newInterfaceType );
-        try {
-            InterfaceType it = hostMetaMapper.addInterface_type(
-                    newInterfaceType.getInterfaceType(),
-                    newInterfaceType.getHost_meta_id());
-            LOGGER.debug("Values returned <[{}]>",it);
-            JSONObject jsonObject = new JSONObject();
-            jsonObject.put("id", it.getHost_meta_id());
-            jsonObject.put("message", "New interface created for host_meta");
-            return new ResponseEntity<>(jsonObject.toString(), HttpStatus.CREATED);
-        } catch (RuntimeException ex) {
-            JSONObject jsonErr = new JSONObject();
-            jsonErr.put("id", newInterfaceType.getHost_meta_id());
-            jsonErr.put("message", ex.getCause().toString());
-            return new ResponseEntity<>(jsonErr.toString(), HttpStatus.BAD_REQUEST);
-        }
-    }
-
-    // new ip address for host metadata
     @RequestMapping(path = "/meta/ip", method = RequestMethod.PUT, produces = "application/json")
-    @Operation(summary = "Insert IP address")
+    @Operation(summary = "Create IP address")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "New IP address created",
                     content = {@Content(mediaType = "application/json",
                             schema = @Schema(implementation = IPAddress.class))}),
-            @ApiResponse(responseCode = "400", description = "SQL Constraint error",
-                    content = @Content),
-            @ApiResponse(responseCode = "500", description = "Internal server error, contact admin", content = @Content)
-    })
-    public ResponseEntity<String> addIpAddress(@RequestBody IPAddress newIpAddress) {
-        LOGGER.info("About to insert <[{}]>",newIpAddress);
+            @ApiResponse(responseCode = "500", description = "Internal server error, contact admin", content = @Content)})
+    public ResponseEntity<String> createIp(@RequestBody IPAddress newIpAddress) {
+        LOGGER.info("About to insert <[{}]>", newIpAddress);
         try {
-            IPAddress ia = hostMetaMapper.addIpAddress(
-                    newIpAddress.getHost_meta_id(),
-                    newIpAddress.getIpAddress());
-            LOGGER.debug("Values returned <[{}]>",ia);
+            IPAddress ia = hostMetaMapper.createIp(newIpAddress.getIpAddress());
+            LOGGER.debug("Values returned <[{}]>", ia);
             JSONObject jsonObject = new JSONObject();
-            jsonObject.put("id", ia.getHost_meta_id());
-            jsonObject.put("message", "New ip address created for host_meta");
+            jsonObject.put("id", ia.getId());
+            jsonObject.put("message", "New ip address created");
             return new ResponseEntity<>(jsonObject.toString(), HttpStatus.CREATED);
         } catch (RuntimeException ex) {
             JSONObject jsonErr = new JSONObject();
-            jsonErr.put("id", newIpAddress.getHost_meta_id());
-            jsonErr.put("message", ex.getCause().toString());
+            jsonErr.put("id", newIpAddress.getId());
+            jsonErr.put("message", ex.getCause().getMessage());
             return new ResponseEntity<>(jsonErr.toString(), HttpStatus.BAD_REQUEST);
         }
     }
 
-    // Delete IP
-    @RequestMapping(path = "/meta/ip/{id}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
-    @Operation(summary = "Delete IP address")
+    @RequestMapping(method = RequestMethod.PUT, path = "/meta/{ipId}/{Id}", produces = "application/json")
+    @Operation(summary = "Link IP to hostmeta")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "IP address deleted",
+            @ApiResponse(responseCode = "201", description = "IP linked to hostmeta",
                     content = {@Content(mediaType = "application/json",
-                            schema = @Schema(implementation = IPAddress.class))}),
-            @ApiResponse(responseCode = "400", description = "IP address is being used OR IP address does not exist",
+                            schema = @Schema(implementation = InterfaceType.class))}),
+            @ApiResponse(responseCode = "400", description = "IP OR hostmeta does not exist",
+                    content = @Content),
+            @ApiResponse(responseCode = "500", description = "Internal server error, contact admin", content = @Content)})
+    public ResponseEntity<String> createIpLink(@PathVariable("ipId") int ipId, @PathVariable("Id") int id) {
+        LOGGER.info("About to insert <[{}]>", ipId);
+        try {
+            IPAddress it = hostMetaMapper.createLinkIp(ipId,id);
+            LOGGER.debug("Values returned <[{}]>", it);
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("id", ipId);
+            jsonObject.put("message", "IP linked to hostMeta");
+            return new ResponseEntity<>(jsonObject.toString(), HttpStatus.CREATED);
+        } catch (RuntimeException ex) {
+            JSONObject jsonErr = new JSONObject();
+            jsonErr.put("id", ipId);
+            jsonErr.put("message", ex.getCause().getMessage());
+            final Throwable cause = ex.getCause();
+            if (cause instanceof SQLException) {
+                LOGGER.error((cause).getMessage());
+                String state = ((SQLException) cause).getSQLState();
+                if (state.equals("45000")) {
+                    jsonErr.put("message", "Record does not exist");
+                    return new ResponseEntity<>(jsonErr.toString(), HttpStatus.NOT_FOUND);
+                }
+            }
+            return new ResponseEntity<>(jsonErr.toString(), HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @RequestMapping(path = "/meta/{id}", method = RequestMethod.GET, produces = "application/json")
+    @Operation(summary = "Fetch host meta by id")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Host meta retrieved",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = HostMeta.class))}),
+            @ApiResponse(responseCode = "400", description = "Host meta does not exist",
+                    content = @Content),
+            @ApiResponse(responseCode = "500", description = "Internal server error, contact admin", content = @Content)})
+    public ResponseEntity<?> getMeta(@PathVariable("id") int id, @RequestParam(required = false) Integer version) {
+        try {
+            HostMeta hm = hostMetaMapper.getMeta(id, version);
+            return new ResponseEntity<>(hm, HttpStatus.OK);
+        } catch (RuntimeException ex) {
+            JSONObject jsonErr = new JSONObject();
+            jsonErr.put("id", id);
+            jsonErr.put("message", ex.getCause().getMessage());
+            final Throwable cause = ex.getCause();
+            if (cause instanceof SQLException) {
+                LOGGER.error((cause).getMessage());
+                String state = ((SQLException) cause).getSQLState();
+                if (state.equals("45000")) {
+                    jsonErr.put("message", "Record does not exist");
+                    return new ResponseEntity<>(jsonErr.toString(), HttpStatus.NOT_FOUND);
+                }
+            }
+            return new ResponseEntity<>(jsonErr.toString(), HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @RequestMapping(path = "/meta/interface/{id}", method = RequestMethod.GET, produces = "application/json")
+    @Operation(summary = "Fetch interfaces linked to hostmeta", description = "Will return empty list if there are no interface types to fetch")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Interface types fetched",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = InterfaceType.class))})
+    })
+    public ResponseEntity<?> getMetaInterfaces(@PathVariable("id")int id,@RequestParam(required = false) Integer version) {
+        try {
+            List<InterfaceType> hm = hostMetaMapper.getInterface(id, version);
+            return new ResponseEntity<>(hm, HttpStatus.OK);
+        } catch (RuntimeException ex) {
+            JSONObject jsonErr = new JSONObject();
+            jsonErr.put("id", id);
+            jsonErr.put("message", ex.getCause().getMessage());
+            final Throwable cause = ex.getCause();
+            if (cause instanceof SQLException) {
+                LOGGER.error((cause).getMessage());
+                String state = ((SQLException) cause).getSQLState();
+                if (state.equals("45000")) {
+                    jsonErr.put("message", "Record does not exist");
+                    return new ResponseEntity<>(jsonErr.toString(), HttpStatus.NOT_FOUND);
+                }
+            }
+            return new ResponseEntity<>(jsonErr.toString(), HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @RequestMapping(path = "/meta/ipAddress/{id}", method = RequestMethod.GET, produces = "application/json")
+    @Operation(summary = "Fetch ip addresses linked to hostmeta", description = "Will return empty list if there are no ip addresses to fetch")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Ip addresses fetched",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = IPAddress.class))})
+    })
+    public ResponseEntity<?> getMetaIpAddresses(@PathVariable("id")int id,@RequestParam(required = false) Integer version) {
+        try {
+            List<IPAddress> hm = hostMetaMapper.getIp(id, version);
+            return new ResponseEntity<>(hm, HttpStatus.OK);
+        } catch (RuntimeException ex) {
+            JSONObject jsonErr = new JSONObject();
+            jsonErr.put("id", id);
+            jsonErr.put("message", ex.getCause().getMessage());
+            final Throwable cause = ex.getCause();
+            if (cause instanceof SQLException) {
+                LOGGER.error((cause).getMessage());
+                String state = ((SQLException) cause).getSQLState();
+                if (state.equals("45000")) {
+                    jsonErr.put("message", "Record does not exist");
+                    return new ResponseEntity<>(jsonErr.toString(), HttpStatus.NOT_FOUND);
+                }
+            }
+            return new ResponseEntity<>(jsonErr.toString(), HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @RequestMapping(path = "/meta", method = RequestMethod.GET, produces = "application/json")
+    @Operation(summary = "Fetch all host metas", description = "Will return empty list if there are no host metas to fetch")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Successfully retrieved",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = HostMeta.class))})})
+    public List<HostMeta> getAllMeta(@RequestParam(required = false) Integer version) {
+        return hostMetaMapper.getAllMeta(version);
+    }
+
+    @RequestMapping(path = "/meta/interface", method = RequestMethod.GET, produces = "application/json")
+    @Operation(summary = "Fetch all interfaces", description = "Will return empty list if there are no interfaces to fetch")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Successfully retrieved",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = InterfaceType.class))})})
+    public List<InterfaceType> getAllInterfaces(@RequestParam(required = false) Integer version) {
+        return hostMetaMapper.getAllInterfaces(version);
+    }
+
+    @RequestMapping(path = "/meta/ip", method = RequestMethod.GET, produces = "application/json")
+    @Operation(summary = "Fetch all ip addresses", description = "Will return empty list if there are no ip addresses to fetch")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Successfully retrieved",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = IPAddress.class))})})
+    public List<IPAddress> getAllIpAddresses(@RequestParam(required = false) Integer version) {
+        return hostMetaMapper.getAllIps(version);
+    }
+
+    @RequestMapping(path = "/meta/{id}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @Operation(summary = "Delete host meta")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Host meta deleted",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = HostMeta.class))}),
+            @ApiResponse(responseCode = "400", description = "Host meta is being used OR Host meta does not exist",
                     content = @Content),
             @ApiResponse(responseCode = "500", description = "Internal server error, contact admin", content = @Content)
     })
-    public ResponseEntity<String> removeIp(@PathVariable("id") int id) {
-        LOGGER.info("Deleting Host <[{}]>",id);
-        JSONObject jsonErr = new JSONObject();
-        jsonErr.put("id", id);
+    public ResponseEntity<String> deleteMeta(@PathVariable("id") int id) {
+        LOGGER.info("Deleting Hostmeta <[{}]>", id);
         try {
-            hostMetaMapper.deleteIp(id);
+            hostMetaMapper.delete(id);
             JSONObject j = new JSONObject();
             j.put("id", id);
-            j.put("message", "Ip with id =  " + id + " deleted.");
+            j.put("message", "Hostmeta deleted");
             return new ResponseEntity<>(j.toString(), HttpStatus.OK);
-        } catch (Exception ex) {
+        } catch (RuntimeException ex) {
+            JSONObject jsonErr = new JSONObject();
+            jsonErr.put("id", id);
+            jsonErr.put("message", ex.getCause().getMessage());
             final Throwable cause = ex.getCause();
             if (cause instanceof SQLException) {
                 LOGGER.error((cause).getMessage());
                 String state = ((SQLException) cause).getSQLState();
                 if (state.equals("23000")) {
                     jsonErr.put("message", "Is in use");
+                    return new ResponseEntity<>(jsonErr.toString(), HttpStatus.BAD_REQUEST);
                 } else if (state.equals("45000")) {
                     jsonErr.put("message", "Record does not exist");
+                    return new ResponseEntity<>(jsonErr.toString(), HttpStatus.NOT_FOUND);
                 }
-                return new ResponseEntity<>(jsonErr.toString(), HttpStatus.BAD_REQUEST);
             }
-            return new ResponseEntity<>("Unexpected error", HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(jsonErr.toString(), HttpStatus.BAD_REQUEST);
         }
     }
 
-    // Delete Interface
+    @RequestMapping(path = "/meta/{id}/{hostMetaId}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @Operation(summary = "Delete interface from host meta")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Interface deleted from host meta",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = InterfaceType.class))}),
+            @ApiResponse(responseCode = "400", description = "Interface does not exist",
+                    content = @Content),
+            @ApiResponse(responseCode = "500", description = "Internal server error, contact admin", content = @Content)})
+    public ResponseEntity<String> deleteLinkInterface(@PathVariable("id") int id,@PathVariable("hostMetaId") int hostMetaId) {
+        LOGGER.info("Deleting interface link <[{}]>", id);
+        try {
+            hostMetaMapper.deleteLinkInterface(id,hostMetaId);
+            JSONObject j = new JSONObject();
+            j.put("id", id);
+            j.put("message", "Interface link deleted");
+            return new ResponseEntity<>(j.toString(), HttpStatus.OK);
+        } catch (RuntimeException ex) {
+            JSONObject jsonErr = new JSONObject();
+            jsonErr.put("id", id);
+            jsonErr.put("message", ex.getCause().getMessage());
+            final Throwable cause = ex.getCause();
+            if (cause instanceof SQLException) {
+                LOGGER.error((cause).getMessage());
+                String state = ((SQLException) cause).getSQLState();
+                if (state.equals("23000")) {
+                    jsonErr.put("message", "Is in use");
+                    return new ResponseEntity<>(jsonErr.toString(), HttpStatus.BAD_REQUEST);
+                } else if (state.equals("45000")) {
+                    jsonErr.put("message", "Record does not exist");
+                    return new ResponseEntity<>(jsonErr.toString(), HttpStatus.NOT_FOUND);
+                }
+            }
+            return new ResponseEntity<>(jsonErr.toString(), HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @RequestMapping(path = "/meta/{id}/{hostMetaId}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @Operation(summary = "Delete ip address from host meta")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Ip address deleted from host meta",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = IPAddress.class))}),
+            @ApiResponse(responseCode = "400", description = "Ip address does not exist",
+                    content = @Content),
+            @ApiResponse(responseCode = "500", description = "Internal server error, contact admin", content = @Content)})
+    public ResponseEntity<String> deleteLinkIp(@PathVariable("id") int id,@PathVariable("hostMetaId") int hostMetaId) {
+        LOGGER.info("Deleting ip link <[{}]>", id);
+        try {
+            hostMetaMapper.deleteLinkIp(id,hostMetaId);
+            JSONObject j = new JSONObject();
+            j.put("id", id);
+            j.put("message", "Ip link deleted");
+            return new ResponseEntity<>(j.toString(), HttpStatus.OK);
+        } catch (RuntimeException ex) {
+            JSONObject jsonErr = new JSONObject();
+            jsonErr.put("id", id);
+            jsonErr.put("message", ex.getCause().getMessage());
+            final Throwable cause = ex.getCause();
+            if (cause instanceof SQLException) {
+                LOGGER.error((cause).getMessage());
+                String state = ((SQLException) cause).getSQLState();
+                if (state.equals("23000")) {
+                    jsonErr.put("message", "Is in use");
+                    return new ResponseEntity<>(jsonErr.toString(), HttpStatus.BAD_REQUEST);
+                } else if (state.equals("45000")) {
+                    jsonErr.put("message", "Record does not exist");
+                    return new ResponseEntity<>(jsonErr.toString(), HttpStatus.NOT_FOUND);
+                }
+            }
+            return new ResponseEntity<>(jsonErr.toString(), HttpStatus.BAD_REQUEST);
+        }
+    }
+
     @RequestMapping(path = "/meta/interface/{id}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
     @Operation(summary = "Delete interface type")
     @ApiResponses(value = {
@@ -303,67 +474,74 @@ public class HostMetaController {
                     content = @Content),
             @ApiResponse(responseCode = "500", description = "Internal server error, contact admin", content = @Content)
     })
-    public ResponseEntity<String> removeInterface(@PathVariable("id") int id) {
-        LOGGER.info("Deleting Interface <[{}]>",id);
-        JSONObject jsonErr = new JSONObject();
-        jsonErr.put("id", id);
+    public ResponseEntity<String> deleteInterface(@PathVariable("id") int id) {
+        LOGGER.info("Deleting Interface <[{}]>", id);
+
         try {
             hostMetaMapper.deleteInterface(id);
             JSONObject j = new JSONObject();
             j.put("id", id);
-            j.put("message", "Interface with id =  " + id + " deleted.");
+            j.put("message", "Interface deleted");
             return new ResponseEntity<>(j.toString(), HttpStatus.OK);
-        } catch (Exception ex) {
+        } catch (RuntimeException ex) {
+            JSONObject jsonErr = new JSONObject();
+            jsonErr.put("id", id);
+            jsonErr.put("message", ex.getCause().getMessage());
             final Throwable cause = ex.getCause();
             if (cause instanceof SQLException) {
                 LOGGER.error((cause).getMessage());
                 String state = ((SQLException) cause).getSQLState();
                 if (state.equals("23000")) {
                     jsonErr.put("message", "Is in use");
+                    return new ResponseEntity<>(jsonErr.toString(), HttpStatus.NOT_FOUND);
                 } else if (state.equals("45000")) {
                     jsonErr.put("message", "Record does not exist");
+                    return new ResponseEntity<>(jsonErr.toString(), HttpStatus.BAD_REQUEST);
                 }
-                return new ResponseEntity<>(jsonErr.toString(), HttpStatus.BAD_REQUEST);
             }
-            return new ResponseEntity<>("Unexpected error", HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(jsonErr.toString(), HttpStatus.BAD_REQUEST);
         }
     }
 
-    // Delete HostMeta
-    @RequestMapping(path = "/meta/{id}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
-    @Operation(summary = "Delete host meta")
+    @RequestMapping(path = "/meta/ip/{id}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @Operation(summary = "Delete IP address")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Host meta deleted",
+            @ApiResponse(responseCode = "200", description = "IP address deleted",
                     content = {@Content(mediaType = "application/json",
-                            schema = @Schema(implementation = InterfaceType.class))}),
-            @ApiResponse(responseCode = "400", description = "Host meta is being used OR Host meta does not exist",
+                            schema = @Schema(implementation = IPAddress.class))}),
+            @ApiResponse(responseCode = "400", description = "IP address is being used OR IP address does not exist",
                     content = @Content),
             @ApiResponse(responseCode = "500", description = "Internal server error, contact admin", content = @Content)
     })
-    public ResponseEntity<String> removeHostMeta(@PathVariable("id") int id) {
-        LOGGER.info("Deleting Hostmeta <[{}]>",id);
-        JSONObject jsonErr = new JSONObject();
-        jsonErr.put("id", id);
-        jsonErr.put("message", "Unexpected error occurred");
+    public ResponseEntity<String> deleteIp(@PathVariable("id") int id) {
+        LOGGER.info("Deleting Host <[{}]>", id);
         try {
-            hostMetaMapper.deleteHostmeta(id);
+            hostMetaMapper.deleteIp(id);
             JSONObject j = new JSONObject();
             j.put("id", id);
-            j.put("message", "Hostmeta with id =  " + id + " deleted.");
+            j.put("message", "Ip deleted");
             return new ResponseEntity<>(j.toString(), HttpStatus.OK);
-        } catch (Exception ex) {
+        } catch (RuntimeException ex) {
+            JSONObject jsonErr = new JSONObject();
+            jsonErr.put("id", id);
+            jsonErr.put("message", ex.getCause().getMessage());
             final Throwable cause = ex.getCause();
             if (cause instanceof SQLException) {
                 LOGGER.error((cause).getMessage());
                 String state = ((SQLException) cause).getSQLState();
                 if (state.equals("23000")) {
                     jsonErr.put("message", "Is in use");
+                    return new ResponseEntity<>(jsonErr.toString(), HttpStatus.NOT_FOUND);
                 } else if (state.equals("45000")) {
                     jsonErr.put("message", "Record does not exist");
+                    return new ResponseEntity<>(jsonErr.toString(), HttpStatus.BAD_REQUEST);
                 }
-                return new ResponseEntity<>(jsonErr.toString(), HttpStatus.BAD_REQUEST);
             }
-            return new ResponseEntity<>("Unexpected error", HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(jsonErr.toString(), HttpStatus.BAD_REQUEST);
         }
     }
+
+
 }
+
+

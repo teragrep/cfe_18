@@ -46,35 +46,48 @@
 package com.teragrep.cfe18.handlers.entities;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import io.swagger.v3.oas.annotations.media.Schema;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class InterfaceType {
 
+    @Schema(accessMode = Schema.AccessMode.READ_ONLY)
+    private int id;
+
     private String interfaceType;
 
-    private int host_meta_id;
+    private int hostMetaId;
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
 
     public String getInterfaceType() {
         return interfaceType;
     }
 
-    public void setInterfaceType(String interface_type) {
-        this.interfaceType = interface_type;
+    public void setInterfaceType(String interfaceType) {
+        this.interfaceType = interfaceType;
     }
 
-    public int getHost_meta_id() {
-        return host_meta_id;
+    public int getHostMetaId() {
+        return hostMetaId;
     }
 
-    public void setHost_meta_id(int host_meta_id) {
-        this.host_meta_id = host_meta_id;
+    public void setHostMetaId(int hostMetaId) {
+        this.hostMetaId = hostMetaId;
     }
 
     @Override
     public String toString() {
-        return "Interface_Type{" +
-                "interface_type='" + interfaceType + '\'' +
-                ", host_meta_id=" + host_meta_id +
+        return "InterfaceType{" +
+                "id=" + id +
+                ", interfaceType='" + interfaceType + '\'' +
+                ", hostMetaId=" + hostMetaId +
                 '}';
     }
 }

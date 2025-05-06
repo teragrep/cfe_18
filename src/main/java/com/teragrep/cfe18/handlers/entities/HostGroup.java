@@ -50,41 +50,48 @@ import io.swagger.v3.oas.annotations.media.Schema;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class HostGroup {
-    public enum group_type {
+    public enum groupType {
         cfe, relp
     }
-
-    private int host_id;
-    private String host_group_name;
-    @Schema(accessMode = Schema.AccessMode.READ_ONLY)
-    private group_type host_group_type;
-    @Schema(accessMode = Schema.AccessMode.READ_ONLY)
-    private String md5;
     @Schema(accessMode = Schema.AccessMode.READ_ONLY)
     private int id;
+    private String hostGroupName;
+    @Schema(accessMode = Schema.AccessMode.READ_ONLY)
+    private groupType hostGroupType;
+    private int hostId;
+    @Schema(accessMode = Schema.AccessMode.READ_ONLY)
+    private String md5;
 
-    public int getHost_id() {
-        return host_id;
+    public int getId() {
+        return id;
     }
 
-    public void setHost_id(int host_id) {
-        this.host_id = host_id;
+    public void setId(int id) {
+        this.id = id;
     }
 
-    public String getHost_group_name() {
-        return host_group_name;
+    public String getHostGroupName() {
+        return hostGroupName;
     }
 
-    public void setHost_group_name(String host_group_name) {
-        this.host_group_name = host_group_name;
+    public void setHostGroupName(String hostGroupName) {
+        this.hostGroupName = hostGroupName;
     }
 
-    public group_type getHost_group_type() {
-        return host_group_type;
+    public groupType getHostGroupType() {
+        return hostGroupType;
     }
 
-    public void setHost_group_type(group_type host_group_type) {
-        this.host_group_type = host_group_type;
+    public void setHostGroupType(groupType hostGroupType) {
+        this.hostGroupType = hostGroupType;
+    }
+
+    public int getHostId() {
+        return hostId;
+    }
+
+    public void setHostId(int hostId) {
+        this.hostId = hostId;
     }
 
     public String getMd5() {
@@ -95,22 +102,14 @@ public class HostGroup {
         this.md5 = md5;
     }
 
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
     @Override
     public String toString() {
         return "HostGroup{" +
-                "host_id=" + host_id +
-                ", host_group_name='" + host_group_name + '\'' +
-                ", host_group_type=" + host_group_type +
+                "id=" + id +
+                ", hostGroupName='" + hostGroupName + '\'' +
+                ", hostGroupType=" + hostGroupType +
+                ", hostId=" + hostId +
                 ", md5='" + md5 + '\'' +
-                ", id=" + id +
                 '}';
     }
 }

@@ -62,10 +62,8 @@ BEGIN
     START TRANSACTION;
 
     IF ((SELECT COUNT(id) FROM cfe_18.file_processing_type WHERE id = file_processing_id) = 0) THEN
-        SELECT JSON_OBJECT('id', NULL, 'message', 'Processing type does not exist') INTO @pt;
+        SELECT JSON_OBJECT('id', file_processing_id, 'message', 'Processing type does not exist') INTO @pt;
         SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = @pt;
-    ELSE
-        SELECT id INTO @Processing_id FROM cfe_18.file_processing_type WHERE id = file_processing_id;
     END IF;
 
     -- Check if tag_path matches with tag
@@ -160,13 +158,13 @@ BEGIN
          FROM capture_meta_file cmf
          WHERE capturePath = capture_path
            AND (tagPath = tag_path OR (tag_path IS NULL AND tagPath IS NULL))
-           AND processing_type_id = @Processing_id) = 0) THEN
+           AND processing_type_id = file_processing_id) = 0) THEN
         -- insert new one
         INSERT INTO cfe_18.capture_type(capture_type)
         VALUES ('cfe');
         SELECT LAST_INSERT_ID() INTO @CaptureTypeId;
         INSERT INTO cfe_18.capture_meta_file(id, capturePath, tagPath, processing_type_id, capture_type)
-        VALUES (@CaptureTypeId, capture_path, tag_path, @Processing_id, 'cfe');
+        VALUES (@CaptureTypeId, capture_path, tag_path, file_processing_id, 'cfe');
     ELSE
         -- if exists then select capture_meta_file ID for later
         SELECT cmf.id
@@ -174,7 +172,7 @@ BEGIN
         FROM capture_meta_file cmf
         WHERE capturePath = capture_path
           AND (tagPath = tag_path OR (tag_path IS NULL AND tagPath IS NULL))
-          AND processing_type_id = @Processing_id;
+          AND processing_type_id = file_processing_id;
     END IF;
 
     -- check if capture exists with current values

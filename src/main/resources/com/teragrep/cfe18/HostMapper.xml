@@ -5,20 +5,20 @@
 <mapper namespace="com.teragrep.cfe18.HostMapper">
 
     <!-- Insert host  ( proc_MD5 VARCHAR(32), proc_fqhost VARCHAR(128), proc_hub_fq VARCHAR(128) )  -->
-    <select id="create" resultMap="insertedID" statementType="CALLABLE">
+    <select id="createCfe" resultMap="insertedID" statementType="CALLABLE">
         {CALL
         location.insert_cfe_host(#{param1},#{param2},#{param3})}
     </select>
 
     <!-- Insert relp  ( proc_MD5 VARCHAR(32), proc_fqhost VARCHAR(128) ) -->
-    <select id="create" resultMap="insertedID" statementType="CALLABLE">
+    <select id="createRelp" resultMap="insertedID" statementType="CALLABLE">
         {CALL
         location.insert_relp_host(#{param1},#{param2})}
     </select>
 
 
     <!-- get    ( proc_host_id INT, tx_id INT ) -->
-    <select id="get" resultMap="getCfe" statementType="CALLABLE">
+    <select id="getCfe" resultMap="getCfe" statementType="CALLABLE">
         {CALL cfe_00.select_cfe_host(#{param1},#{param2})}
     </select>
     <resultMap id="getCfe" type="com.teragrep.cfe18.handlers.entities.HostCfe">
@@ -32,7 +32,7 @@
     </resultMap>
 
     <!-- get    ( proc_host_id INT, tx_id INT ) -->
-    <select id="get" resultMap="getRelp" statementType="CALLABLE">
+    <select id="getRelp" resultMap="getRelp" statementType="CALLABLE">
         {CALL cfe_00.select_relp_host(#{param1},#{param2})}
     </select>
     <resultMap id="getRelp" type="com.teragrep.cfe18.handlers.entities.HostRelp">
@@ -45,7 +45,7 @@
 
 
     <!-- GET ALL Cfe  ( tx_id INT ) -->
-    <select id="getAll" resultMap="allCfe" statementType="CALLABLE">
+    <select id="getAllCfe" resultMap="allCfe" statementType="CALLABLE">
         {CALL location.select_all_cfe_hosts(#{param1})}
     </select>
     <resultMap id="allCfe" type="com.teragrep.cfe18.handlers.entities.HostCfe">
@@ -59,7 +59,7 @@
     </resultMap>
 
     <!-- GET ALL Relp  ( tx_id INT ) -->
-    <select id="getAll" resultMap="allRelp" statementType="CALLABLE">
+    <select id="getAllRelp" resultMap="allRelp" statementType="CALLABLE">
         {CALL location.select_all_relp_hosts(#{param1})}
     </select>
     <resultMap id="allRelp" type="com.teragrep.cfe18.handlers.entities.HostRelp">
@@ -71,14 +71,14 @@
     </resultMap>
 
 
-    <!-- Delete Relp  ( proc_host_id INT ) -->
-    <select id="deleteRelp" statementType="CALLABLE">
-        {CALL location.delete_relp_host(#{param1})}
-    </select>
-
     <!-- Delete Cfe  ( proc_host_id INT ) -->
     <select id="deleteCfe" statementType="CALLABLE">
         {CALL location.delete_cfe_host(#{param1})}
+    </select>
+
+    <!-- Delete Relp  ( proc_host_id INT ) -->
+    <select id="deleteRelp" statementType="CALLABLE">
+        {CALL location.delete_relp_host(#{param1})}
     </select>
 
 

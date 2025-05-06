@@ -46,6 +46,7 @@
 package com.teragrep.cfe18.handlers;
 
 import com.teragrep.cfe18.CaptureMapper;
+import com.teragrep.cfe18.handlers.entities.CaptureDefinition;
 import com.teragrep.cfe18.handlers.entities.CaptureFile;
 import com.teragrep.cfe18.handlers.entities.CaptureRelp;
 import io.swagger.v3.oas.annotations.Operation;
@@ -54,20 +55,24 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import org.apache.ibatis.exceptions.IbatisException;
 import org.json.JSONObject;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.TransientDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.jdbc.BadSqlGrammarException;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.*;
 
 import javax.sql.DataSource;
 import java.sql.SQLException;
+import java.sql.SQLTransientConnectionException;
 import java.util.List;
 
 @RestController
@@ -91,96 +96,6 @@ public class CaptureController {
         return String.format("Hello, %s!", jwt.getSubject());
     }
 
-    @RequestMapping(path = "/file/{id}", method = RequestMethod.GET, produces = "application/json")
-    @Operation(summary = "Fetch a file capture by its id")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Found the file capture",
-                    content = {@Content(mediaType = "application/json",
-                            schema = @Schema(implementation = CaptureFile.class))}),
-            @ApiResponse(responseCode = "400", description = "Invalid capture id or capture type",
-                    content = @Content),
-            @ApiResponse(responseCode = "500", description = "Internal server error, contact admin", content = @Content)
-    })
-    public ResponseEntity<?> getResultsFile(@PathVariable("id") int id, @RequestParam(required = false) Integer version) {
-        try {
-            CaptureFile c = captureMapper.getCaptureFileById(id,version);
-            if (c.getCaptureType() == CaptureFile.CaptureType.cfe) {
-                return new ResponseEntity<>(c, HttpStatus.OK);
-            } else {
-                throw new Exception("Different capture_type");
-            }
-        } catch (Exception ex) {
-            JSONObject jsonErr = new JSONObject();
-            jsonErr.put("id", id);
-            final Throwable cause = ex.getCause();
-            if (cause instanceof SQLException) {
-                LOGGER.error((cause).getMessage());
-                String state = ((SQLException) cause).getSQLState();
-                if (state.equals("45000")) {
-                    jsonErr.put("message", "Record does not exist with the given capture ID");
-                    return new ResponseEntity<>(jsonErr.toString(), HttpStatus.BAD_REQUEST);
-                }
-            } else if (ex.getMessage().equals("Different capture_type")) {
-                LOGGER.error(ex.getMessage());
-                jsonErr.put("message", "capture exists with different type");
-                return new ResponseEntity<>(jsonErr.toString(), HttpStatus.BAD_REQUEST);
-            }
-        }
-        return new ResponseEntity<>("Unexpected error", HttpStatus.INTERNAL_SERVER_ERROR);
-    }
-
-    @RequestMapping(path = "/relp/{id}", method = RequestMethod.GET, produces = "application/json")
-    @Operation(summary = "Fetch a relp capture by its id")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Found the relp capture",
-                    content = {@Content(mediaType = "application/json",
-                            schema = @Schema(implementation = CaptureRelp.class))}),
-            @ApiResponse(responseCode = "400", description = "Invalid capture id or capture type",
-                    content = @Content),
-            @ApiResponse(responseCode = "500", description = "Internal server error, contact admin", content = @Content)
-    })
-    public ResponseEntity<?> getResultsRelp(@PathVariable("id") int id, @RequestParam(required = false) Integer version) {
-        try {
-            CaptureRelp c = captureMapper.getCaptureRelpById(id,version);
-            if (c.getCaptureType() == CaptureRelp.CaptureType.relp) {
-                return new ResponseEntity<>(c, HttpStatus.OK);
-            } else {
-                throw new Exception("Different capture_type");
-            }
-        } catch (Exception ex) {
-            JSONObject jsonErr = new JSONObject();
-            jsonErr.put("id", id);
-            final Throwable cause = ex.getCause();
-            if (cause instanceof SQLException) {
-                LOGGER.error((cause).getMessage());
-                String state = ((SQLException) cause).getSQLState();
-                if (state.equals("45000")) {
-                    jsonErr.put("message", "Record does not exist with the given capture ID");
-                    return new ResponseEntity<>(jsonErr.toString(), HttpStatus.BAD_REQUEST);
-                }
-
-            } else if (ex.getMessage().equals("Different capture_type")) {
-                LOGGER.error(ex.getMessage());
-                jsonErr.put("message", "capture exists with different type");
-                return new ResponseEntity<>(jsonErr.toString(), HttpStatus.BAD_REQUEST);
-            }
-        }
-        return new ResponseEntity<>("Unexpected error", HttpStatus.INTERNAL_SERVER_ERROR);
-    }
-
-
-    // GET ALL Captures
-    @RequestMapping(path = "/", method = RequestMethod.GET, produces = "application/json")
-    @Operation(summary = "Fetch all captures", description = "Will return empty list if there are no captures to fetch")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Found the relp capture",
-                    content = {@Content(mediaType = "application/json",
-                            schema = @Schema(implementation = CaptureFile.class))}),
-    })
-    public List<CaptureFile> getAllCapture(@RequestParam(required = false) Integer version) {
-        return captureMapper.getAllCapture(version);
-    }
-
 
     @RequestMapping(path = "/file", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
     @Operation(summary = "Create new file based capture")
@@ -188,24 +103,24 @@ public class CaptureController {
             @ApiResponse(responseCode = "201", description = "New file based capture created",
                     content = {@Content(mediaType = "application/json",
                             schema = @Schema(implementation = CaptureFile.class))}),
-            @ApiResponse(responseCode = "400", description = "Missing requirements or mismatch along values",
+            @ApiResponse(responseCode = "400", description = "Wrong details",
                     content = @Content)
     })
-    public ResponseEntity<String> newCaptureFile(@RequestBody CaptureFile newCapture) {
+    public ResponseEntity<String> create(@RequestBody CaptureFile newCapture) {
         LOGGER.info("About to insert <[{}]>",newCapture);
         try {
-            CaptureFile c = captureMapper.addNewCaptureFile(
+            CaptureFile c = captureMapper.createFile(
                     newCapture.getTag(),
-                    newCapture.getRetention_time(),
+                    newCapture.getRetentionTime(),
                     newCapture.getCategory(),
                     newCapture.getApplication(),
                     newCapture.getIndex(),
-                    newCapture.getSource_type(),
+                    newCapture.getSourceType(),
                     newCapture.getProtocol(),
                     newCapture.getFlow(),
-                    newCapture.getTag_path(),
-                    newCapture.getCapture_path(),
-                    newCapture.getProcessing_type_id());
+                    newCapture.getTagPath(),
+                    newCapture.getCapturePath(),
+                    newCapture.getFileProcessingTypeId());
             LOGGER.debug("Values returned <[{}]>",c);
             JSONObject jsonObjectFile = new JSONObject();
             jsonObjectFile.put("id", c.getId());
@@ -227,13 +142,13 @@ public class CaptureController {
             @ApiResponse(responseCode = "201", description = "New relp based capture created",
                     content = {@Content(mediaType = "application/json",
                             schema = @Schema(implementation = CaptureFile.class))}),
-            @ApiResponse(responseCode = "400", description = "Missing requirements",
+            @ApiResponse(responseCode = "400", description = "Wrong details",
                     content = @Content)
     })
-    public ResponseEntity<String> newCaptureRelp(@RequestBody CaptureRelp newCapture) {
+    public ResponseEntity<String> create(@RequestBody CaptureRelp newCapture) {
         LOGGER.info("About to insert <[{}]>",newCapture);
         try {
-            CaptureRelp c = captureMapper.addNewCaptureRelp(
+            CaptureRelp c = captureMapper.createRelp(
                     newCapture.getTag(),
                     newCapture.getRetention_time(),
                     newCapture.getCategory(),
@@ -251,9 +166,97 @@ public class CaptureController {
             JSONObject jsonErr = new JSONObject();
             jsonErr.put("id", newCapture.getId());
             jsonErr.put("message", ex.getCause().toString());
+            LOGGER.error(ex.getMessage());
             return new ResponseEntity<>(jsonErr.toString(), HttpStatus.BAD_REQUEST);
         }
     }
+
+    @RequestMapping(path = "/file/{id}", method = RequestMethod.GET, produces = "application/json")
+    @Operation(summary = "Fetch a file capture by its id")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Found the file capture",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = CaptureFile.class))}),
+            @ApiResponse(responseCode = "404", description = "Capture not found",
+                    content = @Content),
+            @ApiResponse(responseCode = "500", description = "Internal server error, contact admin", content = @Content)
+    })
+    public ResponseEntity<?> getFile(@PathVariable("id") int id, @RequestParam(required = false) Integer version) {
+        try {
+            CaptureFile c = captureMapper.getFile(id,version);
+            return new ResponseEntity<>(c, HttpStatus.OK);
+        } catch (RuntimeException ex) {
+            JSONObject jsonErr = new JSONObject();
+            jsonErr.put("id", id);
+            jsonErr.put("message", ex.getCause().toString());
+            final Throwable cause = ex.getCause();
+            if (cause instanceof SQLException) {
+                LOGGER.error((cause).getMessage());
+                String state = ((SQLException) cause).getSQLState();
+                if (state.equals("45000")) {
+                    jsonErr.put("message", "Record does not exist");
+                    return new ResponseEntity<>(jsonErr.toString(), HttpStatus.NOT_FOUND);
+                }
+            }
+            return new ResponseEntity<>(jsonErr.toString(), HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @RequestMapping(path = "/relp/{id}", method = RequestMethod.GET, produces = "application/json")
+    @Operation(summary = "Fetch a relp capture by its id")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Found the relp capture",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = CaptureRelp.class))}),
+            @ApiResponse(responseCode = "404", description = "Capture not found",
+                    content = @Content),
+            @ApiResponse(responseCode = "500", description = "Internal server error, contact admin", content = @Content)
+    })
+    public ResponseEntity<?> getRelp(@PathVariable("id") int id, @RequestParam(required = false) Integer version) {
+        try {
+            CaptureRelp c = captureMapper.getRelp(id,version);
+            return new ResponseEntity<>(c, HttpStatus.OK);
+        } catch (RuntimeException ex) {
+            JSONObject jsonErr = new JSONObject();
+            jsonErr.put("id", id);
+            jsonErr.put("message", ex.getCause().toString());
+            final Throwable cause = ex.getCause();
+            if (cause instanceof SQLException) {
+                LOGGER.error((cause).getMessage());
+                String state = ((SQLException) cause).getSQLState();
+                if (state.equals("45000")) {
+                    jsonErr.put("message", "Record does not exist");
+                    return new ResponseEntity<>(jsonErr.toString(), HttpStatus.NOT_FOUND);
+                }
+            }
+            return new ResponseEntity<>(jsonErr.toString(), HttpStatus.BAD_REQUEST);
+        }
+    }
+
+
+    @RequestMapping(path = "/file", method = RequestMethod.GET, produces = "application/json")
+    @Operation(summary = "Fetch all file captures", description = "Will return empty list if there are no captures to fetch")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Successfully retrieved",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = CaptureFile.class))}),
+    })
+    public List<CaptureFile> getAllFile(@RequestParam(required = false) Integer version) {
+        return captureMapper.getAllFile(version);
+    }
+
+    @RequestMapping(path = "/relp", method = RequestMethod.GET, produces = "application/json")
+    @Operation(summary = "Fetch all relp captures", description = "Will return empty list if there are no captures to fetch")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Successfully retrieved",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = CaptureRelp.class))}),
+    })
+    public List<CaptureRelp> getAllRelp(@RequestParam(required = false) Integer version) {
+        return captureMapper.getAllRelp(version);
+    }
+
+
 
     // Delete
     @RequestMapping(path = "/{id}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -261,36 +264,37 @@ public class CaptureController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Capture deleted",
                     content = {@Content(mediaType = "application/json",
-                            schema = @Schema(implementation = CaptureRelp.class))}),
+                            schema = @Schema(implementation = CaptureDefinition.class))}),
             @ApiResponse(responseCode = "400", description = "Capture does not exist OR Capture is being used",
                     content = @Content),
             @ApiResponse(responseCode = "500", description = "Internal server error, contact admin", content = @Content)
     })
     public ResponseEntity<String> removeCapture(@PathVariable("id") int id) {
-        LOGGER.info("Deleting capture with id <[{}]>",id);
-        JSONObject jsonErr = new JSONObject();
-        jsonErr.put("id", id);
-        jsonErr.put("message", "Unexpected error occurred");
+        LOGGER.info("Deleting capture with id <[{}]>", id);
+
         try {
             captureMapper.deleteCapture(id);
             JSONObject j = new JSONObject();
             j.put("id", id);
-            j.put("message", "Capture with id = " + id + " deleted.");
+            j.put("message", "Capture deleted.");
             return new ResponseEntity<>(j.toString(), HttpStatus.OK);
-        } catch (Exception ex) {
+        } catch (RuntimeException ex) {
+            JSONObject jsonErr = new JSONObject();
+            jsonErr.put("id", id);
+            jsonErr.put("message", ex.getCause().getMessage());
             final Throwable cause = ex.getCause();
             if (cause instanceof SQLException) {
                 LOGGER.error((cause).getMessage());
                 String state = ((SQLException) cause).getSQLState();
                 if (state.equals("23000")) {
                     jsonErr.put("message", "Is in use");
+                    return new ResponseEntity<>(jsonErr.toString(), HttpStatus.BAD_REQUEST);
                 } else if (state.equals("45000")) {
                     jsonErr.put("message", "Record does not exist");
+                    return new ResponseEntity<>(jsonErr.toString(), HttpStatus.NOT_FOUND);
                 }
-                return new ResponseEntity<>(jsonErr.toString(), HttpStatus.BAD_REQUEST);
             }
-            return new ResponseEntity<>("Unexpected error", HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(jsonErr.toString(), HttpStatus.BAD_REQUEST);
         }
     }
 }
-

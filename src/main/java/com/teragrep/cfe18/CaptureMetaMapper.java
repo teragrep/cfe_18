@@ -64,5 +64,5 @@ public interface CaptureMetaMapper {
 
      CaptureMeta delete(int capture_id);
 
-     List<CaptureDefinition> get(String key, String value, Integer version);
+     List<CaptureDefinition> getKeyValue(String key, String value, Integer version);
 }

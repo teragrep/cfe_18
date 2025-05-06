@@ -53,9 +53,9 @@ import java.util.List;
 @Mapper
 public interface HostGroupMapper {
 
-    HostGroup create(String groupName, String type);
+    HostGroup create(String groupName, HostGroup.groupType type);
 
-    HostGroup create(int hostId, int id);
+    HostGroup createLink(int hostId, int id);
 
     HostGroup get(int id, Integer version);
 
@@ -63,7 +63,7 @@ public interface HostGroupMapper {
 
     List<HostGroup> getAll(Integer version);
 
-    HostGroup delete(int hostId, int id);
+    HostGroup deleteLink(int hostId, int id);
 
     HostGroup delete(int id);
 }

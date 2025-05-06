@@ -55,7 +55,7 @@ import java.util.List;
 @Mapper
 public interface CaptureMapper {
 
-    CaptureFile create(String tag,
+    CaptureFile createFile(String tag,
                         String retention,
                         String category,
                         String application,
@@ -67,7 +67,7 @@ public interface CaptureMapper {
                         String capturePath,
                         int fileProcessingTypeId);
 
-    CaptureRelp create(String tag,
+    CaptureRelp createRelp(String tag,
                         String retention,
                         String category,
                         String application,
@@ -76,11 +76,11 @@ public interface CaptureMapper {
                         String protocol,
                         String flow
     );
-    CaptureFile getCfe(int captureId,Integer version);
+    CaptureFile getFile(int captureId,Integer version);
 
     CaptureRelp getRelp(int captureId,Integer version);
 
-    List<CaptureFile> getAllCfe(Integer version);
+    List<CaptureFile> getAllFile(Integer version);
     List<CaptureRelp> getAllRelp(Integer version);
 
     CaptureDefinition deleteCapture(int captureId);

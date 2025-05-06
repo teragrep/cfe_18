@@ -32,10 +32,10 @@
     </resultMap>
 
     <!-- get            ( flow_id INT, tx_id INT ) -->
-    <select id="getFlowStorage" resultMap="flowStorage" statementType="CALLABLE">
+    <select id="getFlowStorages" resultMap="flowStorages" statementType="CALLABLE">
         {CALL flow.select_flow_storages(#{param1},#{param2})}
     </select>
-    <resultMap id="flowStorage" type="com.teragrep.cfe18.handlers.entities.FlowStorage">
+    <resultMap id="flowStorages" type="com.teragrep.cfe18.handlers.entities.FlowStorage">
         <result property="id"           column="id"/>
         <result property="flow"         column="flow"/>
         <result property="storageId"    column="storage_id"/>
@@ -68,7 +68,7 @@
     <select id="getAllFlow" resultMap="allFlowStorages" statementType="CALLABLE">
         {CALL flow.select_all_flow_storages(#{param1})}
     </select>
-    <resultMap id="allFlowStorage" type="com.teragrep.cfe18.handlers.entities.FlowStorage">
+    <resultMap id="allFlowStorages" type="com.teragrep.cfe18.handlers.entities.FlowStorage">
         <result property="id"           column="id"/>
         <result property="flow"         column="flow"/>
         <result property="storageId"    column="storage_id"/>

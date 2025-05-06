@@ -103,7 +103,7 @@ BEGIN
          FROM cfe_18.capture_def_group_x_capture_def
          WHERE capture_def_id = capture_id
            AND capture_def_group_id = capture_group_id) = 0) THEN
-        SELECT JSON_OBJECT('id', capture_id, 'message', 'Capture does not exist') INTO @c;
+        SELECT JSON_OBJECT('id', capture_id, 'message', 'Capture does not exist OR capture is not linked to group') INTO @c;
         SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = @c;
     END IF;
 

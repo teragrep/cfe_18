@@ -81,7 +81,7 @@
     </resultMap>
 
     <!-- Get ALL                    ( tx_id INT )-->
-    <select id="getAllInterface" resultMap="allInterface" statementType="CALLABLE">
+    <select id="getAllInterfaces" resultMap="allInterface" statementType="CALLABLE">
         {CAll cfe_03.select_all_interfaces(#{param1})}
     </select>
     <resultMap id="allInterface" type="com.teragrep.cfe18.handlers.entities.InterfaceType">
@@ -90,7 +90,7 @@
     </resultMap>
 
     <!-- Get ALL                    ( tx_id INT )-->
-    <select id="getAllIp" resultMap="allIp" statementType="CALLABLE">
+    <select id="getAllIps" resultMap="allIp" statementType="CALLABLE">
         {CAll cfe_03.select_all_ip_addresses(#{param1})}
     </select>
     <resultMap id="allIp" type="com.teragrep.cfe18.handlers.entities.IPAddress">

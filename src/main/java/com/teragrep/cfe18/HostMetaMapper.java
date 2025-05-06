@@ -70,20 +70,17 @@ public interface HostMetaMapper {
 
     IPAddress createLinkIp(int ipAddressId, int hostMetaId);
 
-
     HostMeta getMeta(int hostMetaId, Integer version);
 
     List<InterfaceType> getInterface(int hostMetaId, Integer version);
 
     List<IPAddress> getIp(int hostMetaId, Integer version);
 
-
     List<HostMeta> getAllMeta(Integer version);
 
-    List<InterfaceType> getAllInterface(Integer version);
+    List<InterfaceType> getAllInterfaces(Integer version);
 
-    List<IPAddress> getAllIp(Integer version);
-
+    List<IPAddress> getAllIps(Integer version);
 
     HostMeta delete(int id);
 

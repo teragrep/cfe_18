@@ -59,5 +59,5 @@ public interface HubMapper {
 
     List<Hub> getAll(Integer version);
 
-    Hub deleteHub(int hubId);
+    Hub delete(int hubId);
 }

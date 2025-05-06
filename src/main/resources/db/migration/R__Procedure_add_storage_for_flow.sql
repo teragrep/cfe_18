@@ -54,12 +54,12 @@ BEGIN
         END;
     START TRANSACTION;
 
-    IF ((SELECT COUNT(id) FROM flows f WHERE f.id = p_flow_id)) THEN
+    IF ((SELECT COUNT(id) FROM flows f WHERE f.id = p_flow_id)=0) THEN
         SELECT JSON_OBJECT('id', p_flow_id, 'message', 'Flow does not exist') INTO @fid;
         SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = @fid;
     END IF;
 
-    IF ((SELECT COUNT(id) FROM storages WHERE id = proc_storage_id) = 0) THEN
+    IF ((SELECT COUNT(id) FROM storages s WHERE s.id = proc_storage_id) = 0) THEN
         SELECT JSON_OBJECT('id', proc_storage_id, 'message', 'Storage does not exist') INTO @sid;
         SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = @sid;
     END IF;

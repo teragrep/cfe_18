@@ -50,28 +50,27 @@ import io.swagger.v3.oas.annotations.media.Schema;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class Hub {
-    private int host_id;
+    @Schema(accessMode = Schema.AccessMode.READ_ONLY)
+    private int id;
+    private int hostId;
     private String fqHost;
     private String md5;
     private String ip;
-    @Schema(accessMode = Schema.AccessMode.READ_ONLY)
-    private int hub_id;
 
-
-    public int getHub_id() {
-        return hub_id;
+    public int getId() {
+        return id;
     }
 
-    public void setHub_id(int hub_id) {
-        this.hub_id = hub_id;
+    public void setId(int id) {
+        this.id = id;
     }
 
-    public int getHost_id() {
-        return host_id;
+    public int getHostId() {
+        return hostId;
     }
 
-    public void setHost_id(int host_id) {
-        this.host_id = host_id;
+    public void setHostId(int hostId) {
+        this.hostId = hostId;
     }
 
     public String getFqHost() {
@@ -101,11 +100,11 @@ public class Hub {
     @Override
     public String toString() {
         return "Hub{" +
-                "host_id=" + host_id +
+                "id=" + id +
+                ", hostId=" + hostId +
                 ", fqHost='" + fqHost + '\'' +
                 ", md5='" + md5 + '\'' +
                 ", ip='" + ip + '\'' +
-                ", hub_id=" + hub_id +
                 '}';
     }
 }

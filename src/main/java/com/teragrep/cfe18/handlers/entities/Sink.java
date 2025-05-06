@@ -51,28 +51,28 @@ import io.swagger.v3.oas.annotations.media.Schema;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class Sink {
 
-    private String protocol;
-    private String ip_address;
-    @Schema(maxLength = 5)
-    private String port;
-    private String flow;
     @Schema(accessMode = Schema.AccessMode.READ_ONLY)
     private int id;
+    private String ipAddress;
+    @Schema(maxLength = 5)
+    private String port;
+    private String protocol;
+    private int flowId;
 
-    public String getProtocol() {
-        return protocol;
+    public int getId() {
+        return id;
     }
 
-    public void setProtocol(String protocol) {
-        this.protocol = protocol;
+    public void setId(int id) {
+        this.id = id;
     }
 
-    public String getIp_address() {
-        return ip_address;
+    public String getIpAddress() {
+        return ipAddress;
     }
 
-    public void setIp_address(String ip_address) {
-        this.ip_address = ip_address;
+    public void setIpAddress(String ipAddress) {
+        this.ipAddress = ipAddress;
     }
 
     public String getPort() {
@@ -83,30 +83,30 @@ public class Sink {
         this.port = port;
     }
 
-    public String getFlow() {
-        return flow;
+    public String getProtocol() {
+        return protocol;
     }
 
-    public void setFlow(String flow) {
-        this.flow = flow;
+    public void setProtocol(String protocol) {
+        this.protocol = protocol;
     }
 
-    public int getId() {
-        return id;
+    public int getFlowId() {
+        return flowId;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public void setFlowId(int flowId) {
+        this.flowId = flowId;
     }
 
     @Override
     public String toString() {
         return "Sink{" +
-                "protocol='" + protocol + '\'' +
-                ", ip_address='" + ip_address + '\'' +
+                "id=" + id +
+                ", ipAddress='" + ipAddress + '\'' +
                 ", port='" + port + '\'' +
-                ", flow='" + flow + '\'' +
-                ", id=" + id +
+                ", protocol='" + protocol + '\'' +
+                ", flowId=" + flowId +
                 '}';
     }
 }

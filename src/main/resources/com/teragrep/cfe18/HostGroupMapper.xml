@@ -11,7 +11,7 @@
     </select>
 
     <!-- insert             (  proc_host_id INT, p_host_group_id INT )  -->
-    <select id="create" resultMap="insertedID" statementType="CALLABLE">
+    <select id="createLink" resultMap="insertedID" statementType="CALLABLE">
         {CALL location.insert_host_to_group(#{param1},#{param2})}
     </select>
 
@@ -54,7 +54,7 @@
     </select>
 
     <!-- Delete  ( host_group_id INT ) -->
-    <select id="delete" statementType="CALLABLE">
+    <select id="deleteLink" statementType="CALLABLE">
         {CALL location.delete_host_group(#{param1})}
     </select>
 

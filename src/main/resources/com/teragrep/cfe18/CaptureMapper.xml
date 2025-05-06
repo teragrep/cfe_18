@@ -10,7 +10,7 @@
                                                 app_protoc VARCHAR(64), flow VARCHAR(255),
                                                 tag_path VARCHAR(255), capture_path VARCHAR(255),
                                                 file_processing_id INT) -->
-    <select id="create" resultMap="id" statementType="CALLABLE">
+    <select id="createFile" resultMap="id" statementType="CALLABLE">
         {CALL
         cfe_18.insert_file_capture(#{param1},#{param2},#{param3},#{param4},#{param5},#{param6},#{param7},#{param8},#{param9},#{param10},#{param11})}
     </select>
@@ -19,7 +19,7 @@
                                                 meta_category VARCHAR(48), application VARCHAR(48),
                                                 capture_index VARCHAR(48), source_type VARCHAR(255),
                                                 app_protoc VARCHAR(64), flow VARCHAR(255) ) -->
-    <select id="create" resultMap="id" statementType="CALLABLE">
+    <select id="createRelp" resultMap="id" statementType="CALLABLE">
         {CALL
         cfe_18.insert_relp_capture(#{param1},#{param2},#{param3},#{param4},#{param5},#{param6},#{param7},#{param8})}
     </select>

@@ -49,20 +49,86 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class HostFile {
+public class HostCfe {
+
     @Schema(accessMode = Schema.AccessMode.READ_ONLY)
     private int id;
     private String md5;
     private String fqHost;
     @Schema(accessMode = Schema.AccessMode.READ_ONLY)
-    private String hostType;
-    @Schema(accessMode = Schema.AccessMode.READ_ONLY)
     private int hubId;
     @Schema(accessMode = Schema.AccessMode.READ_ONLY)
-    private String hostname;
+    private String hostName;
     @Schema(accessMode = Schema.AccessMode.READ_ONLY)
     private int hostMetaId;
     private String hubFq;
 
+    public int getId() {
+        return id;
+    }
 
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getMd5() {
+        return md5;
+    }
+
+    public void setMd5(String md5) {
+        this.md5 = md5;
+    }
+
+    public String getFqHost() {
+        return fqHost;
+    }
+
+    public void setFqHost(String fqHost) {
+        this.fqHost = fqHost;
+    }
+
+    public int getHubId() {
+        return hubId;
+    }
+
+    public void setHubId(int hubId) {
+        this.hubId = hubId;
+    }
+
+    public String getHostName() {
+        return hostName;
+    }
+
+    public void setHostName(String hostName) {
+        this.hostName = hostName;
+    }
+
+    public int getHostMetaId() {
+        return hostMetaId;
+    }
+
+    public void setHostMetaId(int hostMetaId) {
+        this.hostMetaId = hostMetaId;
+    }
+
+    public String getHubFq() {
+        return hubFq;
+    }
+
+    public void setHubFq(String hubFq) {
+        this.hubFq = hubFq;
+    }
+
+    @Override
+    public String toString() {
+        return "HostCfe{" +
+                "id=" + id +
+                ", md5='" + md5 + '\'' +
+                ", fqHost='" + fqHost + '\'' +
+                ", hubId=" + hubId +
+                ", hostName='" + hostName + '\'' +
+                ", hostMetaId=" + hostMetaId +
+                ", hubFq='" + hubFq + '\'' +
+                '}';
+    }
 }

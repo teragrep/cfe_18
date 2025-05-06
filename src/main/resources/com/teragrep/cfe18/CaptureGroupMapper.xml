@@ -7,32 +7,30 @@
 
     <!-- Insert group               ( group_name VARCHAR(255), type VARCHAR(255) )-->
     <select id="create" resultMap="insertedID" statementType="CALLABLE">
-        {CALL
-        cfe_18.insert_capture_group(#{param1},#{param2})}
+        {CALL cfe_18.insert_capture_group(#{param1},#{param2})}
     </select>
 
     <!-- Link capture to group      ( capture_id INT, capture_group_id INT )-->
-    <select id="create" resultMap="insertedID" statementType="CALLABLE">
-        {CALL
-        cfe_18.insert_capture_to_group(#{param1},#{param2})}
+    <select id="createLink" resultMap="insertedID" statementType="CALLABLE">
+        {CALL cfe_18.insert_capture_to_group(#{param1},#{param2})}
     </select>
 
 
     <!-- get group                  ( capture_group_id INT, tx_id INT ) -->
-    <select id="get" resultMap="captureGroupByName" statementType="CALLABLE">
+    <select id="get" resultMap="group" statementType="CALLABLE">
         {CALL cfe_18.select_capture_group(#{param1},#{param2})}
     </select>
-    <resultMap type="com.teragrep.cfe18.handlers.entities.CaptureGroup" id="captureGroupByName">
+    <resultMap id="group" type="com.teragrep.cfe18.handlers.entities.CaptureGroup">
         <result property="id"                       column="id"/>
         <result property="captureGroupName"         column="group_name"/>
         <result property="captureGroupType"         column="capture_type"/>
     </resultMap>
 
     <!-- get captures in group      ( capture_group_id INT, tx_id INT ) -->
-    <select id="getCaptures" resultMap="captureGroupByName" statementType="CALLABLE">
+    <select id="getCaptures" resultMap="capture" statementType="CALLABLE">
         {CALL cfe_18.select_captures_in_group(#{param1},#{param2})}
     </select>
-    <resultMap type="com.teragrep.cfe18.handlers.entities.CaptureGroup" id="captureGroupByName">
+    <resultMap id="capture" type="com.teragrep.cfe18.handlers.entities.CaptureGroup">
         <result property="captureDefinitionId"      column="capture_definition_id"/>
     </resultMap>
 
@@ -56,7 +54,7 @@
     </select>
 
     <!-- Delete capture from group ( capture_id INT, capture_group_id INT ) -->
-    <select id="delete" statementType="CALLABLE">
+    <select id="deleteCapture" statementType="CALLABLE">
         {CALL cfe_18.delete_capture_from_group(#{param1},#{param2})}
     </select>
 
