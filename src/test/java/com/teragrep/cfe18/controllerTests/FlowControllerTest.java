@@ -218,9 +218,9 @@ public class FlowControllerTest extends TestSpringBootInformation {
         // insert sink
 
         Sink sink = new Sink();
-        sink.setFlow("Testflow");
+        sink.setFlowId(1);
         sink.setPort("601");
-        sink.setIp_address("ip1");
+        sink.setIpAddress("ip1");
         sink.setProtocol("tls");
 
         String json = gson.toJson(sink);

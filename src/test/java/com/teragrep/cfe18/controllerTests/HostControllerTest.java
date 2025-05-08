@@ -46,7 +46,6 @@
 package com.teragrep.cfe18.controllerTests;
 
 import com.google.gson.Gson;
-import com.teragrep.cfe18.handlers.HostController;
 import com.teragrep.cfe18.handlers.entities.*;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -137,7 +136,6 @@ public class HostControllerTest extends TestSpringBootInformation {
         relpHost.setId(1);
         relpHost.setMd5("relpHostmd5");
         relpHost.setFqHost("relpHostfq");
-        relpHost.setHostType("relp");
         String json = gson.toJson(relpHost);
 
         // Asserting get request
@@ -185,10 +183,10 @@ public class HostControllerTest extends TestSpringBootInformation {
         HttpClientBuilder.create().build().execute(request1);
 
 
-        HostFile host = new HostFile();
-        host.setMD5("randommd5value");
+        HostCfe host = new HostCfe();
+        host.setMd5("randommd5value");
         host.setFqHost("hostFq");
-        host.setHub_fq("hubfq");
+        host.setHubFq("hubfq");
 
         String json = gson.toJson(host);
 
@@ -243,9 +241,9 @@ public class HostControllerTest extends TestSpringBootInformation {
         hostmeta.setArch("arch1");
         hostmeta.setFlavor("flavor1");
         hostmeta.setHostname("hostname1");
-        hostmeta.setHost_id(3);
+        hostmeta.setHostId(3);
         hostmeta.setOs("linux");
-        hostmeta.setRelease_version("release_version1");
+        hostmeta.setReleaseVersion("release_version1");
 
         String json = gson.toJson(hostmeta);
 
@@ -294,7 +292,7 @@ public class HostControllerTest extends TestSpringBootInformation {
     public void testInsertIp() throws Exception {
         IPAddress ip = new IPAddress();
         ip.setIpAddress("ip1");
-        ip.setHost_meta_id(1);
+        ip.setHostMetaId(1);
 
         String json = gson.toJson(ip);
 
@@ -342,7 +340,7 @@ public class HostControllerTest extends TestSpringBootInformation {
     public void testInsertInterface() throws Exception {
         InterfaceType interfaceType = new InterfaceType();
         interfaceType.setInterfaceType("interface1");
-        interfaceType.setHost_meta_id(1);
+        interfaceType.setHostMetaId(1);
 
         String json = gson.toJson(interfaceType);
 
@@ -391,7 +389,7 @@ public class HostControllerTest extends TestSpringBootInformation {
 
         ArrayList<IPAddress> expected = new ArrayList<>();
         IPAddress ip = new IPAddress();
-        ip.setHost_meta_id(1);
+        ip.setHostMetaId(1);
         ip.setIpAddress("ip1");
 
         expected.add(ip);
@@ -418,7 +416,7 @@ public class HostControllerTest extends TestSpringBootInformation {
     public void testGetInterface() throws Exception {
         ArrayList<InterfaceType> expected = new ArrayList<>();
         InterfaceType interfaceType = new InterfaceType();
-        interfaceType.setHost_meta_id(1);
+        interfaceType.setHostMetaId(1);
         interfaceType.setInterfaceType("interface1");
 
         expected.add(interfaceType);
@@ -449,11 +447,11 @@ public class HostControllerTest extends TestSpringBootInformation {
         HostMeta hostMeta = new HostMeta();
         hostMeta.setId(1);
         hostMeta.setArch("arch1");
-        hostMeta.setRelease_version("release_version1");
+        hostMeta.setReleaseVersion("release_version1");
         hostMeta.setFlavor("flavor1");
         hostMeta.setOs("linux");
         hostMeta.setHostname("hostname1");
-        hostMeta.setHost_id(3);
+        hostMeta.setHostId(3);
 
         expected.add(hostMeta);
         String json = gson.toJson(expected);
@@ -480,15 +478,14 @@ public class HostControllerTest extends TestSpringBootInformation {
     @Order(10)
     public void testGetCfeHost() throws Exception {
 
-        HostFile host = new HostFile();
+        HostCfe host = new HostCfe();
         host.setId(3);
-        host.setMD5("randommd5value");
+        host.setMd5("randommd5value");
         host.setFqHost("hostFq");
-        host.setHost_type("cfe");
-        host.setHub(1);
-        host.setHostname("hostname1");
-        host.setHost_meta_id(1);
-        host.setHub_fq("hubfq");
+        host.setHubId(1);
+        host.setHostName("hostname1");
+        host.setHostMetaId(1);
+        host.setHubFq("hubfq");
 
         String json = gson.toJson(host);
 
@@ -514,33 +511,30 @@ public class HostControllerTest extends TestSpringBootInformation {
     public void testGetAllHosts() throws Exception {
 
 
-        ArrayList<HostFile> expectedListFile = new ArrayList<>();
+        ArrayList<HostCfe> expectedListFile = new ArrayList<>();
 
-        HostFile host = new HostFile();
+        HostCfe host = new HostCfe();
         host.setId(3);
-        host.setMD5("randommd5value");
+        host.setMd5("randommd5value");
         host.setFqHost("hostFq");
-        host.setHost_type("cfe");
-        host.setHub(1);
-        host.setHostname("hostname1");
-        host.setHost_meta_id(1);
-        host.setHub_fq("hubfq");
+        host.setHubId(1);
+        host.setHostName("hostname1");
+        host.setHostMetaId(1);
+        host.setHubFq("hubfq");
 
 
-        HostFile relpHost = new HostFile();
+        HostCfe relpHost = new HostCfe();
         relpHost.setId(1);
-        relpHost.setMD5("relpHostmd5");
+        relpHost.setMd5("relpHostmd5");
         relpHost.setFqHost("relpHostfq");
-        relpHost.setHost_type("relp");
 
 
-        HostFile hub1 = new HostFile();
+        HostCfe hub1 = new HostCfe();
         hub1.setId(2);
         hub1.setFqHost("hubfq");
-        hub1.setMD5("hubmd5");
-        hub1.setHost_type("cfe");
-        hub1.setHub(1);
-        hub1.setHub_fq("hubfq");
+        hub1.setMd5("hubmd5");
+        hub1.setHubId(1);
+        hub1.setHubFq("hubfq");
 
         expectedListFile.add(host);
         expectedListFile.add(hub1);

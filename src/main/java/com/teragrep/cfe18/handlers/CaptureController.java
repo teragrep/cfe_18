@@ -150,11 +150,11 @@ public class CaptureController {
         try {
             CaptureRelp c = captureMapper.createRelp(
                     newCapture.getTag(),
-                    newCapture.getRetention_time(),
+                    newCapture.getRetentionTime(),
                     newCapture.getCategory(),
                     newCapture.getApplication(),
                     newCapture.getIndex(),
-                    newCapture.getSource_type(),
+                    newCapture.getSourceType(),
                     newCapture.getProtocol(),
                     newCapture.getFlow());
             LOGGER.debug("Values returned <[{}]>",c);

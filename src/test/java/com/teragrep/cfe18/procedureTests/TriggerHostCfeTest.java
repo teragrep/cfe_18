@@ -58,9 +58,9 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 
-public class TriggerHostFileTest extends DBUnitbase {
+public class TriggerHostCfeTest extends DBUnitbase {
 
-    public TriggerHostFileTest(String name) {
+    public TriggerHostCfeTest(String name) {
         super(name);
 
     }

@@ -86,8 +86,8 @@ public class StorageControllerTest extends TestSpringBootInformation {
     public void testInsertStorage() throws Exception {
 
         Storage storage = new Storage();
-        storage.setCfe_type(Storage.Cfe_type.cfe_04);
-        storage.setTarget_name("cfe_04");
+        storage.setCfeType(Storage.CfeType.cfe_04);
+        storage.setStorageName("cfe_04");
 
         String json = gson.toJson(storage);
 
@@ -135,8 +135,8 @@ public class StorageControllerTest extends TestSpringBootInformation {
         ArrayList<Storage> expected = new ArrayList<>();
 
         Storage storage = new Storage();
-        storage.setTarget_name("cfe_04");
-        storage.setCfe_type(Storage.Cfe_type.cfe_04);
+        storage.setStorageName("cfe_04");
+        storage.setCfeType(Storage.CfeType.cfe_04);
         storage.setId(1);
 
         expected.add(storage);
@@ -185,8 +185,8 @@ public class StorageControllerTest extends TestSpringBootInformation {
 
 
         FlowStorage flowStorage = new FlowStorage();
-        flowStorage.setFlow("Testflow");
-        flowStorage.setStorage_id(1);
+        flowStorage.setFlowId(1);
+        flowStorage.setStorageId(1);
 
         String jsonStorage = gson.toJson(flowStorage);
 
@@ -235,10 +235,10 @@ public class StorageControllerTest extends TestSpringBootInformation {
 
         FlowStorage flowStorage = new FlowStorage();
         flowStorage.setId(1);
-        flowStorage.setFlow("Testflow");
-        flowStorage.setStorage_name("cfe_04");
-        flowStorage.setStorage_type("cfe_04");
-        flowStorage.setStorage_id(1);
+        flowStorage.setFlowId(1);
+        flowStorage.setStorageName("cfe_04");
+        flowStorage.setStorageType("cfe_04");
+        flowStorage.setStorageId(1);
 
         expected.add(flowStorage);
 
@@ -267,10 +267,10 @@ public class StorageControllerTest extends TestSpringBootInformation {
 
         FlowStorage flowStorage = new FlowStorage();
         flowStorage.setId(1);
-        flowStorage.setFlow("Testflow");
-        flowStorage.setStorage_name("cfe_04");
-        flowStorage.setStorage_type("cfe_04");
-        flowStorage.setStorage_id(1);
+        flowStorage.setFlowId(1);
+        flowStorage.setStorageName("cfe_04");
+        flowStorage.setStorageType("cfe_04");
+        flowStorage.setStorageId(1);
 
         expected.add(flowStorage);
 
@@ -298,9 +298,9 @@ public class StorageControllerTest extends TestSpringBootInformation {
         // insert sink
 
         Sink sink = new Sink();
-        sink.setFlow("Testflow");
+        sink.setFlowId(1);
         sink.setPort("cap");
-        sink.setIp_address("capsink");
+        sink.setIpAddress("capsink");
         sink.setProtocol("prot");
 
         String json1 = gson.toJson(sink);
@@ -324,11 +324,11 @@ public class StorageControllerTest extends TestSpringBootInformation {
         // add relp type capture with the same flow
         CaptureRelp captureRelp = new CaptureRelp();
         captureRelp.setTag("relpTag");
-        captureRelp.setRetention_time("P30D");
+        captureRelp.setRetentionTime("P30D");
         captureRelp.setCategory("audit");
         captureRelp.setApplication("relp");
         captureRelp.setIndex("audit_relp");
-        captureRelp.setSource_type("relpsource1");
+        captureRelp.setSourceType("relpsource1");
         captureRelp.setProtocol("prot");
         captureRelp.setFlow("Testflow");
 
@@ -354,8 +354,8 @@ public class StorageControllerTest extends TestSpringBootInformation {
 
 
         CaptureStorage captureStorage = new CaptureStorage();
-        captureStorage.setCapture_id(1);
-        captureStorage.setStorage_id(1);
+        captureStorage.setCaptureId(1);
+        captureStorage.setStorageId(1);
 
         String jsonStorage = gson.toJson(captureStorage);
 
@@ -403,9 +403,9 @@ public class StorageControllerTest extends TestSpringBootInformation {
     public void testRetrieveCaptureStorage() throws Exception {
         ArrayList<CaptureStorage> expected = new ArrayList<>();
         CaptureStorage captureStorage = new CaptureStorage();
-        captureStorage.setStorage_name("cfe_04");
-        captureStorage.setStorage_id(1);
-        captureStorage.setCapture_id(1);
+        captureStorage.setStorageName("cfe_04");
+        captureStorage.setStorageId(1);
+        captureStorage.setCaptureId(1);
 
         expected.add(captureStorage);
         String expectedJson = new Gson().toJson(expected);
@@ -430,9 +430,9 @@ public class StorageControllerTest extends TestSpringBootInformation {
     public void testRetrieveCaptureStorages() throws Exception {
         ArrayList<CaptureStorage> expected = new ArrayList<>();
         CaptureStorage captureStorage = new CaptureStorage();
-        captureStorage.setStorage_name("cfe_04");
-        captureStorage.setStorage_id(1);
-        captureStorage.setCapture_id(1);
+        captureStorage.setStorageName("cfe_04");
+        captureStorage.setStorageId(1);
+        captureStorage.setCaptureId(1);
 
         expected.add(captureStorage);
         String expectedJson = new Gson().toJson(expected);

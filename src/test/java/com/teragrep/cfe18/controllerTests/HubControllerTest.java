@@ -46,7 +46,7 @@
 package com.teragrep.cfe18.controllerTests;
 
 import com.google.gson.Gson;
-import com.teragrep.cfe18.handlers.entities.HostFile;
+import com.teragrep.cfe18.handlers.entities.HostCfe;
 import com.teragrep.cfe18.handlers.entities.Hub;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -136,7 +136,7 @@ public class HubControllerTest extends TestSpringBootInformation {
     public void testGetHub() throws Exception {
 
         Hub hub2 = new Hub();
-        hub2.setHost_id(123456);
+        hub2.setHostId(123456);
         hub2.setFqHost("hubfq");
         hub2.setMd5("hubmd5");
         hub2.setIp("hubip");
@@ -162,11 +162,11 @@ public class HubControllerTest extends TestSpringBootInformation {
         Gson gson2 = new Gson();
 
         Hub hub = new Hub();
-        hub.setHost_id(1);
+        hub.setHostId(1);
         hub.setFqHost("hubfq");
         hub.setMd5("hubmd5");
         hub.setIp("hubip");
-        hub.setHub_id(1);
+        hub.setId(1);
 
         String json = gson2.toJson(hub);
 
@@ -190,7 +190,7 @@ public class HubControllerTest extends TestSpringBootInformation {
     public void testGetAllHubs() throws Exception {
         // send one hub
         Hub hub1 = new Hub();
-        hub1.setHost_id(123456);
+        hub1.setHostId(123456);
         hub1.setFqHost("hubfq");
         hub1.setMd5("hubmd5");
         hub1.setIp("hubip");
@@ -214,7 +214,7 @@ public class HubControllerTest extends TestSpringBootInformation {
 
         // send another hub
         Hub hub2 = new Hub();
-        hub2.setHost_id(123);
+        hub2.setHostId(123);
         hub2.setFqHost("hubfq2");
         hub2.setMd5("hubmd52");
         hub2.setIp("hubip2");
@@ -242,18 +242,18 @@ public class HubControllerTest extends TestSpringBootInformation {
         ArrayList<Hub> expected = new ArrayList<>();
 
         Hub hubexpected1 = new Hub();
-        hubexpected1.setHost_id(1);
+        hubexpected1.setHostId(1);
         hubexpected1.setFqHost("hubfq");
         hubexpected1.setMd5("hubmd5");
         hubexpected1.setIp("hubip");
-        hubexpected1.setHub_id(1);
+        hubexpected1.setId(1);
 
         Hub hubexpected2 = new Hub();
-        hubexpected2.setHost_id(2);
+        hubexpected2.setHostId(2);
         hubexpected2.setFqHost("hubfq2");
         hubexpected2.setMd5("hubmd52");
         hubexpected2.setIp("hubip2");
-        hubexpected2.setHub_id(2);
+        hubexpected2.setId(2);
 
         expected.add(hubexpected1);
         expected.add(hubexpected2);
@@ -282,11 +282,11 @@ public class HubControllerTest extends TestSpringBootInformation {
     @Order(4)
     public void testDeleteHubInUse() throws Exception {
         // add host to hub
-        HostFile host = new HostFile();
+        HostCfe host = new HostCfe();
         host.setId(321);
-        host.setMD5("randommd5value");
+        host.setMd5("randommd5value");
         host.setFqHost("hostFq");
-        host.setHub_fq("hubfq");
+        host.setHubFq("hubfq");
 
         String json = gson.toJson(host);
 

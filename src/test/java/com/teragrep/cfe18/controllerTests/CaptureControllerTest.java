@@ -136,9 +136,9 @@ public class CaptureControllerTest extends TestSpringBootInformation {
         // insert sink
 
         Sink sink = new Sink();
-        sink.setFlow("capflow");
+        sink.setFlowId(1);
         sink.setPort("cap");
-        sink.setIp_address("capsink");
+        sink.setIpAddress("capsink");
         sink.setProtocol("prot");
 
         String json1 = gson.toJson(sink);
@@ -163,16 +163,16 @@ public class CaptureControllerTest extends TestSpringBootInformation {
         CaptureFile captureFile = new CaptureFile();
         captureFile.setId(1);
         captureFile.setTag("f466e5a4-tagpath1");
-        captureFile.setRetention_time("P30D");
+        captureFile.setRetentionTime("P30D");
         captureFile.setCategory("audit");
         captureFile.setApplication("app1");
         captureFile.setIndex("app1_audit");
-        captureFile.setSource_type("sourcetype1");
+        captureFile.setSourceType("sourcetype1");
         captureFile.setProtocol("prot");
         captureFile.setFlow("capflow");
-        captureFile.setTag_path("tagpath1");
-        captureFile.setCapture_path("capturepath1");
-        captureFile.setProcessing_type_id(1);
+        captureFile.setTagPath("tagpath1");
+        captureFile.setCapturePath("capturepath1");
+        captureFile.setFileProcessingTypeId(1);
 
         String jsonFile = gson.toJson(captureFile);
 
@@ -220,11 +220,11 @@ public class CaptureControllerTest extends TestSpringBootInformation {
     public void testInsertRelpCapture() throws Exception {
         CaptureRelp captureRelp = new CaptureRelp();
         captureRelp.setTag("relpTag");
-        captureRelp.setRetention_time("P30D");
+        captureRelp.setRetentionTime("P30D");
         captureRelp.setCategory("audit");
         captureRelp.setApplication("relp");
         captureRelp.setIndex("audit_relp");
-        captureRelp.setSource_type("relpsource1");
+        captureRelp.setSourceType("relpsource1");
         captureRelp.setProtocol("prot");
         captureRelp.setFlow("capFlow");
 
@@ -272,19 +272,16 @@ public class CaptureControllerTest extends TestSpringBootInformation {
     @Test
     @Order(3)
     public void testGetRelpCapture() throws Exception {
-
-
         CaptureRelp captureRelp2 = new CaptureRelp();
         captureRelp2.setId(2);
         captureRelp2.setTag("relpTag");
-        captureRelp2.setRetention_time("P30D");
+        captureRelp2.setRetentionTime("P30D");
         captureRelp2.setCategory("audit");
         captureRelp2.setApplication("relp");
         captureRelp2.setIndex("audit_relp");
-        captureRelp2.setSource_type("relpsource1");
+        captureRelp2.setSourceType("relpsource1");
         captureRelp2.setProtocol("prot");
         captureRelp2.setFlow("capflow");
-        captureRelp2.setCaptureType(CaptureRelp.CaptureType.relp);
 
         String json = gson.toJson(captureRelp2);
 
@@ -310,17 +307,17 @@ public class CaptureControllerTest extends TestSpringBootInformation {
         CaptureFile captureFile = new CaptureFile();
         captureFile.setId(1);
         captureFile.setTag("f466e5a4-tagpath1");
-        captureFile.setRetention_time("P30D");
+        captureFile.setRetentionTime("P30D");
         captureFile.setCategory("audit");
         captureFile.setApplication("app1");
         captureFile.setIndex("app1_audit");
-        captureFile.setSource_type("sourcetype1");
+        captureFile.setSourceType("sourcetype1");
         captureFile.setProtocol("prot");
         captureFile.setFlow("capflow");
-        captureFile.setTag_path("tagpath1");
-        captureFile.setCapture_path("capturepath1");
-        captureFile.setProcessing_type_id(1);
-        captureFile.setCaptureType(CaptureFile.CaptureType.cfe);
+        captureFile.setTagPath("tagpath1");
+        captureFile.setCapturePath("capturepath1");
+        captureFile.setFileProcessingTypeId(1);
+        captureFile.setType(CaptureFile.CaptureType.cfe);
 
         String json = gson.toJson(captureFile);
 
@@ -351,29 +348,29 @@ public class CaptureControllerTest extends TestSpringBootInformation {
         CaptureFile captureFile2 = new CaptureFile();
         captureFile2.setId(1);
         captureFile2.setTag("f466e5a4-tagpath1");
-        captureFile2.setRetention_time("P30D");
+        captureFile2.setRetentionTime("P30D");
         captureFile2.setCategory("audit");
         captureFile2.setApplication("app1");
         captureFile2.setIndex("app1_audit");
-        captureFile2.setSource_type("sourcetype1");
+        captureFile2.setSourceType("sourcetype1");
         captureFile2.setProtocol("prot");
         captureFile2.setFlow("capflow");
-        captureFile2.setTag_path("tagpath1");
-        captureFile2.setCapture_path("capturepath1");
-        captureFile2.setProcessing_type_id(1);
-        captureFile2.setCaptureType(CaptureFile.CaptureType.cfe);
+        captureFile2.setTagPath("tagpath1");
+        captureFile2.setCapturePath("capturepath1");
+        captureFile2.setFileProcessingTypeId(1);
+        captureFile2.setType(CaptureFile.CaptureType.cfe);
 
         CaptureFile captureRelp2 = new CaptureFile();
         captureRelp2.setId(2);
         captureRelp2.setTag("relpTag");
-        captureRelp2.setRetention_time("P30D");
+        captureRelp2.setRetentionTime("P30D");
         captureRelp2.setCategory("audit");
         captureRelp2.setApplication("relp");
         captureRelp2.setIndex("audit_relp");
-        captureRelp2.setSource_type("relpsource1");
+        captureRelp2.setSourceType("relpsource1");
         captureRelp2.setProtocol("prot");
         captureRelp2.setFlow("capflow");
-        captureRelp2.setCaptureType(CaptureFile.CaptureType.relp);
+        captureRelp2.setType(CaptureFile.CaptureType.relp);
 
         expected.add(captureFile2);
         expected.add(captureRelp2);

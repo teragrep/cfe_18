@@ -71,17 +71,6 @@ BEGIN
         INSERT INTO location.host(MD5, fqhost, host_type)
         VALUES (proc_MD5, proc_fqhost, 'relp');
         SELECT LAST_INSERT_ID() AS id;
-
-    END IF;
-
-    IF (SELECT id
-        FROM location.host
-        WHERE MD5 = proc_MD5
-          AND fqhost = proc_fqhost
-          AND host_type = 'relp') THEN
-        INSERT INTO location.host(MD5, fqhost, host_type)
-        VALUES (proc_MD5, proc_fqhost, 'relp');
-        SELECT LAST_INSERT_ID() AS id;
     ELSE
         SELECT id AS id FROM location.host WHERE MD5 = proc_MD5 AND fqhost = proc_fqhost AND host_type = 'relp';
     END IF;

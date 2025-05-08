@@ -100,8 +100,6 @@
                                             capture_type="cfe"/>
     <cfe_18.capture_def_group_x_capture_def id="12" capture_def_id="8" capture_def_group_id="6" tag_id="8"
                                             capture_type="cfe"/>
-    <cfe_18.capture_def_group_x_capture_def id="21" capture_def_id="1" capture_def_group_id="21" tag_id="1"
-                                            capture_type="cfe"/>
     <location.host id="1" fqhost="1" MD5="12365" host_type="cfe"/>
     <location.host id="2" fqhost="12" MD5="12322" host_type="cfe"/>
     <location.host id="3" fqhost="13" MD5="1323" host_type="cfe"/>

@@ -45,7 +45,7 @@
  */
 USE cfe_18;
 DELIMITER //
-CREATE OR REPLACE PROCEDURE select_all_linkages(tx_id INT)
+CREATE OR REPLACE PROCEDURE select_linkage(linkage_id INT, tx_id INT)
 BEGIN
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
         BEGIN
@@ -63,7 +63,8 @@ BEGIN
     SELECT hgxcdg.id               AS id,
            hgxcdg.host_group_id    AS host_group_id,
            hgxcdg.capture_group_id AS capture_group_id
-    FROM host_groups_x_capture_def_group FOR SYSTEM_TIME AS OF TRANSACTION @time hgxcdg;
+    FROM host_groups_x_capture_def_group FOR SYSTEM_TIME AS OF TRANSACTION @time hgxcdg
+    WHERE hgxcdg.id = linkage_id;
     COMMIT;
 END;
 //

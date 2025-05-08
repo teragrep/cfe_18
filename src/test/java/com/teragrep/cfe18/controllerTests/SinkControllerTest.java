@@ -108,9 +108,9 @@ public class SinkControllerTest extends TestSpringBootInformation {
         // insert sink
 
         Sink sink = new Sink();
-        sink.setFlow("flow1");
+        sink.setFlowId(1);
         sink.setPort("601");
-        sink.setIp_address("ip1");
+        sink.setIpAddress("ip1");
         sink.setProtocol("prot1");
 
         String json = gson.toJson(sink);
@@ -160,9 +160,9 @@ public class SinkControllerTest extends TestSpringBootInformation {
 
         // create expected Sink to match
         Sink sink = new Sink();
-        sink.setFlow("flow1");
+        sink.setFlowId(1);
         sink.setPort("601");
-        sink.setIp_address("ip1");
+        sink.setIpAddress("ip1");
         sink.setProtocol("prot1");
 
         String json = gson.toJson(sink);
@@ -191,9 +191,9 @@ public class SinkControllerTest extends TestSpringBootInformation {
         // insert sink another sink
 
         Sink sink = new Sink();
-        sink.setFlow("flow1");
+        sink.setFlowId(1);
         sink.setPort("601");
-        sink.setIp_address("IPaddress2");
+        sink.setIpAddress("IPaddress2");
         sink.setProtocol("tcp/ip");
         sink.setId(2);
 
@@ -216,9 +216,9 @@ public class SinkControllerTest extends TestSpringBootInformation {
 
         // adding the earlier sink to expected list
         Sink sink2 = new Sink();
-        sink2.setFlow("flow1");
+        sink2.setFlowId(1);
         sink2.setPort("601");
-        sink2.setIp_address("ip1");
+        sink2.setIpAddress("ip1");
         sink2.setProtocol("prot1");
         sink2.setId(1);
 
@@ -301,11 +301,11 @@ public class SinkControllerTest extends TestSpringBootInformation {
     public void testSinkInUse() throws Exception {
         CaptureRelp captureRelp = new CaptureRelp();
         captureRelp.setTag("relpTag");
-        captureRelp.setRetention_time("P30D");
+        captureRelp.setRetentionTime("P30D");
         captureRelp.setCategory("audit");
         captureRelp.setApplication("relp");
         captureRelp.setIndex("audit_relp");
-        captureRelp.setSource_type("relpsource1");
+        captureRelp.setSourceType("relpsource1");
         captureRelp.setProtocol("tcp/ip");
         captureRelp.setFlow("flow1");
 

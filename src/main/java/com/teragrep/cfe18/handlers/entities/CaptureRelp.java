@@ -99,28 +99,20 @@ public class CaptureRelp {
         this.index = index;
     }
 
-    public String getRetention_time() {
+    public String getRetentionTime() {
         return retentionTime;
     }
 
-    public void setRetention_time(String retention_time) {
-        this.retentionTime = retention_time;
+    public void setRetentionTime(String retentionTime) {
+        this.retentionTime = retentionTime;
     }
 
-    public String getSource_type() {
+    public String getSourceType() {
         return sourceType;
     }
 
-    public void setSource_type(String source_type) {
-        this.sourceType = source_type;
-    }
-
-    public String getProtocol() {
-        return protocol;
-    }
-
-    public void setProtocol(String protocol) {
-        this.protocol = protocol;
+    public void setSourceType(String sourceType) {
+        this.sourceType = sourceType;
     }
 
     public String getCategory() {
@@ -139,12 +131,20 @@ public class CaptureRelp {
         this.flow = flow;
     }
 
-    public CaptureType getCaptureType() {
+    public String getProtocol() {
+        return protocol;
+    }
+
+    public void setProtocol(String protocol) {
+        this.protocol = protocol;
+    }
+
+    public CaptureType getType() {
         return type;
     }
 
-    public void setCaptureType(CaptureType captureType) {
-        this.type = captureType;
+    public void setType(CaptureType type) {
+        this.type = type;
     }
 
     @Override
@@ -152,14 +152,14 @@ public class CaptureRelp {
         return "CaptureRelp{" +
                 "id=" + id +
                 ", tag='" + tag + '\'' +
-                ", retention_time='" + retentionTime + '\'' +
-                ", category='" + category + '\'' +
                 ", application='" + application + '\'' +
                 ", index='" + index + '\'' +
-                ", source_type='" + sourceType + '\'' +
-                ", protocol='" + protocol + '\'' +
+                ", retentionTime='" + retentionTime + '\'' +
+                ", sourceType='" + sourceType + '\'' +
+                ", category='" + category + '\'' +
                 ", flow='" + flow + '\'' +
-                ", captureType=" + type +
+                ", protocol='" + protocol + '\'' +
+                ", type=" + type +
                 '}';
     }
 }

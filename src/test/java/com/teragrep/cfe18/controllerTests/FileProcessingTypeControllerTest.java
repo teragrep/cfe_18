@@ -347,9 +347,9 @@ public class FileProcessingTypeControllerTest extends TestSpringBootInformation 
         // insert sink
 
         Sink sink = new Sink();
-        sink.setFlow("capflow");
+        sink.setFlowId(1);
         sink.setPort("cap");
-        sink.setIp_address("capsink");
+        sink.setIpAddress("capsink");
         sink.setProtocol("prot");
 
         String json1 = gson.toJson(sink);
@@ -372,16 +372,16 @@ public class FileProcessingTypeControllerTest extends TestSpringBootInformation 
         CaptureFile captureFile = new CaptureFile();
         captureFile.setId(1);
         captureFile.setTag("f466e5a4-tagpath1");
-        captureFile.setRetention_time("P30D");
+        captureFile.setRetentionTime("P30D");
         captureFile.setCategory("audit");
         captureFile.setApplication("app1");
         captureFile.setIndex("app1_audit");
-        captureFile.setSource_type("sourcetype1");
+        captureFile.setSourceType("sourcetype1");
         captureFile.setProtocol("prot");
         captureFile.setFlow("capflow");
-        captureFile.setTag_path("tagpath1");
-        captureFile.setCapture_path("capturepath1");
-        captureFile.setProcessing_type_id(1);
+        captureFile.setTagPath("tagpath1");
+        captureFile.setCapturePath("capturepath1");
+        captureFile.setFileProcessingTypeId(1);
 
         String jsonFile = gson.toJson(captureFile);
 

@@ -71,7 +71,7 @@ BEGIN
            AND flow_id = (SELECT flow_id FROM cfe_18.capture_definition c WHERE c.id = capture_id)
            AND flow_target_id = storage_id) = 0) THEN
         INSERT INTO cfe_18.capture_def_x_flow_targets(capture_def_id, flow_id, flow_target_id)
-        VALUES (capture_id, @FlowId, storage_id);
+        VALUES (capture_id, (SELECT flow_id FROM cfe_18.capture_definition c WHERE c.id = capture_id), storage_id);
         SELECT capture_id AS id;
     ELSE
         SELECT capture_def_id AS id

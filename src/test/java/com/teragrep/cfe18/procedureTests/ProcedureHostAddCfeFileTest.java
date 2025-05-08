@@ -75,7 +75,7 @@ public class ProcedureHostAddCfeFileTest extends DBUnitbase {
      */
     public void testProcedureCfeHostNoHub() throws Exception {
         SQLException state = Assertions.assertThrows(SQLException.class, () -> {
-            CallableStatement stmnt = conn.prepareCall("{CALL location.host_add_cfe(?,?,?)}");
+            CallableStatement stmnt = conn.prepareCall("{CALL location.insert_cfe_host(?,?,?)}");
             stmnt.setString(1, "someMd5Test");
             stmnt.setString(2, "someFullyQualifiedHost");
             stmnt.setString(3, "someFullyQualifiedHostForHub");
@@ -96,7 +96,7 @@ public class ProcedureHostAddCfeFileTest extends DBUnitbase {
         IDataSet expectedDataSet = new FlatXmlDataSetBuilder().build(new File("src/test/resources/XMLProcedureHost/procedureHostExpectedTestData1.xml"));
         ITable expectedTable = expectedDataSet.getTable("cfe_00.host_type_cfe");
 
-        CallableStatement stmnt = conn.prepareCall("{call location.host_add_cfe_hub(?, ?, ?)}");
+        CallableStatement stmnt = conn.prepareCall("{call location.insert_cfe_hub(?, ?, ?)}");
         stmnt.setString(1, "hosit1");
         stmnt.setString(2, "Md5jokaeiosu");
         stmnt.setString(3, "jokuip");
@@ -118,7 +118,7 @@ public class ProcedureHostAddCfeFileTest extends DBUnitbase {
         ITable expectedTable = expectedDataSet.getTable("location.host");
 
 
-        CallableStatement stmnt = conn.prepareCall("{call location.host_add_cfe( ?, ?, ?)}");
+        CallableStatement stmnt = conn.prepareCall("{call location.insert_cfe_host( ?, ?, ?)}");
         stmnt.setString(1, "51232445674");
         stmnt.setString(2, "534209325");
         stmnt.setString(3, "1");
@@ -132,29 +132,30 @@ public class ProcedureHostAddCfeFileTest extends DBUnitbase {
 
     /*
     This test is retrieving relp based host
-*/
+    */
     public void testProcedureRetrieveRelpHost() throws Exception {
-        CallableStatement stmnt = conn.prepareCall("{CALL cfe_00.retrieve_host_details(?,?)}");
+        CallableStatement stmnt = conn.prepareCall("{CALL cfe_00.select_relp_host(?,?)}");
         stmnt.setInt(1, 25);
         stmnt.setString(2, null);
         ResultSet rs = stmnt.executeQuery();
         rs.next();
-        Assertions.assertEquals(25, rs.getInt("host_id"));
-        Assertions.assertEquals("relpmd5", rs.getString("md5"));
-        Assertions.assertEquals("relpfqhost", rs.getString("fqhost"));
-        Assertions.assertEquals("relp", rs.getString("host_type"));
+        Assertions.assertEquals(25, rs.getInt("id"));
+        Assertions.assertEquals("relpmd5", rs.getString("host_md5"));
+        Assertions.assertEquals("relpfqhost", rs.getString("host_fq"));
+        Assertions.assertEquals("host3", rs.getString("host_name"));
+        Assertions.assertEquals(25, rs.getInt("host_meta_id"));
     }
 
     /*
     This test is retrieving cfe hub
 */
     public void testProcedureRetrieveHub() throws Exception {
-        CallableStatement stmnt = conn.prepareCall("{CALL location.retrieve_cfe_hub_details(?,?)}");
+        CallableStatement stmnt = conn.prepareCall("{CALL location.select_cfe_hub(?,?)}");
         stmnt.setInt(1, 1);
         stmnt.setString(2, null);
         ResultSet rs = stmnt.executeQuery();
         rs.next();
-        Assertions.assertEquals(1, rs.getInt("hub_id"));
+        Assertions.assertEquals(1, rs.getInt("id"));
         Assertions.assertEquals(1, rs.getInt("host_id"));
         Assertions.assertEquals("1", rs.getString("hub_fq_host"));
         Assertions.assertEquals("ip?", rs.getString("ip"));
@@ -169,7 +170,7 @@ public class ProcedureHostAddCfeFileTest extends DBUnitbase {
         IDataSet expectedDataSet = new FlatXmlDataSetBuilder().build(new File("src/test/resources/XMLProcedureHost/procedureHostExpectedTestData3.xml"));
         ITable expectedTable = expectedDataSet.getTable("location.host");
 
-        CallableStatement stmnt = conn.prepareCall("{call location.host_add_relp(?, ?)}");
+        CallableStatement stmnt = conn.prepareCall("{call location.insert_relp_host(?, ?)}");
         stmnt.setString(1, "ReliantMD5");
         stmnt.setString(2, "ReliantFqHost");
         stmnt.execute();
@@ -181,18 +182,6 @@ public class ProcedureHostAddCfeFileTest extends DBUnitbase {
     }
 
 
-    /*
-    This test is for trying to retrieve cfe based host without hostmeta included. Results in error state 42000 "insert host meta data first"
-     */
-    public void testProcedureRetrieveHostWithoutMeta() throws Exception {
-        SQLException state = Assertions.assertThrows(SQLException.class, () -> {
-            CallableStatement stmnt = conn.prepareCall("{CALL location.retrieve_host_details(?,?)}");
-            stmnt.setInt(1, 1);
-            stmnt.setString(2, null);
-            stmnt.execute();
-        });
-        Assertions.assertEquals("42000", state.getSQLState());
-    }
 }
 
 

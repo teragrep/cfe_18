@@ -108,9 +108,9 @@ public class GXGControllerTest extends TestSpringBootInformation {
         // insert sink
 
         Sink sink = new Sink();
-        sink.setFlow("testflow1");
+        sink.setFlowId(1);
         sink.setPort("601");
-        sink.setIp_address("ip1");
+        sink.setIpAddress("ip1");
         sink.setProtocol("prot");
 
         String json = gson.toJson(sink);
@@ -134,11 +134,11 @@ public class GXGControllerTest extends TestSpringBootInformation {
 
         CaptureRelp captureRelp = new CaptureRelp();
         captureRelp.setTag("relpTag");
-        captureRelp.setRetention_time("P30D");
+        captureRelp.setRetentionTime("P30D");
         captureRelp.setCategory("audit");
         captureRelp.setApplication("relp");
         captureRelp.setIndex("audit_relp");
-        captureRelp.setSource_type("relpsource1");
+        captureRelp.setSourceType("relpsource1");
         captureRelp.setProtocol("prot");
         captureRelp.setFlow("testflow1");
 
@@ -161,8 +161,8 @@ public class GXGControllerTest extends TestSpringBootInformation {
 
         // Capture Group
         CaptureGroup captureGroup = new CaptureGroup();
-        captureGroup.setCapture_def_group_name("groupRelp");
-        captureGroup.setCapture_definition_id(1);
+        captureGroup.setCaptureGroupName("groupRelp");
+        captureGroup.setCaptureDefinitionId(1);
 
         String cgJson = gson.toJson(captureGroup);
 
@@ -236,8 +236,8 @@ public class GXGControllerTest extends TestSpringBootInformation {
 
         // Host Group
         HostGroup relpHostGroup = new HostGroup();
-        relpHostGroup.setHost_id(1);
-        relpHostGroup.setHost_group_name("hostgroup1");
+        relpHostGroup.setHostId(1);
+        relpHostGroup.setHostGroupName("hostgroup1");
 
         String jsonGroup = gson.toJson(relpHostGroup);
 
@@ -285,8 +285,8 @@ public class GXGControllerTest extends TestSpringBootInformation {
     public void testAddLinkage() throws Exception {
         // Linkage
         Linkage linkage = new Linkage();
-        linkage.setCapture_group_id(1);
-        linkage.setHost_group_id(1);
+        linkage.setCaptureGroupId(1);
+        linkage.setHostGroupId(1);
 
         String jsonGroup = gson.toJson(linkage);
 
@@ -335,10 +335,10 @@ public class GXGControllerTest extends TestSpringBootInformation {
     public void testRetrieveCaptureGroup() throws Exception {
         ArrayList<CaptureGroup> expected = new ArrayList<>();
         CaptureGroup captureGroup = new CaptureGroup();
-        captureGroup.setCapture_group_type(CaptureGroup.group_type.relp);
+        captureGroup.setCaptureGroupType(CaptureGroup.groupType.relp);
         captureGroup.setId(1);
-        captureGroup.setCapture_definition_id(1);
-        captureGroup.setCapture_def_group_name("groupRelp");
+        captureGroup.setCaptureDefinitionId(1);
+        captureGroup.setCaptureGroupName("groupRelp");
 
         expected.add(captureGroup);
 
@@ -366,9 +366,9 @@ public class GXGControllerTest extends TestSpringBootInformation {
         ArrayList<HostGroup> expected = new ArrayList<>();
         HostGroup hostGroup = new HostGroup();
         hostGroup.setMd5("relpHostmd5");
-        hostGroup.setHost_id(1);
-        hostGroup.setHost_group_name("hostgroup1");
-        hostGroup.setHost_group_type(HostGroup.group_type.relp);
+        hostGroup.setHostId(1);
+        hostGroup.setHostGroupName("hostgroup1");
+        hostGroup.setHostGroupType(HostGroup.groupType.relp);
         hostGroup.setId(1);
 
         expected.add(hostGroup);
@@ -397,12 +397,8 @@ public class GXGControllerTest extends TestSpringBootInformation {
         ArrayList<Linkage> expected = new ArrayList<>();
         Linkage linkage = new Linkage();
         linkage.setId(1);
-        linkage.setCapture_group_name("groupRelp");
-        linkage.setHost_group_name("hostgroup1");
-        linkage.setHost_group_type(Linkage.group_type.relp);
-        linkage.setCapture_group_type(Linkage.group_type.relp);
-        linkage.setHost_group_id(1);
-        linkage.setCapture_group_id(1);
+        linkage.setHostGroupId(1);
+        linkage.setCaptureGroupId(1);
 
         expected.add(linkage);
 
@@ -430,10 +426,10 @@ public class GXGControllerTest extends TestSpringBootInformation {
     public void testRetrieveAllCaptureGroups() throws Exception {
         ArrayList<CaptureGroup> expected = new ArrayList<>();
         CaptureGroup captureGroup = new CaptureGroup();
-        captureGroup.setCapture_def_group_name("groupRelp");
-        captureGroup.setCapture_group_type(CaptureGroup.group_type.relp);
+        captureGroup.setCaptureGroupName("groupRelp");
+        captureGroup.setCaptureGroupType(CaptureGroup.groupType.relp);
         captureGroup.setTag("relpTag");
-        captureGroup.setCapture_definition_id(1);
+        captureGroup.setCaptureDefinitionId(1);
 
         expected.add(captureGroup);
 
@@ -462,9 +458,9 @@ public class GXGControllerTest extends TestSpringBootInformation {
         ArrayList<HostGroup> expected = new ArrayList<>();
         HostGroup hostGroup = new HostGroup();
         hostGroup.setMd5("relpHostmd5");
-        hostGroup.setHost_id(1);
-        hostGroup.setHost_group_name("hostgroup1");
-        hostGroup.setHost_group_type(HostGroup.group_type.relp);
+        hostGroup.setHostId(1);
+        hostGroup.setHostGroupName("hostgroup1");
+        hostGroup.setHostGroupType(HostGroup.groupType.relp);
         hostGroup.setId(1);
 
         expected.add(hostGroup);
@@ -494,12 +490,8 @@ public class GXGControllerTest extends TestSpringBootInformation {
         ArrayList<Linkage> expected = new ArrayList<>();
         Linkage linkage = new Linkage();
         linkage.setId(1);
-        linkage.setCapture_group_name("groupRelp");
-        linkage.setHost_group_name("hostgroup1");
-        linkage.setHost_group_type(Linkage.group_type.relp);
-        linkage.setCapture_group_type(Linkage.group_type.relp);
-        linkage.setHost_group_id(1);
-        linkage.setCapture_group_id(1);
+        linkage.setHostGroupId(1);
+        linkage.setCaptureGroupId(1);
 
         expected.add(linkage);
 
@@ -692,11 +684,11 @@ public class GXGControllerTest extends TestSpringBootInformation {
         // Insert another capture with the same tag
         CaptureRelp captureRelp = new CaptureRelp();
         captureRelp.setTag("relpTag");
-        captureRelp.setRetention_time("P30D");
+        captureRelp.setRetentionTime("P30D");
         captureRelp.setCategory("audit2");
         captureRelp.setApplication("relp2");
         captureRelp.setIndex("audit_relp2");
-        captureRelp.setSource_type("relpsource2");
+        captureRelp.setSourceType("relpsource2");
         captureRelp.setProtocol("prot");
         captureRelp.setFlow("testflow1");
 
@@ -721,8 +713,8 @@ public class GXGControllerTest extends TestSpringBootInformation {
 
         // Capture Group
         CaptureGroup captureGroup = new CaptureGroup();
-        captureGroup.setCapture_def_group_name("groupRelp");
-        captureGroup.setCapture_definition_id(2);
+        captureGroup.setCaptureGroupName("groupRelp");
+        captureGroup.setCaptureDefinitionId(2);
 
         String cgJson = gson.toJson(captureGroup);
 
