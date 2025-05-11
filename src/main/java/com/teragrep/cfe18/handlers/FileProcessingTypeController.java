@@ -176,9 +176,9 @@ public class FileProcessingTypeController {
         LOGGER.info("Deleting file processing type  <[{}]>",id);
         JSONObject jsonErr = new JSONObject();
         try {
-            FileProcessing fp = fileProcessingTypeMapper.delete(id);
+            fileProcessingTypeMapper.delete(id);
             JSONObject j = new JSONObject();
-            j.put("id", fp.getId());
+            j.put("id", id);
             j.put("message", "File processing type deleted.");
             return new ResponseEntity<>(j.toString(), HttpStatus.OK);
         } catch (Exception ex) {

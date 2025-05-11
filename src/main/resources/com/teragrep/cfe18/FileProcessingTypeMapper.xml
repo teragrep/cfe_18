@@ -41,9 +41,10 @@
     </resultMap>
 
     <!-- delete -->
-    <select id="delete" resultMap="deletedId" statementType="CALLABLE">
+    <select id="delete" statementType="CALLABLE">
         {call cfe_18.delete_file_processing_type(#{param1})}
     </select>
+
     <resultMap id="deletedId" type="com.teragrep.cfe18.handlers.entities.FileProcessing">
         <result property="id" column="id"/>
     </resultMap>

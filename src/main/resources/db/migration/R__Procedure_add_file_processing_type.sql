@@ -45,9 +45,9 @@
  */
 use cfe_18;
 DELIMITER //
-CREATE OR REPLACE PROCEDURE insert_file_processing_type(meta_template_filename varchar(255), meta_rule varchar(1000),
-                                                            meta_rule_name varchar(255),
-                                                            meta_inputtype enum('regex','newline'), meta_inputvalue varchar(255)
+CREATE OR REPLACE PROCEDURE insert_file_processing_type(template_filename varchar(255), rule varchar(1000),
+                                                            rule_name varchar(255),
+                                                            inputtype enum('regex','newline'), inputvalue varchar(255)
 )
 BEGIN
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
@@ -58,24 +58,24 @@ BEGIN
 
     -- if record does not exist then insert new one
     if((select count(id) from cfe_18.file_processing_type fpt
-                         where fpt.name=meta_rule_name
-                           and fpt.inputtype=meta_inputtype
-                           and fpt.inputvalue=meta_inputvalue
-                           and fpt.ruleset=meta_rule
-                           and fpt.template=meta_template_filename)=0) then
+                         where fpt.name=rule_name
+                           and fpt.inputtype=inputtype
+                           and fpt.inputvalue=inputvalue
+                           and fpt.ruleset=rule
+                           and fpt.template=template_filename)=0) then
 
         insert into cfe_18.file_processing_type(name,inputtype,inputvalue,ruleset,template)
-        values (meta_rule_name,meta_inputtype,meta_inputvalue,meta_rule,meta_template_filename);
+        values (rule_name,inputtype,inputvalue,rule,template_filename);
         select last_insert_id() as id;
 
     -- if record exists then select the ID
     else
         select id as id from cfe_18.file_processing_type fpt
-                         where fpt.name=meta_rule_name
-                           and fpt.inputtype=meta_inputtype
-                           and fpt.inputvalue=meta_inputvalue
-                           and fpt.ruleset=meta_rule
-                           and fpt.template=meta_template_filename;
+                         where fpt.name=rule_name
+                           and fpt.inputtype=inputtype
+                           and fpt.inputvalue=inputvalue
+                           and fpt.ruleset=rule
+                           and fpt.template=template_filename;
     end if;
 
 end;

@@ -60,7 +60,6 @@ BEGIN
 
     delete from cfe_18.file_processing_type where p_id = id;
     COMMIT;
-    select p_id as id;
 end;
 //
 DELIMITER ;
