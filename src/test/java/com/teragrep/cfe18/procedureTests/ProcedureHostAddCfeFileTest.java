@@ -142,8 +142,6 @@ public class ProcedureHostAddCfeFileTest extends DBUnitbase {
         Assertions.assertEquals(25, rs.getInt("id"));
         Assertions.assertEquals("relpmd5", rs.getString("host_md5"));
         Assertions.assertEquals("relpfqhost", rs.getString("host_fq"));
-        Assertions.assertEquals("host3", rs.getString("host_name"));
-        Assertions.assertEquals(25, rs.getInt("host_meta_id"));
     }
 
     /*

@@ -84,7 +84,7 @@ public class CaptureMetaController {
     @Autowired
     CaptureMetaMapper captureMetaMapper;
 
-    @RequestMapping(path="/",method=RequestMethod.PUT,produces="application/json")
+    @RequestMapping(path="",method=RequestMethod.PUT,produces="application/json")
     @Operation(summary = "Insert new capture meta for capture")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "Capture meta created for capture",
@@ -92,8 +92,7 @@ public class CaptureMetaController {
                             schema = @Schema(implementation = CaptureMeta.class))}),
             @ApiResponse(responseCode = "400", description = "Capture does not exist",
                     content = @Content),
-            @ApiResponse(responseCode = "500", description = "Internal server error, contact admin", content = @Content)
-    })
+            @ApiResponse(responseCode = "500", description = "Internal server error, contact admin", content = @Content)})
     public ResponseEntity<String> create(@RequestBody CaptureMeta newCaptureMeta){
         LOGGER.info("About to insert <[{}]>", newCaptureMeta);
         try {
@@ -120,7 +119,7 @@ public class CaptureMetaController {
                     return new ResponseEntity<>(jsonErr.toString(), HttpStatus.NOT_FOUND);
                 }
             }
-            return new ResponseEntity<>("Unexpected error", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(jsonErr.toString(), HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -174,7 +173,7 @@ public class CaptureMetaController {
             @ApiResponse(responseCode = "400", description = "Capture meta does not exist",
                     content = @Content),
             @ApiResponse(responseCode = "500", description = "Internal server error, contact admin", content = @Content)})
-    public ResponseEntity<String> removeCaptureMeta(@PathVariable("captureId") int captureId) {
+    public ResponseEntity<String> delete(@PathVariable("captureId") int captureId) {
         LOGGER.info("Deleting Capture meta <[{}]>",captureId);
         try {
             captureMetaMapper.delete(captureId);

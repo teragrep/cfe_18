@@ -180,7 +180,7 @@ public class HubController {
             hubMapper.delete(id);
             JSONObject j = new JSONObject();
             j.put("id", id);
-            j.put("message", "Hub deleted.");
+            j.put("message", "Hub deleted");
             return new ResponseEntity<>(j.toString(), HttpStatus.OK);
         } catch (RuntimeException ex) {
             JSONObject jsonErr = new JSONObject();

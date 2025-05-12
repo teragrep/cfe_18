@@ -57,13 +57,11 @@ BEGIN
     ELSE
         SET @time = tx_id;
     END IF;
-    SELECT h.id        AS id,
-           h.md5       AS host_md5,
-           h.fqhost    AS host_fq,
-           hm.hostname AS host_name,
-           hm.id       AS host_meta_id
+    SELECT h.id     AS id,
+           h.md5    AS host_md5,
+           h.fqhost AS host_fq
     FROM location.host FOR SYSTEM_TIME AS OF TRANSACTION @time h
-             LEFT JOIN cfe_03.host_meta FOR SYSTEM_TIME AS OF TRANSACTION @time hm ON h.id = hm.host_id;
+    WHERE h.host_type = 'relp';
 END;
 //
 DELIMITER ;

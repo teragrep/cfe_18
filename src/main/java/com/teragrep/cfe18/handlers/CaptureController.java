@@ -267,16 +267,15 @@ public class CaptureController {
                             schema = @Schema(implementation = CaptureDefinition.class))}),
             @ApiResponse(responseCode = "400", description = "Capture does not exist OR Capture is being used",
                     content = @Content),
-            @ApiResponse(responseCode = "500", description = "Internal server error, contact admin", content = @Content)
-    })
-    public ResponseEntity<String> removeCapture(@PathVariable("id") int id) {
+            @ApiResponse(responseCode = "500", description = "Internal server error, contact admin", content = @Content)})
+    public ResponseEntity<String> delete(@PathVariable("id") int id) {
         LOGGER.info("Deleting capture with id <[{}]>", id);
 
         try {
-            captureMapper.deleteCapture(id);
+            captureMapper.delete(id);
             JSONObject j = new JSONObject();
             j.put("id", id);
-            j.put("message", "Capture deleted.");
+            j.put("message", "Capture deleted");
             return new ResponseEntity<>(j.toString(), HttpStatus.OK);
         } catch (RuntimeException ex) {
             JSONObject jsonErr = new JSONObject();

@@ -56,8 +56,8 @@ public class HostGroup {
     @Schema(accessMode = Schema.AccessMode.READ_ONLY)
     private int id;
     private String hostGroupName;
-    @Schema(accessMode = Schema.AccessMode.READ_ONLY)
     private groupType hostGroupType;
+    @Schema(accessMode = Schema.AccessMode.READ_ONLY)
     private int hostId;
     @Schema(accessMode = Schema.AccessMode.READ_ONLY)
     private String md5;

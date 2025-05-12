@@ -130,7 +130,7 @@ public class CaptureGroupController {
             LOGGER.debug("Values returned <[{}]>", c);
             JSONObject jsonObject = new JSONObject();
             jsonObject.put("id", c.getId());
-            jsonObject.put("message", "New capture group created");
+            jsonObject.put("message", "Capture group created");
             return new ResponseEntity<>(jsonObject.toString(), HttpStatus.CREATED);
         } catch (RuntimeException ex) {
             JSONObject jsonErr = new JSONObject();
@@ -222,7 +222,7 @@ public class CaptureGroupController {
             captureGroupMapper.delete(id);
             JSONObject j = new JSONObject();
             j.put("id", id);
-            j.put("message", "Capture group deleted.");
+            j.put("message", "Capture group deleted");
             return new ResponseEntity<>(j.toString(), HttpStatus.OK);
         } catch (RuntimeException ex) {
             JSONObject jsonErr = new JSONObject();

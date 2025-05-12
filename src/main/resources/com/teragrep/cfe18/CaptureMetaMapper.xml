@@ -56,8 +56,8 @@
 
 
     <!-- ID return map -->
-    <resultMap id="insertedID" type="com.teragrep.cfe18.handlers.entities.CaptureDefinition">
-        <result property="id"                       column="id"/>
+    <resultMap id="insertedID" type="com.teragrep.cfe18.handlers.entities.CaptureMeta">
+        <result property="captureId"                       column="id"/>
     </resultMap>
 
 </mapper>

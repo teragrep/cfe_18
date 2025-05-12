@@ -74,16 +74,12 @@ BEGIN
                h.md5         AS host_md5,
                h.fqhost      AS host_fq,
                h2.id         AS hub_id,
-               hm.hostname   AS host_name,
-               hm.id         AS host_meta_id,
                h3.fqhost     AS hub_fq
         FROM location.host FOR SYSTEM_TIME AS OF TRANSACTION @time h
                  INNER JOIN host_type_cfe FOR SYSTEM_TIME AS OF TRANSACTION @time htc ON h.id = htc.host_id
                  INNER JOIN hubs FOR SYSTEM_TIME AS OF TRANSACTION @time h2 ON htc.hub_id = h2.id
-                 INNER JOIN cfe_03.host_meta FOR SYSTEM_TIME AS OF TRANSACTION @time hm ON h.id = hm.host_id
                  INNER JOIN location.host FOR SYSTEM_TIME AS OF TRANSACTION @time h3 ON h2.host_id = h3.id
         WHERE h.id = proc_host_id
-          AND hm.host_id = proc_host_id
           AND h3.id = h2.host_id;
     END IF;
     COMMIT;

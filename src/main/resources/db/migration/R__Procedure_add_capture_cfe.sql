@@ -214,7 +214,7 @@ BEGIN
     END IF;
     COMMIT;
     -- return ID
-    SELECT @c_id AS last;
+    SELECT @c_id AS id;
 
 END;
 //

@@ -109,7 +109,7 @@ public class Cfe04TransformController {
             LOGGER.debug("Values returned <[{}]>", cfe04Transform);
             JSONObject jsonObject = new JSONObject();
             jsonObject.put("id", cfe04Transform.getId());
-            jsonObject.put("message", "New cfe04 transform  created");
+            jsonObject.put("message", "New cfe04 transform created");
             return new ResponseEntity<>(jsonObject.toString(), HttpStatus.CREATED);
         } catch (RuntimeException ex) {
             JSONObject jsonErr = new JSONObject();

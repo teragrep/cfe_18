@@ -139,7 +139,7 @@ public class HostControllerTest extends TestSpringBootInformation {
         String json = gson.toJson(relpHost);
 
         // Asserting get request
-        HttpGet requestGet = new HttpGet("http://localhost:" + port + "/host/relp/" + 1);
+        HttpGet requestGet = new HttpGet("http://localhost:" + port + "/host/relp/1");
 
         requestGet.setHeader("Authorization", "Bearer " + token);
 
@@ -215,7 +215,7 @@ public class HostControllerTest extends TestSpringBootInformation {
         JSONObject responseAsJson = new JSONObject(responseString);
 
         // Creating expected message as JSON Object from the data that was sent towards endpoint
-        String expected = "New host created with cfe type";
+        String expected = "New host created";
 
         // Creating string from Json that was given as a response
         String actual = responseAsJson.get("message").toString();
@@ -272,7 +272,7 @@ public class HostControllerTest extends TestSpringBootInformation {
         JSONObject responseAsJson = new JSONObject(responseString);
 
         // Creating expected message as JSON Object from the data that was sent towards endpoint
-        String expected = "New host meta added for host";
+        String expected = "New host meta created";
 
         // Creating string from Json that was given as a response
         String actual = responseAsJson.get("message").toString();
@@ -292,7 +292,6 @@ public class HostControllerTest extends TestSpringBootInformation {
     public void testInsertIp() throws Exception {
         IPAddress ip = new IPAddress();
         ip.setIpAddress("ip1");
-        ip.setHostMetaId(1);
 
         String json = gson.toJson(ip);
 
@@ -321,7 +320,7 @@ public class HostControllerTest extends TestSpringBootInformation {
         JSONObject responseAsJson = new JSONObject(responseString);
 
         // Creating expected message as JSON Object from the data that was sent towards endpoint
-        String expected = "New ip address created for host_meta";
+        String expected = "New ip address created";
 
         // Creating string from Json that was given as a response
         String actual = responseAsJson.get("message").toString();
@@ -340,7 +339,6 @@ public class HostControllerTest extends TestSpringBootInformation {
     public void testInsertInterface() throws Exception {
         InterfaceType interfaceType = new InterfaceType();
         interfaceType.setInterfaceType("interface1");
-        interfaceType.setHostMetaId(1);
 
         String json = gson.toJson(interfaceType);
 
@@ -369,7 +367,77 @@ public class HostControllerTest extends TestSpringBootInformation {
 
         JSONObject responseAsJson = new JSONObject(responseString);
         // Creating expected message as JSON Object from the data that was sent towards endpoint
-        String expected = "New interface created for host_meta";
+        String expected = "New interface created";
+
+        // Creating string from Json that was given as a response
+        String actual = responseAsJson.get("message").toString();
+
+        // Assertions
+        assertEquals(expected, actual);
+        assertThat(
+                httpResponse.getStatusLine().getStatusCode(),
+                equalTo(HttpStatus.SC_CREATED));
+
+    }
+
+    // link ip to host meta
+    @Test
+    @Order(7)
+    public void testLinkIpToHostMeta() throws Exception {
+        // Creates the request
+        HttpPut request = new HttpPut("http://localhost:" + port + "/host/meta/ip/1/1");
+        // Header
+        request.setHeader("Authorization", "Bearer " + token);
+
+        // Get the response from endpoint
+        HttpResponse httpResponse = HttpClientBuilder.create().build().execute(request);
+
+        // Get the entity from response
+        HttpEntity entity = httpResponse.getEntity();
+
+        // Entity response string
+        String responseString = EntityUtils.toString(entity);
+
+        // Parsin respponse as JSONObject
+
+        JSONObject responseAsJson = new JSONObject(responseString);
+        // Creating expected message as JSON Object from the data that was sent towards endpoint
+        String expected = "IP linked to hostMeta";
+
+        // Creating string from Json that was given as a response
+        String actual = responseAsJson.get("message").toString();
+
+        // Assertions
+        assertEquals(expected, actual);
+        assertThat(
+                httpResponse.getStatusLine().getStatusCode(),
+                equalTo(HttpStatus.SC_CREATED));
+
+    }
+
+    // link interface to host meta
+    @Test
+    @Order(8)
+    public void testLinkInterfaceToHostMeta() throws Exception {
+
+        HttpPut request = new HttpPut("http://localhost:" + port + "/host/meta/interface/1/1");
+        // Header
+        request.setHeader("Authorization", "Bearer " + token);
+
+        // Get the response from endpoint
+        HttpResponse httpResponse = HttpClientBuilder.create().build().execute(request);
+
+        // Get the entity from response
+        HttpEntity entity = httpResponse.getEntity();
+
+        // Entity response string
+        String responseString = EntityUtils.toString(entity);
+
+        // Parsin respponse as JSONObject
+
+        JSONObject responseAsJson = new JSONObject(responseString);
+        // Creating expected message as JSON Object from the data that was sent towards endpoint
+        String expected = "Interface linked to hostMeta";
 
         // Creating string from Json that was given as a response
         String actual = responseAsJson.get("message").toString();
@@ -384,7 +452,7 @@ public class HostControllerTest extends TestSpringBootInformation {
 
     // retrieve all ip test
     @Test
-    @Order(7)
+    @Order(9)
     public void testGetIpaddress() throws Exception {
 
         ArrayList<IPAddress> expected = new ArrayList<>();
@@ -412,7 +480,7 @@ public class HostControllerTest extends TestSpringBootInformation {
 
     // retrieve all interface test
     @Test
-    @Order(8)
+    @Order(10)
     public void testGetInterface() throws Exception {
         ArrayList<InterfaceType> expected = new ArrayList<>();
         InterfaceType interfaceType = new InterfaceType();
@@ -440,7 +508,7 @@ public class HostControllerTest extends TestSpringBootInformation {
 
     // retrieve all host meta test
     @Test
-    @Order(9)
+    @Order(11)
     public void testGetAllHostMetas() throws Exception {
 
         ArrayList<HostMeta> expected = new ArrayList<>();
@@ -475,7 +543,7 @@ public class HostControllerTest extends TestSpringBootInformation {
 
     // retrieve cfe based host
     @Test
-    @Order(10)
+    @Order(12)
     public void testGetCfeHost() throws Exception {
 
         HostCfe host = new HostCfe();
@@ -483,8 +551,6 @@ public class HostControllerTest extends TestSpringBootInformation {
         host.setMd5("randommd5value");
         host.setFqHost("hostFq");
         host.setHubId(1);
-        host.setHostName("hostname1");
-        host.setHostMetaId(1);
         host.setHubFq("hubfq");
 
         String json = gson.toJson(host);
@@ -507,10 +573,8 @@ public class HostControllerTest extends TestSpringBootInformation {
     // retrieve all hosts
 
     @Test
-    @Order(11)
-    public void testGetAllHosts() throws Exception {
-
-
+    @Order(13)
+    public void testGetAllCfeHosts() throws Exception {
         ArrayList<HostCfe> expectedListFile = new ArrayList<>();
 
         HostCfe host = new HostCfe();
@@ -518,16 +582,7 @@ public class HostControllerTest extends TestSpringBootInformation {
         host.setMd5("randommd5value");
         host.setFqHost("hostFq");
         host.setHubId(1);
-        host.setHostName("hostname1");
-        host.setHostMetaId(1);
         host.setHubFq("hubfq");
-
-
-        HostCfe relpHost = new HostCfe();
-        relpHost.setId(1);
-        relpHost.setMd5("relpHostmd5");
-        relpHost.setFqHost("relpHostfq");
-
 
         HostCfe hub1 = new HostCfe();
         hub1.setId(2);
@@ -536,13 +591,12 @@ public class HostControllerTest extends TestSpringBootInformation {
         hub1.setHubId(1);
         hub1.setHubFq("hubfq");
 
-        expectedListFile.add(host);
         expectedListFile.add(hub1);
-        expectedListFile.add(relpHost);
+        expectedListFile.add(host);
         String expectedJson = gson.toJson(expectedListFile);
 
         // Asserting get request
-        HttpGet requestGet = new HttpGet("http://localhost:" + port + "/host");
+        HttpGet requestGet = new HttpGet("http://localhost:" + port + "/host/cfe");
 
         requestGet.setHeader("Authorization", "Bearer " + token);
 
@@ -557,12 +611,42 @@ public class HostControllerTest extends TestSpringBootInformation {
 
     }
 
-    // Delete
+    @Test
+    @Order(14)
+    public void testGetAllRelpHosts() throws Exception {
+
+        ArrayList<HostRelp> expectedListFile = new ArrayList<>();
+
+        HostRelp host2 = new HostRelp();
+        host2.setId(1);
+        host2.setMd5("relpHostmd5");
+        host2.setFqHost("relpHostfq");
+
+        expectedListFile.add(host2);
+        String expectedJson = gson.toJson(expectedListFile);
+
+        // Asserting get request
+        HttpGet requestGet = new HttpGet("http://localhost:" + port + "/host/relp");
+
+        requestGet.setHeader("Authorization", "Bearer " + token);
+
+        HttpResponse responseGet = HttpClientBuilder.create().build().execute(requestGet);
+
+        HttpEntity entityGet = responseGet.getEntity();
+
+        String responseStringGet = EntityUtils.toString(entityGet, "UTF-8");
+
+        assertEquals(expectedJson, responseStringGet);
+        assertThat(responseGet.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_OK));
+
+    }
+
+
 
     @Test
-    @Order(12)
-    public void testDeleteHost() throws Exception {
-        HttpDelete delete = new HttpDelete("http://localhost:" + port + "/host/" + 1);
+    @Order(15)
+    public void testDeleteRelpHost() throws Exception {
+        HttpDelete delete = new HttpDelete("http://localhost:" + port + "/host/relp/" + 1);
 
         // Header
         delete.setHeader("Authorization", "Bearer " + token);
@@ -580,16 +664,16 @@ public class HostControllerTest extends TestSpringBootInformation {
         String actual = responseAsJson.get("message").toString();
 
         // Creating expected message as JSON Object from the data that was sent towards endpoint
-        String expected = "Host with id =  1 deleted.";
+        String expected = "Host deleted";
 
         assertEquals(expected, actual);
         assertThat(deleteResponse.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_OK));
     }
 
     @Test
-    @Order(13)
-    public void testDeleteNonExistentHost() throws Exception {
-        HttpDelete delete = new HttpDelete("http://localhost:" + port + "/host/" + 99999);
+    @Order(16)
+    public void testDeleteNonExistentCfeHost() throws Exception {
+        HttpDelete delete = new HttpDelete("http://localhost:" + port + "/host/cfe/" + 99999);
 
         // Header
         delete.setHeader("Authorization", "Bearer " + token);
@@ -609,11 +693,37 @@ public class HostControllerTest extends TestSpringBootInformation {
         String expected = "Record does not exist";
 
         assertEquals(expected, actual);
-        assertThat(deleteResponse.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_BAD_REQUEST));
+        assertThat(deleteResponse.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_NOT_FOUND));
     }
 
     @Test
-    @Order(14)
+    @Order(17)
+    public void testDeleteNonExistentRelpHost() throws Exception {
+        HttpDelete delete = new HttpDelete("http://localhost:" + port + "/host/relp/" + 99999);
+
+        // Header
+        delete.setHeader("Authorization", "Bearer " + token);
+
+        HttpResponse deleteResponse = HttpClientBuilder.create().build().execute(delete);
+
+        HttpEntity entityDelete = deleteResponse.getEntity();
+
+        String responseStringGet = EntityUtils.toString(entityDelete, "UTF-8");
+
+        // Parsin respponse as JSONObject
+        JSONObject responseAsJson = new JSONObject(responseStringGet);
+
+        // Creating string from Json that was given as a response
+        String actual = responseAsJson.get("message").toString();
+        // Creating expected message as JSON Object from the data that was sent towards endpoint
+        String expected = "Record does not exist";
+
+        assertEquals(expected, actual);
+        assertThat(deleteResponse.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_NOT_FOUND));
+    }
+
+    @Test
+    @Order(18)
     public void testDeleteNonExistentHostMeta() throws Exception {
         HttpDelete delete = new HttpDelete("http://localhost:" + port + "/host/meta/" + 99999);
 
@@ -635,12 +745,12 @@ public class HostControllerTest extends TestSpringBootInformation {
         String expected = "Record does not exist";
 
         assertEquals(expected, actual);
-        assertThat(deleteResponse.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_BAD_REQUEST));
+        assertThat(deleteResponse.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_NOT_FOUND));
     }
 
 
     @Test
-    @Order(15)
+    @Order(19)
     public void testDeleteNonExistentHostMetaIp() throws Exception {
         HttpDelete delete = new HttpDelete("http://localhost:" + port + "/host/meta/ip/" + 99999);
 
@@ -663,13 +773,13 @@ public class HostControllerTest extends TestSpringBootInformation {
         String expected = "Record does not exist";
 
         assertEquals(expected, actual);
-        assertThat(deleteResponse.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_BAD_REQUEST));
+        assertThat(deleteResponse.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_NOT_FOUND));
     }
 
     @Test
-    @Order(16)
+    @Order(20)
     public void testDeleteHostMetaIpInUse() throws Exception {
-        HttpDelete delete = new HttpDelete("http://localhost:" + port + "/host/meta/ip/" + 1);
+        HttpDelete delete = new HttpDelete("http://localhost:" + port + "/host/meta/ip/1");
 
         // Header
         delete.setHeader("Authorization", "Bearer " + token);
@@ -694,7 +804,7 @@ public class HostControllerTest extends TestSpringBootInformation {
 
 
     @Test
-    @Order(17)
+    @Order(21)
     public void testDeleteNonExistentHostMetaInterface() throws Exception {
         HttpDelete delete = new HttpDelete("http://localhost:" + port + "/host/meta/ip/" + 99999);
 
@@ -717,13 +827,13 @@ public class HostControllerTest extends TestSpringBootInformation {
         String expected = "Record does not exist";
 
         assertEquals(expected, actual);
-        assertThat(deleteResponse.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_BAD_REQUEST));
+        assertThat(deleteResponse.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_NOT_FOUND));
     }
 
     @Test
-    @Order(18)
+    @Order(22)
     public void testDeleteHostMetaInterfaceInUse() throws Exception {
-        HttpDelete delete = new HttpDelete("http://localhost:" + port + "/host/meta/interface/" + 1);
+        HttpDelete delete = new HttpDelete("http://localhost:" + port + "/host/meta/interface/1");
 
         // Header
         delete.setHeader("Authorization", "Bearer " + token);
@@ -746,13 +856,64 @@ public class HostControllerTest extends TestSpringBootInformation {
         assertThat(deleteResponse.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_BAD_REQUEST));
     }
 
+    // Delete
 
     @Test
-    @Order(19)
+    @Order(23)
+    public void testDeleteHostMetaLinkIp() throws Exception {
+        HttpDelete delete = new HttpDelete("http://localhost:" + port + "/host/meta/ip/1/1" );
+
+        // Header
+        delete.setHeader("Authorization", "Bearer " + token);
+
+        HttpResponse deleteResponse = HttpClientBuilder.create().build().execute(delete);
+
+        HttpEntity entityDelete = deleteResponse.getEntity();
+
+        String responseStringGet = EntityUtils.toString(entityDelete, "UTF-8");
+
+        // Parsin respponse as JSONObject
+        JSONObject responseAsJson = new JSONObject(responseStringGet);
+
+        // Creating string from Json that was given as a response
+        String actual = responseAsJson.get("message").toString();
+        // Creating expected message as JSON Object from the data that was sent towards endpoint
+        String expected = "Ip link deleted";
+
+        assertEquals(expected, actual);
+        assertThat(deleteResponse.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_OK));
+    }
+
+    @Test
+    @Order(24)
+    public void testDeleteHostMetaLinkInterface() throws Exception {
+        HttpDelete delete = new HttpDelete("http://localhost:" + port + "/host/meta/interface/1/1" );
+
+        // Header
+        delete.setHeader("Authorization", "Bearer " + token);
+
+        HttpResponse deleteResponse = HttpClientBuilder.create().build().execute(delete);
+
+        HttpEntity entityDelete = deleteResponse.getEntity();
+
+        String responseStringGet = EntityUtils.toString(entityDelete, "UTF-8");
+
+        // Parsin respponse as JSONObject
+        JSONObject responseAsJson = new JSONObject(responseStringGet);
+
+        // Creating string from Json that was given as a response
+        String actual = responseAsJson.get("message").toString();
+        // Creating expected message as JSON Object from the data that was sent towards endpoint
+        String expected = "Interface link deleted";
+
+        assertEquals(expected, actual);
+        assertThat(deleteResponse.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_OK));
+    }
+    @Test
+    @Order(25)
     public void testDeleteHostMeta() throws Exception {
         HttpDelete delete = new HttpDelete("http://localhost:" + port + "/host/meta/" + 1);
 
-
         // Header
         delete.setHeader("Authorization", "Bearer " + token);
 
@@ -769,18 +930,18 @@ public class HostControllerTest extends TestSpringBootInformation {
         String actual = responseAsJson.get("message").toString();
 
         // Creating expected message as JSON Object from the data that was sent towards endpoint
-        String expected = "Hostmeta with id =  1 deleted.";
+        String expected = "Hostmeta deleted";
 
         assertEquals(expected, actual);
         assertThat(deleteResponse.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_OK));
     }
 
+
     @Test
-    @Order(20)
+    @Order(26)
     public void testDeleteHostMetaIp() throws Exception {
         HttpDelete delete = new HttpDelete("http://localhost:" + port + "/host/meta/ip/" + 1);
 
-
         // Header
         delete.setHeader("Authorization", "Bearer " + token);
 
@@ -797,14 +958,14 @@ public class HostControllerTest extends TestSpringBootInformation {
         String actual = responseAsJson.get("message").toString();
 
         // Creating expected message as JSON Object from the data that was sent towards endpoint
-        String expected = "Ip with id =  1 deleted.";
+        String expected = "Ip deleted";
 
         assertEquals(expected, actual);
         assertThat(deleteResponse.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_OK));
     }
 
     @Test
-    @Order(21)
+    @Order(27)
     public void testDeleteHostMetaInterface() throws Exception {
         HttpDelete delete = new HttpDelete("http://localhost:" + port + "/host/meta/interface/" + 1);
 
@@ -825,9 +986,40 @@ public class HostControllerTest extends TestSpringBootInformation {
         String actual = responseAsJson.get("message").toString();
 
         // Creating expected message as JSON Object from the data that was sent towards endpoint
-        String expected = "Interface with id =  1 deleted.";
+        String expected = "Interface deleted";
 
         assertEquals(expected, actual);
         assertThat(deleteResponse.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_OK));
     }
+
+
+    @Test
+    @Order(28)
+    public void testDeleteCfeHost() throws Exception {
+        HttpDelete delete = new HttpDelete("http://localhost:" + port + "/host/cfe/" + 3);
+
+        // Header
+        delete.setHeader("Authorization", "Bearer " + token);
+
+        HttpResponse deleteResponse = HttpClientBuilder.create().build().execute(delete);
+
+        HttpEntity entityDelete = deleteResponse.getEntity();
+
+        String responseStringGet = EntityUtils.toString(entityDelete, "UTF-8");
+
+        // Parsin respponse as JSONObject
+        JSONObject responseAsJson = new JSONObject(responseStringGet);
+
+        // Creating string from Json that was given as a response
+        String actual = responseAsJson.get("message").toString();
+
+        // Creating expected message as JSON Object from the data that was sent towards endpoint
+        String expected = "Host deleted";
+
+        assertEquals(expected, actual);
+        assertThat(deleteResponse.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_OK));
+    }
+
+
+
 }

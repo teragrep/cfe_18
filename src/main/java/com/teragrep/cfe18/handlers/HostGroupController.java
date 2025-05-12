@@ -122,7 +122,7 @@ public class HostGroupController {
             @ApiResponse(responseCode = "500", description = "Internal server error, contact admin", content = @Content)
     })
     public ResponseEntity<String> createLink(@PathVariable("hostId") int hostId, @PathVariable("id") int id) {
-        LOGGER.info("About to insert <[{}]>", hostId, id);
+        LOGGER.info("About to insert <[{}]>", hostId);
         try {
             HostGroup hg = hostGroupMapper.createLink(hostId, id);
             LOGGER.debug("Values returned <[{}]>", hg);
@@ -241,7 +241,7 @@ public class HostGroupController {
                     return new ResponseEntity<>(jsonErr.toString(), HttpStatus.BAD_REQUEST);
                 } else if (state.equals("45000")) {
                     jsonErr.put("message", "Record does not exist");
-                    return new ResponseEntity<>(jsonErr.toString(), HttpStatus.BAD_REQUEST);
+                    return new ResponseEntity<>(jsonErr.toString(), HttpStatus.NOT_FOUND);
                 }
             }
             return new ResponseEntity<>(jsonErr.toString(), HttpStatus.BAD_REQUEST);

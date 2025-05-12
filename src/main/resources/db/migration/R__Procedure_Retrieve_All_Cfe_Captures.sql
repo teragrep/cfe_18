@@ -85,7 +85,8 @@ BEGIN
              LEFT JOIN capture_meta_file FOR SYSTEM_TIME AS OF TRANSACTION @time cmf
                        ON ct.id = cmf.id AND ct.capture_type = cmf.capture_type
              LEFT JOIN file_processing_type FOR SYSTEM_TIME AS OF TRANSACTION @time pt
-                       ON cmf.processing_type_id = pt.id;
+                       ON cmf.processing_type_id = pt.id
+    WHERE cd.capture_type='cfe';
 END;
 //
 DELIMITER ;

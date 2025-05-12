@@ -170,12 +170,12 @@ public class FileProcessingTypeController {
                     content = @Content),
             @ApiResponse(responseCode = "500", description = "Internal server error, contact admin", content = @Content)
     })
-    public ResponseEntity<String> delete(@PathVariable("id") int id) {
+    public ResponseEntity<String> delete(@PathVariable("id") Integer id) {
         LOGGER.info("Deleting file processing type  <[{}]>",id);
         try {
-            FileProcessing fp = fileProcessingTypeMapper.delete(id);
+            fileProcessingTypeMapper.delete(id);
             JSONObject j = new JSONObject();
-            j.put("id", fp.getId());
+            j.put("id", id);
             j.put("message", "File processing type deleted");
             return new ResponseEntity<>(j.toString(), HttpStatus.OK);
         } catch (RuntimeException ex) {

@@ -65,11 +65,8 @@ BEGIN
 
     SELECT h.id        AS id,
            h.md5       AS host_md5,
-           h.fqhost    AS host_fq,
-           hm.hostname AS host_name,
-           hm.id       AS host_meta_id
+           h.fqhost    AS host_fq
     FROM location.host FOR SYSTEM_TIME AS OF TRANSACTION @time h
-             INNER JOIN cfe_03.host_meta FOR SYSTEM_TIME AS OF TRANSACTION @time hm ON h.id = hm.host_id
     WHERE h.id = proc_host_id;
     COMMIT;
 END;

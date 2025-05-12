@@ -64,5 +64,5 @@ public interface FileProcessingTypeMapper {
 
     List<FileProcessing> getAll(Integer version);
 
-    FileProcessing delete(int id);
+    FileProcessing delete(Integer id);
 };

@@ -52,6 +52,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 public class Hub {
     @Schema(accessMode = Schema.AccessMode.READ_ONLY)
     private int id;
+    @Schema(accessMode = Schema.AccessMode.READ_ONLY)
     private int hostId;
     private String fqHost;
     private String md5;

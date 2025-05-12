@@ -11,12 +11,12 @@
     </select>
 
     <!-- insert         ( p_flow_id INT, proc_storage_id INT ) -->
-    <select id="createFlowStorage" resultMap="insertedID" statementType="CALLABLE">
+    <select id="createFlowStorage" resultMap="insertedIDFlow" statementType="CALLABLE">
         {CALL flow.insert_flow_storage(#{param1},#{param2})}
     </select>
 
     <!-- insert         ( capture_id INT, storage_id INT ) -->
-    <select id="createCaptureStorage" resultMap="insertedID" statementType="CALLABLE">
+    <select id="createCaptureStorage" resultMap="insertedIDCapture" statementType="CALLABLE">
         {CALL flow.insert_capture_storage(#{param1},#{param2})}
     </select>
 
@@ -37,7 +37,7 @@
     </select>
     <resultMap id="flowStorages" type="com.teragrep.cfe18.handlers.entities.FlowStorage">
         <result property="id"           column="id"/>
-        <result property="flow"         column="flow"/>
+        <result property="flowId"       column="flow_id"/>
         <result property="storageId"    column="storage_id"/>
         <result property="storageName"  column="storage_name"/>
         <result property="storageType"  column="storage_type"/>
@@ -70,7 +70,7 @@
     </select>
     <resultMap id="allFlowStorages" type="com.teragrep.cfe18.handlers.entities.FlowStorage">
         <result property="id"           column="id"/>
-        <result property="flow"         column="flow"/>
+        <result property="flowId"       column="flow_id"/>
         <result property="storageId"    column="storage_id"/>
         <result property="storageName"  column="storage_name"/>
         <result property="storageType"  column="storage_type"/>
@@ -106,6 +106,16 @@
     <!-- ID return map -->
     <resultMap id="insertedID" type="com.teragrep.cfe18.handlers.entities.Storage">
         <result property="id"       column="id"/>
+    </resultMap>
+
+    <!-- ID return map -->
+    <resultMap id="insertedIDFlow" type="com.teragrep.cfe18.handlers.entities.FlowStorage">
+        <result property="id"       column="id"/>
+    </resultMap>
+
+    <!-- ID return map -->
+    <resultMap id="insertedIDCapture" type="com.teragrep.cfe18.handlers.entities.CaptureStorage">
+        <result property="captureId"       column="id"/>
     </resultMap>
 
 </mapper>

@@ -183,8 +183,7 @@ public class HostController {
                             schema = @Schema(implementation = HostCfe.class))}),
             @ApiResponse(responseCode = "400", description = "ID given does not match any host_id OR ID given directs to a hub based host OR ID given points to different type of host",
                     content = @Content),
-            @ApiResponse(responseCode = "500", description = "Internal server error, contact admin", content = @Content)
-    })
+            @ApiResponse(responseCode = "500", description = "Internal server error, contact admin", content = @Content)})
     public ResponseEntity<?> getCfe(@PathVariable("id") int id, @RequestParam(required = false) Integer version) {
         try {
             HostCfe hf = hostMapper.getCfe(id,version);

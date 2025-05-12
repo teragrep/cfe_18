@@ -5,42 +5,39 @@
 <mapper namespace="com.teragrep.cfe18.HostMapper">
 
     <!-- Insert host  ( proc_MD5 VARCHAR(32), proc_fqhost VARCHAR(128), proc_hub_fq VARCHAR(128) )  -->
-    <select id="createCfe" resultMap="insertedID" statementType="CALLABLE">
+    <select id="createCfe" resultMap="insertedCfeID" statementType="CALLABLE">
         {CALL
         location.insert_cfe_host(#{param1},#{param2},#{param3})}
     </select>
 
+
     <!-- Insert relp  ( proc_MD5 VARCHAR(32), proc_fqhost VARCHAR(128) ) -->
-    <select id="createRelp" resultMap="insertedID" statementType="CALLABLE">
+    <select id="createRelp" resultMap="insertedRelpID" statementType="CALLABLE">
         {CALL
         location.insert_relp_host(#{param1},#{param2})}
     </select>
 
 
     <!-- get    ( proc_host_id INT, tx_id INT ) -->
-    <select id="getCfe" resultMap="getCfe" statementType="CALLABLE">
+    <select id="getCfe" resultMap="getCfeHost" statementType="CALLABLE">
         {CALL cfe_00.select_cfe_host(#{param1},#{param2})}
     </select>
-    <resultMap id="getCfe" type="com.teragrep.cfe18.handlers.entities.HostCfe">
+    <resultMap id="getCfeHost" type="com.teragrep.cfe18.handlers.entities.HostCfe">
         <result property="id"               column="id"/>
         <result property="md5"              column="host_md5"/>
         <result property="fqHost"           column="host_fq"/>
         <result property="hubId"            column="hub_id"/>
-        <result property="hostName"         column="host_name"/>
-        <result property="hostMetaId"       column="host_meta_id"/>
         <result property="hubFq"            column="hub_fq"/>
     </resultMap>
 
     <!-- get    ( proc_host_id INT, tx_id INT ) -->
-    <select id="getRelp" resultMap="getRelp" statementType="CALLABLE">
+    <select id="getRelp" resultMap="getRelpHost" statementType="CALLABLE">
         {CALL cfe_00.select_relp_host(#{param1},#{param2})}
     </select>
-    <resultMap id="getRelp" type="com.teragrep.cfe18.handlers.entities.HostRelp">
+    <resultMap id="getRelpHost" type="com.teragrep.cfe18.handlers.entities.HostRelp">
         <result property="id"               column="id"/>
         <result property="md5"              column="host_md5"/>
         <result property="fqHost"           column="host_fq"/>
-        <result property="hostName"         column="host_name"/>
-        <result property="hostMetaId"       column="host_meta_id"/>
     </resultMap>
 
 
@@ -53,8 +50,6 @@
         <result property="md5"              column="host_md5"/>
         <result property="fqHost"           column="host_fq"/>
         <result property="hubId"            column="hub_id"/>
-        <result property="hostName"         column="host_name"/>
-        <result property="hostMetaId"       column="host_meta_id"/>
         <result property="hubFq"            column="hub_fq"/>
     </resultMap>
 
@@ -66,8 +61,6 @@
         <result property="id"               column="id"/>
         <result property="md5"              column="host_md5"/>
         <result property="fqHost"           column="host_fq"/>
-        <result property="hostName"         column="host_name"/>
-        <result property="hostMetaId"       column="host_meta_id"/>
     </resultMap>
 
 
@@ -83,7 +76,12 @@
 
 
     <!-- ID return map -->
-    <resultMap id="insertedID" type="com.teragrep.cfe18.handlers.entities.HostRelp">
+    <resultMap id="insertedCfeID" type="com.teragrep.cfe18.handlers.entities.HostCfe">
+        <result property="id"       column="id"/>
+    </resultMap>
+
+    <!-- ID return map -->
+    <resultMap id="insertedRelpID" type="com.teragrep.cfe18.handlers.entities.HostRelp">
         <result property="id"       column="id"/>
     </resultMap>
 

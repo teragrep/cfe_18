@@ -122,10 +122,10 @@ public class StorageControllerTest extends TestSpringBootInformation {
         String actual = responseAsJson.get("message").toString();
 
         // Assertions
+        assertEquals(expected, actual);
         assertThat(
                 httpResponse.getStatusLine().getStatusCode(),
                 equalTo(HttpStatus.SC_CREATED));
-        assertEquals(expected, actual);
 
     }
 
@@ -154,8 +154,8 @@ public class StorageControllerTest extends TestSpringBootInformation {
 
         String responseStringGet = EntityUtils.toString(entityGet, "UTF-8");
 
-        assertThat(responseGet.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_OK));
         assertEquals(expectedJson, responseStringGet);
+        assertThat(responseGet.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_OK));
 
     }
 
@@ -243,7 +243,7 @@ public class StorageControllerTest extends TestSpringBootInformation {
         expected.add(flowStorage);
 
         // Asserting get request
-        HttpGet requestGet = new HttpGet("http://localhost:" + port + "/storage/flow/Testflow");
+        HttpGet requestGet = new HttpGet("http://localhost:" + port + "/storage/flow/1");
 
         requestGet.setHeader("Authorization", "Bearer " + token);
 
@@ -255,8 +255,8 @@ public class StorageControllerTest extends TestSpringBootInformation {
 
         String expectedJson = new Gson().toJson(expected);
 
-        assertThat(responseGet.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_OK));
         assertEquals(expectedJson, responseStringGet);
+        assertThat(responseGet.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_OK));
     }
 
     @Test
@@ -287,8 +287,8 @@ public class StorageControllerTest extends TestSpringBootInformation {
 
         String expectedJson = new Gson().toJson(expected);
 
-        assertThat(responseGet.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_OK));
         assertEquals(expectedJson, responseStringGet);
+        assertThat(responseGet.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_OK));
     }
 
     @Test
@@ -311,7 +311,7 @@ public class StorageControllerTest extends TestSpringBootInformation {
                 ContentType.APPLICATION_JSON);
 
         // Creates the request
-        HttpPut request1 = new HttpPut("http://localhost:" + port + "/sink/details");
+        HttpPut request1 = new HttpPut("http://localhost:" + port + "/sink");
         // set requestEntity to the put request
         request1.setEntity(requestEntity1);
         // Header
@@ -348,9 +348,6 @@ public class StorageControllerTest extends TestSpringBootInformation {
 
         // Get the response from endpoint
         HttpClientBuilder.create().build().execute(request3);
-
-
-        // link the cfe_04 storage to capture
 
 
         CaptureStorage captureStorage = new CaptureStorage();
@@ -421,8 +418,8 @@ public class StorageControllerTest extends TestSpringBootInformation {
 
         String responseStringGet = EntityUtils.toString(entityGet, "UTF-8");
 
-        assertThat(responseGet.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_OK));
         assertEquals(expectedJson, responseStringGet);
+        assertThat(responseGet.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_OK));
     }
 
     @Test
@@ -448,8 +445,8 @@ public class StorageControllerTest extends TestSpringBootInformation {
 
         String responseStringGet = EntityUtils.toString(entityGet, "UTF-8");
 
-        assertThat(responseGet.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_OK));
         assertEquals(expectedJson, responseStringGet);
+        assertThat(responseGet.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_OK));
     }
 
     // Delete
@@ -477,8 +474,8 @@ public class StorageControllerTest extends TestSpringBootInformation {
         // Creating expected message as JSON Object from the data that was sent towards endpoint
         String expected = "Record does not exist";
 
-        assertThat(deleteResponse.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_BAD_REQUEST));
         assertEquals(expected, actual);
+        assertThat(deleteResponse.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_NOT_FOUND));
     }
 
     @Test
@@ -511,7 +508,7 @@ public class StorageControllerTest extends TestSpringBootInformation {
     @Test
     @Order(11)
     public void testDeleteNonExistentFlowStorage() throws Exception {
-        HttpDelete delete = new HttpDelete("http://localhost:" + port + "/storage/flow/" + "Testflow/" + 124);
+        HttpDelete delete = new HttpDelete("http://localhost:" + port + "/storage/flow/32323/1233");
 
         // Header
         delete.setHeader("Authorization", "Bearer " + token);
@@ -530,15 +527,16 @@ public class StorageControllerTest extends TestSpringBootInformation {
 
         // Creating expected message as JSON Object from the data that was sent towards endpoint
         String expected = "Record does not exist";
+
         assertEquals(expected, actual);
-        assertThat(deleteResponse.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_BAD_REQUEST));
+        assertThat(deleteResponse.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_NOT_FOUND));
     }
 
 
     @Test
     @Order(12)
     public void testDeleteFlowStorageInUse() throws Exception {
-        HttpDelete delete = new HttpDelete("http://localhost:" + port + "/storage/flow/" + "Testflow/" + 1);
+        HttpDelete delete = new HttpDelete("http://localhost:" + port + "/storage/flow/1/1");
 
 
         // Header
@@ -585,8 +583,9 @@ public class StorageControllerTest extends TestSpringBootInformation {
 
         // Creating expected message as JSON Object from the data that was sent towards endpoint
         String expected = "Record does not exist";
+
         assertEquals(expected, actual);
-        assertThat(deleteResponse.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_BAD_REQUEST));
+        assertThat(deleteResponse.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_NOT_FOUND));
     }
 
     @Test
@@ -609,17 +608,17 @@ public class StorageControllerTest extends TestSpringBootInformation {
         String actual = responseAsJson.get("message").toString();
 
         // Creating expected message as JSON Object from the data that was sent towards endpoint
-        String expected = "Capture = " + 1 + ", with Storage " + 1 + " deleted.";
+        String expected = "Capture storage deleted";
 
-        assertThat(deleteResponse.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_OK));
         assertEquals(expected, actual);
+        assertThat(deleteResponse.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_OK));
     }
 
 
     @Test
     @Order(15)
     public void testDeleteFlowStorage() throws Exception {
-        HttpDelete delete = new HttpDelete("http://localhost:" + port + "/storage/flow/" + "Testflow/" + 1);
+        HttpDelete delete = new HttpDelete("http://localhost:" + port + "/storage/flow/1/1");
         // Header
         delete.setHeader("Authorization", "Bearer " + token);
 
@@ -636,10 +635,10 @@ public class StorageControllerTest extends TestSpringBootInformation {
         String actual = responseAsJson.get("message").toString();
 
         // Creating expected message as JSON Object from the data that was sent towards endpoint
-        String expected = "Flow =Testflow, Storage 1 deleted.";
+        String expected = "Flow storage deleted";
 
-        assertThat(deleteResponse.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_OK));
         assertEquals(expected, actual);
+        assertThat(deleteResponse.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_OK));
     }
 
 
@@ -663,10 +662,10 @@ public class StorageControllerTest extends TestSpringBootInformation {
         String actual = responseAsJson.get("message").toString();
 
         // Creating expected message as JSON Object from the data that was sent towards endpoint
-        String expected = "Storage 1 deleted.";
+        String expected = "Storage deleted";
 
-        assertThat(deleteResponse.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_OK));
         assertEquals(expected, actual);
+        assertThat(deleteResponse.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_OK));
     }
 
 

@@ -150,10 +150,10 @@ public class FlowController {
                 String state = ((SQLException) cause).getSQLState();
                 if (state.equals("23000")) {
                     jsonErr.put("message", "Is in use");
-                    return new ResponseEntity<>(jsonErr.toString(), HttpStatus.NOT_FOUND);
+                    return new ResponseEntity<>(jsonErr.toString(), HttpStatus.BAD_REQUEST);
                 } else if (state.equals("45000")) {
                     jsonErr.put("message", "Record does not exist");
-                    return new ResponseEntity<>(jsonErr.toString(), HttpStatus.BAD_REQUEST);
+                    return new ResponseEntity<>(jsonErr.toString(), HttpStatus.NOT_FOUND);
                 }
             }
             return new ResponseEntity<>(jsonErr.toString(), HttpStatus.BAD_REQUEST);

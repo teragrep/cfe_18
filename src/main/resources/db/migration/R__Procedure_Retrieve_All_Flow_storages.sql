@@ -58,7 +58,7 @@ BEGIN
         SET @time = tx_id;
     END IF;
     SELECT ft.id          AS id,
-           f.name         AS flow,
+           f.id           AS flow_id,
            ft.storage_id  AS storage_id,
            s.storage_name AS storage_name,
            s.cfe_type     AS storage_type

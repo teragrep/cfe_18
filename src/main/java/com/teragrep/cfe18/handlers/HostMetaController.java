@@ -107,7 +107,7 @@ public class HostMetaController {
             LOGGER.debug("Values returned <[{}]>", hm);
             JSONObject jsonObject = new JSONObject();
             jsonObject.put("id", hm.getId());
-            jsonObject.put("message", "New host meta added for host");
+            jsonObject.put("message", "New host meta created");
             return new ResponseEntity<>(jsonObject.toString(), HttpStatus.CREATED);
         } catch (RuntimeException ex) {
             JSONObject jsonErr = new JSONObject();
@@ -142,7 +142,7 @@ public class HostMetaController {
         }
     }
 
-    @RequestMapping(method = RequestMethod.PUT, path = "/meta/{interfaceId}/{Id}", produces = "application/json")
+    @RequestMapping(method = RequestMethod.PUT, path = "/meta/interface/{interfaceId}/{Id}", produces = "application/json")
     @Operation(summary = "Link interface to hostmeta")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "Interface linked to hostmeta",
@@ -201,7 +201,7 @@ public class HostMetaController {
         }
     }
 
-    @RequestMapping(method = RequestMethod.PUT, path = "/meta/{ipId}/{Id}", produces = "application/json")
+    @RequestMapping(method = RequestMethod.PUT, path = "/meta/ip/{ipId}/{Id}", produces = "application/json")
     @Operation(summary = "Link IP to hostmeta")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "IP linked to hostmeta",
@@ -390,7 +390,7 @@ public class HostMetaController {
         }
     }
 
-    @RequestMapping(path = "/meta/{id}/{hostMetaId}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(path = "/meta/interface/{interfaceId}/{hostMetaId}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
     @Operation(summary = "Delete interface from host meta")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Interface deleted from host meta",
@@ -399,7 +399,7 @@ public class HostMetaController {
             @ApiResponse(responseCode = "400", description = "Interface does not exist",
                     content = @Content),
             @ApiResponse(responseCode = "500", description = "Internal server error, contact admin", content = @Content)})
-    public ResponseEntity<String> deleteLinkInterface(@PathVariable("id") int id,@PathVariable("hostMetaId") int hostMetaId) {
+    public ResponseEntity<String> deleteLinkInterface(@PathVariable("interfaceId") int id,@PathVariable("hostMetaId") int hostMetaId) {
         LOGGER.info("Deleting interface link <[{}]>", id);
         try {
             hostMetaMapper.deleteLinkInterface(id,hostMetaId);
@@ -427,7 +427,7 @@ public class HostMetaController {
         }
     }
 
-    @RequestMapping(path = "/meta/{id}/{hostMetaId}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(path = "/meta/ip/{ipId}/{hostMetaId}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
     @Operation(summary = "Delete ip address from host meta")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Ip address deleted from host meta",
@@ -436,7 +436,7 @@ public class HostMetaController {
             @ApiResponse(responseCode = "400", description = "Ip address does not exist",
                     content = @Content),
             @ApiResponse(responseCode = "500", description = "Internal server error, contact admin", content = @Content)})
-    public ResponseEntity<String> deleteLinkIp(@PathVariable("id") int id,@PathVariable("hostMetaId") int hostMetaId) {
+    public ResponseEntity<String> deleteLinkIp(@PathVariable("ipId") int id,@PathVariable("hostMetaId") int hostMetaId) {
         LOGGER.info("Deleting ip link <[{}]>", id);
         try {
             hostMetaMapper.deleteLinkIp(id,hostMetaId);
@@ -493,10 +493,10 @@ public class HostMetaController {
                 String state = ((SQLException) cause).getSQLState();
                 if (state.equals("23000")) {
                     jsonErr.put("message", "Is in use");
-                    return new ResponseEntity<>(jsonErr.toString(), HttpStatus.NOT_FOUND);
+                    return new ResponseEntity<>(jsonErr.toString(), HttpStatus.BAD_REQUEST);
                 } else if (state.equals("45000")) {
                     jsonErr.put("message", "Record does not exist");
-                    return new ResponseEntity<>(jsonErr.toString(), HttpStatus.BAD_REQUEST);
+                    return new ResponseEntity<>(jsonErr.toString(), HttpStatus.NOT_FOUND);
                 }
             }
             return new ResponseEntity<>(jsonErr.toString(), HttpStatus.BAD_REQUEST);
@@ -531,10 +531,10 @@ public class HostMetaController {
                 String state = ((SQLException) cause).getSQLState();
                 if (state.equals("23000")) {
                     jsonErr.put("message", "Is in use");
-                    return new ResponseEntity<>(jsonErr.toString(), HttpStatus.NOT_FOUND);
+                    return new ResponseEntity<>(jsonErr.toString(), HttpStatus.BAD_REQUEST);
                 } else if (state.equals("45000")) {
                     jsonErr.put("message", "Record does not exist");
-                    return new ResponseEntity<>(jsonErr.toString(), HttpStatus.BAD_REQUEST);
+                    return new ResponseEntity<>(jsonErr.toString(), HttpStatus.NOT_FOUND);
                 }
             }
             return new ResponseEntity<>(jsonErr.toString(), HttpStatus.BAD_REQUEST);

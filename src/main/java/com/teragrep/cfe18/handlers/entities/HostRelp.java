@@ -50,11 +50,10 @@ import io.swagger.v3.oas.annotations.media.Schema;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class HostRelp {
+    @Schema(accessMode = Schema.AccessMode.READ_ONLY)
     private int id;
     private String md5;
     private String fqHost;
-    private String hostName;
-    private int hostMetaId;
 
     public int getId() {
         return id;
@@ -80,30 +79,12 @@ public class HostRelp {
         this.fqHost = fqHost;
     }
 
-    public String getHostName() {
-        return hostName;
-    }
-
-    public void setHostName(String hostName) {
-        this.hostName = hostName;
-    }
-
-    public int getHostMetaId() {
-        return hostMetaId;
-    }
-
-    public void setHostMetaId(int hostMetaId) {
-        this.hostMetaId = hostMetaId;
-    }
-
     @Override
     public String toString() {
         return "HostRelp{" +
                 "id=" + id +
                 ", md5='" + md5 + '\'' +
                 ", fqHost='" + fqHost + '\'' +
-                ", hostName='" + hostName + '\'' +
-                ", hostMetaId=" + hostMetaId +
                 '}';
     }
 }

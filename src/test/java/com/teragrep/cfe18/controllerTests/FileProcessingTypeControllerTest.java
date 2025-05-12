@@ -109,7 +109,7 @@ public class FileProcessingTypeControllerTest extends TestSpringBootInformation 
                 ContentType.APPLICATION_JSON);
 
         // Creates the request
-        HttpPut request = new HttpPut("http://localhost:" + port + "/file/capture/meta/rule");
+        HttpPut request = new HttpPut("http://localhost:" + port + "/file/capture/meta");
         // set requestEntity to the put request
         request.setEntity(requestEntity);
         // Header
@@ -163,7 +163,7 @@ public class FileProcessingTypeControllerTest extends TestSpringBootInformation 
                 ContentType.APPLICATION_JSON);
 
         // Creates the request
-        HttpPut request = new HttpPut("http://localhost:" + port + "/file/capture/meta/rule");
+        HttpPut request = new HttpPut("http://localhost:" + port + "/file/capture/meta");
         // set requestEntity to the put request
         request.setEntity(requestEntity);
         // Header
@@ -222,7 +222,7 @@ public class FileProcessingTypeControllerTest extends TestSpringBootInformation 
                 ContentType.APPLICATION_JSON);
 
         // Creates the request
-        HttpPut request = new HttpPut("http://localhost:" + port + "/file/capture/meta/rule");
+        HttpPut request = new HttpPut("http://localhost:" + port + "/file/capture/meta");
         // set requestEntity to the put request
         request.setEntity(requestEntity);
         // Header
@@ -248,7 +248,7 @@ public class FileProcessingTypeControllerTest extends TestSpringBootInformation 
         // Test Get ALL
 
         // Asserting get request
-        HttpGet requestGet = new HttpGet("http://localhost:" + port + "/file/capture/meta/");
+        HttpGet requestGet = new HttpGet("http://localhost:" + port + "/file/capture/meta");
 
         requestGet.setHeader("Authorization", "Bearer " + token);
 
@@ -258,8 +258,8 @@ public class FileProcessingTypeControllerTest extends TestSpringBootInformation 
 
         String responseStringGet = EntityUtils.toString(entityGet, "UTF-8");
 
-        assertThat(responseGet.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_OK));
         assertEquals(expectedJson, responseStringGet);
+        assertThat(responseGet.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_OK));
     }
 
     // Delete endpoint tests
@@ -285,7 +285,7 @@ public class FileProcessingTypeControllerTest extends TestSpringBootInformation 
         String actual = responseAsJson.get("message").toString();
 
         // Creating expected message as JSON Object from the data that was sent towards endpoint
-        String expected = "File processing type deleted.";
+        String expected = "File processing type deleted";
 
         assertEquals(expected, actual);
         assertThat(deleteResponse.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_OK));
@@ -316,8 +316,8 @@ public class FileProcessingTypeControllerTest extends TestSpringBootInformation 
         // Creating expected message as JSON Object from the data that was sent towards endpoint
         String expected = "Record does not exist";
 
-        assertThat(deleteResponse.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_BAD_REQUEST));
         assertEquals(expected, actual);
+        assertThat(deleteResponse.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_NOT_FOUND));
 
     }
 
@@ -360,7 +360,7 @@ public class FileProcessingTypeControllerTest extends TestSpringBootInformation 
                 ContentType.APPLICATION_JSON);
 
         // Creates the request
-        HttpPut request1 = new HttpPut("http://localhost:" + port + "/sink/details");
+        HttpPut request1 = new HttpPut("http://localhost:" + port + "/sink");
         // set requestEntity to the put request
         request1.setEntity(requestEntity1);
         // Header

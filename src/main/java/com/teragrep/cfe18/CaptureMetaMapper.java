@@ -54,7 +54,7 @@ import java.util.List;
 @Mapper
 public interface CaptureMetaMapper {
      CaptureMeta create(
-             int capture_id,
+             int captureId,
              String captureMetaKey,
              String captureMetaValue);
 
@@ -62,7 +62,7 @@ public interface CaptureMetaMapper {
 
      List<CaptureMeta> getAll(Integer version);
 
-     CaptureMeta delete(int capture_id);
+     CaptureMeta delete(int captureId);
 
      List<CaptureDefinition> getKeyValue(String key, String value, Integer version);
 }

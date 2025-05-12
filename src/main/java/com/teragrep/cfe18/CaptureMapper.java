@@ -83,5 +83,5 @@ public interface CaptureMapper {
     List<CaptureFile> getAllFile(Integer version);
     List<CaptureRelp> getAllRelp(Integer version);
 
-    CaptureDefinition deleteCapture(int captureId);
+    CaptureDefinition delete(int captureId);
 }

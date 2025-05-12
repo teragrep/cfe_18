@@ -13,22 +13,22 @@
     </select>
 
     <!-- insert                     ( p_interface VARCHAR(255) )-->
-    <select id="createInterface" resultMap="insertedID" statementType="CALLABLE">
+    <select id="createInterface" resultMap="insertedIDinterface" statementType="CALLABLE">
         {CALL cfe_03.insert_interface(#{param1})}
     </select>
 
     <!-- insert                     ( ip_add VARCHAR(255) ) -->
-    <select id="createIp" resultMap="insertedID" statementType="CALLABLE">
+    <select id="createIp" resultMap="insertedIDip" statementType="CALLABLE">
         {CALL cfe_03.insert_ip_address(#{param1})}
     </select>
 
     <!-- insert link interface meta ( p_interface_id INT, p_hostmeta_id INT ) -->
-    <select id="createLinkInterface" resultMap="insertedID" statementType="CALLABLE">
+    <select id="createLinkInterface" resultMap="insertedIDinterface" statementType="CALLABLE">
         {CALL cfe_03.insert_interface_to_hostmeta(#{param1},#{param2})}
     </select>
 
     <!-- insert link ip meta        ( p_ip_id INT, p_hostmeta_id INT ) -->
-    <select id="createLinkIp" resultMap="insertedID" statementType="CALLABLE">
+    <select id="createLinkIp" resultMap="insertedIDip" statementType="CALLABLE">
         {CALL cfe_03.insert_ip_address_to_hostmeta(#{param1},#{param2})}
     </select>
 
@@ -127,6 +127,16 @@
 
     <!-- ID return map -->
     <resultMap id="insertedID" type="com.teragrep.cfe18.handlers.entities.HostMeta">
+        <result property="id"       column="id"/>
+    </resultMap>
+
+    <!-- ID return map -->
+    <resultMap id="insertedIDinterface" type="com.teragrep.cfe18.handlers.entities.InterfaceType">
+        <result property="id"       column="id"/>
+    </resultMap>
+
+    <!-- ID return map -->
+    <resultMap id="insertedIDip" type="com.teragrep.cfe18.handlers.entities.IPAddress">
         <result property="id"       column="id"/>
     </resultMap>
 

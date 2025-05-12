@@ -58,12 +58,12 @@ BEGIN
     ELSE
         SET @time = tx_id;
     END IF;
-    IF ((SELECT count(id) FROM flows FOR SYSTEM_TIME AS OF TRANSACTION @time WHERE id = flow_id) = 0) THEN
+    IF ((SELECT COUNT(id) FROM flows FOR SYSTEM_TIME AS OF TRANSACTION @time WHERE id = flow_id) = 0) THEN
         SELECT JSON_OBJECT('id', flow_id, 'message', 'Flow does not exist') INTO @fs;
         SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = @fs;
     ELSE
         SELECT ft.id           AS id,
-               f.name          AS flow,
+               f.id            AS flow_id,
                s.id            AS storage_id,
                s.storage_name  AS storage_name,
                ft.storage_type AS storage_type

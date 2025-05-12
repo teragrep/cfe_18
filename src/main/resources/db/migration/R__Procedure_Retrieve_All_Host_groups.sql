@@ -59,13 +59,8 @@ BEGIN
     END IF;
     SELECT hg.id        AS host_group_id,
            hg.groupName AS host_group_name,
-           hg.host_type AS host_group_type,
-           h.id         AS host_id,
-           h.MD5        AS host_md5
-    FROM location.host_group FOR SYSTEM_TIME AS OF TRANSACTION @time hg
-             INNER JOIN location.host_group_x_host FOR SYSTEM_TIME AS OF TRANSACTION @time hgxh
-                        ON hg.id = hgxh.host_group_id
-             INNER JOIN location.host FOR SYSTEM_TIME AS OF TRANSACTION @time h ON hgxh.host_id = h.id;
+           hg.host_type AS host_group_type
+    FROM location.host_group FOR SYSTEM_TIME AS OF TRANSACTION @time hg;
 END;
 //
 DELIMITER ;

@@ -20,7 +20,7 @@
         <result property="ipAddress"    column="ip"/>
         <result property="port"         column="port"/>
         <result property="protocol"     column="protocol"/>
-        <result property="flow"         column="flow"/>
+        <result property="flowId"       column="flow_id"/>
     </resultMap>
 
 
@@ -33,7 +33,7 @@
         <result property="ipAddress"    column="ip"/>
         <result property="port"         column="port"/>
         <result property="protocol"     column="protocol"/>
-        <result property="flow"         column="flow"/>
+        <result property="flowId"       column="flow_id"/>
     </resultMap>
 
 

@@ -59,15 +59,8 @@ BEGIN
     END IF;
     SELECT cdg.id                     AS id,
            cdg.capture_def_group_name AS group_name,
-           cdg.capture_type           AS group_type,
-           t.tag                      AS capture_tag,
-           cd.id                      AS capture_id
-    FROM cfe_18.capture_def_group FOR SYSTEM_TIME AS OF TRANSACTION @time cdg
-             INNER JOIN capture_def_group_x_capture_def FOR SYSTEM_TIME AS OF TRANSACTION @time cdgxcd
-                        ON cdg.id = cdgxcd.capture_def_group_id
-             INNER JOIN capture_definition FOR SYSTEM_TIME AS OF TRANSACTION @time cd
-                        ON cdgxcd.capture_def_id = cd.id AND cdgxcd.capture_type = cd.capture_type
-             INNER JOIN tags FOR SYSTEM_TIME AS OF TRANSACTION @time t ON cd.tag_id = t.id;
+           cdg.capture_type           AS group_type
+    FROM cfe_18.capture_def_group FOR SYSTEM_TIME AS OF TRANSACTION @time cdg;
 END;
 //
 DELIMITER ;

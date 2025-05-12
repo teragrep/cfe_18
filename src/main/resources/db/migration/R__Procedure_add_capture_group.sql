@@ -55,16 +55,14 @@ BEGIN
     START TRANSACTION;
     IF ((SELECT COUNT(id)
          FROM cfe_18.capture_def_group cdg
-         WHERE cdg.capture_def_group_name = group_name
-           AND cdg.capture_type = type) = 0) THEN
+         WHERE cdg.capture_def_group_name = group_name) = 0) THEN
         INSERT INTO cfe_18.capture_def_group(capture_def_group_name, capture_type)
         VALUES (group_name, type);
         SELECT LAST_INSERT_ID() AS id;
     ELSE
         SELECT id AS id
         FROM cfe_18.capture_def_group cdg
-        WHERE cdg.capture_def_group_name = group_name
-          AND cdg.capture_type = type;
+        WHERE cdg.capture_def_group_name = group_name;
     END IF;
     COMMIT;
 END;

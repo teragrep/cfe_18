@@ -10,7 +10,7 @@
                                                 app_protoc VARCHAR(64), flow VARCHAR(255),
                                                 tag_path VARCHAR(255), capture_path VARCHAR(255),
                                                 file_processing_id INT) -->
-    <select id="createFile" resultMap="id" statementType="CALLABLE">
+    <select id="createFile" resultMap="idFile" statementType="CALLABLE">
         {CALL
         cfe_18.insert_file_capture(#{param1},#{param2},#{param3},#{param4},#{param5},#{param6},#{param7},#{param8},#{param9},#{param10},#{param11})}
     </select>
@@ -19,17 +19,17 @@
                                                 meta_category VARCHAR(48), application VARCHAR(48),
                                                 capture_index VARCHAR(48), source_type VARCHAR(255),
                                                 app_protoc VARCHAR(64), flow VARCHAR(255) ) -->
-    <select id="createRelp" resultMap="id" statementType="CALLABLE">
+    <select id="createRelp" resultMap="idRelp" statementType="CALLABLE">
         {CALL
         cfe_18.insert_relp_capture(#{param1},#{param2},#{param3},#{param4},#{param5},#{param6},#{param7},#{param8})}
     </select>
 
 
     <!-- select cfe                         ( capture_id INT, tx_id INT ) -->
-    <select id="getCfe" resultMap="getCfe" statementType="CALLABLE">
+    <select id="getFile" resultMap="getCaptureCfe" statementType="CALLABLE">
         {CALL cfe_18.select_cfe_capture(#{param1},#{param2})}
     </select>
-    <resultMap type="com.teragrep.cfe18.handlers.entities.CaptureFile" id="getCfe">
+    <resultMap id="getCaptureCfe" type="com.teragrep.cfe18.handlers.entities.CaptureFile">
         <result property="id"                       column="id"/>
         <result property="tag"                      column="tag"/>
         <result property="retentionTime"            column="retention"/>
@@ -46,10 +46,10 @@
     </resultMap>
 
     <!-- select relp                        ( capture_id INT, tx_id INT )  -->
-    <select id="getRelp" resultMap="getRelp" statementType="CALLABLE">
+    <select id="getRelp" resultMap="getCaptureRelp" statementType="CALLABLE">
         {CALL cfe_18.select_relp_capture(#{param1},#{param2})}
     </select>
-    <resultMap type="com.teragrep.cfe18.handlers.entities.CaptureRelp" id="getRelp">
+    <resultMap id="getCaptureRelp" type="com.teragrep.cfe18.handlers.entities.CaptureRelp" >
         <result property="id"                   column="id"/>
         <result property="tag"                  column="tag"/>
         <result property="retentionTime"        column="retention_time"/>
@@ -64,7 +64,7 @@
 
 
     <!-- GET ALL CFE captures               ( tx_id INT ) -->
-    <select id="getAllCfe" resultMap="allCfe" statementType="CALLABLE">
+    <select id="getAllFile" resultMap="allCfe" statementType="CALLABLE">
         {CALL cfe_18.select_all_cfe_captures(#{param1})}
     </select>
     <resultMap id="allCfe" type="com.teragrep.cfe18.handlers.entities.CaptureFile">
@@ -108,7 +108,12 @@
 
 
     <!-- ID resultmap -->
-    <resultMap id="id" type="com.teragrep.cfe18.handlers.entities.CaptureDefinition">
+    <resultMap id="idFile" type="com.teragrep.cfe18.handlers.entities.CaptureFile">
+        <result property="id"                       column="id"/>
+    </resultMap>
+
+    <!-- ID resultmap -->
+    <resultMap id="idRelp" type="com.teragrep.cfe18.handlers.entities.CaptureRelp">
         <result property="id"                       column="id"/>
     </resultMap>
 

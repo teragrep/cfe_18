@@ -67,7 +67,9 @@ BEGIN
                                     INNER JOIN hubs h2 ON h.id = h2.host_id
                            WHERE h2.id = proc_hub_id)) > 0) THEN
         SELECT JSON_OBJECT('id', proc_hub_id, 'message', 'Hosts use the hub') INTO @ha;
-        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = @ha;
+        -- Signals constraint error since schema design is reversed and allows deleting hub that hosts rely on.
+        -- Should maybe rework schema on this part since it hides flawed design.
+        SIGNAL SQLSTATE '23000' SET MESSAGE_TEXT = @ha;
     END IF;
     -- select the host id before deleting hub since it's not accessible later
     SELECT host_id INTO @Hostid FROM cfe_00.hubs WHERE id = proc_hub_id;

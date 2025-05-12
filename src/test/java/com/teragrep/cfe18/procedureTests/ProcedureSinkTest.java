@@ -108,6 +108,6 @@ public class ProcedureSinkTest extends DBUnitbase {
         Assertions.assertEquals("ip11", rs.getString("ip"));
         Assertions.assertEquals("601", rs.getString("port"));
         Assertions.assertEquals("prot1", rs.getString("protocol"));
-        Assertions.assertEquals("flow2", rs.getString("flow"));
+        Assertions.assertEquals(2, rs.getInt("flow_id"));
     }
 }

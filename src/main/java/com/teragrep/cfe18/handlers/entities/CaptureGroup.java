@@ -54,7 +54,6 @@ public class CaptureGroup {
         cfe, relp
     }
 
-    @Schema(accessMode = Schema.AccessMode.READ_ONLY)
     private int id;
     private String captureGroupName;
     private groupType captureGroupType;

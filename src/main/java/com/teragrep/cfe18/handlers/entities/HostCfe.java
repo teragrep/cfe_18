@@ -57,10 +57,6 @@ public class HostCfe {
     private String fqHost;
     @Schema(accessMode = Schema.AccessMode.READ_ONLY)
     private int hubId;
-    @Schema(accessMode = Schema.AccessMode.READ_ONLY)
-    private String hostName;
-    @Schema(accessMode = Schema.AccessMode.READ_ONLY)
-    private int hostMetaId;
     private String hubFq;
 
     public int getId() {
@@ -95,22 +91,6 @@ public class HostCfe {
         this.hubId = hubId;
     }
 
-    public String getHostName() {
-        return hostName;
-    }
-
-    public void setHostName(String hostName) {
-        this.hostName = hostName;
-    }
-
-    public int getHostMetaId() {
-        return hostMetaId;
-    }
-
-    public void setHostMetaId(int hostMetaId) {
-        this.hostMetaId = hostMetaId;
-    }
-
     public String getHubFq() {
         return hubFq;
     }
@@ -126,8 +106,6 @@ public class HostCfe {
                 ", md5='" + md5 + '\'' +
                 ", fqHost='" + fqHost + '\'' +
                 ", hubId=" + hubId +
-                ", hostName='" + hostName + '\'' +
-                ", hostMetaId=" + hostMetaId +
                 ", hubFq='" + hubFq + '\'' +
                 '}';
     }

@@ -43,8 +43,6 @@
         <result property="id"                       column="id"/>
         <result property="captureGroupName"         column="group_name"/>
         <result property="captureGroupType"         column="group_type"/>
-        <result property="tag"                      column="capture_tag"/>
-        <result property="captureDefinitionId"      column="capture_id"/>
     </resultMap>
 
 

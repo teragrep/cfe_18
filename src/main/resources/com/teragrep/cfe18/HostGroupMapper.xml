@@ -43,19 +43,17 @@
         <result property="id"                   column="host_group_id"/>
         <result property="hostGroupName"        column="host_group_name"/>
         <result property="hostGroupType"        column="host_group_type"/>
-        <result property="hostId"               column="host_id"/>
-        <result property="md5"                  column="host_md5"/>
     </resultMap>
 
 
-    <!-- Delete  ( p_host_id INT, p_host_group_id INT )  -->
+    <!-- Delete  ( host_group_id INT ) -->
     <select id="delete" statementType="CALLABLE">
-        {CALL location.delete_host_from_group(#{param1},#{param2})}
+        {CALL location.delete_host_group(#{param1})}
     </select>
 
-    <!-- Delete  ( host_group_id INT ) -->
+    <!-- Delete  ( p_host_id INT, p_host_group_id INT )  -->
     <select id="deleteLink" statementType="CALLABLE">
-        {CALL location.delete_host_group(#{param1})}
+        {CALL location.delete_host_from_group(#{param1},#{param2})}
     </select>
 
 
