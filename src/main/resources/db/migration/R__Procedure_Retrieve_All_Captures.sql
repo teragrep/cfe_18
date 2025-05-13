@@ -70,7 +70,7 @@ BEGIN
            cg.capture_def_group_name as groupName,
            cmf.tagPath               as tagpath,
            cmf.capturePath           as capturepath,
-           pt.type_name              as processing_type
+           pt.id                   as processing_type_id
     from cfe_18.capture_definition for system_time as of transaction @time cd
              inner join application for system_time as of transaction @time a on cd.application_id = a.id
              inner join category for system_time as of transaction @time c on cd.category_id = c.id
@@ -87,7 +87,7 @@ BEGIN
                           t.id = cdgxcd.tag_id
              left join capture_def_group for system_time as of transaction @time cg on cdgxcd.capture_def_group_id = cg.id
              left join capture_meta_file for system_time as of transaction @time cmf on ct.id = cmf.id and ct.capture_type = cmf.capture_type
-             left join processing_type for system_time as of transaction @time pt on cmf.processing_type_id = pt.id;
+             left join file_processing_type for system_time as of transaction @time pt on cmf.processing_type_id = pt.id;
 end;
 //
 DELIMITER ;

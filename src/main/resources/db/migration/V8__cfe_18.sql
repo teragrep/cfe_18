@@ -45,56 +45,6 @@
  */
 use `cfe_18`;
 
-create table inputtype
-(
-    id        int auto_increment primary key,
-    inputtype varchar(20) not null check (inputtype in ('regex', 'newline')),
-    unique key (id, inputtype),
-    start_trxid BIGINT UNSIGNED GENERATED ALWAYS AS ROW START INVISIBLE,
-    end_trxid BIGINT UNSIGNED GENERATED ALWAYS AS ROW END INVISIBLE,
-    PERIOD FOR SYSTEM_TIME(start_trxid, end_trxid)
-) WITH SYSTEM VERSIONING;
-
-create table regex
-(
-    id        int primary key,
-    regex     varchar(255) not null,
-    inputtype varchar(20)  not null check (inputtype = 'regex'),
-    constraint inputTypeRegex foreign key (id, inputtype) references inputtype (id, inputtype),
-    start_trxid BIGINT UNSIGNED GENERATED ALWAYS AS ROW START INVISIBLE,
-    end_trxid BIGINT UNSIGNED GENERATED ALWAYS AS ROW END INVISIBLE,
-    PERIOD FOR SYSTEM_TIME(start_trxid, end_trxid)
-) WITH SYSTEM VERSIONING;
-
-create table newline
-(
-    id        int primary key,
-    newline   varchar(255) not null,
-    inputtype varchar(20)  not null check (inputtype = 'newline'),
-    constraint inputTypeNewline foreign key (id, inputtype) references inputtype (id, inputtype),
-    start_trxid BIGINT UNSIGNED GENERATED ALWAYS AS ROW START INVISIBLE,
-    end_trxid BIGINT UNSIGNED GENERATED ALWAYS AS ROW END INVISIBLE,
-    PERIOD FOR SYSTEM_TIME(start_trxid, end_trxid)
-) WITH SYSTEM VERSIONING;
-
-create table ruleset
-(
-    id   int auto_increment primary key,
-    rule varchar(1000) not null unique,
-    start_trxid BIGINT UNSIGNED GENERATED ALWAYS AS ROW START INVISIBLE,
-    end_trxid BIGINT UNSIGNED GENERATED ALWAYS AS ROW END INVISIBLE,
-    PERIOD FOR SYSTEM_TIME(start_trxid, end_trxid)
-) WITH SYSTEM VERSIONING;
-
-create table templates
-(
-    id       int auto_increment primary key,
-    template varchar(255) not null unique,
-    start_trxid BIGINT UNSIGNED GENERATED ALWAYS AS ROW START INVISIBLE,
-    end_trxid BIGINT UNSIGNED GENERATED ALWAYS AS ROW END INVISIBLE,
-    PERIOD FOR SYSTEM_TIME(start_trxid, end_trxid)
-) WITH SYSTEM VERSIONING;
-
 create table capture_type
 (
     id           int auto_increment primary key,
@@ -197,18 +147,16 @@ create table capture_definition
 
 
 
-create table cfe_18.processing_type
+create table cfe_18.file_processing_type
 (
-    id           int auto_increment primary key,
-    inputtype_id int,
-    ruleset_id   int,
-    template_id  int,
-    type_name    varchar(48) unique,
-    constraint ´input´ foreign key (inputtype_id) references inputtype (id),
-    constraint ´ruleset´ foreign key (ruleset_id) references ruleset (id),
-    constraint ´template´ foreign key (template_id) references templates (id),
-    index (type_name),
-    unique (inputtype_id, ruleset_id, template_id, type_name),
+    id          int auto_increment primary key,
+    name        varchar(48),
+    inputtype   enum('regex','newline') not null,
+    inputvalue  varchar(255) not null,
+    ruleset     varchar(1000) not null,
+    template    varchar(255) not null,
+    index (name),
+    unique (inputtype, inputvalue, ruleset, template, name),
     start_trxid BIGINT UNSIGNED GENERATED ALWAYS AS ROW START INVISIBLE,
     end_trxid BIGINT UNSIGNED GENERATED ALWAYS AS ROW END INVISIBLE,
     PERIOD FOR SYSTEM_TIME(start_trxid, end_trxid)
@@ -222,7 +170,7 @@ create table capture_meta_file
     processing_type_id int          not null,
     capture_type       varchar(64)  not null check (capture_type = 'cfe'),
     constraint captureTypeCfe foreign key (id, capture_type) references capture_type (id, capture_type) on delete cascade,
-    constraint metaFileToMetaType foreign key (processing_type_id) references processing_type (id),
+    constraint metaFileToMetaType foreign key (processing_type_id) references file_processing_type (id),
     start_trxid BIGINT UNSIGNED GENERATED ALWAYS AS ROW START INVISIBLE,
     end_trxid BIGINT UNSIGNED GENERATED ALWAYS AS ROW END INVISIBLE,
     PERIOD FOR SYSTEM_TIME(start_trxid, end_trxid)

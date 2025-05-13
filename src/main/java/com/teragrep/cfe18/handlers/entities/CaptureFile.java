@@ -66,7 +66,7 @@ public class CaptureFile {
     private String flow;
     private String tag_path;
     private String capture_path;
-    private String processing_type;
+    private int processing_type_id;
     @Schema(accessMode = Schema.AccessMode.READ_ONLY)
     private CaptureType captureType;
     @Schema(accessMode = Schema.AccessMode.READ_ONLY)
@@ -169,12 +169,12 @@ public class CaptureFile {
         this.capture_path = capture_path;
     }
 
-    public String getProcessing_type() {
-        return processing_type;
+    public int getProcessing_type_id() {
+        return processing_type_id;
     }
 
-    public void setProcessing_type(String processing_type) {
-        this.processing_type = processing_type;
+    public void setProcessing_type_id(int processing_type_id) {
+        this.processing_type_id = processing_type_id;
     }
 
     public CaptureType getCaptureType() {
@@ -199,7 +199,7 @@ public class CaptureFile {
                 ", flow='" + flow + '\'' +
                 ", tag_path='" + tag_path + '\'' +
                 ", capture_path='" + capture_path + '\'' +
-                ", processing_type='" + processing_type + '\'' +
+                ", processing_type_id=" + processing_type_id +
                 ", captureType=" + captureType +
                 ", captureGroup='" + captureGroup + '\'' +
                 '}';

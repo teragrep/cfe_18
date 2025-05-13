@@ -67,7 +67,7 @@ public interface CaptureMapper {
                                   String flow,
                                   String tag_path,
                                   String capture_path,
-                                  String processing_type);
+                                  int processing_type_id);
 
     CaptureRelp addNewCaptureRelp(String tag,
                                   String retention,

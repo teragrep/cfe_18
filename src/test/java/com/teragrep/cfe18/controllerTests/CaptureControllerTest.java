@@ -172,7 +172,7 @@ public class CaptureControllerTest extends TestSpringBootInformation {
         captureFile.setFlow("capflow");
         captureFile.setTag_path("tagpath1");
         captureFile.setCapture_path("capturepath1");
-        captureFile.setProcessing_type("capname");
+        captureFile.setProcessing_type_id(1);
 
         String jsonFile = gson.toJson(captureFile);
 
@@ -319,7 +319,7 @@ public class CaptureControllerTest extends TestSpringBootInformation {
         captureFile.setFlow("capflow");
         captureFile.setTag_path("tagpath1");
         captureFile.setCapture_path("capturepath1");
-        captureFile.setProcessing_type("capname");
+        captureFile.setProcessing_type_id(1);
         captureFile.setCaptureType(CaptureFile.CaptureType.cfe);
 
         String json = gson.toJson(captureFile);
@@ -360,7 +360,7 @@ public class CaptureControllerTest extends TestSpringBootInformation {
         captureFile2.setFlow("capflow");
         captureFile2.setTag_path("tagpath1");
         captureFile2.setCapture_path("capturepath1");
-        captureFile2.setProcessing_type("capname");
+        captureFile2.setProcessing_type_id(1);
         captureFile2.setCaptureType(CaptureFile.CaptureType.cfe);
 
         CaptureFile captureRelp2 = new CaptureFile();

@@ -45,9 +45,9 @@
  */
 use cfe_18;
 DELIMITER //
-CREATE OR REPLACE PROCEDURE insert_file_processing_type(meta_template_filename varchar(255), meta_rule varchar(1000),
-                                                            meta_rule_name varchar(255),
-                                                            inputtype varchar(20), inputvalue varchar(255)
+CREATE OR REPLACE PROCEDURE insert_file_processing_type(template_filename varchar(255), rule varchar(1000),
+                                                            rule_name varchar(255),
+                                                            inputtype enum('regex','newline'), inputvalue varchar(255)
 )
 BEGIN
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
@@ -56,88 +56,26 @@ BEGIN
             RESIGNAL;
         end;
 
+    -- if record does not exist then insert new one
+    if((select count(id) from cfe_18.file_processing_type fpt
+                         where fpt.name=rule_name
+                           and fpt.inputtype=inputtype
+                           and fpt.inputvalue=inputvalue
+                           and fpt.ruleset=rule
+                           and fpt.template=template_filename)=0) then
 
-    if ((inputtype != 'regex') and (inputtype != 'newline')) then
-        SELECT JSON_OBJECT('id', NULL, 'message', 'Provide correct inputtype. (Regex or Newline)') into @it;
-        signal sqlstate '45000' set message_text = @it;
-    end if;
+        insert into cfe_18.file_processing_type(name,inputtype,inputvalue,ruleset,template)
+        values (rule_name,inputtype,inputvalue,rule,template_filename);
+        select last_insert_id() as id;
 
-
-    if inputtype = 'regex' then
-        if (select regex from cfe_18.regex where regex = inputvalue) is null then
-            insert into cfe_18.inputtype(inputtype) values ('regex');
-            select last_insert_id() into @RegexId;
-            insert into cfe_18.regex(id, regex, inputtype) values (@RegexId, inputvalue, 'regex');
-            select last_insert_id() into @InputId;
-        else
-            select id into @InputId from cfe_18.regex where regex = inputvalue;
-        end if;
-    end if;
-    if inputtype = 'newline' then
-        if (select newline from cfe_18.newline where newline = inputvalue) is null then
-            insert into cfe_18.inputtype(inputtype) values ('newline');
-            select last_insert_id() into @NewlineId;
-            insert into cfe_18.newline(id, newline, inputtype) values (@NewlineId, inputvalue, 'newline');
-            select last_insert_id() into @InputId;
-        else
-            select id into @InputId from cfe_18.newline where newline = inputvalue;
-        end if;
-    end if;
-
-    if (select id from cfe_18.ruleset where rule = meta_rule) is null then
-        insert into cfe_18.ruleset(rule)
-        values (meta_rule);
-        select last_insert_id() into @RuleId;
+    -- if record exists then select the ID
     else
-        select id into @RuleId from cfe_18.ruleset where rule = meta_rule;
-    end if;
-
-    if (select id from cfe_18.templates where template = meta_template_filename) is null then
-        insert into cfe_18.templates(template)
-        values (meta_template_filename);
-        select last_insert_id() into @TemplateId;
-    else
-        select id into @TemplateId from cfe_18.templates where template = meta_template_filename;
-    end if;
-
-    -- check if row exists with the same name
-    if ((select count(id) from cfe_18.processing_type pt where pt.type_name=meta_rule_name)>0) then
-        -- check if values are also same
-        if((select count(id) from cfe_18.processing_type pt
-                             where inputtype_id=@InputId
-                               and ruleset_id=@RuleId
-                               and template_id=@TemplateId)>0) then
-            -- return the name of that row
-            select pt.type_name as name from cfe_18.processing_type pt where
-                   inputtype_id=@InputId and
-                   ruleset_id=@RuleId and
-                   template_id=@TemplateId;
-
-        -- in this case name was same but values different. Generate new name and insert values
-        else
-            -- generate new name in case name is already reserved
-            set @tempName = concat(@InputId,'_',@RuleId,'_',@RegexId,'_',@TemplateId);
-            insert into cfe_18.processing_type(inputtype_id, ruleset_id, template_id, type_name)
-            values (@InputId, @RuleId, @TemplateId, @tempName);
-            select @tempName as name;
-
-        end if;
-
-        -- Here name is different but values are same so we return the real name
-    elseif((select count(id) from cfe_18.processing_type pt
-                         where inputtype_id=@InputId
-                            and ruleset_id=@RuleId
-                            and template_id=@TemplateId)>0) then
-    select pt.type_name as name from cfe_18.processing_type pt
-                         where inputtype_id=@InputId
-                            and ruleset_id=@RuleId
-                            and template_id=@TemplateId;
-    -- else name is different and values are different. Just insert new row
-    else
-        insert into cfe_18.processing_type(inputtype_id, ruleset_id, template_id, type_name)
-        values (@InputId, @RuleId, @TemplateId, meta_rule_name);
-        select meta_rule_name as name;
-
+        select id as id from cfe_18.file_processing_type fpt
+                         where fpt.name=rule_name
+                           and fpt.inputtype=inputtype
+                           and fpt.inputvalue=inputvalue
+                           and fpt.ruleset=rule
+                           and fpt.template=template_filename;
     end if;
 
 end;
