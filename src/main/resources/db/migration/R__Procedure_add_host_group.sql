@@ -43,9 +43,9 @@
  * Teragrep, the applicable Commercial License may apply to this file if you as
  * a licensee so wish it.
  */
-use location;
+USE location;
 DELIMITER //
-CREATE OR REPLACE PROCEDURE add_host_group_with_host(proc_host_id int, host_group varchar(255))
+CREATE OR REPLACE PROCEDURE insert_host_group(hostGroupName VARCHAR(255), type VARCHAR(255))
 
 BEGIN
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
@@ -54,32 +54,14 @@ BEGIN
             RESIGNAL;
         END;
     START TRANSACTION;
-
-    if (select id from location.host where id = proc_host_id) is null then
-        SELECT JSON_OBJECT('id', NULL, 'message', 'host does not exist') into @host;
-        signal sqlstate '45000' set message_text = @host;
-    end if;
-
-    select host_type into @type from location.host where id = proc_host_id;
-
-
-    -- check if the group exists. If not then create said group
-    if (select groupName from location.host_group where groupName = host_group) is null then
-        insert into location.host_group(groupName, host_type) values (host_group, @type);
-        select last_insert_id() into @GroupId;
-    else
-        select id into @GroupId from location.host_group where groupName = host_group;
-    end if;
-
-    if (select id
-        from host_group_x_host
-        where host_group_id = @GroupId
-          and host_id = proc_host_id
-          and host_type = @type) is null then
-        insert into location.host_group_x_host(host_group_id, host_id, host_type)
-        values (@GroupId, proc_host_id, @type);
-    end if;
-    select host_group as name, @GroupId as last;
+    IF ((SELECT COUNT(id) FROM location.host_group WHERE groupName = hostGroupName) = 0) THEN
+        INSERT INTO location.host_group(host_type, groupName) VALUES (type, hostGroupName);
+        -- return ID
+        SELECT LAST_INSERT_ID() AS id;
+    ELSE
+        -- return ID
+        SELECT id FROM location.host_group WHERE groupName = hostGroupName AND host_type = type;
+    END IF;
     COMMIT;
 END;
 //

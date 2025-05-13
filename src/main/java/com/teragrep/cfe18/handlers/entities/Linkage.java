@@ -57,17 +57,8 @@ public class Linkage {
 
     @Schema(accessMode = Schema.AccessMode.READ_ONLY)
     private int id;
-    @Schema(accessMode = Schema.AccessMode.READ_ONLY)
-    private String capture_group_name;
-    @Schema(accessMode = Schema.AccessMode.READ_ONLY)
-    private String host_group_name;
-    @Schema(accessMode = Schema.AccessMode.READ_ONLY)
-    private group_type host_group_type;
-    @Schema(accessMode = Schema.AccessMode.READ_ONLY)
-    private group_type capture_group_type;
-
-    private int host_group_id;
-    private int capture_group_id;
+    private int hostGroupId;
+    private int captureGroupId;
 
     public int getId() {
         return id;
@@ -77,64 +68,28 @@ public class Linkage {
         this.id = id;
     }
 
-    public String getCapture_group_name() {
-        return capture_group_name;
+    public int getHostGroupId() {
+        return hostGroupId;
     }
 
-    public void setCapture_group_name(String capture_group_name) {
-        this.capture_group_name = capture_group_name;
+    public void setHostGroupId(int hostGroupId) {
+        this.hostGroupId = hostGroupId;
     }
 
-    public String getHost_group_name() {
-        return host_group_name;
+    public int getCaptureGroupId() {
+        return captureGroupId;
     }
 
-    public void setHost_group_name(String host_group_name) {
-        this.host_group_name = host_group_name;
-    }
-
-    public group_type getHost_group_type() {
-        return host_group_type;
-    }
-
-    public void setHost_group_type(group_type host_group_type) {
-        this.host_group_type = host_group_type;
-    }
-
-    public group_type getCapture_group_type() {
-        return capture_group_type;
-    }
-
-    public void setCapture_group_type(group_type capture_group_type) {
-        this.capture_group_type = capture_group_type;
-    }
-
-    public int getHost_group_id() {
-        return host_group_id;
-    }
-
-    public void setHost_group_id(int host_group_id) {
-        this.host_group_id = host_group_id;
-    }
-
-    public int getCapture_group_id() {
-        return capture_group_id;
-    }
-
-    public void setCapture_group_id(int capture_group_id) {
-        this.capture_group_id = capture_group_id;
+    public void setCaptureGroupId(int captureGroupId) {
+        this.captureGroupId = captureGroupId;
     }
 
     @Override
     public String toString() {
         return "Linkage{" +
                 "id=" + id +
-                ", capture_group_name='" + capture_group_name + '\'' +
-                ", host_group_name='" + host_group_name + '\'' +
-                ", host_group_type=" + host_group_type +
-                ", capture_group_type=" + capture_group_type +
-                ", host_group_id=" + host_group_id +
-                ", capture_group_id=" + capture_group_id +
+                ", hostGroupId=" + hostGroupId +
+                ", captureGroupId=" + captureGroupId +
                 '}';
     }
 }

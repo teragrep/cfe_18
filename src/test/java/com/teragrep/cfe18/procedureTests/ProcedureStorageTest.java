@@ -45,12 +45,15 @@
  */
 package com.teragrep.cfe18.procedureTests;
 
+import com.teragrep.cfe18.handlers.HostMetaController;
 import org.dbunit.Assertion;
 import org.dbunit.dataset.IDataSet;
 import org.dbunit.dataset.ITable;
 import org.dbunit.dataset.xml.FlatXmlDataSetBuilder;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.TestInstance;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.nio.file.Files;
@@ -69,16 +72,15 @@ public class ProcedureStorageTest extends DBUnitbase {
         return new FlatXmlDataSetBuilder().build(Files.newInputStream(Paths.get("src/test/resources/XMLProcedureStorage/procedureStorageData.xml")));
     }
 
-
     /*
     -Check that flow exists when inserting storage with flow
     -Takes flow,storage_type and target_name
-    -Throws 42000 when not existing
+    -Throws 45000 when not existing
     */
     public void testStorageFlowExistence() throws Exception {
         SQLException state = Assertions.assertThrows(SQLException.class, () -> {
-            CallableStatement stmnt = conn.prepareCall("{CALL flow.add_storage(?,?)}");
-            stmnt.setString(1, "FlowThatDontExist");
+            CallableStatement stmnt = conn.prepareCall("{CALL flow.insert_storage(?,?)}");
+            stmnt.setInt(1, 555);
             stmnt.setInt(2, 2);
             stmnt.execute();
 
@@ -98,8 +100,8 @@ public class ProcedureStorageTest extends DBUnitbase {
 
         ITable expectedTable = expectedDataSet.getTable("flow.flow_targets");
 
-        CallableStatement stmnt = conn.prepareCall("CALL flow.add_storage(?,?)");
-        stmnt.setString(1, "flow");
+        CallableStatement stmnt = conn.prepareCall("CALL flow.insert_flow_storage(?,?)");
+        stmnt.setInt(1, 2);
         stmnt.setInt(2, 2);
         stmnt.execute();
 
@@ -118,7 +120,7 @@ public class ProcedureStorageTest extends DBUnitbase {
 
         ITable expectedTable = expectedDataSet.getTable("cfe_18.capture_def_x_flow_targets");
 
-        CallableStatement stmnt = conn.prepareCall("CALL flow.add_storage_for_capture(?,?)");
+        CallableStatement stmnt = conn.prepareCall("CALL flow.insert_capture_storage(?,?)");
         stmnt.setInt(1, 1);
         stmnt.setInt(2, 2);
         stmnt.execute();
@@ -131,31 +133,30 @@ public class ProcedureStorageTest extends DBUnitbase {
     /*
     -Check if storage exists when linking storage to capture.
     -Takes capture_id and storage_id
-    -Throws 42000 when not existing
+    -Throws 45000 when not existing
      */
     public void testStorageMissingStorageLinkage() throws Exception {
         SQLException state = Assertions.assertThrows(SQLException.class, () -> {
-            CallableStatement stmnt = conn.prepareCall("{CALL flow.add_storage_for_capture(?,?)}");
+            CallableStatement stmnt = conn.prepareCall("{CALL flow.insert_capture_storage(?,?)}");
             stmnt.setInt(1, 1);
             stmnt.setInt(2, 40);
             stmnt.execute();
 
         });
-        Assertions.assertEquals("23000", state.getSQLState());
+        Assertions.assertEquals("45000", state.getSQLState());
     }
 
     /*
     -Check that capture can not be linked to indifferent flow storage
     -Takes capture_id and storage_id
-    -Throws 45000 when indifferent
+    -Throws 23000 when indifferent
   */
     public void testStorageDifferentFlowLinkage() throws Exception {
         SQLException state = Assertions.assertThrows(SQLException.class, () -> {
-            CallableStatement stmnt = conn.prepareCall("{CALL flow.add_storage_for_capture(?,?)}");
+            CallableStatement stmnt = conn.prepareCall("{CALL flow.insert_capture_storage(?,?)}");
             stmnt.setInt(1, 1);
-            stmnt.setInt(2, 7);
+            stmnt.setInt(2, 6);
             stmnt.execute();
-
         });
         Assertions.assertEquals("23000", state.getSQLState());
     }
@@ -167,12 +168,12 @@ public class ProcedureStorageTest extends DBUnitbase {
      */
     public void testStorageMissingCaptureLinkage() throws Exception {
         SQLException state = Assertions.assertThrows(SQLException.class, () -> {
-            CallableStatement stmnt = conn.prepareCall("{CALL flow.add_storage_for_capture(?,?)}");
+            CallableStatement stmnt = conn.prepareCall("{CALL flow.insert_capture_storage(?,?)}");
             stmnt.setInt(1, 500);
             stmnt.setInt(2, 1);
             stmnt.execute();
 
         });
-        Assertions.assertEquals("42000", state.getSQLState());
+        Assertions.assertEquals("45000", state.getSQLState());
     }
 }

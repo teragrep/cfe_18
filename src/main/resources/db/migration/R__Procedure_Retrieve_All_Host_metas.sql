@@ -43,33 +43,33 @@
  * Teragrep, the applicable Commercial License may apply to this file if you as
  * a licensee so wish it.
  */
-use cfe_03;
+USE cfe_03;
 DELIMITER //
-CREATE OR REPLACE PROCEDURE retrieve_all_host_metas(tx_id int)
+CREATE OR REPLACE PROCEDURE select_all_host_metas(tx_id INT)
 BEGIN
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
         BEGIN
             ROLLBACK;
             RESIGNAL;
-        end;
-        if(tx_id) is null then
-             set @time = (select max(transaction_id) from mysql.transaction_registry);
-        else
-             set @time=tx_id;
-        end if;
-    select hm.id       as host_meta_id,
-           hm.host_id  as host_id,
-           hm.hostname as host_name,
-           ot.os       as os,
-           ft.flavor   as flavor,
-           a.arch      as arch,
-           rv.rel_ver  as release_version
-    from cfe_03.host_meta for system_time as of transaction @time hm
-             inner join cfe_03.os_type for system_time as of transaction @time ot on hm.os_id = ot.id
-             inner join cfe_03.flavor_type for system_time as of transaction @time  ft on hm.flavor_id = ft.id
-             inner join cfe_03.arch_type for system_time as of transaction @time a on hm.arch_id = a.id
-             inner join cfe_03.release_version for system_time as of transaction @time rv on hm.release_ver_id = rv.id;
+        END;
+    IF (tx_id) IS NULL THEN
+        SET @time = (SELECT MAX(transaction_id) FROM mysql.transaction_registry);
+    ELSE
+        SET @time = tx_id;
+    END IF;
+    SELECT hm.id       AS id,
+           a.arch      AS arch,
+           rv.rel_ver  AS release_version,
+           ft.flavor   AS flavor,
+           ot.os       AS os,
+           hm.hostname AS hostname,
+           hm.host_id  AS host_id
+    FROM cfe_03.host_meta FOR SYSTEM_TIME AS OF TRANSACTION @time hm
+             INNER JOIN cfe_03.os_type FOR SYSTEM_TIME AS OF TRANSACTION @time ot ON hm.os_id = ot.id
+             INNER JOIN cfe_03.flavor_type FOR SYSTEM_TIME AS OF TRANSACTION @time ft ON hm.flavor_id = ft.id
+             INNER JOIN cfe_03.arch_type FOR SYSTEM_TIME AS OF TRANSACTION @time a ON hm.arch_id = a.id
+             INNER JOIN cfe_03.release_version FOR SYSTEM_TIME AS OF TRANSACTION @time rv ON hm.release_ver_id = rv.id;
 
-end;
+END;
 //
 DELIMITER ;

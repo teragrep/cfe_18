@@ -43,9 +43,9 @@
  * Teragrep, the applicable Commercial License may apply to this file if you as
  * a licensee so wish it.
  */
-use location;
+USE location;
 DELIMITER //
-CREATE OR REPLACE PROCEDURE remove_host_group(proc_host_group_name varchar(255))
+CREATE OR REPLACE PROCEDURE delete_host_group(host_group_id INT)
 BEGIN
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
         BEGIN
@@ -53,13 +53,13 @@ BEGIN
             RESIGNAL;
         END;
     START TRANSACTION;
-    if (select id from location.host_group where groupName = proc_host_group_name) is null then
-        SELECT JSON_OBJECT('id', null, 'message', 'Host group does not exist') into @hg;
-        signal sqlstate '45000' set message_text = @hg;
-    end if;
-
-    delete from location.host_group where groupName = proc_host_group_name;
+    IF ((SELECT COUNT(id) FROM location.host_group WHERE id = host_group_id) = 0) THEN
+        SELECT JSON_OBJECT('id', host_group_id, 'message', 'Host group does not exist') INTO @hg;
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = @hg;
+    END IF;
+    DELETE FROM location.host_group WHERE id = host_group_id;
     COMMIT;
+
 END;
 //
 DELIMITER ;

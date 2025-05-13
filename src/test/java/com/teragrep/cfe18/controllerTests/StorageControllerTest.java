@@ -86,8 +86,8 @@ public class StorageControllerTest extends TestSpringBootInformation {
     public void testInsertStorage() throws Exception {
 
         Storage storage = new Storage();
-        storage.setCfe_type(Storage.Cfe_type.cfe_04);
-        storage.setTarget_name("cfe_04");
+        storage.setCfeType(Storage.CfeType.cfe_04);
+        storage.setStorageName("cfe_04");
 
         String json = gson.toJson(storage);
 
@@ -122,10 +122,10 @@ public class StorageControllerTest extends TestSpringBootInformation {
         String actual = responseAsJson.get("message").toString();
 
         // Assertions
+        assertEquals(expected, actual);
         assertThat(
                 httpResponse.getStatusLine().getStatusCode(),
                 equalTo(HttpStatus.SC_CREATED));
-        assertEquals(expected, actual);
 
     }
 
@@ -135,8 +135,8 @@ public class StorageControllerTest extends TestSpringBootInformation {
         ArrayList<Storage> expected = new ArrayList<>();
 
         Storage storage = new Storage();
-        storage.setTarget_name("cfe_04");
-        storage.setCfe_type(Storage.Cfe_type.cfe_04);
+        storage.setStorageName("cfe_04");
+        storage.setCfeType(Storage.CfeType.cfe_04);
         storage.setId(1);
 
         expected.add(storage);
@@ -154,8 +154,8 @@ public class StorageControllerTest extends TestSpringBootInformation {
 
         String responseStringGet = EntityUtils.toString(entityGet, "UTF-8");
 
-        assertThat(responseGet.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_OK));
         assertEquals(expectedJson, responseStringGet);
+        assertThat(responseGet.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_OK));
 
     }
 
@@ -185,8 +185,8 @@ public class StorageControllerTest extends TestSpringBootInformation {
 
 
         FlowStorage flowStorage = new FlowStorage();
-        flowStorage.setFlow("Testflow");
-        flowStorage.setStorage_id(1);
+        flowStorage.setFlowId(1);
+        flowStorage.setStorageId(1);
 
         String jsonStorage = gson.toJson(flowStorage);
 
@@ -235,15 +235,15 @@ public class StorageControllerTest extends TestSpringBootInformation {
 
         FlowStorage flowStorage = new FlowStorage();
         flowStorage.setId(1);
-        flowStorage.setFlow("Testflow");
-        flowStorage.setStorage_name("cfe_04");
-        flowStorage.setStorage_type("cfe_04");
-        flowStorage.setStorage_id(1);
+        flowStorage.setFlowId(1);
+        flowStorage.setStorageName("cfe_04");
+        flowStorage.setStorageType("cfe_04");
+        flowStorage.setStorageId(1);
 
         expected.add(flowStorage);
 
         // Asserting get request
-        HttpGet requestGet = new HttpGet("http://localhost:" + port + "/storage/flow/Testflow");
+        HttpGet requestGet = new HttpGet("http://localhost:" + port + "/storage/flow/1");
 
         requestGet.setHeader("Authorization", "Bearer " + token);
 
@@ -255,8 +255,8 @@ public class StorageControllerTest extends TestSpringBootInformation {
 
         String expectedJson = new Gson().toJson(expected);
 
-        assertThat(responseGet.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_OK));
         assertEquals(expectedJson, responseStringGet);
+        assertThat(responseGet.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_OK));
     }
 
     @Test
@@ -267,10 +267,10 @@ public class StorageControllerTest extends TestSpringBootInformation {
 
         FlowStorage flowStorage = new FlowStorage();
         flowStorage.setId(1);
-        flowStorage.setFlow("Testflow");
-        flowStorage.setStorage_name("cfe_04");
-        flowStorage.setStorage_type("cfe_04");
-        flowStorage.setStorage_id(1);
+        flowStorage.setFlowId(1);
+        flowStorage.setStorageName("cfe_04");
+        flowStorage.setStorageType("cfe_04");
+        flowStorage.setStorageId(1);
 
         expected.add(flowStorage);
 
@@ -287,8 +287,8 @@ public class StorageControllerTest extends TestSpringBootInformation {
 
         String expectedJson = new Gson().toJson(expected);
 
-        assertThat(responseGet.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_OK));
         assertEquals(expectedJson, responseStringGet);
+        assertThat(responseGet.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_OK));
     }
 
     @Test
@@ -298,9 +298,9 @@ public class StorageControllerTest extends TestSpringBootInformation {
         // insert sink
 
         Sink sink = new Sink();
-        sink.setFlow("Testflow");
+        sink.setFlowId(1);
         sink.setPort("cap");
-        sink.setIp_address("capsink");
+        sink.setIpAddress("capsink");
         sink.setProtocol("prot");
 
         String json1 = gson.toJson(sink);
@@ -311,7 +311,7 @@ public class StorageControllerTest extends TestSpringBootInformation {
                 ContentType.APPLICATION_JSON);
 
         // Creates the request
-        HttpPut request1 = new HttpPut("http://localhost:" + port + "/sink/details");
+        HttpPut request1 = new HttpPut("http://localhost:" + port + "/sink");
         // set requestEntity to the put request
         request1.setEntity(requestEntity1);
         // Header
@@ -324,11 +324,11 @@ public class StorageControllerTest extends TestSpringBootInformation {
         // add relp type capture with the same flow
         CaptureRelp captureRelp = new CaptureRelp();
         captureRelp.setTag("relpTag");
-        captureRelp.setRetention_time("P30D");
+        captureRelp.setRetentionTime("P30D");
         captureRelp.setCategory("audit");
         captureRelp.setApplication("relp");
         captureRelp.setIndex("audit_relp");
-        captureRelp.setSource_type("relpsource1");
+        captureRelp.setSourceType("relpsource1");
         captureRelp.setProtocol("prot");
         captureRelp.setFlow("Testflow");
 
@@ -350,12 +350,9 @@ public class StorageControllerTest extends TestSpringBootInformation {
         HttpClientBuilder.create().build().execute(request3);
 
 
-        // link the cfe_04 storage to capture
-
-
         CaptureStorage captureStorage = new CaptureStorage();
-        captureStorage.setCapture_id(1);
-        captureStorage.setStorage_id(1);
+        captureStorage.setCaptureId(1);
+        captureStorage.setStorageId(1);
 
         String jsonStorage = gson.toJson(captureStorage);
 
@@ -403,9 +400,9 @@ public class StorageControllerTest extends TestSpringBootInformation {
     public void testRetrieveCaptureStorage() throws Exception {
         ArrayList<CaptureStorage> expected = new ArrayList<>();
         CaptureStorage captureStorage = new CaptureStorage();
-        captureStorage.setStorage_name("cfe_04");
-        captureStorage.setStorage_id(1);
-        captureStorage.setCapture_id(1);
+        captureStorage.setStorageName("cfe_04");
+        captureStorage.setStorageId(1);
+        captureStorage.setCaptureId(1);
 
         expected.add(captureStorage);
         String expectedJson = new Gson().toJson(expected);
@@ -421,8 +418,8 @@ public class StorageControllerTest extends TestSpringBootInformation {
 
         String responseStringGet = EntityUtils.toString(entityGet, "UTF-8");
 
-        assertThat(responseGet.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_OK));
         assertEquals(expectedJson, responseStringGet);
+        assertThat(responseGet.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_OK));
     }
 
     @Test
@@ -430,9 +427,9 @@ public class StorageControllerTest extends TestSpringBootInformation {
     public void testRetrieveCaptureStorages() throws Exception {
         ArrayList<CaptureStorage> expected = new ArrayList<>();
         CaptureStorage captureStorage = new CaptureStorage();
-        captureStorage.setStorage_name("cfe_04");
-        captureStorage.setStorage_id(1);
-        captureStorage.setCapture_id(1);
+        captureStorage.setStorageName("cfe_04");
+        captureStorage.setStorageId(1);
+        captureStorage.setCaptureId(1);
 
         expected.add(captureStorage);
         String expectedJson = new Gson().toJson(expected);
@@ -448,8 +445,8 @@ public class StorageControllerTest extends TestSpringBootInformation {
 
         String responseStringGet = EntityUtils.toString(entityGet, "UTF-8");
 
-        assertThat(responseGet.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_OK));
         assertEquals(expectedJson, responseStringGet);
+        assertThat(responseGet.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_OK));
     }
 
     // Delete
@@ -477,8 +474,8 @@ public class StorageControllerTest extends TestSpringBootInformation {
         // Creating expected message as JSON Object from the data that was sent towards endpoint
         String expected = "Record does not exist";
 
-        assertThat(deleteResponse.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_BAD_REQUEST));
         assertEquals(expected, actual);
+        assertThat(deleteResponse.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_NOT_FOUND));
     }
 
     @Test
@@ -511,7 +508,7 @@ public class StorageControllerTest extends TestSpringBootInformation {
     @Test
     @Order(11)
     public void testDeleteNonExistentFlowStorage() throws Exception {
-        HttpDelete delete = new HttpDelete("http://localhost:" + port + "/storage/flow/" + "Testflow/" + 124);
+        HttpDelete delete = new HttpDelete("http://localhost:" + port + "/storage/flow/32323/1233");
 
         // Header
         delete.setHeader("Authorization", "Bearer " + token);
@@ -530,15 +527,16 @@ public class StorageControllerTest extends TestSpringBootInformation {
 
         // Creating expected message as JSON Object from the data that was sent towards endpoint
         String expected = "Record does not exist";
+
         assertEquals(expected, actual);
-        assertThat(deleteResponse.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_BAD_REQUEST));
+        assertThat(deleteResponse.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_NOT_FOUND));
     }
 
 
     @Test
     @Order(12)
     public void testDeleteFlowStorageInUse() throws Exception {
-        HttpDelete delete = new HttpDelete("http://localhost:" + port + "/storage/flow/" + "Testflow/" + 1);
+        HttpDelete delete = new HttpDelete("http://localhost:" + port + "/storage/flow/1/1");
 
 
         // Header
@@ -585,8 +583,9 @@ public class StorageControllerTest extends TestSpringBootInformation {
 
         // Creating expected message as JSON Object from the data that was sent towards endpoint
         String expected = "Record does not exist";
+
         assertEquals(expected, actual);
-        assertThat(deleteResponse.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_BAD_REQUEST));
+        assertThat(deleteResponse.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_NOT_FOUND));
     }
 
     @Test
@@ -609,17 +608,17 @@ public class StorageControllerTest extends TestSpringBootInformation {
         String actual = responseAsJson.get("message").toString();
 
         // Creating expected message as JSON Object from the data that was sent towards endpoint
-        String expected = "Capture = " + 1 + ", with Storage " + 1 + " deleted.";
+        String expected = "Capture storage deleted";
 
-        assertThat(deleteResponse.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_OK));
         assertEquals(expected, actual);
+        assertThat(deleteResponse.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_OK));
     }
 
 
     @Test
     @Order(15)
     public void testDeleteFlowStorage() throws Exception {
-        HttpDelete delete = new HttpDelete("http://localhost:" + port + "/storage/flow/" + "Testflow/" + 1);
+        HttpDelete delete = new HttpDelete("http://localhost:" + port + "/storage/flow/1/1");
         // Header
         delete.setHeader("Authorization", "Bearer " + token);
 
@@ -636,10 +635,10 @@ public class StorageControllerTest extends TestSpringBootInformation {
         String actual = responseAsJson.get("message").toString();
 
         // Creating expected message as JSON Object from the data that was sent towards endpoint
-        String expected = "Flow =Testflow, Storage 1 deleted.";
+        String expected = "Flow storage deleted";
 
-        assertThat(deleteResponse.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_OK));
         assertEquals(expected, actual);
+        assertThat(deleteResponse.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_OK));
     }
 
 
@@ -663,10 +662,10 @@ public class StorageControllerTest extends TestSpringBootInformation {
         String actual = responseAsJson.get("message").toString();
 
         // Creating expected message as JSON Object from the data that was sent towards endpoint
-        String expected = "Storage 1 deleted.";
+        String expected = "Storage deleted";
 
-        assertThat(deleteResponse.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_OK));
         assertEquals(expected, actual);
+        assertThat(deleteResponse.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_OK));
     }
 
 

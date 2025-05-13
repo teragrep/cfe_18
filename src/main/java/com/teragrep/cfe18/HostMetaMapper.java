@@ -55,31 +55,41 @@ import java.util.List;
 @Mapper
 public interface HostMetaMapper {
 
-    List<HostMeta> getHostMetaById(int host_meta_id,Integer version);
+    HostMeta create(String arch,
+                    String flavor,
+                    String hostname,
+                    int hostId,
+                    String os,
+                    String releaseVersion);
 
-    HostMeta addHostMeta(String arch,
-                         String flavor,
-                         String hostname,
-                         int host_id,
-                         String os,
-                         String release_version);
+    InterfaceType createInterface(String interfaceType);
 
-    InterfaceType addInterface_type(String interface_type,
-                                    int host_meta_id);
+    IPAddress createIp(String ipAddress);
 
-    IPAddress addIpAddress(int host_meta_id,
-                           String ip_address);
+    InterfaceType createLinkInterface(int interfaceId, int hostMetaId);
 
-    List<HostMeta> getAllHostMeta(Integer version);
+    IPAddress createLinkIp(int ipAddressId, int hostMetaId);
 
-    List<IPAddress> getAllHostMetaIp(Integer version);
+    HostMeta getMeta(int hostMetaId, Integer version);
 
+    List<InterfaceType> getInterface(int hostMetaId, Integer version);
 
-    List<InterfaceType> getAllHostMetaInterface(Integer version);
+    List<IPAddress> getIp(int hostMetaId, Integer version);
 
-    IPAddress deleteIp(int id);
+    List<HostMeta> getAllMeta(Integer version);
 
-    InterfaceType deleteInterface(int id);
+    List<InterfaceType> getAllInterfaces(Integer version);
 
-    HostMeta deleteHostmeta(int id);
+    List<IPAddress> getAllIps(Integer version);
+
+    HostMeta delete(int id);
+
+    InterfaceType deleteLinkInterface(int id,int hostMetaId);
+
+    IPAddress deleteLinkIp(int id,int hostMetaId);
+
+    InterfaceType deleteInterface ( int id);
+
+    IPAddress deleteIp ( int id);
+
 }

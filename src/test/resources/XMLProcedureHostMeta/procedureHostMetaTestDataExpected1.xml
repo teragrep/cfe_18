@@ -24,11 +24,10 @@
     <cfe_03.ip_addresses id="1" ip_address="ip1"/>
     <cfe_03.ip_addresses id="2" ip_address="ip2"/>
     <cfe_03.ip_addresses id="3" ip_address="ip3"/>
-    <cfe_03.ip_addresses id="4" ip_address="ipaddress1"/>
     <cfe_03.host_meta_x_ip id="1" host_meta_id="1" ip_id="1"/>
     <cfe_03.host_meta_x_ip id="2" host_meta_id="1" ip_id="2"/>
     <cfe_03.host_meta_x_ip id="3" host_meta_id="1" ip_id="3"/>
-    <cfe_03.host_meta_x_ip id="4" host_meta_id="1" ip_id="4"/>
+    <cfe_03.host_meta_x_ip id="4" host_meta_id="2" ip_id="3"/>
     <cfe_03.host_meta_x_interface id="1" host_meta_id="1" interface_id="1"/>
     <cfe_03.host_meta_x_interface id="2" host_meta_id="1" interface_id="2"/>
 </dataset>

@@ -52,22 +52,12 @@ import io.swagger.v3.oas.annotations.media.Schema;
 public class FlowStorage {
     @Schema(accessMode = Schema.AccessMode.READ_ONLY)
     private int id;
+    private int flowId;
     @Schema(accessMode = Schema.AccessMode.READ_ONLY)
-    private String storage_type;
-
-    private String flow;
+    private String storageType;
     @Schema(accessMode = Schema.AccessMode.READ_ONLY)
-    private String storage_name;
-
-    private int storage_id;
-
-    public int getStorage_id() {
-        return storage_id;
-    }
-
-    public void setStorage_id(int storage_id) {
-        this.storage_id = storage_id;
-    }
+    private String storageName;
+    private int storageId;
 
     public int getId() {
         return id;
@@ -77,38 +67,46 @@ public class FlowStorage {
         this.id = id;
     }
 
-    public String getStorage_type() {
-        return storage_type;
+    public int getFlowId() {
+        return flowId;
     }
 
-    public void setStorage_type(String storage_type) {
-        this.storage_type = storage_type;
+    public void setFlowId(int flowId) {
+        this.flowId = flowId;
     }
 
-    public String getFlow() {
-        return flow;
+    public String getStorageType() {
+        return storageType;
     }
 
-    public void setFlow(String flow) {
-        this.flow = flow;
+    public void setStorageType(String storageType) {
+        this.storageType = storageType;
     }
 
-    public String getStorage_name() {
-        return storage_name;
+    public String getStorageName() {
+        return storageName;
     }
 
-    public void setStorage_name(String storage_name) {
-        this.storage_name = storage_name;
+    public void setStorageName(String storageName) {
+        this.storageName = storageName;
+    }
+
+    public int getStorageId() {
+        return storageId;
+    }
+
+    public void setStorageId(int storageId) {
+        this.storageId = storageId;
     }
 
     @Override
     public String toString() {
         return "FlowStorage{" +
                 "id=" + id +
-                ", storage_type='" + storage_type + '\'' +
-                ", flow='" + flow + '\'' +
-                ", storage_name='" + storage_name + '\'' +
-                ", storage_id=" + storage_id +
+                ", flowId=" + flowId +
+                ", storageType='" + storageType + '\'' +
+                ", storageName='" + storageName + '\'' +
+                ", storageId=" + storageId +
                 '}';
     }
 }

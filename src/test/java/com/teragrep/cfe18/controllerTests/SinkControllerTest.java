@@ -108,9 +108,9 @@ public class SinkControllerTest extends TestSpringBootInformation {
         // insert sink
 
         Sink sink = new Sink();
-        sink.setFlow("flow1");
+        sink.setFlowId(1);
         sink.setPort("601");
-        sink.setIp_address("ip1");
+        sink.setIpAddress("ip1");
         sink.setProtocol("prot1");
 
         String json = gson.toJson(sink);
@@ -121,7 +121,7 @@ public class SinkControllerTest extends TestSpringBootInformation {
                 ContentType.APPLICATION_JSON);
 
         // Creates the request
-        HttpPut request = new HttpPut("http://localhost:" + port + "/sink/details");
+        HttpPut request = new HttpPut("http://localhost:" + port + "/sink");
         // set requestEntity to the put request
         request.setEntity(requestEntity);
         // Header
@@ -147,10 +147,10 @@ public class SinkControllerTest extends TestSpringBootInformation {
         String actual = responseAsJson.get("message").toString();
 
         // Assertions
+        assertEquals(expected, actual);
         assertThat(
                 httpResponse.getStatusLine().getStatusCode(),
                 equalTo(HttpStatus.SC_CREATED));
-        assertEquals(expected, actual);
     }
 
     // Test getting the inserted sink
@@ -160,15 +160,16 @@ public class SinkControllerTest extends TestSpringBootInformation {
 
         // create expected Sink to match
         Sink sink = new Sink();
-        sink.setFlow("flow1");
+        sink.setId(1);
+        sink.setFlowId(1);
         sink.setPort("601");
-        sink.setIp_address("ip1");
+        sink.setIpAddress("ip1");
         sink.setProtocol("prot1");
 
         String json = gson.toJson(sink);
 
         // Asserting get request. Here the ID is hardcoded as one since Sink inserted earlier is Sink id = 1
-        HttpGet requestGet = new HttpGet("http://localhost:" + port + "/sink/id/" + 1);
+        HttpGet requestGet = new HttpGet("http://localhost:" + port + "/sink/1");
 
         requestGet.setHeader("Authorization", "Bearer " + token);
 
@@ -178,8 +179,8 @@ public class SinkControllerTest extends TestSpringBootInformation {
 
         String responseStringGet = EntityUtils.toString(entityGet, "UTF-8");
 
-        assertThat(responseGet.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_OK));
         assertEquals(json, responseStringGet);
+        assertThat(responseGet.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_OK));
     }
 
     // Test get ALL Sinks
@@ -191,9 +192,9 @@ public class SinkControllerTest extends TestSpringBootInformation {
         // insert sink another sink
 
         Sink sink = new Sink();
-        sink.setFlow("flow1");
+        sink.setFlowId(1);
         sink.setPort("601");
-        sink.setIp_address("IPaddress2");
+        sink.setIpAddress("IPaddress2");
         sink.setProtocol("tcp/ip");
         sink.setId(2);
 
@@ -205,7 +206,7 @@ public class SinkControllerTest extends TestSpringBootInformation {
                 ContentType.APPLICATION_JSON);
 
         // Creates the request
-        HttpPut request = new HttpPut("http://localhost:" + port + "/sink/details");
+        HttpPut request = new HttpPut("http://localhost:" + port + "/sink");
         // set requestEntity to the put request
         request.setEntity(requestEntity);
         // Header
@@ -216,9 +217,9 @@ public class SinkControllerTest extends TestSpringBootInformation {
 
         // adding the earlier sink to expected list
         Sink sink2 = new Sink();
-        sink2.setFlow("flow1");
+        sink2.setFlowId(1);
         sink2.setPort("601");
-        sink2.setIp_address("ip1");
+        sink2.setIpAddress("ip1");
         sink2.setProtocol("prot1");
         sink2.setId(1);
 
@@ -240,15 +241,15 @@ public class SinkControllerTest extends TestSpringBootInformation {
 
         String responseStringGet = EntityUtils.toString(entityGet, "UTF-8");
 
-        assertThat(responseGet.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_OK));
         assertEquals(expectedJson, responseStringGet);
+        assertThat(responseGet.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_OK));
     }
 
     // Delete
 
     @Test
     public void testDeleteSink() throws Exception {
-        HttpDelete delete = new HttpDelete("http://localhost:" + port + "/sink/id/" + 1);
+        HttpDelete delete = new HttpDelete("http://localhost:" + port + "/sink/1");
 
         // Header
         delete.setHeader("Authorization", "Bearer " + token);
@@ -266,15 +267,15 @@ public class SinkControllerTest extends TestSpringBootInformation {
         String actual = responseAsJson.get("message").toString();
 
         // Creating expected message as JSON Object from the data that was sent towards endpoint
-        String expected = "Sink with id = 1 deleted.";
+        String expected = "Sink deleted";
 
-        assertThat(deleteResponse.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_OK));
         assertEquals(expected, actual);
+        assertThat(deleteResponse.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_OK));
     }
 
     @Test
     public void testDeleteNonExistentSink() throws Exception {
-        HttpDelete delete = new HttpDelete("http://localhost:" + port + "/sink/id/" + 1245);
+        HttpDelete delete = new HttpDelete("http://localhost:" + port + "/sink/" + 1245);
 
         // Header
         delete.setHeader("Authorization", "Bearer " + token);
@@ -293,19 +294,19 @@ public class SinkControllerTest extends TestSpringBootInformation {
         // Creating expected message as JSON Object from the data that was sent towards endpoint
         String expected = "Record does not exist";
 
-        assertThat(deleteResponse.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_BAD_REQUEST));
         assertEquals(expected, actual);
+        assertThat(deleteResponse.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_NOT_FOUND));
     }
 
     @Test
     public void testSinkInUse() throws Exception {
         CaptureRelp captureRelp = new CaptureRelp();
         captureRelp.setTag("relpTag");
-        captureRelp.setRetention_time("P30D");
+        captureRelp.setRetentionTime("P30D");
         captureRelp.setCategory("audit");
         captureRelp.setApplication("relp");
         captureRelp.setIndex("audit_relp");
-        captureRelp.setSource_type("relpsource1");
+        captureRelp.setSourceType("relpsource1");
         captureRelp.setProtocol("tcp/ip");
         captureRelp.setFlow("flow1");
 
@@ -327,7 +328,7 @@ public class SinkControllerTest extends TestSpringBootInformation {
         HttpClientBuilder.create().build().execute(request3);
 
 
-        HttpDelete delete = new HttpDelete("http://localhost:" + port + "/sink/id/" + 2);
+        HttpDelete delete = new HttpDelete("http://localhost:" + port + "/sink/2");
 
         // Header
         delete.setHeader("Authorization", "Bearer " + token);
@@ -347,8 +348,8 @@ public class SinkControllerTest extends TestSpringBootInformation {
         // Creating expected message as JSON Object from the data that was sent towards endpoint
         String expected = "Is in use";
 
-        assertThat(deleteResponse.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_BAD_REQUEST));
         assertEquals(expected, actual);
+        assertThat(deleteResponse.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_BAD_REQUEST));
     }
 
 }

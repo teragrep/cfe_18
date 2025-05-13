@@ -43,35 +43,25 @@
  * Teragrep, the applicable Commercial License may apply to this file if you as
  * a licensee so wish it.
  */
-USE cfe_03;
+USE flow;
 DELIMITER //
-CREATE OR REPLACE PROCEDURE add_ip_address(p_host_meta_id int, ip_add varchar(255))
+CREATE OR REPLACE PROCEDURE select_all_storages(tx_id INT)
 BEGIN
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
         BEGIN
             ROLLBACK;
             RESIGNAL;
         END;
-    START TRANSACTION;
-
-    if (select id from host_meta where id = p_host_meta_id) is null then
-        SELECT JSON_OBJECT('id', p_host_meta_id, 'message', 'Given id for host meta does not exist') into @hmid;
-        signal sqlstate '45000' set message_text = @hmid;
-    end if;
-    if (select id from ip_addresses where ip_address = ip_add) is null then
-        insert into cfe_03.ip_addresses(ip_address)
-        values (ip_add);
-        select last_insert_id() into @ip_id;
-    else
-        select id into @ip_id from ip_addresses where ip_address = ip_add;
-    end if;
-
-    if (select id from cfe_03.host_meta_x_ip where host_meta_id = p_host_meta_id and ip_id = @ip_id) is null then
-        insert into cfe_03.host_meta_x_ip(host_meta_id, ip_id)
-        values (p_host_meta_id, @ip_id);
-    end if;
-    select p_host_meta_id as last;
-    COMMIT;
+    IF (tx_id) IS NULL THEN
+        SET @time = (SELECT MAX(transaction_id) FROM mysql.transaction_registry);
+    ELSE
+        SET @time = tx_id;
+    END IF;
+    SELECT s.id           AS id,
+           s.storage_name AS storage_name,
+           s.cfe_type     AS storage_type
+    FROM flow.storages FOR SYSTEM_TIME AS OF TRANSACTION @time s;
 END;
+
 //
 DELIMITER ;

@@ -54,15 +54,11 @@ public class HostMeta {
     @Schema(accessMode = Schema.AccessMode.READ_ONLY)
     private int id;
     private String arch;
+    private String releaseVersion;
     private String flavor;
-    private String hostname;
-    private Integer host_id;
     private String os;
-    private String release_version;
-    @Schema(accessMode = Schema.AccessMode.READ_ONLY)
-    private String interface_type;
-    @Schema(accessMode = Schema.AccessMode.READ_ONLY)
-    private String ip_address;
+    private String hostname;
+    private Integer hostId;
 
     public int getId() {
         return id;
@@ -80,28 +76,20 @@ public class HostMeta {
         this.arch = arch;
     }
 
+    public String getReleaseVersion() {
+        return releaseVersion;
+    }
+
+    public void setReleaseVersion(String releaseVersion) {
+        this.releaseVersion = releaseVersion;
+    }
+
     public String getFlavor() {
         return flavor;
     }
 
     public void setFlavor(String flavor) {
         this.flavor = flavor;
-    }
-
-    public String getHostname() {
-        return hostname;
-    }
-
-    public void setHostname(String hostname) {
-        this.hostname = hostname;
-    }
-
-    public Integer getHost_id() {
-        return host_id;
-    }
-
-    public void setHost_id(Integer host_id) {
-        this.host_id = host_id;
     }
 
     public String getOs() {
@@ -112,28 +100,20 @@ public class HostMeta {
         this.os = os;
     }
 
-    public String getRelease_version() {
-        return release_version;
+    public String getHostname() {
+        return hostname;
     }
 
-    public void setRelease_version(String release_version) {
-        this.release_version = release_version;
+    public void setHostname(String hostname) {
+        this.hostname = hostname;
     }
 
-    public String getInterface_type() {
-        return interface_type;
+    public Integer getHostId() {
+        return hostId;
     }
 
-    public void setInterface_type(String interface_type) {
-        this.interface_type = interface_type;
-    }
-
-    public String getIp_address() {
-        return ip_address;
-    }
-
-    public void setIp_address(String ip_address) {
-        this.ip_address = ip_address;
+    public void setHostId(Integer hostId) {
+        this.hostId = hostId;
     }
 
     @Override
@@ -141,13 +121,11 @@ public class HostMeta {
         return "HostMeta{" +
                 "id=" + id +
                 ", arch='" + arch + '\'' +
+                ", releaseVersion='" + releaseVersion + '\'' +
                 ", flavor='" + flavor + '\'' +
-                ", hostname='" + hostname + '\'' +
-                ", host_id=" + host_id +
                 ", os='" + os + '\'' +
-                ", release_version='" + release_version + '\'' +
-                ", interface_type='" + interface_type + '\'' +
-                ", ip_address='" + ip_address + '\'' +
+                ", hostname='" + hostname + '\'' +
+                ", hostId=" + hostId +
                 '}';
     }
 }

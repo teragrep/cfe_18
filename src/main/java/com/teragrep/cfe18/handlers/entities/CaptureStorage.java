@@ -50,41 +50,42 @@ import io.swagger.v3.oas.annotations.media.Schema;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class CaptureStorage {
-    private int storage_id;
-    private int capture_id;
+
+    private int captureId;
+    private int storageId;
     @Schema(accessMode = Schema.AccessMode.READ_ONLY)
-    private String storage_name;
+    private String storageName;
 
-    public int getStorage_id() {
-        return storage_id;
+    public int getCaptureId() {
+        return captureId;
     }
 
-    public void setStorage_id(int storage_id) {
-        this.storage_id = storage_id;
+    public void setCaptureId(int captureId) {
+        this.captureId = captureId;
     }
 
-    public int getCapture_id() {
-        return capture_id;
+    public int getStorageId() {
+        return storageId;
     }
 
-    public void setCapture_id(int capture_id) {
-        this.capture_id = capture_id;
+    public void setStorageId(int storageId) {
+        this.storageId = storageId;
     }
 
-    public String getStorage_name() {
-        return storage_name;
+    public String getStorageName() {
+        return storageName;
     }
 
-    public void setStorage_name(String storage_name) {
-        this.storage_name = storage_name;
+    public void setStorageName(String storageName) {
+        this.storageName = storageName;
     }
 
     @Override
     public String toString() {
         return "CaptureStorage{" +
-                "storage_id=" + storage_id +
-                ", capture_id=" + capture_id +
-                ", storage_name='" + storage_name + '\'' +
+                "captureId=" + captureId +
+                ", storageId=" + storageId +
+                ", storageName='" + storageName + '\'' +
                 '}';
     }
 }

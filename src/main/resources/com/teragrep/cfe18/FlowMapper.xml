@@ -4,31 +4,32 @@
         "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.teragrep.cfe18.FlowMapper">
 
-    <!-- Insert new flow -->
-    <select id="addNewFlow" resultMap="insertedID" statementType="CALLABLE">
-        {CALL
-        flow.add_flow(#{param1})}
+    <!-- insert             ( flowname VARCHAR(255) ) -->
+    <select id="create" resultMap="insertedID" statementType="CALLABLE">
+        {CALL flow.insert_flow(#{param1})}
     </select>
+
+
+    <!-- Get ALL            ( tx_id INT ) -->
+    <select id="getAll" resultMap="all" statementType="CALLABLE">
+        {CALL flow.select_all_flows(#{param1})}
+    </select>
+    <resultMap id="all" type="com.teragrep.cfe18.handlers.entities.Flow">
+        <result property="id"       column="id"/>
+        <result property="name"     column="name"/>
+    </resultMap>
+
+
+    <!-- Delete             ( flow_id INT )  -->
+    <select id="delete" statementType="CALLABLE">
+        {CALL flow.delete_flow(#{param1})}
+    </select>
+
+
+    <!-- ID return map -->
     <resultMap id="insertedID" type="com.teragrep.cfe18.handlers.entities.Flow">
-        <result property="name" column="name"/>
-        <result property="id" column="last"/>
+        <result property="id"       column="id"/>
     </resultMap>
-
-
-    <!-- Get ALL Flows -->
-    <select id="getAllFlow" resultMap="allFlow" statementType="CALLABLE">
-        {CALL flow.retrieve_all_flows(#{param1})}
-    </select>
-    <resultMap id="allFlow" type="com.teragrep.cfe18.handlers.entities.Flow">
-        <result property="id" column="id"/>
-        <result property="name" column="name"/>
-    </resultMap>
-
-
-    <!-- Delete -->
-    <select id="deleteFlow" statementType="CALLABLE">
-        {CALL flow.remove_flow(#{param1})}
-    </select>
 
 </mapper>
 

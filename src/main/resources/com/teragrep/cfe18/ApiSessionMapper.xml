@@ -12,6 +12,5 @@
         <result property="version" column="tx_id"/>
     </resultMap>
 
-
 </mapper>
 

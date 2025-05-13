@@ -21,7 +21,6 @@
     <cfe_03.host_meta id="2" release_ver_id="2" flavor_id="2" arch_id="2" os_id="2" host_id="3" hostname="host2"/>
     <cfe_03.interfaces id="1" interface="ens192"/>
     <cfe_03.interfaces id="2" interface="ens256"/>
-    <cfe_03.interfaces id="3" interface="interface1"/>
     <cfe_03.ip_addresses id="1" ip_address="ip1"/>
     <cfe_03.ip_addresses id="2" ip_address="ip2"/>
     <cfe_03.ip_addresses id="3" ip_address="ip3"/>
@@ -30,5 +29,5 @@
     <cfe_03.host_meta_x_ip id="3" host_meta_id="1" ip_id="3"/>
     <cfe_03.host_meta_x_interface id="1" host_meta_id="1" interface_id="1"/>
     <cfe_03.host_meta_x_interface id="2" host_meta_id="1" interface_id="2"/>
-    <cfe_03.host_meta_x_interface id="3" host_meta_id="1" interface_id="3"/>
+    <cfe_03.host_meta_x_interface id="3" host_meta_id="2" interface_id="2"/>
 </dataset>

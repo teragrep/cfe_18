@@ -84,9 +84,9 @@ public class ProcedureHostGroupFileTest extends DBUnitbase {
         ITable expectedTable2 = expectedDataSet.getTable("location.host");
         ITable expectedTable3 = expectedDataSet.getTable("location.host_group");
 
-        CallableStatement stmnt = conn.prepareCall("{call location.add_host_group_with_host(?,?)}");
+        CallableStatement stmnt = conn.prepareCall("{call location.insert_host_to_group(?,?)}");
         stmnt.setInt(1, 1); // host id
-        stmnt.setString(2, "host_group_6");
+        stmnt.setInt(2, 6);
         stmnt.execute();
         ITable actualTable2 = databaseConnection.createQueryTable("result", "select * from location.host");
         ITable actualTable3 = databaseConnection.createQueryTable("result", "select * from location.host_group");
@@ -97,38 +97,15 @@ public class ProcedureHostGroupFileTest extends DBUnitbase {
 
     }
 
-    /*
-    This test is for checking that new host group is created when one does not exist during insertion.
-     */
-    public void testProcedureAddHostWithNewGroup() throws Exception {
-        IDataSet expectedDataSet = new FlatXmlDataSetBuilder().build(new File("src/test/resources/XMLProcedureHostGroup/procedureHostGroupTestDataExpected2.xml"));
-        ITable expectedTable1 = expectedDataSet.getTable("location.host_group_x_host");
-        ITable expectedTable2 = expectedDataSet.getTable("location.host");
-        ITable expectedTable3 = expectedDataSet.getTable("location.host_group");
-
-        CallableStatement stmnt = conn.prepareCall("{call location.add_host_group_with_host(?,?)}");
-        stmnt.setInt(1, 1); // host id
-        stmnt.setString(2, "new_host_group");
-        stmnt.execute();
-
-        ITable actualTable1 = databaseConnection.createQueryTable("result", "select * from location.host_group_x_host");
-        ITable actualTable2 = databaseConnection.createQueryTable("result", "select * from location.host");
-        ITable actualTable3 = databaseConnection.createQueryTable("result", "select * from location.host_group");
-
-        Assertion.assertEqualsIgnoreCols(expectedTable1, actualTable1, new String[]{"id"});
-        Assertion.assertEquals(expectedTable2, actualTable2);
-        Assertion.assertEquals(expectedTable3, actualTable3);
-
-    }
 
     /*
     This test is for checking if the host id check is in place when inserting a host group with invalid host id
      */
     public void testHostValidityWithHostGroup() throws Exception {
         SQLException state = Assertions.assertThrows(SQLException.class, () -> {
-            CallableStatement stmnt = conn.prepareCall("{CALL location.add_host_group_with_host(?,?)}");
+            CallableStatement stmnt = conn.prepareCall("{CALL location.insert_host_to_group(?,?)}");
             stmnt.setInt(1, 1000);
-            stmnt.setString(2, "host_group_1");
+            stmnt.setInt(2, 1);
             stmnt.execute();
         });
         Assertions.assertEquals("45000", state.getSQLState());
@@ -140,18 +117,13 @@ public class ProcedureHostGroupFileTest extends DBUnitbase {
     public void testRetrieveHostGroupDetails() throws Exception {
         List<Integer> host_id = new ArrayList<>();
         List<String> md5 = new ArrayList<>();
-        CallableStatement stmnt = conn.prepareCall("{CALL location.retrieve_host_group_details(?,?)}");
-        stmnt.setString(1, "host_group_1");
+        CallableStatement stmnt = conn.prepareCall("{CALL location.select_hosts_in_group(?,?)}");
+        stmnt.setInt(1,1);
         stmnt.setString(2, null);
         ResultSet rs = stmnt.executeQuery();
         while (rs.next()) {
             host_id.add(rs.getInt("host_id"));
-            md5.add(rs.getString("md5"));
-            Assertions.assertEquals("host_group_1", rs.getString("group_name"));
-            Assertions.assertEquals("cfe", rs.getString("host_type"));
-            Assertions.assertEquals(1, rs.getInt("host_group_id"));
         }
         Assertions.assertEquals(Arrays.asList(1, 2, 3, 4), host_id);
-        Assertions.assertEquals(Arrays.asList("12365", "12322", "1323", "4123"), md5);
     }
 }

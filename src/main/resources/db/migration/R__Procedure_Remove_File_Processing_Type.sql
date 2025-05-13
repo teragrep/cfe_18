@@ -43,23 +43,24 @@
  * Teragrep, the applicable Commercial License may apply to this file if you as
  * a licensee so wish it.
  */
-use cfe_18;
+USE cfe_18;
 DELIMITER //
-CREATE OR REPLACE PROCEDURE delete_file_processing_type(p_id int)
+CREATE OR REPLACE PROCEDURE delete_file_processing_type(p_id INT)
 BEGIN
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
         BEGIN
             ROLLBACK;
             RESIGNAL;
-        end;
+        END;
     START TRANSACTION;
-    if ((select count(id) from cfe_18.file_processing_type where p_id=id)=0) then
-        SELECT JSON_OBJECT('id', p_id, 'message', 'File processing type does not exist') into @pt;
-        signal sqlstate '45000' set message_text = @pt;
-    end if;
+    IF ((SELECT COUNT(id) FROM cfe_18.file_processing_type WHERE p_id = id) = 0) THEN
+        SELECT JSON_OBJECT('id', p_id, 'message', 'File processing type does not exist') INTO @pt;
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = @pt;
+    END IF;
 
-    delete from cfe_18.file_processing_type where p_id = id;
+    DELETE FROM cfe_18.file_processing_type WHERE p_id = id;
     COMMIT;
-end;
+
+END;
 //
 DELIMITER ;

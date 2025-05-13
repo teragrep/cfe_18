@@ -46,34 +46,46 @@
 package com.teragrep.cfe18.handlers.entities;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import io.swagger.v3.oas.annotations.media.Schema;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class IPAddress {
 
+    @Schema(accessMode = Schema.AccessMode.READ_ONLY)
+    private int id;
     private String ipAddress;
-    private int host_meta_id;
+    private int hostMetaId;
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
 
     public String getIpAddress() {
         return ipAddress;
     }
 
-    public void setIpAddress(String ip_address) {
-        this.ipAddress = ip_address;
+    public void setIpAddress(String ipAddress) {
+        this.ipAddress = ipAddress;
     }
 
-    public int getHost_meta_id() {
-        return host_meta_id;
+    public int getHostMetaId() {
+        return hostMetaId;
     }
 
-    public void setHost_meta_id(int host_meta_id) {
-        this.host_meta_id = host_meta_id;
+    public void setHostMetaId(int hostMetaId) {
+        this.hostMetaId = hostMetaId;
     }
 
     @Override
     public String toString() {
-        return "Ip_Address{" +
-                "ip_address='" + ipAddress + '\'' +
-                ", host_meta_id=" + host_meta_id +
+        return "IPAddress{" +
+                "id=" + id +
+                ", ipAddress='" + ipAddress + '\'' +
+                ", hostMetaId=" + hostMetaId +
                 '}';
     }
 }

@@ -43,23 +43,30 @@
  * Teragrep, the applicable Commercial License may apply to this file if you as
  * a licensee so wish it.
  */
-use flow;
-DELIMITER //
-CREATE OR REPLACE PROCEDURE retrieve_storages(tx_id int)
-BEGIN
-    DECLARE EXIT HANDLER FOR SQLEXCEPTION
-        BEGIN
-            ROLLBACK;
-            RESIGNAL;
-        end;
-    if(tx_id) is null then
-        set @time = (select max(transaction_id) from mysql.transaction_registry);
-    else
-        set @time=tx_id;
-    end if;
-    select s.storage_name as storage_name, s.cfe_type as storage_type, s.id as storage_id
-    from flow.storages for system_time as of transaction @time s;
-end;
+use cfe_18;
+alter table cfe_18.capture_meta_file drop constraint metaFileToMetaType;
+drop table cfe_18.processing_type;
+drop table cfe_18.templates;
+drop table cfe_18.ruleset;
+drop table cfe_18.newline;
+drop table cfe_18.regex;
+drop table cfe_18.inputtype;
 
-//
-DELIMITER ;
+
+create table cfe_18.file_processing_type
+(
+    id          int auto_increment primary key,
+    name        varchar(48),
+    inputtype   enum('regex','newline') not null,
+    inputvalue  varchar(255) not null,
+    ruleset     varchar(1000) not null,
+    template    varchar(255) not null,
+    index (name),
+    unique (inputtype, inputvalue, ruleset, template, name),
+    start_trxid BIGINT UNSIGNED GENERATED ALWAYS AS ROW START INVISIBLE,
+    end_trxid BIGINT UNSIGNED GENERATED ALWAYS AS ROW END INVISIBLE,
+    PERIOD FOR SYSTEM_TIME(start_trxid, end_trxid)
+) WITH SYSTEM VERSIONING;
+
+alter table cfe_18.capture_meta_file add constraint metaFileToMetaType foreign key (processing_type_id) references file_processing_type (id);
+

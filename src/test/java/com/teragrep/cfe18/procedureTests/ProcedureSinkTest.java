@@ -77,11 +77,11 @@ public class ProcedureSinkTest extends DBUnitbase {
         ITable expectedTable1 = expectedDataSet.getTable("flow.L7");
         ITable expectedTable2 = expectedDataSet.getTable("flow.flows");
 
-        CallableStatement stmnt = conn.prepareCall("{CALL flow.add_sink(?,?,?,?)}");
+        CallableStatement stmnt = conn.prepareCall("{CALL flow.insert_sink(?,?,?,?)}");
         stmnt.setString(1, "prot3");
         stmnt.setString(2, "ip1");
         stmnt.setString(3, "1234");
-        stmnt.setString(4, "flow2");
+        stmnt.setInt(4, 2);
         stmnt.execute();
 
         ITable actualTable = databaseConnection.createQueryTable("result", "select * from flow.capture_sink");
@@ -100,14 +100,14 @@ public class ProcedureSinkTest extends DBUnitbase {
     Goal is to receive correct values from retrieve_sink_by_id procedure
      */
     public void testSinkRetrieveById() throws Exception {
-        CallableStatement stmnt = conn.prepareCall("{CALL flow.retrieve_sink_by_id(?,?)}");
-        stmnt.setString(1, "1");
+        CallableStatement stmnt = conn.prepareCall("{CALL flow.select_sink(?,?)}");
+        stmnt.setInt(1, 1);
         stmnt.setString(2, null);
         ResultSet rs = stmnt.executeQuery();
         rs.next();
         Assertions.assertEquals("ip11", rs.getString("ip"));
         Assertions.assertEquals("601", rs.getString("port"));
         Assertions.assertEquals("prot1", rs.getString("protocol"));
-        Assertions.assertEquals("flow2", rs.getString("flow"));
+        Assertions.assertEquals(2, rs.getInt("flow_id"));
     }
 }

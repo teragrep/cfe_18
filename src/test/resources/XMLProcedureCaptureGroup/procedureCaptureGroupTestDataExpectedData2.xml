@@ -75,7 +75,6 @@
     <cfe_18.capture_def_group id="4" capture_def_group_name="capturegroup4" capture_type="cfe"/>
     <cfe_18.capture_def_group id="5" capture_def_group_name="capturegroup5" capture_type="cfe"/>
     <cfe_18.capture_def_group id="6" capture_def_group_name="capturegroup6" capture_type="cfe"/>
-    <cfe_18.capture_def_group id="22" capture_def_group_name="group1" capture_type="cfe"/>
     <cfe_18.capture_def_group_x_capture_def id="1" capture_def_id="1" capture_def_group_id="1" tag_id="1"
                                             capture_type="cfe"/>
     <cfe_18.capture_def_group_x_capture_def id="2" capture_def_id="2" capture_def_group_id="1" tag_id="2"
@@ -99,8 +98,6 @@
     <cfe_18.capture_def_group_x_capture_def id="11" capture_def_id="12" capture_def_group_id="5" tag_id="10"
                                             capture_type="cfe"/>
     <cfe_18.capture_def_group_x_capture_def id="12" capture_def_id="8" capture_def_group_id="6" tag_id="8"
-                                            capture_type="cfe"/>
-    <cfe_18.capture_def_group_x_capture_def id="22" capture_def_id="2" capture_def_group_id="22" tag_id="2"
                                             capture_type="cfe"/>
     <location.host id="1" fqhost="1" MD5="12365" host_type="cfe"/>
     <location.host id="2" fqhost="12" MD5="12322" host_type="cfe"/>

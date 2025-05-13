@@ -57,15 +57,15 @@ public class CaptureRelp {
     @Schema(accessMode = Schema.AccessMode.READ_ONLY)
     private Integer id;
     private String tag;
-    private String retention_time;
-    private String category;
     private String application;
     private String index;
-    private String source_type;
-    private String protocol;
+    private String retentionTime;
+    private String sourceType;
+    private String category;
     private String flow;
+    private String protocol;
     @Schema(accessMode = Schema.AccessMode.READ_ONLY)
-    private CaptureType captureType;
+    private CaptureType type;
 
     public Integer getId() {
         return id;
@@ -99,28 +99,20 @@ public class CaptureRelp {
         this.index = index;
     }
 
-    public String getRetention_time() {
-        return retention_time;
+    public String getRetentionTime() {
+        return retentionTime;
     }
 
-    public void setRetention_time(String retention_time) {
-        this.retention_time = retention_time;
+    public void setRetentionTime(String retentionTime) {
+        this.retentionTime = retentionTime;
     }
 
-    public String getSource_type() {
-        return source_type;
+    public String getSourceType() {
+        return sourceType;
     }
 
-    public void setSource_type(String source_type) {
-        this.source_type = source_type;
-    }
-
-    public String getProtocol() {
-        return protocol;
-    }
-
-    public void setProtocol(String protocol) {
-        this.protocol = protocol;
+    public void setSourceType(String sourceType) {
+        this.sourceType = sourceType;
     }
 
     public String getCategory() {
@@ -139,12 +131,20 @@ public class CaptureRelp {
         this.flow = flow;
     }
 
-    public CaptureType getCaptureType() {
-        return captureType;
+    public String getProtocol() {
+        return protocol;
     }
 
-    public void setCaptureType(CaptureType captureType) {
-        this.captureType = captureType;
+    public void setProtocol(String protocol) {
+        this.protocol = protocol;
+    }
+
+    public CaptureType getType() {
+        return type;
+    }
+
+    public void setType(CaptureType type) {
+        this.type = type;
     }
 
     @Override
@@ -152,14 +152,14 @@ public class CaptureRelp {
         return "CaptureRelp{" +
                 "id=" + id +
                 ", tag='" + tag + '\'' +
-                ", retention_time='" + retention_time + '\'' +
-                ", category='" + category + '\'' +
                 ", application='" + application + '\'' +
                 ", index='" + index + '\'' +
-                ", source_type='" + source_type + '\'' +
-                ", protocol='" + protocol + '\'' +
+                ", retentionTime='" + retentionTime + '\'' +
+                ", sourceType='" + sourceType + '\'' +
+                ", category='" + category + '\'' +
                 ", flow='" + flow + '\'' +
-                ", captureType=" + captureType +
+                ", protocol='" + protocol + '\'' +
+                ", type=" + type +
                 '}';
     }
 }

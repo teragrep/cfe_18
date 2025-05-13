@@ -43,9 +43,9 @@
  * Teragrep, the applicable Commercial License may apply to this file if you as
  * a licensee so wish it.
  */
-use location;
+USE cfe_18;
 DELIMITER //
-CREATE OR REPLACE PROCEDURE remove_host(proc_host_id int)
+CREATE OR REPLACE PROCEDURE delete_linkage(linkage_id INT)
 BEGIN
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
         BEGIN
@@ -53,12 +53,13 @@ BEGIN
             RESIGNAL;
         END;
     START TRANSACTION;
-    if (select id from location.host where id = proc_host_id) is null then
-        SELECT JSON_OBJECT('id', null, 'message', 'Host does not exist') into @h;
-        signal sqlstate '45000' set message_text = @h;
-    end if;
-    delete from location.host where id = proc_host_id;
+    IF ((SELECT COUNT(id) FROM cfe_18.host_groups_x_capture_def_group WHERE id = linkage_id) = 0) THEN
+        SELECT JSON_OBJECT('id', linkage_id, 'message', 'Linkage does not exist') INTO @l;
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = @l;
+    END IF;
+    DELETE FROM cfe_18.host_groups_x_capture_def_group WHERE id = linkage_id;
     COMMIT;
+
 END;
 
 //

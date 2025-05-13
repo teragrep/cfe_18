@@ -109,7 +109,7 @@ public class FileProcessingTypeControllerTest extends TestSpringBootInformation 
                 ContentType.APPLICATION_JSON);
 
         // Creates the request
-        HttpPut request = new HttpPut("http://localhost:" + port + "/file/capture/meta/rule");
+        HttpPut request = new HttpPut("http://localhost:" + port + "/file/capture/meta");
         // set requestEntity to the put request
         request.setEntity(requestEntity);
         // Header
@@ -163,7 +163,7 @@ public class FileProcessingTypeControllerTest extends TestSpringBootInformation 
                 ContentType.APPLICATION_JSON);
 
         // Creates the request
-        HttpPut request = new HttpPut("http://localhost:" + port + "/file/capture/meta/rule");
+        HttpPut request = new HttpPut("http://localhost:" + port + "/file/capture/meta");
         // set requestEntity to the put request
         request.setEntity(requestEntity);
         // Header
@@ -222,7 +222,7 @@ public class FileProcessingTypeControllerTest extends TestSpringBootInformation 
                 ContentType.APPLICATION_JSON);
 
         // Creates the request
-        HttpPut request = new HttpPut("http://localhost:" + port + "/file/capture/meta/rule");
+        HttpPut request = new HttpPut("http://localhost:" + port + "/file/capture/meta");
         // set requestEntity to the put request
         request.setEntity(requestEntity);
         // Header
@@ -248,7 +248,7 @@ public class FileProcessingTypeControllerTest extends TestSpringBootInformation 
         // Test Get ALL
 
         // Asserting get request
-        HttpGet requestGet = new HttpGet("http://localhost:" + port + "/file/capture/meta/");
+        HttpGet requestGet = new HttpGet("http://localhost:" + port + "/file/capture/meta");
 
         requestGet.setHeader("Authorization", "Bearer " + token);
 
@@ -258,8 +258,8 @@ public class FileProcessingTypeControllerTest extends TestSpringBootInformation 
 
         String responseStringGet = EntityUtils.toString(entityGet, "UTF-8");
 
-        assertThat(responseGet.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_OK));
         assertEquals(expectedJson, responseStringGet);
+        assertThat(responseGet.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_OK));
     }
 
     // Delete endpoint tests
@@ -285,7 +285,7 @@ public class FileProcessingTypeControllerTest extends TestSpringBootInformation 
         String actual = responseAsJson.get("message").toString();
 
         // Creating expected message as JSON Object from the data that was sent towards endpoint
-        String expected = "File processing type deleted.";
+        String expected = "File processing type deleted";
 
         assertEquals(expected, actual);
         assertThat(deleteResponse.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_OK));
@@ -316,8 +316,8 @@ public class FileProcessingTypeControllerTest extends TestSpringBootInformation 
         // Creating expected message as JSON Object from the data that was sent towards endpoint
         String expected = "Record does not exist";
 
-        assertThat(deleteResponse.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_BAD_REQUEST));
         assertEquals(expected, actual);
+        assertThat(deleteResponse.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_NOT_FOUND));
 
     }
 
@@ -347,9 +347,9 @@ public class FileProcessingTypeControllerTest extends TestSpringBootInformation 
         // insert sink
 
         Sink sink = new Sink();
-        sink.setFlow("capflow");
+        sink.setFlowId(1);
         sink.setPort("cap");
-        sink.setIp_address("capsink");
+        sink.setIpAddress("capsink");
         sink.setProtocol("prot");
 
         String json1 = gson.toJson(sink);
@@ -360,7 +360,7 @@ public class FileProcessingTypeControllerTest extends TestSpringBootInformation 
                 ContentType.APPLICATION_JSON);
 
         // Creates the request
-        HttpPut request1 = new HttpPut("http://localhost:" + port + "/sink/details");
+        HttpPut request1 = new HttpPut("http://localhost:" + port + "/sink");
         // set requestEntity to the put request
         request1.setEntity(requestEntity1);
         // Header
@@ -372,16 +372,16 @@ public class FileProcessingTypeControllerTest extends TestSpringBootInformation 
         CaptureFile captureFile = new CaptureFile();
         captureFile.setId(1);
         captureFile.setTag("f466e5a4-tagpath1");
-        captureFile.setRetention_time("P30D");
+        captureFile.setRetentionTime("P30D");
         captureFile.setCategory("audit");
         captureFile.setApplication("app1");
         captureFile.setIndex("app1_audit");
-        captureFile.setSource_type("sourcetype1");
+        captureFile.setSourceType("sourcetype1");
         captureFile.setProtocol("prot");
         captureFile.setFlow("capflow");
-        captureFile.setTag_path("tagpath1");
-        captureFile.setCapture_path("capturepath1");
-        captureFile.setProcessing_type_id(1);
+        captureFile.setTagPath("tagpath1");
+        captureFile.setCapturePath("capturepath1");
+        captureFile.setFileProcessingTypeId(1);
 
         String jsonFile = gson.toJson(captureFile);
 

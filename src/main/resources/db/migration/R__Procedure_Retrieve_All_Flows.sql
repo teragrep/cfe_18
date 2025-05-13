@@ -43,21 +43,23 @@
  * Teragrep, the applicable Commercial License may apply to this file if you as
  * a licensee so wish it.
  */
-use flow;
-delimiter //
-create or replace procedure retrieve_all_flows(tx_id int)
-begin
-    declare exit handler for sqlexception
-        begin
-            rollback;
-            resignal;
-        end;
-    if(tx_id) is null then
-        set @time = (select max(transaction_id) from mysql.transaction_registry);
-    else
-        set @time=tx_id;
-    end if;
-    select id, name from flow.flows for system_time as of transaction @time;
-end;
+USE flow;
+DELIMITER //
+CREATE OR REPLACE PROCEDURE select_all_flows(tx_id INT)
+BEGIN
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+        BEGIN
+            ROLLBACK;
+            RESIGNAL;
+        END;
+    IF (tx_id) IS NULL THEN
+        SET @time = (SELECT MAX(transaction_id) FROM mysql.transaction_registry);
+    ELSE
+        SET @time = tx_id;
+    END IF;
+    SELECT id   AS id,
+           name AS name
+    FROM flow.flows FOR SYSTEM_TIME AS OF TRANSACTION @time;
+END;
 //
-delimiter ;
+DELIMITER ;

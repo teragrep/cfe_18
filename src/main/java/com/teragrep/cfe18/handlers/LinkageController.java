@@ -55,6 +55,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.json.JSONObject;
 import org.mybatis.spring.SqlSessionTemplate;
+import org.omg.SendingContext.RunTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -83,72 +84,25 @@ public class LinkageController {
     @Autowired
     LinkageMapper linkageMapper;
 
-
-    // retrieve g_x_g details by group_name
-    @RequestMapping(path = "/linkage/{name}", method = RequestMethod.GET, produces = "application/json")
-    @Operation(summary = "Fetch linkage by either capture group name or host group name")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Linkage retrieved",
-                    content = {@Content(mediaType = "application/json",
-                            schema = @Schema(implementation = Linkage.class))}),
-            @ApiResponse(responseCode = "400", description = "Record does not exist with the given group name",
-                    content = @Content),
-            @ApiResponse(responseCode = "500", description = "Internal server error, contact admin", content = @Content)
-    })
-    public ResponseEntity<?> getLinkage(@PathVariable("name") String name, @RequestParam(required = false) Integer version) {
-        try {
-            List<Linkage> l = linkageMapper.getLinkageByName(name,version);
-            return new ResponseEntity<>(l, HttpStatus.OK);
-        } catch (Exception ex) {
-            final Throwable cause = ex.getCause();
-            if (cause instanceof SQLException) {
-                JSONObject jsonErr = new JSONObject();
-                LOGGER.error((cause).getMessage());
-                String state = ((SQLException) cause).getSQLState();
-                if (state.equals("45000")) {
-                    jsonErr.put("message", "Record does not exist with the given group name");
-                    return new ResponseEntity<>(jsonErr.toString(), HttpStatus.BAD_REQUEST);
-                }
-            }
-            return new ResponseEntity<>("Unexpected error", HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
-
-
-    // GET ALL Linkages
-    @RequestMapping(path = "/linkage", method = RequestMethod.GET, produces = "application/json")
-    @Operation(summary = "Fetch all linkages", description = "Will return empty list if there are no linkages to fetch")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Linkages fetched",
-                    content = {@Content(mediaType = "application/json",
-                            schema = @Schema(implementation = Linkage.class))})
-    })
-    public List<Linkage> getAllLinkage(@RequestParam(required = false) Integer version) {
-        return linkageMapper.getAllLinkage(version);
-    }
-
-    // add new g_x_g
     @RequestMapping(path = "/linkage", method = RequestMethod.PUT, produces = "application/json")
-    @Operation(summary = "Insert new linkage")
+    @Operation(summary = "Create new linkage")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "New linkage created",
                     content = {@Content(mediaType = "application/json",
                             schema = @Schema(implementation = Linkage.class))}),
             @ApiResponse(responseCode = "400", description = "SQL Constraint error",
                     content = @Content),
-            @ApiResponse(responseCode = "500", description = "Internal server error, contact admin", content = @Content)
-    })
-    public ResponseEntity<String> newLinkage(@RequestBody Linkage newLinkage) {
-        LOGGER.info("About to insert <[{}]>",newLinkage);
+            @ApiResponse(responseCode = "500", description = "Internal server error, contact admin", content = @Content)})
+    public ResponseEntity<String> create(@RequestBody Linkage newLinkage) {
+        LOGGER.info("About to insert <[{}]>", newLinkage);
         try {
-            Linkage l = linkageMapper.addLinkage(
-                    newLinkage.getHost_group_id(),
-                    newLinkage.getCapture_group_id()
-            );
-            LOGGER.debug("Values returned <[{}]>",l);
+            Linkage l = linkageMapper.create(
+                    newLinkage.getHostGroupId(),
+                    newLinkage.getCaptureGroupId());
+            LOGGER.debug("Values returned <[{}]>", l);
             JSONObject jsonObject = new JSONObject();
             jsonObject.put("id", l.getId());
-            jsonObject.put("message", "New linkage created for groups = " + l.getCapture_group_name() + " and " + l.getHost_group_name());
+            jsonObject.put("message", "Linkage created");
             return new ResponseEntity<>(jsonObject.toString(), HttpStatus.CREATED);
         } catch (RuntimeException ex) {
             JSONObject jsonErr = new JSONObject();
@@ -158,7 +112,46 @@ public class LinkageController {
         }
     }
 
-    // Delete
+    @RequestMapping(path = "/linkage/{id}", method = RequestMethod.GET, produces = "application/json")
+    @Operation(summary = "Fetch linkage")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Linkage retrieved",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = Linkage.class))}),
+            @ApiResponse(responseCode = "400", description = "Record does not exist",
+                    content = @Content),
+            @ApiResponse(responseCode = "500", description = "Internal server error, contact admin", content = @Content)})
+    public ResponseEntity<?> get(@PathVariable("id") int id, @RequestParam(required = false) Integer version) {
+        try {
+            Linkage l = linkageMapper.get(id, version);
+            return new ResponseEntity<>(l, HttpStatus.OK);
+        } catch (RuntimeException ex) {
+            JSONObject jsonErr = new JSONObject();
+            jsonErr.put("id", id);
+            jsonErr.put("message", ex.getCause().toString());
+            final Throwable cause = ex.getCause();
+            if (cause instanceof SQLException) {
+                LOGGER.error((cause).getMessage());
+                String state = ((SQLException) cause).getSQLState();
+                if (state.equals("45000")) {
+                    jsonErr.put("message", "Record does not exist");
+                    return new ResponseEntity<>(jsonErr.toString(), HttpStatus.NOT_FOUND);
+                }
+            }
+            return new ResponseEntity<>(jsonErr.toString(), HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @RequestMapping(path = "/linkage", method = RequestMethod.GET, produces = "application/json")
+    @Operation(summary = "Fetch all linkages", description = "Will return empty list if there are no linkages to fetch")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Successfully retrieved",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = Linkage.class))})})
+    public List<Linkage> getAll(@RequestParam(required = false) Integer version) {
+        return linkageMapper.getAll(version);
+    }
+
     @RequestMapping(path = "/linkage/{id}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
     @Operation(summary = "Delete linkage")
     @ApiResponses(value = {
@@ -169,32 +162,33 @@ public class LinkageController {
                     content = @Content),
             @ApiResponse(responseCode = "500", description = "Internal server error, contact admin", content = @Content)
     })
-    public ResponseEntity<String> removeLinkage(@PathVariable("id") int id) {
-        LOGGER.info("Deleting Linkage <[{}]>",id);
-        JSONObject jsonErr = new JSONObject();
-        jsonErr.put("id", id);
+    public ResponseEntity<String> delete(@PathVariable("id") int id) {
+        LOGGER.info("Deleting Linkage <[{}]>", id);
         try {
-            linkageMapper.deleteLinkage(id);
+            linkageMapper.delete(id);
             JSONObject j = new JSONObject();
             j.put("id", id);
-            j.put("message", "Linkage with id = " + id + " deleted.");
+            j.put("message", "Linkage deleted");
             return new ResponseEntity<>(j.toString(), HttpStatus.OK);
-        } catch (Exception ex) {
+        } catch (RuntimeException ex) {
+            JSONObject jsonErr = new JSONObject();
+            jsonErr.put("id", id);
+            jsonErr.put("message", ex.getCause().getMessage());
             final Throwable cause = ex.getCause();
             if (cause instanceof SQLException) {
                 LOGGER.error((cause).getMessage());
                 String state = ((SQLException) cause).getSQLState();
                 if (state.equals("23000")) {
                     jsonErr.put("message", "Is in use");
+                    return new ResponseEntity<>(jsonErr.toString(), HttpStatus.BAD_REQUEST);
                 } else if (state.equals("45000")) {
                     jsonErr.put("message", "Record does not exist");
+                    return new ResponseEntity<>(jsonErr.toString(), HttpStatus.NOT_FOUND);
                 }
-                return new ResponseEntity<>(jsonErr.toString(), HttpStatus.BAD_REQUEST);
             }
-            return new ResponseEntity<>("Unexpected error", HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(jsonErr.toString(), HttpStatus.BAD_REQUEST);
         }
-
-
     }
-
 }
+
+

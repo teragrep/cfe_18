@@ -43,21 +43,70 @@
  * Teragrep, the applicable Commercial License may apply to this file if you as
  * a licensee so wish it.
  */
-DELIMITER //
+package com.teragrep.cfe18.handlers.entities;
 
-CREATE OR REPLACE PROCEDURE host_add_aws(proc_id int, proc_MD5 varchar(32), proc_fqhost varchar(128),
-                                         proc_host_type varchar(20), proc_account BIGINT)
-BEGIN
-    DECLARE EXIT HANDLER FOR SQLEXCEPTION
-        BEGIN
-            ROLLBACK;
-            RESIGNAL;
-        END;
-    insert into location.host values (proc_id, proc_MD5, proc_fqhost, proc_host_type);
-    if proc_host_type = 'aws' then
-        insert into location.host_type_aws values (last_insert_id(), proc_account, 'aws');
-    end if;
-END;
-//
-DELIMITER ;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import io.swagger.v3.oas.annotations.media.Schema;
 
+@JsonInclude(JsonInclude.Include.NON_NULL)
+public class HostCfe {
+
+    @Schema(accessMode = Schema.AccessMode.READ_ONLY)
+    private int id;
+    private String md5;
+    private String fqHost;
+    @Schema(accessMode = Schema.AccessMode.READ_ONLY)
+    private int hubId;
+    private String hubFq;
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getMd5() {
+        return md5;
+    }
+
+    public void setMd5(String md5) {
+        this.md5 = md5;
+    }
+
+    public String getFqHost() {
+        return fqHost;
+    }
+
+    public void setFqHost(String fqHost) {
+        this.fqHost = fqHost;
+    }
+
+    public int getHubId() {
+        return hubId;
+    }
+
+    public void setHubId(int hubId) {
+        this.hubId = hubId;
+    }
+
+    public String getHubFq() {
+        return hubFq;
+    }
+
+    public void setHubFq(String hubFq) {
+        this.hubFq = hubFq;
+    }
+
+    @Override
+    public String toString() {
+        return "HostCfe{" +
+                "id=" + id +
+                ", md5='" + md5 + '\'' +
+                ", fqHost='" + fqHost + '\'' +
+                ", hubId=" + hubId +
+                ", hubFq='" + hubFq + '\'' +
+                '}';
+    }
+}

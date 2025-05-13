@@ -43,55 +43,41 @@
  * Teragrep, the applicable Commercial License may apply to this file if you as
  * a licensee so wish it.
  */
-use location;
 DELIMITER //
-CREATE OR REPLACE PROCEDURE host_add_cfe(proc_MD5 varchar(32), proc_fqhost varchar(128),
-                                         proc_hub_fq varchar(128))
 
+CREATE OR REPLACE PROCEDURE insert_aws_host(proc_MD5 VARCHAR(32), proc_fqhost VARCHAR(128),
+                                            proc_host_type VARCHAR(20), proc_account_id BIGINT)
 BEGIN
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
         BEGIN
             ROLLBACK;
             RESIGNAL;
-        end;
-    start transaction;
-
-    select cfe_00.hubs.id
-    into @hubs_id
-    from cfe_00.hubs
-             inner join(select id from location.host where location.host.fqhost = proc_hub_fq) as hi
-    where hubs.host_id = hi.id;
-    if (select cfe_00.hubs.id
-        from cfe_00.hubs
-                 inner join(select id from location.host where location.host.fqhost = proc_hub_fq) as hi
-        where hubs.host_id = hi.id) is null then
-        SELECT JSON_OBJECT('id', @hubs_id, 'message', 'Hub does not exist') into @hub;
-        signal sqlstate '45000' set message_text = @hub;
-    else
-        if (select id
-            from location.host
-            where MD5 = proc_MD5
-              and fqhost = proc_fqhost
-              and host_type = 'cfe') is null then
-            insert into location.host(MD5, fqhost, host_type)
-            values (proc_MD5, proc_fqhost, 'cfe');
-            select last_insert_id() into @id;
-        else
-            select id into @id from location.host where MD5 = proc_MD5 and fqhost = proc_fqhost and host_type = 'cfe';
-        end if;
-    end if;
-
-    if (select host_id
-        from cfe_00.host_type_cfe
-        where host_id = @id
-          and host_type = 'cfe'
-          and hub_id = @hubs_id) is null then
-        insert into cfe_00.host_type_cfe(host_id, host_type, hub_id)
-        values (@id, 'cfe', @hubs_id);
-    end if;
-    commit;
-    select @id as last;
-
+        END;
+    START TRANSACTION;
+    IF ((SELECT COUNT(h.id)
+         FROM location.host h
+                  INNER JOIN location.host_type_aws hta ON hta.id = h.id
+         WHERE h.MD5 = proc_MD5
+           AND h.fqhost = proc_fqhost
+           AND h.host_type = proc_host_type
+           AND hta.accountId = proc_account_id) = 0) THEN
+        INSERT INTO location.host(MD5, fqhost, host_type) VALUES (proc_MD5, proc_fqhost, proc_host_type);
+        SELECT LAST_INSERT_ID() INTO @id;
+        INSERT INTO location.host_type_aws VALUES (LAST_INSERT_ID(), proc_account_id, 'aws');
+    ELSE
+        SELECT h.id
+        INTO @id
+        FROM location.host h
+                 INNER JOIN location.host_type_aws hta ON h.id = hta.id
+        WHERE h.MD5 = proc_MD5
+          AND h.fqhost = proc_fqhost
+          AND h.host_type = proc_host_type
+          AND hta.accountId = proc_account_id;
+    END IF;
+    COMMIT;
+    -- return ID
+    SELECT @id AS id;
 END;
 //
 DELIMITER ;
+

@@ -43,9 +43,9 @@
  * Teragrep, the applicable Commercial License may apply to this file if you as
  * a licensee so wish it.
  */
-use cfe_03;
+USE cfe_03;
 DELIMITER //
-CREATE OR REPLACE PROCEDURE remove_hostmeta_interface(proc_interface_id int)
+CREATE OR REPLACE PROCEDURE delete_interface(proc_interface_id INT)
 BEGIN
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
         BEGIN
@@ -53,12 +53,13 @@ BEGIN
             RESIGNAL;
         END;
     START TRANSACTION;
-    if (select id from cfe_03.interfaces where id = proc_interface_id) is null then
-        SELECT JSON_OBJECT('id', null, 'message', 'Interface does not exist') into @i;
-        signal sqlstate '45000' set message_text = @i;
-    end if;
-    delete from cfe_03.interfaces where id = proc_interface_id;
+    IF ((SELECT COUNT(id) FROM cfe_03.interfaces WHERE id = proc_interface_id) = 0) THEN
+        SELECT JSON_OBJECT('id', proc_interface_id, 'message', 'Interface does not exist') INTO @i;
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = @i;
+    END IF;
+    DELETE FROM cfe_03.interfaces WHERE id = proc_interface_id;
     COMMIT;
+
 END;
 //
 DELIMITER ;

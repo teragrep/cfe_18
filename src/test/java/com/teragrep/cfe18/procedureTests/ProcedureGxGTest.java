@@ -74,14 +74,12 @@ public class ProcedureGxGTest extends DBUnitbase {
         return new FlatXmlDataSetBuilder().build(Files.newInputStream(Paths.get("src/test/resources/XMLProcedureGxG/procedureGxGTestData.xml")));
     }
 
-    /*
-    Testataan että linkitys onnistuu capture groupin ja host groupin välillä
-     */
+
     public void testProcedureAddLinkageSuccess() throws Exception {
         IDataSet expectedDataSet = new FlatXmlDataSetBuilder().build(new File("src/test/resources/XMLProcedureGxG/procedureGxGTestDataExpected1.xml"));
         ITable expectedTable1 = expectedDataSet.getTable("cfe_18.host_groups_x_capture_def_group");
 
-        CallableStatement stmnt = conn.prepareCall("{call cfe_18.add_g_x_g(?,?)}");
+        CallableStatement stmnt = conn.prepareCall("{call cfe_18.insert_g_x_g(?,?)}");
         stmnt.setInt(1, 1); //Host group id
         stmnt.setInt(2, 6); //Capture group id
         stmnt.execute();
@@ -92,12 +90,10 @@ public class ProcedureGxGTest extends DBUnitbase {
 
     }
 
-    /*
-    Testataan että linkitys ei onnistu jos host_group ei ole olemassa
-     */
+
     public void testProcedureGxGNoHost() throws Exception {
         SQLException state = Assertions.assertThrows(SQLException.class, () -> {
-            CallableStatement stmnt = conn.prepareCall("{call cfe_18.add_g_x_g(?,?)}");
+            CallableStatement stmnt = conn.prepareCall("{call cfe_18.insert_g_x_g(?,?)}");
             stmnt.setInt(1, 100);
             stmnt.setInt(2, 2);
             stmnt.execute();
@@ -105,12 +101,9 @@ public class ProcedureGxGTest extends DBUnitbase {
         Assertions.assertEquals("45000", state.getSQLState());
     }
 
-    /*
-    Testataan että linkitys ei onnistu jos capture_group ei ole olemassa
-     */
     public void testProcedureGxGNoCapture() throws Exception {
         SQLException state = Assertions.assertThrows(SQLException.class, () -> {
-            CallableStatement stmnt = conn.prepareCall("{call cfe_18.add_g_x_g(?,?)}");
+            CallableStatement stmnt = conn.prepareCall("{call cfe_18.insert_g_x_g(?,?)}");
             stmnt.setInt(1, 1);
             stmnt.setInt(2, 200);
             stmnt.execute();
@@ -122,36 +115,18 @@ public class ProcedureGxGTest extends DBUnitbase {
     Testataan että tieto voidaan kerätä oikeassa muodossa käyttäen capture_group nimeä
  */
 
-    public void testProcedureGxGRetrieveByCapture() throws Exception {
-        CallableStatement stmnt = conn.prepareCall("{CALL cfe_18.retrieve_g_x_g_details(?,?)}");
-        stmnt.setString(1, "capturegroup1");
+    public void testProcedureGxGRetrieveById() throws Exception {
+        CallableStatement stmnt = conn.prepareCall("{CALL cfe_18.select_linkage(?,?)}");
+        stmnt.setInt(1, 1);
         stmnt.setString(2, null);
         ResultSet rs = stmnt.executeQuery();
         rs.next(); // Forward to next
-        Assertions.assertEquals("capturegroup1", rs.getString("capture_name"));
-        Assertions.assertEquals("host_group_1", rs.getString("host_name"));
-        Assertions.assertEquals(1, rs.getInt("g_x_g_id"));
-        Assertions.assertEquals("cfe", rs.getString("host_type"));
-        Assertions.assertEquals("cfe", rs.getString("capture_type"));
+        Assertions.assertEquals(1, rs.getInt("host_group_id"));
+        Assertions.assertEquals(1, rs.getInt("capture_group_id"));
+        Assertions.assertEquals(1, rs.getInt("id"));
     }
 
 
-    /*
-    Testataan että tieto voidaan kerätä oikeassa muodossa käyttäen host_group nimeä
-
-     */
-    public void testProcedureGxGRetrieveByHost() throws Exception {
-        CallableStatement stmnt = conn.prepareCall("{CALL cfe_18.retrieve_g_x_g_details(?,?)}");
-        stmnt.setString(1, "host_group_1");
-        stmnt.setString(2, null);
-        ResultSet rs = stmnt.executeQuery();
-        rs.next(); // Forward to next
-        Assertions.assertEquals("capturegroup1", rs.getString("capture_name"));
-        Assertions.assertEquals("host_group_1", rs.getString("host_name"));
-        Assertions.assertEquals(1, rs.getInt("g_x_g_id"));
-        Assertions.assertEquals("cfe", rs.getString("host_type"));
-        Assertions.assertEquals("cfe",  rs.getString("capture_type"));
-    }
 
     /*
     Testataan että linkitys ei onnistu jos capture type ei matchaa host typen kanssa
@@ -159,7 +134,7 @@ public class ProcedureGxGTest extends DBUnitbase {
      */
     public void testProcedureGxGTypeMismatch() throws Exception {
         SQLException state = Assertions.assertThrows(SQLException.class, () -> {
-            CallableStatement stmnt = conn.prepareCall("{CALL cfe_18.add_g_x_g(?,?)}");
+            CallableStatement stmnt = conn.prepareCall("{CALL cfe_18.insert_g_x_g(?,?)}");
             stmnt.setInt(1, 1);
             stmnt.setInt(2, 7);
             stmnt.execute();

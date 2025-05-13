@@ -43,9 +43,9 @@
  * Teragrep, the applicable Commercial License may apply to this file if you as
  * a licensee so wish it.
  */
-use cfe_03;
+USE cfe_00;
 DELIMITER //
-CREATE OR REPLACE PROCEDURE add_interface(p_interface varchar(255), p_host_meta_id int)
+CREATE OR REPLACE PROCEDURE select_cfe_host(proc_host_id INT, tx_id INT)
 BEGIN
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
         BEGIN
@@ -53,27 +53,35 @@ BEGIN
             RESIGNAL;
         END;
     START TRANSACTION;
+    IF (tx_id) IS NULL THEN
+        SET @time = (SELECT MAX(transaction_id) FROM mysql.transaction_registry);
+    ELSE
+        SET @time = tx_id;
+    END IF;
+    IF ((SELECT COUNT(id) FROM location.host FOR SYSTEM_TIME AS OF TRANSACTION @time WHERE id = proc_host_id) = 0) THEN
+        SELECT JSON_OBJECT('id', proc_host_id, 'message', 'Host does not exist') INTO @hid;
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = @hid;
+    END IF;
 
-    if (select id from host_meta where id = p_host_meta_id) is null then
-        SELECT JSON_OBJECT('id', p_host_meta_id, 'message', 'Given id for host meta does not exist') into @hmid;
-        signal sqlstate '45000' set message_text = @hmid;
-    end if;
-    if (select id from interfaces where interface = p_interface) is null then
-        insert into interfaces(interface)
-        values (p_interface);
-        select last_insert_id() into @InterfaceID;
-    else
-        select id into @InterfaceID from interfaces where interface = p_interface;
-    end if;
-
-    if (select id
-        from host_meta_x_interface
-        where host_meta_id = p_host_meta_id
-          and interface_id = @InterfaceID) is null then
-        insert into host_meta_x_interface(host_meta_id, interface_id)
-        values (p_host_meta_id, @InterfaceID);
-    end if;
-    select p_host_meta_id as last;
+    IF ((SELECT COUNT(h.id)
+         FROM location.host FOR SYSTEM_TIME AS OF TRANSACTION @time h
+                  INNER JOIN hubs FOR SYSTEM_TIME AS OF TRANSACTION @time h3 ON h.id = h3.host_id
+         WHERE h.id = proc_host_id) > 0) THEN
+        SELECT JSON_OBJECT('id', proc_host_id, 'message', 'Host is hub') INTO @hub;
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = @hub;
+    ELSE
+        SELECT h.id          AS id,
+               h.md5         AS host_md5,
+               h.fqhost      AS host_fq,
+               h2.id         AS hub_id,
+               h3.fqhost     AS hub_fq
+        FROM location.host FOR SYSTEM_TIME AS OF TRANSACTION @time h
+                 INNER JOIN host_type_cfe FOR SYSTEM_TIME AS OF TRANSACTION @time htc ON h.id = htc.host_id
+                 INNER JOIN hubs FOR SYSTEM_TIME AS OF TRANSACTION @time h2 ON htc.hub_id = h2.id
+                 INNER JOIN location.host FOR SYSTEM_TIME AS OF TRANSACTION @time h3 ON h2.host_id = h3.id
+        WHERE h.id = proc_host_id
+          AND h3.id = h2.host_id;
+    END IF;
     COMMIT;
 END;
 //
