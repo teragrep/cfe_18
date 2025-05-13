@@ -83,12 +83,12 @@ BEGIN
         VALUES (p_host_group_id, proc_host_id,
                 (SELECT host_type FROM location.host_group hg WHERE hg.id = p_host_group_id));
         -- return ID
-        SELECT hgxh.id AS id
+        SELECT hgxh.host_group_id AS id
         FROM location.host_group_x_host hgxh
         WHERE host_id = proc_host_id AND host_group_id = p_host_group_id;
     ELSE
         -- return ID
-        SELECT hgxh.id AS id
+        SELECT hgxh.host_group_id AS id
         FROM location.host_group_x_host hgxh
         WHERE host_id = proc_host_id AND host_group_id = p_host_group_id;
     END IF;

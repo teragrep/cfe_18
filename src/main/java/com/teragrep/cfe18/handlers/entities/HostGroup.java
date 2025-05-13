@@ -53,13 +53,10 @@ public class HostGroup {
     public enum groupType {
         cfe, relp
     }
-    @Schema(accessMode = Schema.AccessMode.READ_ONLY)
     private int id;
     private String hostGroupName;
     private groupType hostGroupType;
-    @Schema(accessMode = Schema.AccessMode.READ_ONLY)
     private int hostId;
-    @Schema(accessMode = Schema.AccessMode.READ_ONLY)
     private String md5;
 
     public int getId() {

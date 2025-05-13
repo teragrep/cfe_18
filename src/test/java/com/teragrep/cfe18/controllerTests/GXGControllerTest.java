@@ -64,6 +64,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
@@ -129,12 +130,128 @@ public class GXGControllerTest extends TestSpringBootInformation {
                 equalTo(HttpStatus.SC_CREATED));
         assertEquals(expected, actual);
 
-
     }
-
 
     @Test
     @Order(2)
+    public void testAddCaptureToGroup() throws Exception {
+        // add flow and sink
+
+        Flow flow = new Flow();
+        flow.setName("capflow");
+        String jsonFlow = gson.toJson(flow);
+
+        // forms the json to requestEntity
+        StringEntity requestEntityFlow = new StringEntity(
+                String.valueOf(jsonFlow),
+                ContentType.APPLICATION_JSON);
+
+        // Creates the request
+        HttpPut requestFlow = new HttpPut("http://localhost:" + port + "/flow");
+        // set requestEntity to the put request
+        requestFlow.setEntity(requestEntityFlow);
+        // Header
+        requestFlow.setHeader("Authorization", "Bearer " + token);
+
+        // Get the response from endpoint
+        HttpClientBuilder.create().build().execute(requestFlow);
+
+        Sink sink = new Sink();
+        sink.setFlowId(1);
+        sink.setPort("cap");
+        sink.setIpAddress("capsink");
+        sink.setProtocol("prot");
+
+        String jsonSink = gson.toJson(sink);
+
+        // forms the json to requestEntity
+        StringEntity requestEntitySink = new StringEntity(
+                String.valueOf(jsonSink),
+                ContentType.APPLICATION_JSON);
+
+        // Creates the request
+        HttpPut requestSink = new HttpPut("http://localhost:" + port + "/sink");
+        // set requestEntity to the put request
+        requestSink.setEntity(requestEntitySink);
+        // Header
+        requestSink.setHeader("Authorization", "Bearer " + token);
+
+        // Get the response from endpoint
+        HttpClientBuilder.create().build().execute(requestSink);
+
+        CaptureRelp captureRelp = new CaptureRelp();
+        captureRelp.setTag("relpTag");
+        captureRelp.setRetentionTime("P30D");
+        captureRelp.setCategory("audit");
+        captureRelp.setApplication("relp");
+        captureRelp.setIndex("audit_relp");
+        captureRelp.setSourceType("relpsource1");
+        captureRelp.setProtocol("prot");
+        captureRelp.setFlow("capFlow");
+
+        String jsonFile = gson.toJson(captureRelp);
+
+        // forms the json to requestEntity
+        StringEntity requestEntity3 = new StringEntity(
+                String.valueOf(jsonFile),
+                ContentType.APPLICATION_JSON);
+
+        // Creates the request
+        HttpPut request3 = new HttpPut("http://localhost:" + port + "/capture/relp");
+        // set requestEntity to the put request
+        request3.setEntity(requestEntity3);
+        // Header
+        request3.setHeader("Authorization", "Bearer " + token);
+
+        HttpClientBuilder.create().build().execute(request3);
+
+        // Capture Group
+        CaptureGroup captureGroup = new CaptureGroup();
+        captureGroup.setCaptureDefinitionId(1);
+        captureGroup.setId(1);
+
+        String cgJson = gson.toJson(captureGroup);
+
+        // forms the json to requestEntity
+        StringEntity requestEntityCaptureGroup = new StringEntity(
+                String.valueOf(cgJson),
+                ContentType.APPLICATION_JSON);
+
+        // Creates the request
+        HttpPut requestCaptureGroup = new HttpPut("http://localhost:" + port + "/capture/group/link");
+        // set requestEntity to the put request
+        requestCaptureGroup.setEntity(requestEntityCaptureGroup);
+        // Header
+        requestCaptureGroup.setHeader("Authorization", "Bearer " + token);
+
+        // Get the response from endpoint
+        HttpResponse httpResponse = HttpClientBuilder.create().build().execute(requestCaptureGroup);
+
+        // Get the entity from response
+        HttpEntity entity = httpResponse.getEntity();
+
+        // Entity response string
+        String responseString = EntityUtils.toString(entity);
+
+        // Parsin respponse as JSONObject
+        JSONObject responseAsJson = new JSONObject(responseString);
+
+        // Creating expected message as JSON Object from the data that was sent towards endpoint
+        String expected = "Capture linked with group";
+
+        // Creating string from Json that was given as a response
+        String actual = responseAsJson.get("message").toString();
+
+        // Assertions
+        assertEquals(expected, actual);
+        assertThat(
+                httpResponse.getStatusLine().getStatusCode(),
+                equalTo(HttpStatus.SC_CREATED));
+
+    }
+
+    @Test
+    @Order(3)
     public void testAddHostGroup() throws Exception {
 
         // Host Group
@@ -185,6 +302,78 @@ public class GXGControllerTest extends TestSpringBootInformation {
 
     @Test
     @Order(3)
+    public void testAddHostToGroup() throws Exception {
+
+
+        HostRelp relpHost = new HostRelp();
+        relpHost.setMd5("relpHostmd5");
+        relpHost.setFqHost("relpHostfq");
+
+        String json = gson.toJson(relpHost);
+
+        // forms the json to requestEntity
+        StringEntity requestEntity = new StringEntity(
+                String.valueOf(json),
+                ContentType.APPLICATION_JSON);
+
+        // Creates the request
+        HttpPut request = new HttpPut("http://localhost:" + port + "/host/relp");
+        // set requestEntity to the put request
+        request.setEntity(requestEntity);
+        // Header
+        request.setHeader("Authorization", "Bearer " + token);
+
+        // Get the response from endpoint
+        HttpClientBuilder.create().build().execute(request);
+
+        // Host Group
+        HostGroup relpHostGroup = new HostGroup();
+        relpHostGroup.setId(1);
+        relpHostGroup.setHostId(1);
+
+        String jsonGroup = gson.toJson(relpHostGroup);
+
+        // forms the json to requestEntity
+        StringEntity requestEntityGroup = new StringEntity(
+                String.valueOf(jsonGroup),
+                ContentType.APPLICATION_JSON);
+
+        // Creates the request
+        HttpPut requestGroup = new HttpPut("http://localhost:" + port + "/host/group/link");
+        // set requestEntity to the put request
+        requestGroup.setEntity(requestEntityGroup);
+        // Header
+        requestGroup.setHeader("Authorization", "Bearer " + token);
+
+        // Get the response from endpoint
+        HttpResponse httpResponse = HttpClientBuilder.create().build().execute(requestGroup);
+
+        // Get the entity from response
+        HttpEntity entity = httpResponse.getEntity();
+
+        // Entity response string
+        String responseString = EntityUtils.toString(entity);
+
+
+        // Parsin respponse as JSONObject
+        JSONObject responseAsJson = new JSONObject(responseString);
+
+        // Creating expected message as JSON Object from the data that was sent towards endpoint
+        String expected = "Host linked with group";
+
+        // Creating string from Json that was given as a response
+        String actual = responseAsJson.get("message").toString();
+
+        // Assertions
+        assertEquals(expected, actual);
+        assertThat(
+                httpResponse.getStatusLine().getStatusCode(),
+                equalTo(HttpStatus.SC_CREATED));
+
+    }
+
+    @Test
+    @Order(4)
     public void testAddLinkage() throws Exception {
         // Linkage
         Linkage linkage = new Linkage();
@@ -232,7 +421,7 @@ public class GXGControllerTest extends TestSpringBootInformation {
     }
 
     @Test
-    @Order(4)
+    @Order(5)
     public void testRetrieveCaptureGroup() throws Exception {
         CaptureGroup captureGroup = new CaptureGroup();
         captureGroup.setCaptureGroupType(CaptureGroup.groupType.relp);
@@ -258,7 +447,35 @@ public class GXGControllerTest extends TestSpringBootInformation {
     }
 
     @Test
-    @Order(5)
+    @Order(6)
+    public void testRetrieveCapturesInGroup() throws Exception {
+        List<CaptureGroup> captureGroupList = new ArrayList<>();
+        CaptureGroup captureGroup = new CaptureGroup();
+        captureGroup.setId(0);
+        captureGroup.setCaptureDefinitionId(1);
+
+        captureGroupList.add(captureGroup);
+
+        String expectedJson = new Gson().toJson(captureGroupList);
+
+        // Asserting get request
+        HttpGet requestGet = new HttpGet("http://localhost:" + port + "/capture/group/captures/1");
+
+        requestGet.setHeader("Authorization", "Bearer " + token);
+
+        HttpResponse responseGet = HttpClientBuilder.create().build().execute(requestGet);
+
+        HttpEntity entityGet = responseGet.getEntity();
+
+        String responseStringGet = EntityUtils.toString(entityGet, "UTF-8");
+
+        assertEquals(expectedJson, responseStringGet);
+        assertThat(responseGet.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_OK));
+
+    }
+
+    @Test
+    @Order(7)
     public void testRetrieveHostGroup() throws Exception {
         HostGroup hostGroup = new HostGroup();
         hostGroup.setHostId(0);
@@ -285,7 +502,35 @@ public class GXGControllerTest extends TestSpringBootInformation {
     }
 
     @Test
-    @Order(6)
+    @Order(7)
+    public void testRetrieveHostsInGroup() throws Exception {
+        List<HostGroup> hostGroups = new ArrayList<>();
+        HostGroup hostGroup = new HostGroup();
+        hostGroup.setHostId(1);
+        hostGroup.setId(0);
+
+        hostGroups.add(hostGroup);
+
+        String expectedJson = new Gson().toJson(hostGroups);
+
+        // Asserting get request
+        HttpGet requestGet = new HttpGet("http://localhost:" + port + "/host/group/hosts/1");
+
+        requestGet.setHeader("Authorization", "Bearer " + token);
+
+        HttpResponse responseGet = HttpClientBuilder.create().build().execute(requestGet);
+
+        HttpEntity entityGet = responseGet.getEntity();
+
+        String responseStringGet = EntityUtils.toString(entityGet, "UTF-8");
+
+        assertEquals(expectedJson, responseStringGet);
+        assertThat(responseGet.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_OK));
+
+    }
+
+    @Test
+    @Order(8)
     public void testRetrieveLinkage() throws Exception {
         Linkage linkage = new Linkage();
         linkage.setId(1);
@@ -310,9 +555,8 @@ public class GXGControllerTest extends TestSpringBootInformation {
 
     }
 
-
     @Test
-    @Order(7)
+    @Order(9)
     public void testRetrieveAllCaptureGroups() throws Exception {
         ArrayList<CaptureGroup> expected = new ArrayList<>();
         CaptureGroup captureGroup = new CaptureGroup();
@@ -340,9 +584,8 @@ public class GXGControllerTest extends TestSpringBootInformation {
 
     }
 
-
     @Test
-    @Order(8)
+    @Order(10)
     public void testRetrieveAllHostGroups() throws Exception {
         ArrayList<HostGroup> expected = new ArrayList<>();
         HostGroup hostGroup = new HostGroup();
@@ -371,7 +614,7 @@ public class GXGControllerTest extends TestSpringBootInformation {
     }
 
     @Test
-    @Order(9)
+    @Order(11)
     public void testRetrieveAllLinkages() throws Exception {
 
         ArrayList<Linkage> expected = new ArrayList<>();
@@ -400,10 +643,8 @@ public class GXGControllerTest extends TestSpringBootInformation {
 
     }
 
-    // Delete
-
     @Test
-    @Order(10)
+    @Order(12)
     public void testDeleteCaptureGroupInUse() throws Exception {
         //groupRelp
         HttpDelete delete = new HttpDelete("http://localhost:" + port + "/capture/group/1");
@@ -429,9 +670,8 @@ public class GXGControllerTest extends TestSpringBootInformation {
         assertThat(deleteResponse.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_BAD_REQUEST));
     }
 
-
     @Test
-    @Order(11)
+    @Order(13)
     public void testDeleteNonExistentCaptureGroup() throws Exception {
         HttpDelete delete = new HttpDelete("http://localhost:" + port + "/capture/group/125412");
 
@@ -456,9 +696,8 @@ public class GXGControllerTest extends TestSpringBootInformation {
         assertThat(deleteResponse.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_NOT_FOUND));
     }
 
-
     @Test
-    @Order(12)
+    @Order(14)
     public void testDeleteHostGroupInUse() throws Exception {
         // hostgroup1
         HttpDelete delete = new HttpDelete("http://localhost:" + port + "/host/group/1");
@@ -485,7 +724,7 @@ public class GXGControllerTest extends TestSpringBootInformation {
     }
 
     @Test
-    @Order(13)
+    @Order(15)
     public void testDeleteNonExistentHostGroup() throws Exception {
         HttpDelete delete = new HttpDelete("http://localhost:" + port + "/host/group/124");
 
@@ -511,9 +750,8 @@ public class GXGControllerTest extends TestSpringBootInformation {
         assertThat(deleteResponse.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_NOT_FOUND));
     }
 
-
     @Test
-    @Order(14)
+    @Order(16)
     public void testDeleteNonExistentLinkage() throws Exception {
         HttpDelete delete = new HttpDelete("http://localhost:" + port + "/capture/groups/linkage/125");
 
@@ -540,7 +778,7 @@ public class GXGControllerTest extends TestSpringBootInformation {
     }
 
     @Test
-    @Order(15)
+    @Order(17)
     public void testDeleteLinkage() throws Exception {
         HttpDelete delete = new HttpDelete("http://localhost:" + port + "/capture/groups/linkage/1");
 
@@ -565,19 +803,22 @@ public class GXGControllerTest extends TestSpringBootInformation {
         assertEquals(expected, actual);
         assertThat(deleteResponse.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_OK));
     }
+
     @Test
-    @Order(16)
+    @Order(18)
     public void testNoTwoTagsInCaptureGroup() throws Exception {
+
+
         // Insert another capture with the same tag
         CaptureRelp captureRelp = new CaptureRelp();
         captureRelp.setTag("relpTag");
-        captureRelp.setRetentionTime("P30D");
-        captureRelp.setCategory("audit2");
-        captureRelp.setApplication("relp2");
-        captureRelp.setIndex("audit_relp2");
-        captureRelp.setSourceType("relpsource2");
+        captureRelp.setRetentionTime("s");
+        captureRelp.setCategory("s");
+        captureRelp.setApplication("s");
+        captureRelp.setIndex("s");
+        captureRelp.setSourceType("s");
         captureRelp.setProtocol("prot");
-        captureRelp.setFlow("testflow1");
+        captureRelp.setFlow("capFlow");
 
         String relpJson = gson.toJson(captureRelp);
 
@@ -594,20 +835,31 @@ public class GXGControllerTest extends TestSpringBootInformation {
         requestCapture.setHeader("Authorization", "Bearer " + token);
 
         // Get the response from endpoint
-        HttpClientBuilder.create().build().execute(requestCapture);
+       HttpClientBuilder.create().build().execute(requestCapture);
 
-        // Try to insert new capture within same group and assert results
+
+        // Capture Group
+        CaptureGroup captureGroup = new CaptureGroup();
+        captureGroup.setCaptureDefinitionId(2);
+        captureGroup.setId(1);
+
+        String cgJson = gson.toJson(captureGroup);
+
+        // forms the json to requestEntity
+        StringEntity requestEntityCaptureGroup = new StringEntity(
+                String.valueOf(cgJson),
+                ContentType.APPLICATION_JSON);
 
         // Creates the request
-        HttpPut requestCaptureGroup = new HttpPut("http://localhost:" + port + "/capture/group/2/1");
-        // set requestEntity to the put request
+        HttpPut requestCaptureGroup = new HttpPut("http://localhost:" + port + "/capture/group/link");
+
+        requestCaptureGroup.setEntity(requestEntityCaptureGroup);
+
         // Header
         requestCaptureGroup.setHeader("Authorization", "Bearer " + token);
 
         // Get the response from endpoint
         HttpResponse httpResponse = HttpClientBuilder.create().build().execute(requestCaptureGroup);
-
-        // Assertion
 
         // Get the entity from response
         HttpEntity entity = httpResponse.getEntity();
@@ -631,10 +883,35 @@ public class GXGControllerTest extends TestSpringBootInformation {
                 equalTo(HttpStatus.SC_BAD_REQUEST));
     }
 
+    @Test
+    @Order(19)
+    public void testDeleteCaptureFromGroup() throws Exception {
+        HttpDelete delete = new HttpDelete("http://localhost:" + port + "/capture/group/1/1");
 
+        // Header
+        delete.setHeader("Authorization", "Bearer " + token);
+
+        HttpResponse deleteResponse = HttpClientBuilder.create().build().execute(delete);
+
+        HttpEntity entityDelete = deleteResponse.getEntity();
+
+        String responseStringGet = EntityUtils.toString(entityDelete, "UTF-8");
+
+        // Parsin respponse as JSONObject
+        JSONObject responseAsJson = new JSONObject(responseStringGet);
+
+        // Creating string from Json that was given as a response
+        String actual = responseAsJson.get("message").toString();
+
+        // Creating expected message as JSON Object from the data that was sent towards endpoint
+        String expected = "Capture deleted from group";
+
+        assertEquals(expected, actual);
+        assertThat(deleteResponse.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_OK));
+    }
 
     @Test
-    @Order(17)
+    @Order(20)
     public void testDeleteCaptureGroup() throws Exception {
         //groupRelp
         HttpDelete delete = new HttpDelete("http://localhost:" + port + "/capture/group/1");
@@ -662,7 +939,35 @@ public class GXGControllerTest extends TestSpringBootInformation {
     }
 
     @Test
-    @Order(18)
+    @Order(21)
+    public void testDeleteHostFromGroup() throws Exception {
+        // deletes host 1 from group 1
+        HttpDelete delete = new HttpDelete("http://localhost:" + port + "/host/group/1/1");
+
+        // Header
+        delete.setHeader("Authorization", "Bearer " + token);
+
+        HttpResponse deleteResponse = HttpClientBuilder.create().build().execute(delete);
+
+        HttpEntity entityDelete = deleteResponse.getEntity();
+
+        String responseStringGet = EntityUtils.toString(entityDelete, "UTF-8");
+
+        // Parsin respponse as JSONObject
+        JSONObject responseAsJson = new JSONObject(responseStringGet);
+
+        // Creating string from Json that was given as a response
+        String actual = responseAsJson.get("message").toString();
+
+        // Creating expected message as JSON Object from the data that was sent towards endpoint
+        String expected = "Host deleted from group";
+
+        assertEquals(expected, actual);
+        assertThat(deleteResponse.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_OK));
+    }
+
+    @Test
+    @Order(21)
     public void testDeleteHostGroup() throws Exception {
         //groupRelp
         HttpDelete delete = new HttpDelete("http://localhost:" + port + "/host/group/1");

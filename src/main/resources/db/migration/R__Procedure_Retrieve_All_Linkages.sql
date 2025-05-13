@@ -57,9 +57,9 @@ BEGIN
     ELSE
         SET @time = tx_id;
     END IF;
-    SELECT hgxcdg.id AS id,
-           hgxcdg.id AS host_group_id,
-           hgxcdg.id AS capture_group_id
+    SELECT hgxcdg.id               AS id,
+           hgxcdg.host_group_id    AS host_group_id,
+           hgxcdg.capture_group_id AS capture_group_id
     FROM cfe_18.host_groups_x_capture_def_group FOR SYSTEM_TIME AS OF TRANSACTION @time hgxcdg;
 END;
 //

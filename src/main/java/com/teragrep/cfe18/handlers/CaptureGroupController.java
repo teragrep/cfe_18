@@ -127,15 +127,35 @@ public class CaptureGroupController {
                     newCaptureGroup.getCaptureDefinitionId(),
                     newCaptureGroup.getId()
             );
-            LOGGER.debug("Values returned <[{}]>", c);
+            LOGGER.info("Values returned what happened with linking <[{}]>", c);
             JSONObject jsonObject = new JSONObject();
             jsonObject.put("id", c.getId());
-            jsonObject.put("message", "Capture group created");
+            jsonObject.put("message", "Capture linked with group");
             return new ResponseEntity<>(jsonObject.toString(), HttpStatus.CREATED);
         } catch (RuntimeException ex) {
             JSONObject jsonErr = new JSONObject();
             jsonErr.put("id", newCaptureGroup.getId());
             jsonErr.put("message", ex.getCause().getMessage());
+            final Throwable cause = ex.getCause();
+            if (cause instanceof SQLException) {
+                LOGGER.error((cause).getMessage());
+                int error = ((SQLException) cause).getErrorCode();
+                String state = error + "-" + ((SQLException) cause).getSQLState();
+                switch (state) {
+                    case "1452-23000":
+                        jsonErr.put("message", "Type mismatch between capture group and capture");
+                        return new ResponseEntity<>(jsonErr.toString(), HttpStatus.BAD_REQUEST);
+                    case "1644-45000":
+                        jsonErr.put("message", "Capture does not exist");
+                        return new ResponseEntity<>(jsonErr.toString(), HttpStatus.NOT_FOUND);
+                    case "1062-23000":
+                        jsonErr.put("message", "Tag already exists within given group");
+                        return new ResponseEntity<>(jsonErr.toString(), HttpStatus.BAD_REQUEST);
+                    default:
+                        jsonErr.put("message", "Error unrecognized, contact admin");
+                        return new ResponseEntity<>(jsonErr.toString(), HttpStatus.BAD_REQUEST);
+                }
+            }
             return new ResponseEntity<>(jsonErr.toString(), HttpStatus.BAD_REQUEST);
         }
     }

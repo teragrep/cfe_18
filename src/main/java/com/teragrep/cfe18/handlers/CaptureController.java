@@ -96,7 +96,6 @@ public class CaptureController {
         return String.format("Hello, %s!", jwt.getSubject());
     }
 
-
     @RequestMapping(path = "/file", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
     @Operation(summary = "Create new file based capture")
     @ApiResponses(value = {
@@ -233,7 +232,6 @@ public class CaptureController {
         }
     }
 
-
     @RequestMapping(path = "/file", method = RequestMethod.GET, produces = "application/json")
     @Operation(summary = "Fetch all file captures", description = "Will return empty list if there are no captures to fetch")
     @ApiResponses(value = {
@@ -256,9 +254,6 @@ public class CaptureController {
         return captureMapper.getAllRelp(version);
     }
 
-
-
-    // Delete
     @RequestMapping(path = "/{id}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
     @Operation(summary = "Delete capture")
     @ApiResponses(value = {

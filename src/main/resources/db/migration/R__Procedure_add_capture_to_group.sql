@@ -81,16 +81,19 @@ BEGIN
         SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = @mismatch;
     END IF;
 
+    SELECT tag_id INTO @tagId FROM cfe_18.capture_definition c WHERE c.id = capture_id;
+    SELECT capture_type INTO @type FROM cfe_18.capture_def_group WHERE id = capture_group_id;
+
     -- if record does not exist
     IF ((SELECT COUNT(id)
          FROM cfe_18.capture_def_group_x_capture_def
          WHERE capture_def_group_id = capture_group_id
-           AND capture_def_id = capture_id) = 0) THEN
+           AND capture_def_id = capture_id
+           AND tag_id = @tagId
+           AND capture_type = @type) = 0) THEN
         -- subqueries fetch relevant information from capture_def for insertion
         INSERT INTO capture_def_group_x_capture_def(capture_def_id, capture_def_group_id, tag_id, capture_type)
-        VALUES (capture_id, capture_group_id,
-                (SELECT tag_id FROM cfe_18.capture_definition c WHERE c.id = capture_id),
-                (SELECT capture_type FROM cfe_18.capture_def_group WHERE id = capture_group_id));
+        VALUES (capture_id, capture_group_id, @tagId, @type);
 
         -- return ID
         SELECT capture_def_group_id AS id

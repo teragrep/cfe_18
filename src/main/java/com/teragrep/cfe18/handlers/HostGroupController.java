@@ -111,7 +111,7 @@ public class HostGroupController {
         }
     }
 
-    @RequestMapping(path = "/group/{hostId}/{id}", method = RequestMethod.PUT, produces = "application/json")
+    @RequestMapping(path = "/group/link", method = RequestMethod.PUT, produces = "application/json")
     @Operation(summary = "Link host with group")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "Host linked with group",
@@ -121,18 +121,18 @@ public class HostGroupController {
                     content = @Content),
             @ApiResponse(responseCode = "500", description = "Internal server error, contact admin", content = @Content)
     })
-    public ResponseEntity<String> createLink(@PathVariable("hostId") int hostId, @PathVariable("id") int id) {
-        LOGGER.info("About to insert <[{}]>", hostId);
+    public ResponseEntity<String> createLink(@RequestBody HostGroup newHostGroup) {
+        LOGGER.info("About to insert <[{}]>", newHostGroup);
         try {
-            HostGroup hg = hostGroupMapper.createLink(hostId, id);
+            HostGroup hg = hostGroupMapper.createLink(newHostGroup.getHostId(), newHostGroup.getId());
             LOGGER.debug("Values returned <[{}]>", hg);
             JSONObject jsonObject = new JSONObject();
-            jsonObject.put("id", id);
-            jsonObject.put("message", "Host línked with group");
+            jsonObject.put("id", hg.getId());
+            jsonObject.put("message", "Host linked with group");
             return new ResponseEntity<>(jsonObject.toString(), HttpStatus.CREATED);
         } catch (RuntimeException ex) {
             JSONObject jsonErr = new JSONObject();
-            jsonErr.put("id", id);
+            jsonErr.put("id", newHostGroup.getId());
             jsonErr.put("message", ex.getCause().getMessage());
             return new ResponseEntity<>(jsonErr.toString(), HttpStatus.BAD_REQUEST);
         }
