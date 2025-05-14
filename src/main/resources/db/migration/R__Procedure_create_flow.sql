@@ -43,24 +43,23 @@
  * Teragrep, the applicable Commercial License may apply to this file if you as
  * a licensee so wish it.
  */
-use flow;
+USE flow;
 DELIMITER //
-CREATE OR REPLACE PROCEDURE remove_flow(flowname varchar(255))
+CREATE OR REPLACE PROCEDURE insert_flow(flowname VARCHAR(255))
 BEGIN
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
         BEGIN
             ROLLBACK;
             RESIGNAL;
-        end;
+        END;
     START TRANSACTION;
-    if (select id from flow.flows where name = flowname) is null then
-        SELECT JSON_OBJECT('id', null, 'message', 'Flow does not exist') into @f;
-        signal sqlstate '45000' set message_text = @f;
-    end if;
-    select id into @FlowId from flow.flows where name = flowname;
-
-    delete from flow.flows where name = flowname;
+    IF ((SELECT COUNT(id) FROM flow.flows WHERE name = flowname) = 0) THEN
+        INSERT INTO flow.flows(name) VALUES (flowname);
+        SELECT LAST_INSERT_ID() AS id;
+    ELSE
+        SELECT id AS id FROM flow.flows WHERE flowname = name;
+    END IF;
     COMMIT;
-end;
+END;
 //
 DELIMITER ;

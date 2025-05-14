@@ -116,16 +116,16 @@ public class FlowControllerTest extends TestSpringBootInformation {
         JSONObject responseAsJson = new JSONObject(responseString);
 
         // Creating expected message as JSON Object from the data that was sent towards endpoint
-        String expected = "new flow added with the name = " + flow.getName();
+        String expected = "New flow created";
 
         // Creating string from Json that was given as a response
         String actual = responseAsJson.get("message").toString();
 
         // Assertions
+        assertEquals(expected, actual);
         assertThat(
                 httpResponse.getStatusLine().getStatusCode(),
                 equalTo(HttpStatus.SC_CREATED));
-        assertEquals(expected, actual);
     }
 
 
@@ -178,8 +178,8 @@ public class FlowControllerTest extends TestSpringBootInformation {
 
         String responseStringGet = EntityUtils.toString(entityGet, "UTF-8");
 
-        assertThat(responseGet.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_OK));
         assertEquals(expectedJson, responseStringGet);
+        assertThat(responseGet.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_OK));
 
     }
 
@@ -189,7 +189,7 @@ public class FlowControllerTest extends TestSpringBootInformation {
     @Test
     @Order(3)
     public void testDeleteNonExistentFlow() throws Exception {
-        HttpDelete delete = new HttpDelete("http://localhost:" + port + "/flow/nonExistentFlow");
+        HttpDelete delete = new HttpDelete("http://localhost:" + port + "/flow/444");
 
         // Header
         delete.setHeader("Authorization", "Bearer " + token);
@@ -208,8 +208,8 @@ public class FlowControllerTest extends TestSpringBootInformation {
         // Creating expected message as JSON Object from the data that was sent towards endpoint
         String expected = "Record does not exist";
 
-        assertThat(deleteResponse.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_BAD_REQUEST));
         assertEquals(expected, actual);
+        assertThat(deleteResponse.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_NOT_FOUND));
     }
 
     @Test
@@ -242,7 +242,7 @@ public class FlowControllerTest extends TestSpringBootInformation {
         HttpClientBuilder.create().build().execute(request);
 
         // Delete
-        HttpDelete delete = new HttpDelete("http://localhost:" + port + "/flow/Testflow");
+        HttpDelete delete = new HttpDelete("http://localhost:" + port + "/flow/1");
 
         // Header
         delete.setHeader("Authorization", "Bearer " + token);
@@ -268,7 +268,7 @@ public class FlowControllerTest extends TestSpringBootInformation {
     @Test
     @Order(5)
     public void testDeleteFlow() throws Exception {
-        HttpDelete delete = new HttpDelete("http://localhost:" + port + "/flow/Testflow1");
+        HttpDelete delete = new HttpDelete("http://localhost:" + port + "/flow/2");
 
         // Header
         delete.setHeader("Authorization", "Bearer " + token);
@@ -286,10 +286,10 @@ public class FlowControllerTest extends TestSpringBootInformation {
         String actual = responseAsJson.get("message").toString();
 
         // Creating expected message as JSON Object from the data that was sent towards endpoint
-        String expected = "flow Testflow1 deleted.";
+        String expected = "Flow deleted";
 
-        assertThat(deleteResponse.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_OK));
         assertEquals(expected, actual);
+        assertThat(deleteResponse.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_OK));
     }
 
 }
