@@ -57,6 +57,6 @@ public interface FlowMapper {
 
     List<Flow> getAll(Integer version);
 
-    Flow delete(int id);
+    void delete(int id);
 
 }
