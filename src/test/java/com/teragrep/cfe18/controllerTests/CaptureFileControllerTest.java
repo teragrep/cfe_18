@@ -46,9 +46,7 @@
 package com.teragrep.cfe18.controllerTests;
 
 import com.google.gson.Gson;
-import com.teragrep.cfe18.handlers.entities.CaptureRelp;
-import com.teragrep.cfe18.handlers.entities.Flow;
-import com.teragrep.cfe18.handlers.entities.Sink;
+import com.teragrep.cfe18.handlers.entities.*;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
@@ -60,8 +58,7 @@ import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.util.EntityUtils;
 import org.json.JSONObject;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
@@ -74,20 +71,60 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @ExtendWith(MigrateDatabaseExtension.class)
-public class SinkControllerTest extends TestSpringBootInformation {
+class CaptureFileControllerTest extends TestSpringBootInformation {
 
     Gson gson = new Gson();
 
     @LocalServerPort
     private int port;
 
-
     @Test
-    public void testSink() throws Exception {
-        // insert flow before sink so database has something to stick to.
+    @BeforeAll
+    void testData() throws Exception {
+        // Filecapturemeta
+        FileProcessing file = new FileProcessing();
+        file.setInputtype(FileProcessing.InputType.regex);
+        file.setInputvalue("capregex");
+        file.setRuleset("capruleset");
+        file.setName("capname");
+        file.setTemplate("regex.moustache");
+
+        String json = gson.toJson(file);
+
+        // forms the json to requestEntity
+        StringEntity requestEntity = new StringEntity(
+                String.valueOf(json),
+                ContentType.APPLICATION_JSON);
+
+        // Creates the request
+        HttpPut request = new HttpPut("http://localhost:" + port + "/file/capture/meta/rule");
+        // set requestEntity to the put request
+        request.setEntity(requestEntity);
+        // Header
+        request.setHeader("Authorization", "Bearer " + token);
+
+        // Get the response from endpoint
+        HttpClientBuilder.create().build().execute(request);
+
+        // Get the response from endpoint
+        HttpResponse httpResponseFileId = HttpClientBuilder.create().build().execute(request);
+
+        // Get the entity from response
+        HttpEntity entityFileId = httpResponseFileId.getEntity();
+
+        // Entity response string
+        String responseFileId = EntityUtils.toString(entityFileId);
+
+        // Parsin respponse as JSONObject
+        new JSONObject(responseFileId);
+
+
+        // add flow and sink
+
         Flow flow = new Flow();
-        flow.setName("flow1");
+        flow.setName("capflow");
         String json2 = gson.toJson(flow);
 
         // forms the json to requestEntity
@@ -102,214 +139,65 @@ public class SinkControllerTest extends TestSpringBootInformation {
         // Header
         request2.setHeader("Authorization", "Bearer " + token);
 
-        HttpClientBuilder.create().build().execute(request2);
+        // Get the response from endpoint
+        HttpResponse httpResponse2 = HttpClientBuilder.create().build().execute(request2);
 
+        // Get the entity from response
+        HttpEntity entity2 = httpResponse2.getEntity();
+
+        // Entity response string
+        String response2 = EntityUtils.toString(entity2);
+
+        // Parsin respponse as JSONObject
+        JSONObject responseJson2 = new JSONObject(response2);
 
         // insert sink
 
         Sink sink = new Sink();
-        sink.setFlow("flow1");
-        sink.setPort("601");
-        sink.setIp_address("ip1");
-        sink.setProtocol("prot1");
+        sink.setFlow("capflow");
+        sink.setPort("cap");
+        sink.setIp_address("capsink");
+        sink.setProtocol("prot");
 
-        String json = gson.toJson(sink);
+        String json1 = gson.toJson(sink);
 
         // forms the json to requestEntity
-        StringEntity requestEntity = new StringEntity(
-                String.valueOf(json),
+        StringEntity requestEntity1 = new StringEntity(
+                String.valueOf(json1),
                 ContentType.APPLICATION_JSON);
 
         // Creates the request
-        HttpPut request = new HttpPut("http://localhost:" + port + "/sink/details");
+        HttpPut request1 = new HttpPut("http://localhost:" + port + "/sink/details");
         // set requestEntity to the put request
-        request.setEntity(requestEntity);
+        request1.setEntity(requestEntity1);
         // Header
-        request.setHeader("Authorization", "Bearer " + token);
+        request1.setHeader("Authorization", "Bearer " + token);
 
         // Get the response from endpoint
-        HttpResponse httpResponse = HttpClientBuilder.create().build().execute(request);
-
-        // Get the entity from response
-        HttpEntity entity = httpResponse.getEntity();
-
-        // Entity response string
-        String responseString = EntityUtils.toString(entity);
-
-
-        // Parsin respponse as JSONObject
-        JSONObject responseAsJson = new JSONObject(responseString);
-
-        // Creating expected message as JSON Object from the data that was sent towards endpoint
-        String expected = "New sink created";
-
-        // Creating string from Json that was given as a response
-        String actual = responseAsJson.get("message").toString();
-
-        // Assertions
-        assertThat(
-                httpResponse.getStatusLine().getStatusCode(),
-                equalTo(HttpStatus.SC_CREATED));
-        assertEquals(expected, actual);
-    }
-
-    // Test getting the inserted sink
-
-    @Test
-    public void testGetSink() throws Exception {
-
-        // create expected Sink to match
-        Sink sink = new Sink();
-        sink.setFlow("flow1");
-        sink.setPort("601");
-        sink.setIp_address("ip1");
-        sink.setProtocol("prot1");
-
-        String json = gson.toJson(sink);
-
-        // Asserting get request. Here the ID is hardcoded as one since Sink inserted earlier is Sink id = 1
-        HttpGet requestGet = new HttpGet("http://localhost:" + port + "/sink/id/" + 1);
-
-        requestGet.setHeader("Authorization", "Bearer " + token);
-
-        HttpResponse responseGet = HttpClientBuilder.create().build().execute(requestGet);
-
-        HttpEntity entityGet = responseGet.getEntity();
-
-        String responseStringGet = EntityUtils.toString(entityGet, "UTF-8");
-
-        assertThat(responseGet.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_OK));
-        assertEquals(json, responseStringGet);
-    }
-
-    // Test get ALL Sinks
-    @Test
-    public void testGetAllSinks() throws Exception {
-        // list of expected values
-        ArrayList<Sink> expected = new ArrayList<>();
-
-        // insert sink another sink
-
-        Sink sink = new Sink();
-        sink.setFlow("flow1");
-        sink.setPort("601");
-        sink.setIp_address("IPaddress2");
-        sink.setProtocol("tcp/ip");
-        sink.setId(2);
-
-        String json = gson.toJson(sink);
-
-        // forms the json to requestEntity
-        StringEntity requestEntity = new StringEntity(
-                String.valueOf(json),
-                ContentType.APPLICATION_JSON);
-
-        // Creates the request
-        HttpPut request = new HttpPut("http://localhost:" + port + "/sink/details");
-        // set requestEntity to the put request
-        request.setEntity(requestEntity);
-        // Header
-        request.setHeader("Authorization", "Bearer " + token);
-
-        // Get the response from endpoint
-        HttpClientBuilder.create().build().execute(request);
-
-        // adding the earlier sink to expected list
-        Sink sink2 = new Sink();
-        sink2.setFlow("flow1");
-        sink2.setPort("601");
-        sink2.setIp_address("ip1");
-        sink2.setProtocol("prot1");
-        sink2.setId(1);
-
-        expected.add(sink2);
-        expected.add(sink);
-
-        String expectedJson = new Gson().toJson(expected);
-
-        // Test Get ALL
-
-        // Asserting get request
-        HttpGet requestGet = new HttpGet("http://localhost:" + port + "/sink");
-
-        requestGet.setHeader("Authorization", "Bearer " + token);
-
-        HttpResponse responseGet = HttpClientBuilder.create().build().execute(requestGet);
-
-        HttpEntity entityGet = responseGet.getEntity();
-
-        String responseStringGet = EntityUtils.toString(entityGet, "UTF-8");
-
-        assertThat(responseGet.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_OK));
-        assertEquals(expectedJson, responseStringGet);
-    }
-
-    // Delete
-
-    @Test
-    public void testDeleteSink() throws Exception {
-        HttpDelete delete = new HttpDelete("http://localhost:" + port + "/sink/id/" + 1);
-
-        // Header
-        delete.setHeader("Authorization", "Bearer " + token);
-
-        HttpResponse deleteResponse = HttpClientBuilder.create().build().execute(delete);
-
-        HttpEntity entityDelete = deleteResponse.getEntity();
-
-        String responseStringGet = EntityUtils.toString(entityDelete, "UTF-8");
-
-        // Parsin respponse as JSONObject
-        JSONObject responseAsJson = new JSONObject(responseStringGet);
-
-        // Creating string from Json that was given as a response
-        String actual = responseAsJson.get("message").toString();
-
-        // Creating expected message as JSON Object from the data that was sent towards endpoint
-        String expected = "Sink with id = 1 deleted.";
-
-        assertThat(deleteResponse.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_OK));
-        assertEquals(expected, actual);
+        HttpClientBuilder.create().build().execute(request1);
     }
 
     @Test
-    public void testDeleteNonExistentSink() throws Exception {
-        HttpDelete delete = new HttpDelete("http://localhost:" + port + "/sink/id/" + 1245);
+    @Order(1)
+    public void testInsertCfeCapture() throws Exception {
 
-        // Header
-        delete.setHeader("Authorization", "Bearer " + token);
 
-        HttpResponse deleteResponse = HttpClientBuilder.create().build().execute(delete);
+        // add Capture File
 
-        HttpEntity entityDelete = deleteResponse.getEntity();
+        CaptureFile captureFile = new CaptureFile();
+        captureFile.setTag("f466e5a4-tagpath1");
+        captureFile.setRetentionTime("P30D");
+        captureFile.setCategory("audit");
+        captureFile.setApplication("app1");
+        captureFile.setIndex("app1_audit");
+        captureFile.setSourceType("sourcetype1");
+        captureFile.setProtocol("prot");
+        captureFile.setFlow("capflow");
+        captureFile.setTagPath("tagpath1");
+        captureFile.setCapturePath("capturepath1");
+        captureFile.setFileProcessingTypeId(1);
 
-        String responseStringGet = EntityUtils.toString(entityDelete, "UTF-8");
-
-        // Parsin respponse as JSONObject
-        JSONObject responseAsJson = new JSONObject(responseStringGet);
-
-        // Creating string from Json that was given as a response
-        String actual = responseAsJson.get("message").toString();
-        // Creating expected message as JSON Object from the data that was sent towards endpoint
-        String expected = "Record does not exist";
-
-        assertThat(deleteResponse.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_BAD_REQUEST));
-        assertEquals(expected, actual);
-    }
-
-    @Test
-    public void testSinkInUse() throws Exception {
-        CaptureRelp captureRelp = new CaptureRelp();
-        captureRelp.setTag("relpTag");
-        captureRelp.setRetentionTime("P30D");
-        captureRelp.setCategory("audit");
-        captureRelp.setApplication("relp");
-        captureRelp.setIndex("audit_relp");
-        captureRelp.setSourceType("relpsource1");
-        captureRelp.setProtocol("tcp/ip");
-        captureRelp.setFlow("flow1");
-
-        String jsonFile = gson.toJson(captureRelp);
+        String jsonFile = gson.toJson(captureFile);
 
         // forms the json to requestEntity
         StringEntity requestEntity3 = new StringEntity(
@@ -317,17 +205,118 @@ public class SinkControllerTest extends TestSpringBootInformation {
                 ContentType.APPLICATION_JSON);
 
         // Creates the request
-        HttpPut request3 = new HttpPut("http://localhost:" + port + "/capture/relp");
+        HttpPut request3 = new HttpPut("http://localhost:" + port + "/capture/file");
         // set requestEntity to the put request
         request3.setEntity(requestEntity3);
         // Header
         request3.setHeader("Authorization", "Bearer " + token);
 
         // Get the response from endpoint
-        HttpClientBuilder.create().build().execute(request3);
+        HttpResponse httpResponse = HttpClientBuilder.create().build().execute(request3);
+
+        // Get the entity from response
+        HttpEntity entity = httpResponse.getEntity();
+
+        // Entity response string
+        String responseString = EntityUtils.toString(entity);
+
+        // Parsin respponse as JSONObject
+        JSONObject responseAsJson = new JSONObject(responseString);
+
+        // Creating expected message as JSON Object from the data that was sent towards endpoint
+        String expected = "New capture created";
+
+        // Creating string from Json that was given as a response
+        String actual = responseAsJson.get("message").toString();
+
+        // Assertions
+        assertEquals(expected, actual);
+        assertThat(
+                httpResponse.getStatusLine().getStatusCode(),
+                equalTo(HttpStatus.SC_CREATED));
+    }
+
+    @Test
+    @Order(2)
+    public void testGetCfeCapture() throws Exception {
+        CaptureFile captureFile = new CaptureFile();
+        captureFile.setId(1);
+        captureFile.setTag("f466e5a4-tagpath1");
+        captureFile.setRetentionTime("P30D");
+        captureFile.setCategory("audit");
+        captureFile.setApplication("app1");
+        captureFile.setIndex("app1_audit");
+        captureFile.setSourceType("sourcetype1");
+        captureFile.setProtocol("prot");
+        captureFile.setFlow("capflow");
+        captureFile.setTagPath("tagpath1");
+        captureFile.setCapturePath("capturepath1");
+        captureFile.setFileProcessingTypeId(1);
+        captureFile.setType(CaptureFile.CaptureType.cfe);
+
+        String json = gson.toJson(captureFile);
+
+        // Asserting get request                                            // cfe id
+        HttpGet requestGet = new HttpGet("http://localhost:" + port + "/capture/file/1");
+
+        requestGet.setHeader("Authorization", "Bearer " + token);
+
+        HttpResponse responseGet = HttpClientBuilder.create().build().execute(requestGet);
+
+        HttpEntity entityGet = responseGet.getEntity();
+
+        String responseStringGet = EntityUtils.toString(entityGet, "UTF-8");
 
 
-        HttpDelete delete = new HttpDelete("http://localhost:" + port + "/sink/id/" + 2);
+        assertEquals(json, responseStringGet);
+        assertThat(responseGet.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_OK));
+    }
+
+    @Test
+    @Order(3)
+    public void testgetAllCfeCaptures() throws Exception {
+
+        ArrayList<CaptureFile> expected = new ArrayList<>();
+
+        CaptureFile captureFile2 = new CaptureFile();
+        captureFile2.setId(1);
+        captureFile2.setTag("f466e5a4-tagpath1");
+        captureFile2.setRetentionTime("P30D");
+        captureFile2.setCategory("audit");
+        captureFile2.setApplication("app1");
+        captureFile2.setIndex("app1_audit");
+        captureFile2.setSourceType("sourcetype1");
+        captureFile2.setProtocol("prot");
+        captureFile2.setFlow("capflow");
+        captureFile2.setTagPath("tagpath1");
+        captureFile2.setCapturePath("capturepath1");
+        captureFile2.setFileProcessingTypeId(1);
+        captureFile2.setType(CaptureFile.CaptureType.cfe);
+
+        expected.add(captureFile2);
+
+        String expectedJson = gson.toJson(expected);
+
+        // Asserting get request
+        HttpGet requestGet = new HttpGet("http://localhost:" + port + "/capture/file");
+
+        requestGet.setHeader("Authorization", "Bearer " + token);
+
+        HttpResponse responseGet = HttpClientBuilder.create().build().execute(requestGet);
+
+        HttpEntity entityGet = responseGet.getEntity();
+
+        String responseStringGet = EntityUtils.toString(entityGet, "UTF-8");
+
+        assertEquals(expectedJson, responseStringGet);
+        assertThat(responseGet.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_OK));
+
+    }
+
+    @Test
+    @Order(4)
+    public void testDeleteNonExistentCapture() throws Exception {
+        HttpDelete delete = new HttpDelete("http://localhost:" + port + "/capture/file/124124");
 
         // Header
         delete.setHeader("Authorization", "Bearer " + token);
@@ -345,10 +334,36 @@ public class SinkControllerTest extends TestSpringBootInformation {
         String actual = responseAsJson.get("message").toString();
 
         // Creating expected message as JSON Object from the data that was sent towards endpoint
-        String expected = "Is in use";
+        String expected = "Record does not exist";
 
-        assertThat(deleteResponse.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_BAD_REQUEST));
         assertEquals(expected, actual);
+        assertThat(deleteResponse.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_NOT_FOUND));
     }
 
+    @Test
+    @Order(5)
+    public void testDeleteCapture() throws Exception {
+        HttpDelete delete = new HttpDelete("http://localhost:" + port + "/capture/file/1");
+
+        // Header
+        delete.setHeader("Authorization", "Bearer " + token);
+
+        HttpResponse deleteResponse = HttpClientBuilder.create().build().execute(delete);
+
+        HttpEntity entityDelete = deleteResponse.getEntity();
+
+        String responseStringGet = EntityUtils.toString(entityDelete, "UTF-8");
+
+        // Parsin respponse as JSONObject
+        JSONObject responseAsJson = new JSONObject(responseStringGet);
+
+        // Creating string from Json that was given as a response
+        String actual = responseAsJson.get("message").toString();
+
+        // Creating expected message as JSON Object from the data that was sent towards endpoint
+        String expected = "Capture deleted";
+
+        assertEquals(expected, actual);
+        assertThat(deleteResponse.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_OK));
+    }
 }

@@ -134,11 +134,11 @@ public class GXGControllerTest extends TestSpringBootInformation {
 
         CaptureRelp captureRelp = new CaptureRelp();
         captureRelp.setTag("relpTag");
-        captureRelp.setRetention_time("P30D");
+        captureRelp.setRetentionTime("P30D");
         captureRelp.setCategory("audit");
         captureRelp.setApplication("relp");
         captureRelp.setIndex("audit_relp");
-        captureRelp.setSource_type("relpsource1");
+        captureRelp.setSourceType("relpsource1");
         captureRelp.setProtocol("prot");
         captureRelp.setFlow("testflow1");
 
@@ -692,11 +692,11 @@ public class GXGControllerTest extends TestSpringBootInformation {
         // Insert another capture with the same tag
         CaptureRelp captureRelp = new CaptureRelp();
         captureRelp.setTag("relpTag");
-        captureRelp.setRetention_time("P30D");
+        captureRelp.setRetentionTime("P30D");
         captureRelp.setCategory("audit2");
         captureRelp.setApplication("relp2");
         captureRelp.setIndex("audit_relp2");
-        captureRelp.setSource_type("relpsource2");
+        captureRelp.setSourceType("relpsource2");
         captureRelp.setProtocol("prot");
         captureRelp.setFlow("testflow1");
 
