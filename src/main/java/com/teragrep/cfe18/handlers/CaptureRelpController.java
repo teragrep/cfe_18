@@ -131,7 +131,7 @@ public class CaptureRelpController {
                     content = @Content),
             @ApiResponse(responseCode = "500", description = "Internal server error, contact admin", content = @Content)
     })
-    public ResponseEntity<?> getRelp(@PathVariable("id") int id, @RequestParam(required = false) Integer version) {
+    public ResponseEntity<?> get(@PathVariable("id") int id, @RequestParam(required = false) Integer version) {
         try {
             CaptureRelp c = captureRelpMapper.get(id,version);
             return new ResponseEntity<>(c, HttpStatus.OK);
@@ -161,7 +161,7 @@ public class CaptureRelpController {
                     content = {@Content(mediaType = "application/json",
                             schema = @Schema(implementation = CaptureRelp.class))}),
     })
-    public List<CaptureRelp> getAllRelp(@RequestParam(required = false) Integer version) {
+    public List<CaptureRelp> getAll(@RequestParam(required = false) Integer version) {
         return captureRelpMapper.getAll(version);
     }
 

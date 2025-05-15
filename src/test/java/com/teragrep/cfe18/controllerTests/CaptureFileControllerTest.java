@@ -73,7 +73,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @ExtendWith(MigrateDatabaseExtension.class)
-class CaptureFileControllerTest extends TestSpringBootInformation {
+public final class CaptureFileControllerTest extends TestSpringBootInformation {
 
     Gson gson = new Gson();
 
@@ -117,12 +117,10 @@ class CaptureFileControllerTest extends TestSpringBootInformation {
         // Entity response string
         String responseFileId = EntityUtils.toString(entityFileId);
 
-        // Parsin respponse as JSONObject
-        new JSONObject(responseFileId);
-
+        // Parsing response as JSONObject
+        JSONObject responseJson = new JSONObject(responseFileId);
 
         // add flow and sink
-
         Flow flow = new Flow();
         flow.setName("capflow");
         String json2 = gson.toJson(flow);
@@ -148,7 +146,7 @@ class CaptureFileControllerTest extends TestSpringBootInformation {
         // Entity response string
         String response2 = EntityUtils.toString(entity2);
 
-        // Parsin respponse as JSONObject
+        // Parsing response as JSONObject
         JSONObject responseJson2 = new JSONObject(response2);
 
         // insert sink
@@ -174,12 +172,52 @@ class CaptureFileControllerTest extends TestSpringBootInformation {
         request1.setHeader("Authorization", "Bearer " + token);
 
         // Get the response from endpoint
-        HttpClientBuilder.create().build().execute(request1);
+        HttpResponse httpResponse3 = HttpClientBuilder.create().build().execute(request1);
+
+        // Get the entity from response
+        HttpEntity entity3 = httpResponse3.getEntity();
+
+        // Entity response string
+        String response3 = EntityUtils.toString(entity3);
+
+        // Parsing response as JSONObject
+        JSONObject responseJson3 = new JSONObject(response3);
+
+        // Assertions
+        // Creating expected message as JSON Object from the data that was sent towards endpoint
+        String expected1 = "New file processing type created";
+
+        // Creating string from Json that was given as a response
+        String actual1 = responseJson.get("message").toString();
+
+        String expected2 = "new flow added with the name = capflow";
+
+        // Creating string from Json that was given as a response
+        String actual2 = responseJson2.get("message").toString();
+
+        String expected3 = "New sink created";
+
+        // Creating string from Json that was given as a response
+        String actual3 = responseJson3.get("message").toString();
+
+        // Assertions
+        assertEquals(expected1, actual1);
+        assertThat(
+                httpResponseFileId.getStatusLine().getStatusCode(),
+                equalTo(HttpStatus.SC_CREATED));
+        assertEquals(expected2, actual2);
+        assertThat(
+                httpResponse2.getStatusLine().getStatusCode(),
+                equalTo(HttpStatus.SC_CREATED));
+        assertEquals(expected3, actual3);
+        assertThat(
+                httpResponse3.getStatusLine().getStatusCode(),
+                equalTo(HttpStatus.SC_CREATED));
     }
 
     @Test
     @Order(1)
-    public void testInsertCfeCapture() throws Exception {
+    public void testInsertFileCapture() throws Exception {
 
 
         // add Capture File
@@ -220,7 +258,7 @@ class CaptureFileControllerTest extends TestSpringBootInformation {
         // Entity response string
         String responseString = EntityUtils.toString(entity);
 
-        // Parsin respponse as JSONObject
+        // Parsing response as JSONObject
         JSONObject responseAsJson = new JSONObject(responseString);
 
         // Creating expected message as JSON Object from the data that was sent towards endpoint
@@ -238,7 +276,7 @@ class CaptureFileControllerTest extends TestSpringBootInformation {
 
     @Test
     @Order(2)
-    public void testGetCfeCapture() throws Exception {
+    public void testGetFileCapture() throws Exception {
         CaptureFile captureFile = new CaptureFile();
         captureFile.setId(1);
         captureFile.setTag("f466e5a4-tagpath1");
@@ -274,7 +312,7 @@ class CaptureFileControllerTest extends TestSpringBootInformation {
 
     @Test
     @Order(3)
-    public void testgetAllCfeCaptures() throws Exception {
+    public void testgetAllFileCaptures() throws Exception {
 
         ArrayList<CaptureFile> expected = new ArrayList<>();
 
@@ -327,7 +365,7 @@ class CaptureFileControllerTest extends TestSpringBootInformation {
 
         String responseStringGet = EntityUtils.toString(entityDelete, "UTF-8");
 
-        // Parsin respponse as JSONObject
+        // Parsing response as JSONObject
         JSONObject responseAsJson = new JSONObject(responseStringGet);
 
         // Creating string from Json that was given as a response
@@ -354,7 +392,7 @@ class CaptureFileControllerTest extends TestSpringBootInformation {
 
         String responseStringGet = EntityUtils.toString(entityDelete, "UTF-8");
 
-        // Parsin respponse as JSONObject
+        // Parsing response as JSONObject
         JSONObject responseAsJson = new JSONObject(responseStringGet);
 
         // Creating string from Json that was given as a response

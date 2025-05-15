@@ -110,7 +110,7 @@ public class CaptureRelpControllerTest extends TestSpringBootInformation {
         // Entity response string
         String response2 = EntityUtils.toString(entity2);
 
-        // Parsin respponse as JSONObject
+        // Parsing response as JSONObject
         JSONObject responseJson2 = new JSONObject(response2);
 
         // insert sink
@@ -136,7 +136,35 @@ public class CaptureRelpControllerTest extends TestSpringBootInformation {
         request1.setHeader("Authorization", "Bearer " + token);
 
         // Get the response from endpoint
-        HttpClientBuilder.create().build().execute(request1);
+        HttpResponse httpResponse3 = HttpClientBuilder.create().build().execute(request1);
+
+        // Get the entity from response
+        HttpEntity entity3 = httpResponse3.getEntity();
+
+        // Entity response string
+        String response3 = EntityUtils.toString(entity3);
+
+        // Parsing response as JSONObject
+        JSONObject responseJson3 = new JSONObject(response3);
+
+        String expected2 = "new flow added with the name = capflow";
+
+        // Creating string from Json that was given as a response
+        String actual2 = responseJson2.get("message").toString();
+
+        String expected3 = "New sink created";
+
+        // Creating string from Json that was given as a response
+        String actual3 = responseJson3.get("message").toString();
+
+        assertEquals(expected2, actual2);
+        assertThat(
+                httpResponse2.getStatusLine().getStatusCode(),
+                equalTo(HttpStatus.SC_CREATED));
+        assertEquals(expected3, actual3);
+        assertThat(
+                httpResponse3.getStatusLine().getStatusCode(),
+                equalTo(HttpStatus.SC_CREATED));
 
     }
 
@@ -176,7 +204,7 @@ public class CaptureRelpControllerTest extends TestSpringBootInformation {
         // Entity response string
         String responseString = EntityUtils.toString(entity);
 
-        // Parsin respponse as JSONObject
+        // Parsing response as JSONObject
         JSONObject responseAsJson = new JSONObject(responseString);
 
         // Creating expected message as JSON Object from the data that was sent towards endpoint
@@ -278,7 +306,7 @@ public class CaptureRelpControllerTest extends TestSpringBootInformation {
 
         String responseStringGet = EntityUtils.toString(entityDelete, "UTF-8");
 
-        // Parsin respponse as JSONObject
+        // Parsing response as JSONObject
         JSONObject responseAsJson = new JSONObject(responseStringGet);
 
         // Creating string from Json that was given as a response
@@ -305,7 +333,7 @@ public class CaptureRelpControllerTest extends TestSpringBootInformation {
 
         String responseStringGet = EntityUtils.toString(entityDelete, "UTF-8");
 
-        // Parsin respponse as JSONObject
+        // Parsing response as JSONObject
         JSONObject responseAsJson = new JSONObject(responseStringGet);
 
         // Creating string from Json that was given as a response
