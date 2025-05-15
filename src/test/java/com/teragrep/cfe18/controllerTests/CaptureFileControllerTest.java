@@ -73,19 +73,16 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @ExtendWith(MigrateDatabaseExtension.class)
-public class CaptureControllerTest extends TestSpringBootInformation {
+public final class CaptureFileControllerTest extends TestSpringBootInformation {
 
     Gson gson = new Gson();
 
     @LocalServerPort
     private int port;
 
-
     @Test
-    @Order(1)
-    public void testInsertCfeCapture() throws Exception {
-        // Capture needs processing_type and capture_sink before it can be inserted.
-
+    @BeforeAll
+    void testData() throws Exception {
         // Filecapturemeta
         FileProcessing file = new FileProcessing();
         file.setInputtype(FileProcessing.InputType.regex);
@@ -94,9 +91,7 @@ public class CaptureControllerTest extends TestSpringBootInformation {
         file.setName("capname");
         file.setTemplate("regex.moustache");
 
-
         String json = gson.toJson(file);
-
 
         // forms the json to requestEntity
         StringEntity requestEntity = new StringEntity(
@@ -113,8 +108,19 @@ public class CaptureControllerTest extends TestSpringBootInformation {
         // Get the response from endpoint
         HttpClientBuilder.create().build().execute(request);
 
-        // add flow and sink
+        // Get the response from endpoint
+        HttpResponse httpResponseFileId = HttpClientBuilder.create().build().execute(request);
 
+        // Get the entity from response
+        HttpEntity entityFileId = httpResponseFileId.getEntity();
+
+        // Entity response string
+        String responseFileId = EntityUtils.toString(entityFileId);
+
+        // Parsing response as JSONObject
+        JSONObject responseJson = new JSONObject(responseFileId);
+
+        // add flow and sink
         Flow flow = new Flow();
         flow.setName("capflow");
         String json2 = gson.toJson(flow);
@@ -131,7 +137,17 @@ public class CaptureControllerTest extends TestSpringBootInformation {
         // Header
         request2.setHeader("Authorization", "Bearer " + token);
 
-        HttpClientBuilder.create().build().execute(request2);
+        // Get the response from endpoint
+        HttpResponse httpResponse2 = HttpClientBuilder.create().build().execute(request2);
+
+        // Get the entity from response
+        HttpEntity entity2 = httpResponse2.getEntity();
+
+        // Entity response string
+        String response2 = EntityUtils.toString(entity2);
+
+        // Parsing response as JSONObject
+        JSONObject responseJson2 = new JSONObject(response2);
 
         // insert sink
 
@@ -156,23 +172,68 @@ public class CaptureControllerTest extends TestSpringBootInformation {
         request1.setHeader("Authorization", "Bearer " + token);
 
         // Get the response from endpoint
-        HttpClientBuilder.create().build().execute(request1);
+        HttpResponse httpResponse3 = HttpClientBuilder.create().build().execute(request1);
+
+        // Get the entity from response
+        HttpEntity entity3 = httpResponse3.getEntity();
+
+        // Entity response string
+        String response3 = EntityUtils.toString(entity3);
+
+        // Parsing response as JSONObject
+        JSONObject responseJson3 = new JSONObject(response3);
+
+        // Assertions
+        // Creating expected message as JSON Object from the data that was sent towards endpoint
+        String expected1 = "New file processing type created";
+
+        // Creating string from Json that was given as a response
+        String actual1 = responseJson.get("message").toString();
+
+        String expected2 = "new flow added with the name = capflow";
+
+        // Creating string from Json that was given as a response
+        String actual2 = responseJson2.get("message").toString();
+
+        String expected3 = "New sink created";
+
+        // Creating string from Json that was given as a response
+        String actual3 = responseJson3.get("message").toString();
+
+        // Assertions
+        assertEquals(expected1, actual1);
+        assertThat(
+                httpResponseFileId.getStatusLine().getStatusCode(),
+                equalTo(HttpStatus.SC_CREATED));
+        assertEquals(expected2, actual2);
+        assertThat(
+                httpResponse2.getStatusLine().getStatusCode(),
+                equalTo(HttpStatus.SC_CREATED));
+        assertEquals(expected3, actual3);
+        assertThat(
+                httpResponse3.getStatusLine().getStatusCode(),
+                equalTo(HttpStatus.SC_CREATED));
+    }
+
+    @Test
+    @Order(1)
+    public void testInsertFileCapture() throws Exception {
+
 
         // add Capture File
 
         CaptureFile captureFile = new CaptureFile();
-        captureFile.setId(1);
         captureFile.setTag("f466e5a4-tagpath1");
-        captureFile.setRetention_time("P30D");
+        captureFile.setRetentionTime("P30D");
         captureFile.setCategory("audit");
         captureFile.setApplication("app1");
         captureFile.setIndex("app1_audit");
-        captureFile.setSource_type("sourcetype1");
+        captureFile.setSourceType("sourcetype1");
         captureFile.setProtocol("prot");
         captureFile.setFlow("capflow");
-        captureFile.setTag_path("tagpath1");
-        captureFile.setCapture_path("capturepath1");
-        captureFile.setProcessing_type_id(1);
+        captureFile.setTagPath("tagpath1");
+        captureFile.setCapturePath("capturepath1");
+        captureFile.setFileProcessingTypeId(1);
 
         String jsonFile = gson.toJson(captureFile);
 
@@ -197,7 +258,7 @@ public class CaptureControllerTest extends TestSpringBootInformation {
         // Entity response string
         String responseString = EntityUtils.toString(entity);
 
-        // Parsin respponse as JSONObject
+        // Parsing response as JSONObject
         JSONObject responseAsJson = new JSONObject(responseString);
 
         // Creating expected message as JSON Object from the data that was sent towards endpoint
@@ -207,125 +268,34 @@ public class CaptureControllerTest extends TestSpringBootInformation {
         String actual = responseAsJson.get("message").toString();
 
         // Assertions
+        assertEquals(expected, actual);
         assertThat(
                 httpResponse.getStatusLine().getStatusCode(),
                 equalTo(HttpStatus.SC_CREATED));
-        assertEquals(expected, actual);
     }
 
-
-    // insert relp type capture test
     @Test
     @Order(2)
-    public void testInsertRelpCapture() throws Exception {
-        CaptureRelp captureRelp = new CaptureRelp();
-        captureRelp.setTag("relpTag");
-        captureRelp.setRetention_time("P30D");
-        captureRelp.setCategory("audit");
-        captureRelp.setApplication("relp");
-        captureRelp.setIndex("audit_relp");
-        captureRelp.setSource_type("relpsource1");
-        captureRelp.setProtocol("prot");
-        captureRelp.setFlow("capFlow");
-
-        String jsonFile = gson.toJson(captureRelp);
-
-        // forms the json to requestEntity
-        StringEntity requestEntity3 = new StringEntity(
-                String.valueOf(jsonFile),
-                ContentType.APPLICATION_JSON);
-
-        // Creates the request
-        HttpPut request3 = new HttpPut("http://localhost:" + port + "/capture/relp");
-        // set requestEntity to the put request
-        request3.setEntity(requestEntity3);
-        // Header
-        request3.setHeader("Authorization", "Bearer " + token);
-
-        // Get the response from endpoint
-        HttpResponse httpResponse = HttpClientBuilder.create().build().execute(request3);
-
-        // Get the entity from response
-        HttpEntity entity = httpResponse.getEntity();
-
-        // Entity response string
-        String responseString = EntityUtils.toString(entity);
-
-        // Parsin respponse as JSONObject
-        JSONObject responseAsJson = new JSONObject(responseString);
-
-        // Creating expected message as JSON Object from the data that was sent towards endpoint
-        String expected = "New capture created";
-
-        // Creating string from Json that was given as a response
-        String actual = responseAsJson.get("message").toString();
-
-        // Assertions
-        assertThat(
-                httpResponse.getStatusLine().getStatusCode(),
-                equalTo(HttpStatus.SC_CREATED));
-        assertEquals(expected, actual);
-
-    }
-
-
-    @Test
-    @Order(3)
-    public void testGetRelpCapture() throws Exception {
-
-
-        CaptureRelp captureRelp2 = new CaptureRelp();
-        captureRelp2.setId(2);
-        captureRelp2.setTag("relpTag");
-        captureRelp2.setRetention_time("P30D");
-        captureRelp2.setCategory("audit");
-        captureRelp2.setApplication("relp");
-        captureRelp2.setIndex("audit_relp");
-        captureRelp2.setSource_type("relpsource1");
-        captureRelp2.setProtocol("prot");
-        captureRelp2.setFlow("capflow");
-        captureRelp2.setCaptureType(CaptureRelp.CaptureType.relp);
-
-        String json = gson.toJson(captureRelp2);
-
-        // Asserting get request                                            // relp id
-        HttpGet requestGet = new HttpGet("http://localhost:" + port + "/capture/relp/" + 2);
-
-        requestGet.setHeader("Authorization", "Bearer " + token);
-
-        HttpResponse responseGet = HttpClientBuilder.create().build().execute(requestGet);
-
-        HttpEntity entityGet = responseGet.getEntity();
-
-        String responseStringGet = EntityUtils.toString(entityGet, "UTF-8");
-
-
-        assertEquals(json, responseStringGet);
-        assertThat(responseGet.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_OK));
-    }
-
-    @Test
-    @Order(4)
-    public void testGetCfeCapture() throws Exception {
+    public void testGetFileCapture() throws Exception {
         CaptureFile captureFile = new CaptureFile();
         captureFile.setId(1);
         captureFile.setTag("f466e5a4-tagpath1");
-        captureFile.setRetention_time("P30D");
+        captureFile.setRetentionTime("P30D");
         captureFile.setCategory("audit");
         captureFile.setApplication("app1");
         captureFile.setIndex("app1_audit");
-        captureFile.setSource_type("sourcetype1");
+        captureFile.setSourceType("sourcetype1");
         captureFile.setProtocol("prot");
         captureFile.setFlow("capflow");
-        captureFile.setTag_path("tagpath1");
-        captureFile.setCapture_path("capturepath1");
-        captureFile.setProcessing_type_id(1);
-        captureFile.setCaptureType(CaptureFile.CaptureType.cfe);
+        captureFile.setTagPath("tagpath1");
+        captureFile.setCapturePath("capturepath1");
+        captureFile.setFileProcessingTypeId(1);
+        captureFile.setType(CaptureFile.CaptureType.cfe);
 
         String json = gson.toJson(captureFile);
 
         // Asserting get request                                            // cfe id
-        HttpGet requestGet = new HttpGet("http://localhost:" + port + "/capture/file/" + 1);
+        HttpGet requestGet = new HttpGet("http://localhost:" + port + "/capture/file/1");
 
         requestGet.setHeader("Authorization", "Bearer " + token);
 
@@ -340,50 +310,33 @@ public class CaptureControllerTest extends TestSpringBootInformation {
         assertThat(responseGet.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_OK));
     }
 
-    // Get All captures
-
     @Test
-    @Order(5)
-    public void testgetAllCaptures() throws Exception {
+    @Order(3)
+    public void testgetAllFileCaptures() throws Exception {
 
         ArrayList<CaptureFile> expected = new ArrayList<>();
 
         CaptureFile captureFile2 = new CaptureFile();
         captureFile2.setId(1);
         captureFile2.setTag("f466e5a4-tagpath1");
-        captureFile2.setRetention_time("P30D");
+        captureFile2.setRetentionTime("P30D");
         captureFile2.setCategory("audit");
         captureFile2.setApplication("app1");
         captureFile2.setIndex("app1_audit");
-        captureFile2.setSource_type("sourcetype1");
+        captureFile2.setSourceType("sourcetype1");
         captureFile2.setProtocol("prot");
         captureFile2.setFlow("capflow");
-        captureFile2.setTag_path("tagpath1");
-        captureFile2.setCapture_path("capturepath1");
-        captureFile2.setProcessing_type_id(1);
-        captureFile2.setCaptureType(CaptureFile.CaptureType.cfe);
-
-        CaptureFile captureRelp2 = new CaptureFile();
-        captureRelp2.setId(2);
-        captureRelp2.setTag("relpTag");
-        captureRelp2.setRetention_time("P30D");
-        captureRelp2.setCategory("audit");
-        captureRelp2.setApplication("relp");
-        captureRelp2.setIndex("audit_relp");
-        captureRelp2.setSource_type("relpsource1");
-        captureRelp2.setProtocol("prot");
-        captureRelp2.setFlow("capflow");
-        captureRelp2.setCaptureType(CaptureFile.CaptureType.relp);
+        captureFile2.setTagPath("tagpath1");
+        captureFile2.setCapturePath("capturepath1");
+        captureFile2.setFileProcessingTypeId(1);
+        captureFile2.setType(CaptureFile.CaptureType.cfe);
 
         expected.add(captureFile2);
-        expected.add(captureRelp2);
 
         String expectedJson = gson.toJson(expected);
 
-        // Test Get ALL
-
         // Asserting get request
-        HttpGet requestGet = new HttpGet("http://localhost:" + port + "/capture/");
+        HttpGet requestGet = new HttpGet("http://localhost:" + port + "/capture/file");
 
         requestGet.setHeader("Authorization", "Bearer " + token);
 
@@ -393,17 +346,15 @@ public class CaptureControllerTest extends TestSpringBootInformation {
 
         String responseStringGet = EntityUtils.toString(entityGet, "UTF-8");
 
-        assertThat(responseGet.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_OK));
         assertEquals(expectedJson, responseStringGet);
+        assertThat(responseGet.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_OK));
 
     }
 
-
-    // Delete
     @Test
-    @Order(6)
+    @Order(4)
     public void testDeleteNonExistentCapture() throws Exception {
-        HttpDelete delete = new HttpDelete("http://localhost:" + port + "/capture/124124");
+        HttpDelete delete = new HttpDelete("http://localhost:" + port + "/capture/file/124124");
 
         // Header
         delete.setHeader("Authorization", "Bearer " + token);
@@ -414,7 +365,7 @@ public class CaptureControllerTest extends TestSpringBootInformation {
 
         String responseStringGet = EntityUtils.toString(entityDelete, "UTF-8");
 
-        // Parsin respponse as JSONObject
+        // Parsing response as JSONObject
         JSONObject responseAsJson = new JSONObject(responseStringGet);
 
         // Creating string from Json that was given as a response
@@ -423,14 +374,14 @@ public class CaptureControllerTest extends TestSpringBootInformation {
         // Creating expected message as JSON Object from the data that was sent towards endpoint
         String expected = "Record does not exist";
 
-        assertThat(deleteResponse.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_BAD_REQUEST));
         assertEquals(expected, actual);
+        assertThat(deleteResponse.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_NOT_FOUND));
     }
 
     @Test
-    @Order(7)
+    @Order(5)
     public void testDeleteCapture() throws Exception {
-        HttpDelete delete = new HttpDelete("http://localhost:" + port + "/capture/" + 1);
+        HttpDelete delete = new HttpDelete("http://localhost:" + port + "/capture/file/1");
 
         // Header
         delete.setHeader("Authorization", "Bearer " + token);
@@ -441,14 +392,14 @@ public class CaptureControllerTest extends TestSpringBootInformation {
 
         String responseStringGet = EntityUtils.toString(entityDelete, "UTF-8");
 
-        // Parsin respponse as JSONObject
+        // Parsing response as JSONObject
         JSONObject responseAsJson = new JSONObject(responseStringGet);
 
         // Creating string from Json that was given as a response
         String actual = responseAsJson.get("message").toString();
 
         // Creating expected message as JSON Object from the data that was sent towards endpoint
-        String expected = "Capture with id = 1 deleted.";
+        String expected = "Capture deleted";
 
         assertEquals(expected, actual);
         assertThat(deleteResponse.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_OK));

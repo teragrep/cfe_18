@@ -82,7 +82,7 @@ public class ProcedureCaptureMetaFileTest extends DBUnitbase {
         IDataSet expectedDataSet = new FlatXmlDataSetBuilder().build(new File("src/test/resources/XMLProcedureCapture/procedureCaptureExpectedTestData1.xml"));
         ITable expectedTable = expectedDataSet.getTable("cfe_18.capture_definition");
 
-        CallableStatement stmnt = conn.prepareCall("{call cfe_18.add_new_capture_file(?,?,?,?,?,?,?,?,?,?,?)}");
+        CallableStatement stmnt = conn.prepareCall("{call cfe_18.insert_file_capture(?,?,?,?,?,?,?,?,?,?,?)}");
         stmnt.setString(1, "632db722-tag.tag");
         stmnt.setString(2, "P1Y");
         stmnt.setString(3, "tech");
@@ -108,7 +108,7 @@ public class ProcedureCaptureMetaFileTest extends DBUnitbase {
      */
     public void testProcedureCaptureTagMismatch() throws Exception {
         SQLException state = Assertions.assertThrows(SQLException.class, () -> {
-            CallableStatement stmnt = conn.prepareCall("{call cfe_18.add_new_capture_file(?,?,?,?,?,?,?,?,?,?,?)}");
+            CallableStatement stmnt = conn.prepareCall("{call cfe_18.insert_file_capture(?,?,?,?,?,?,?,?,?,?,?)}");
             stmnt.setString(1, "632db722-tag.tag");
             stmnt.setString(2, "P1Y");
             stmnt.setString(3, "tech");
@@ -133,7 +133,7 @@ public class ProcedureCaptureMetaFileTest extends DBUnitbase {
         IDataSet expectedDataSet = new FlatXmlDataSetBuilder().build(new File("src/test/resources/XMLProcedureCapture/procedureCaptureExpectedTestData2.xml"));
         ITable expectedTable = expectedDataSet.getTable("cfe_18.tags");
 
-        CallableStatement stmnt = conn.prepareCall("{call cfe_18.add_new_capture_file(?,?,?,?,?,?,?,?,?,?,?)}");
+        CallableStatement stmnt = conn.prepareCall("{call cfe_18.insert_file_capture(?,?,?,?,?,?,?,?,?,?,?)}");
         stmnt.setString(1, null);
         stmnt.setString(2, "P1Y");
         stmnt.setString(3, "tech");
@@ -163,7 +163,7 @@ public class ProcedureCaptureMetaFileTest extends DBUnitbase {
         ITable expectedTable1 = expectedDataSet.getTable("cfe_18.tags");
         ITable expectedTable2 = expectedDataSet.getTable("cfe_18.capture_meta_file");
 
-        CallableStatement stmnt = conn.prepareCall("{call cfe_18.add_new_capture_file(?,?,?,?,?,?,?,?,?,?,?)}");
+        CallableStatement stmnt = conn.prepareCall("{call cfe_18.insert_file_capture(?,?,?,?,?,?,?,?,?,?,?)}");
         stmnt.setString(1, "632db722-tag.tag");
         stmnt.setString(2, "P1Y");
         stmnt.setString(3, "tech");
@@ -194,7 +194,7 @@ public class ProcedureCaptureMetaFileTest extends DBUnitbase {
 
     public void testProcedureCaptureMissingProcessingType() throws Exception {
         SQLException state = Assertions.assertThrows(SQLException.class, () -> {
-            CallableStatement stmnt = conn.prepareCall("{call cfe_18.add_new_capture_file(?,?,?,?,?,?,?,?,?,?,?)}");
+            CallableStatement stmnt = conn.prepareCall("{call cfe_18.insert_file_capture(?,?,?,?,?,?,?,?,?,?,?)}");
             stmnt.setString(1, "632db722-tag.tag");
             stmnt.setString(2, "P1Y");
             stmnt.setString(3, "tech");
@@ -208,7 +208,7 @@ public class ProcedureCaptureMetaFileTest extends DBUnitbase {
             stmnt.setString(11, null);
             stmnt.execute();
         });
-        Assertions.assertEquals("42000", state.getSQLState());
+        Assertions.assertEquals("45000", state.getSQLState());
     }
 
     /*
@@ -217,7 +217,7 @@ public class ProcedureCaptureMetaFileTest extends DBUnitbase {
 
     public void testProcedureCaptureFaultyProcessingType() throws Exception {
         SQLException state = Assertions.assertThrows(SQLException.class, () -> {
-            CallableStatement stmnt = conn.prepareCall("{call cfe_18.add_new_capture_file(?,?,?,?,?,?,?,?,?,?,?)}");
+            CallableStatement stmnt = conn.prepareCall("{call cfe_18.insert_file_capture(?,?,?,?,?,?,?,?,?,?,?)}");
             stmnt.setString(1, "632db722-tag.tag");
             stmnt.setString(2, "P1Y");
             stmnt.setString(3, "tech");
@@ -231,7 +231,7 @@ public class ProcedureCaptureMetaFileTest extends DBUnitbase {
             stmnt.setInt(11, 2222);
             stmnt.execute();
         });
-        Assertions.assertEquals("42000", state.getSQLState());
+        Assertions.assertEquals("45000", state.getSQLState());
     }
 
     /*
@@ -252,7 +252,7 @@ public class ProcedureCaptureMetaFileTest extends DBUnitbase {
         ITable expectedTable8 = expectedDataSet.getTable("cfe_18.capture_meta_file");
         ITable expectedTable9 = expectedDataSet.getTable("cfe_18.file_processing_type");
 
-        CallableStatement stmnt = conn.prepareCall("{call cfe_18.add_new_capture_file(?,?,?,?,?,?,?,?,?,?,?)}");
+        CallableStatement stmnt = conn.prepareCall("{call cfe_18.insert_file_capture(?,?,?,?,?,?,?,?,?,?,?)}");
         stmnt.setString(1, "632db722-tag.tag");
         stmnt.setString(2, "P1Y");
         stmnt.setString(3, "tech");
@@ -293,23 +293,23 @@ public class ProcedureCaptureMetaFileTest extends DBUnitbase {
     This test confirms that data is retrieved accurately from capture_definition via procedure.
      */
     public void testProcedureCaptureGetById() throws Exception {
-        CallableStatement stmnt = conn.prepareCall("{CALL cfe_18.retrieve_capture_by_id(?,?)}");
-        stmnt.setString(1, "1");
+        CallableStatement stmnt = conn.prepareCall("{CALL cfe_18.select_cfe_capture(?,?)}");
+        stmnt.setInt(1, 1);
         stmnt.setString(2, null);
         ResultSet rs = stmnt.executeQuery();
         rs.next(); // Needs to forward to first
         Assertions.assertEquals(1, rs.getInt("id"));
         Assertions.assertEquals("tag1", rs.getString("tag"));
-        Assertions.assertEquals("app1", rs.getString("app"));
+        Assertions.assertEquals("P30D", rs.getString("retention"));
+        Assertions.assertEquals("app1", rs.getString("application"));
         Assertions.assertEquals("index1", rs.getString("captureIndex"));
-        Assertions.assertEquals("P30D", rs.getString("retention_time"));
-        Assertions.assertEquals("sourcetype1", rs.getString("source_type"));
+        Assertions.assertEquals("sourcetype1", rs.getString("sourcetype"));
         Assertions.assertEquals("audit", rs.getString("category"));
-        Assertions.assertEquals(1, rs.getInt("processing_type_id"));
         Assertions.assertEquals("flow1", rs.getString("flow"));
-        Assertions.assertEquals("prot1", rs.getString("protocol"));
-        Assertions.assertEquals("capPathRegex", rs.getString("capture_path"));
-        Assertions.assertEquals("tagPathRegex", rs.getString("tag_path"));
+        Assertions.assertEquals("prot1", rs.getString("L7"));
+        Assertions.assertEquals("capPathRegex", rs.getString("capturepath"));
+        Assertions.assertEquals("tagPathRegex", rs.getString("tagpath"));
+        Assertions.assertEquals(1, rs.getInt("processing_type_id"));
     }
 
     /*
@@ -317,7 +317,7 @@ public class ProcedureCaptureMetaFileTest extends DBUnitbase {
      */
     public void testMissingL7() throws Exception {
         SQLException state = Assertions.assertThrows(SQLException.class, () -> {
-            CallableStatement stmnt = conn.prepareCall("{call cfe_18.add_new_capture_file(?,?,?,?,?,?,?,?,?,?,?)}");
+            CallableStatement stmnt = conn.prepareCall("{call cfe_18.insert_file_capture(?,?,?,?,?,?,?,?,?,?,?)}");
             stmnt.setString(1, "632db722-tag.tag");
             stmnt.setString(2, "P1Y");
             stmnt.setString(3, "tech");
@@ -331,7 +331,7 @@ public class ProcedureCaptureMetaFileTest extends DBUnitbase {
             stmnt.setInt(11, 222);
             stmnt.execute();
         });
-        Assertions.assertEquals("42000", state.getSQLState());
+        Assertions.assertEquals("45000", state.getSQLState());
     }
 
 
@@ -340,7 +340,7 @@ public class ProcedureCaptureMetaFileTest extends DBUnitbase {
      */
     public void testMissingFlow() throws Exception {
         SQLException state = Assertions.assertThrows(SQLException.class, () -> {
-            CallableStatement stmnt = conn.prepareCall("{call cfe_18.add_new_capture_file(?,?,?,?,?,?,?,?,?,?,?)}");
+            CallableStatement stmnt = conn.prepareCall("{call cfe_18.insert_file_capture(?,?,?,?,?,?,?,?,?,?,?)}");
             stmnt.setString(1, "632db722-tag.tag");
             stmnt.setString(2, "P1Y");
             stmnt.setString(3, "tech");
@@ -354,7 +354,7 @@ public class ProcedureCaptureMetaFileTest extends DBUnitbase {
             stmnt.setInt(11, 222);
             stmnt.execute();
         });
-        Assertions.assertEquals("42000", state.getSQLState());
+        Assertions.assertEquals("45000", state.getSQLState());
     }
 
 }

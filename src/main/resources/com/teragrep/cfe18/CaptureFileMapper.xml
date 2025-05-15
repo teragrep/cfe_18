@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.teragrep.cfe18.CaptureFileMapper">
+
+    <!-- insert cfe                         (tag VARCHAR(48), retention_time VARCHAR(255),
+                                                category VARCHAR(48), application VARCHAR(48),
+                                                capture_index VARCHAR(48), source_type VARCHAR(255),
+                                                protocol VARCHAR(64), flow VARCHAR(255),
+                                                tag_path VARCHAR(255), capture_path VARCHAR(255),
+                                                file_processing_id INT) -->
+    <select id="create" resultMap="idFile" statementType="CALLABLE">
+        {CALL
+        cfe_18.insert_file_capture(#{param1},#{param2},#{param3},#{param4},#{param5},#{param6},#{param7},#{param8},#{param9},#{param10},#{param11})}
+    </select>
+
+
+    <!-- select cfe                         ( capture_id INT, tx_id INT ) -->
+    <select id="get" resultMap="getCaptureCfe" statementType="CALLABLE">
+        {CALL cfe_18.select_cfe_capture(#{param1},#{param2})}
+    </select>
+    <resultMap id="getCaptureCfe" type="com.teragrep.cfe18.handlers.entities.CaptureFile">
+        <result property="id"                       column="id"/>
+        <result property="tag"                      column="tag"/>
+        <result property="retentionTime"            column="retention"/>
+        <result property="category"                 column="category"/>
+        <result property="application"              column="application"/>
+        <result property="index"                    column="captureIndex"/>
+        <result property="sourceType"               column="sourcetype"/>
+        <result property="protocol"                 column="L7"/>
+        <result property="flow"                     column="flow"/>
+        <result property="type"                     column="type"/>
+        <result property="tagPath"                  column="tagpath"/>
+        <result property="capturePath"              column="capturepath"/>
+        <result property="fileProcessingTypeId"     column="processing_type_id"/>
+    </resultMap>
+
+
+    <!-- GET ALL CFE captures               ( tx_id INT ) -->
+    <select id="getAll" resultMap="allCfe" statementType="CALLABLE">
+        {CALL cfe_18.select_all_cfe_captures(#{param1})}
+    </select>
+    <resultMap id="allCfe" type="com.teragrep.cfe18.handlers.entities.CaptureFile">
+        <result property="id"                       column="id"/>
+        <result property="tag"                      column="tag"/>
+        <result property="retentionTime"            column="retention"/>
+        <result property="category"                 column="category"/>
+        <result property="application"              column="application"/>
+        <result property="index"                    column="captureIndex"/>
+        <result property="sourceType"               column="sourcetype"/>
+        <result property="protocol"                 column="L7"/>
+        <result property="flow"                     column="flow"/>
+        <result property="type"                     column="type"/>
+        <result property="tagPath"                  column="tagpath"/>
+        <result property="capturePath"              column="capturepath"/>
+        <result property="fileProcessingTypeId"     column="processing_type_id"/>
+    </resultMap>
+
+
+    <!-- Delete                             ( capture_id INT ) -->
+    <select id="delete" statementType="CALLABLE">
+        {CALL cfe_18.delete_capture(#{param1})}
+    </select>
+
+
+    <!-- ID resultmap -->
+    <resultMap id="idFile" type="com.teragrep.cfe18.handlers.entities.CaptureFile">
+        <result property="id"                       column="id"/>
+    </resultMap>
+
+</mapper>
+

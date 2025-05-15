@@ -45,6 +45,7 @@
  */
 package com.teragrep.cfe18;
 
+import com.teragrep.cfe18.handlers.entities.CaptureDefinition;
 import com.teragrep.cfe18.handlers.entities.CaptureFile;
 import com.teragrep.cfe18.handlers.entities.CaptureRelp;
 import org.apache.ibatis.annotations.Mapper;
@@ -52,35 +53,20 @@ import org.apache.ibatis.annotations.Mapper;
 import java.util.List;
 
 @Mapper
-public interface CaptureMapper {
-    CaptureFile getCaptureFileById(int id,Integer version);
+public interface CaptureRelpMapper {
 
-    CaptureRelp getCaptureRelpById(int id,Integer version);
-
-    CaptureFile addNewCaptureFile(String tag,
-                                  String retention,
-                                  String category,
-                                  String application,
-                                  String index,
-                                  String sourcetype,
-                                  String protocol,
-                                  String flow,
-                                  String tag_path,
-                                  String capture_path,
-                                  int processing_type_id);
-
-    CaptureRelp addNewCaptureRelp(String tag,
-                                  String retention,
-                                  String category,
-                                  String application,
-                                  String index,
-                                  String sourcetype,
-                                  String protocol,
-                                  String flow
+    CaptureRelp create(String tag,
+                        String retention,
+                        String category,
+                        String application,
+                        String index,
+                        String sourcetype,
+                        String protocol,
+                        String flow
     );
+    CaptureRelp get(int captureId,Integer version);
 
+    List<CaptureRelp> getAll(Integer version);
 
-    List<CaptureFile> getAllCapture(Integer version);
-
-    CaptureFile deleteCapture(int id);
+    void delete(int captureId);
 }

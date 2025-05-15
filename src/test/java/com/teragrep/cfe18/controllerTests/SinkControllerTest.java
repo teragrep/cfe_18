@@ -301,11 +301,11 @@ public class SinkControllerTest extends TestSpringBootInformation {
     public void testSinkInUse() throws Exception {
         CaptureRelp captureRelp = new CaptureRelp();
         captureRelp.setTag("relpTag");
-        captureRelp.setRetention_time("P30D");
+        captureRelp.setRetentionTime("P30D");
         captureRelp.setCategory("audit");
         captureRelp.setApplication("relp");
         captureRelp.setIndex("audit_relp");
-        captureRelp.setSource_type("relpsource1");
+        captureRelp.setSourceType("relpsource1");
         captureRelp.setProtocol("tcp/ip");
         captureRelp.setFlow("flow1");
 

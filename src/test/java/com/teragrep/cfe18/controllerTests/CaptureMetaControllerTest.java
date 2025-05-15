@@ -130,11 +130,11 @@ public class CaptureMetaControllerTest extends TestSpringBootInformation{
 
         CaptureRelp captureRelp = new CaptureRelp();
         captureRelp.setTag("relpTag");
-        captureRelp.setRetention_time("P30D");
+        captureRelp.setRetentionTime("P30D");
         captureRelp.setCategory("audit");
         captureRelp.setApplication("relp");
         captureRelp.setIndex("audit_relp");
-        captureRelp.setSource_type("relpsource1");
+        captureRelp.setSourceType("relpsource1");
         captureRelp.setProtocol("prot");
         captureRelp.setFlow("capFlow");
 
@@ -281,11 +281,11 @@ public class CaptureMetaControllerTest extends TestSpringBootInformation{
     public void testNoMetaForCapture() {
         CaptureRelp captureRelp = new CaptureRelp();
         captureRelp.setTag("a");
-        captureRelp.setRetention_time("a");
+        captureRelp.setRetentionTime("a");
         captureRelp.setCategory("a");
         captureRelp.setApplication("a");
         captureRelp.setIndex("a");
-        captureRelp.setSource_type("a");
+        captureRelp.setSourceType("a");
         captureRelp.setProtocol("prot");
         captureRelp.setFlow("capFlow");
 
