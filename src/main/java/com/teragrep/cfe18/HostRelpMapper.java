@@ -43,48 +43,24 @@
  * Teragrep, the applicable Commercial License may apply to this file if you as
  * a licensee so wish it.
  */
-package com.teragrep.cfe18.handlers.entities;
+package com.teragrep.cfe18;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-import io.swagger.v3.oas.annotations.media.Schema;
+import com.teragrep.cfe18.handlers.entities.HostRelp;
+import org.apache.ibatis.annotations.Mapper;
 
-@JsonInclude(JsonInclude.Include.NON_NULL)
-public class HostRelp {
-    @Schema(accessMode = Schema.AccessMode.READ_ONLY)
-    private int id;
-    private String md5;
-    private String fqHost;
+import java.util.List;
 
-    public int getId() {
-        return id;
-    }
+@Mapper
+public interface HostRelpMapper {
 
-    public void setId(int id) {
-        this.id = id;
-    }
+    HostRelp create(
+            String md5,
+            String FqHost);
 
-    public String getMd5() {
-        return md5;
-    }
+    HostRelp get(int id,Integer version);
 
-    public void setMd5(String md5) {
-        this.md5 = md5;
-    }
+    List<HostRelp> getAll(Integer version);
 
-    public String getFqHost() {
-        return fqHost;
-    }
+    void delete(int hostId);
 
-    public void setFqHost(String fqHost) {
-        this.fqHost = fqHost;
-    }
-
-    @Override
-    public String toString() {
-        return "HostRelp{" +
-                "id=" + id +
-                ", md5='" + md5 + '\'' +
-                ", fqHost='" + fqHost + '\'' +
-                '}';
-    }
 }

@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.teragrep.cfe18.HostFileMapper">
+
+    <!-- Insert host  ( proc_MD5 VARCHAR(32), proc_fqhost VARCHAR(128), proc_hub_fq VARCHAR(128) )  -->
+    <select id="create" resultMap="insertedID" statementType="CALLABLE">
+        {CALL
+        location.insert_file_host(#{param1},#{param2},#{param3})}
+    </select>
+
+    <!-- get    ( proc_host_id INT, tx_id INT ) -->
+    <select id="get" resultMap="getFile" statementType="CALLABLE">
+        {CALL cfe_00.select_file_host(#{param1},#{param2})}
+    </select>
+    <resultMap id="getFile" type="com.teragrep.cfe18.handlers.entities.HostFile">
+        <result property="id"               column="id"/>
+        <result property="md5"              column="host_md5"/>
+        <result property="fqHost"           column="host_fq"/>
+        <result property="hubId"            column="hub_id"/>
+        <result property="hubFq"            column="hub_fq"/>
+    </resultMap>
+
+
+    <!-- GET ALL Cfe  ( tx_id INT ) -->
+    <select id="getAll" resultMap="all" statementType="CALLABLE">
+        {CALL location.select_all_file_hosts(#{param1})}
+    </select>
+    <resultMap id="all" type="com.teragrep.cfe18.handlers.entities.HostFile">
+        <result property="id"               column="id"/>
+        <result property="md5"              column="host_md5"/>
+        <result property="fqHost"           column="host_fq"/>
+        <result property="hubId"            column="hub_id"/>
+        <result property="hubFq"            column="hub_fq"/>
+    </resultMap>
+
+
+    <!-- Delete Cfe  ( proc_host_id INT ) -->
+    <select id="delete" statementType="CALLABLE">
+        {CALL location.delete_file_host(#{param1})}
+    </select>
+
+
+    <!-- ID return map -->
+    <resultMap id="insertedID" type="com.teragrep.cfe18.handlers.entities.HostFile">
+        <result property="id"       column="id"/>
+    </resultMap>
+
+
+</mapper>
+

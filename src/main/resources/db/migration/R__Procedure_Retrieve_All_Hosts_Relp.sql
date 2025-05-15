@@ -43,48 +43,25 @@
  * Teragrep, the applicable Commercial License may apply to this file if you as
  * a licensee so wish it.
  */
-package com.teragrep.cfe18.handlers.entities;
-
-import com.fasterxml.jackson.annotation.JsonInclude;
-import io.swagger.v3.oas.annotations.media.Schema;
-
-@JsonInclude(JsonInclude.Include.NON_NULL)
-public class HostRelp {
-    @Schema(accessMode = Schema.AccessMode.READ_ONLY)
-    private int id;
-    private String md5;
-    private String fqHost;
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public String getMd5() {
-        return md5;
-    }
-
-    public void setMd5(String md5) {
-        this.md5 = md5;
-    }
-
-    public String getFqHost() {
-        return fqHost;
-    }
-
-    public void setFqHost(String fqHost) {
-        this.fqHost = fqHost;
-    }
-
-    @Override
-    public String toString() {
-        return "HostRelp{" +
-                "id=" + id +
-                ", md5='" + md5 + '\'' +
-                ", fqHost='" + fqHost + '\'' +
-                '}';
-    }
-}
+USE location;
+DELIMITER //
+CREATE OR REPLACE PROCEDURE select_all_relp_hosts(tx_id INT)
+BEGIN
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+        BEGIN
+            ROLLBACK;
+            RESIGNAL;
+        END;
+    IF (tx_id) IS NULL THEN
+        SET @time = (SELECT MAX(transaction_id) FROM mysql.transaction_registry);
+    ELSE
+        SET @time = tx_id;
+    END IF;
+    SELECT h.id     AS id,
+           h.md5    AS host_md5,
+           h.fqhost AS host_fq
+    FROM location.host FOR SYSTEM_TIME AS OF TRANSACTION @time h
+    WHERE h.host_type = 'relp';
+END;
+//
+DELIMITER ;
