@@ -284,9 +284,9 @@ public class HubControllerTest extends TestSpringBootInformation {
         // add host to hub
         HostFile host = new HostFile();
         host.setId(321);
-        host.setMD5("randommd5value");
+        host.setMd5("randommd5value");
         host.setFqHost("hostFq");
-        host.setHub_fq("hubfq");
+        host.setHubFq("hubfq");
 
         String json = gson.toJson(host);
 

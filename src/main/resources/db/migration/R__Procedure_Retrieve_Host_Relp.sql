@@ -43,33 +43,32 @@
  * Teragrep, the applicable Commercial License may apply to this file if you as
  * a licensee so wish it.
  */
-package com.teragrep.cfe18;
+USE cfe_00;
+DELIMITER //
+CREATE OR REPLACE PROCEDURE select_relp_host(proc_host_id INT, tx_id INT)
+BEGIN
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+        BEGIN
+            ROLLBACK;
+            RESIGNAL;
+        END;
+    START TRANSACTION;
+    IF (tx_id) IS NULL THEN
+        SET @time = (SELECT MAX(transaction_id) FROM mysql.transaction_registry);
+    ELSE
+        SET @time = tx_id;
+    END IF;
+    IF ((SELECT COUNT(id) FROM location.host FOR SYSTEM_TIME AS OF TRANSACTION @time WHERE id = proc_host_id) = 0) THEN
+        SELECT JSON_OBJECT('id', proc_host_id, 'message', 'Host does not exist') INTO @hid;
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = @hid;
+    END IF;
 
-import com.teragrep.cfe18.handlers.entities.HostFile;
-import com.teragrep.cfe18.handlers.entities.HostRelp;
-import org.apache.ibatis.annotations.Mapper;
-
-import java.util.List;
-
-@Mapper
-public interface HostMapper {
-
-    HostFile getHostFileById(int host_meta_id,Integer version);
-
-    HostRelp getHostRelpById(int host_meta_id,Integer version);
-
-
-    HostFile addHostFile(
-            String md5,
-            String FqHost,
-            String hub_fq);
-
-    HostRelp addHostRelp(
-            String md5,
-            String FqHost);
-
-    List<HostFile> getAllHost(Integer version);
-
-    HostFile deleteHost(int host_id);
-
-}
+    SELECT h.id        AS id,
+           h.md5       AS host_md5,
+           h.fqhost    AS host_fq
+    FROM location.host FOR SYSTEM_TIME AS OF TRANSACTION @time h
+    WHERE h.id = proc_host_id;
+    COMMIT;
+END;
+//
+DELIMITER ;

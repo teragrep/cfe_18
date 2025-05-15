@@ -43,48 +43,38 @@
  * Teragrep, the applicable Commercial License may apply to this file if you as
  * a licensee so wish it.
  */
-package com.teragrep.cfe18.handlers.entities;
+USE location;
+DELIMITER //
+CREATE OR REPLACE PROCEDURE insert_relp_host(proc_MD5 VARCHAR(32), proc_fqhost VARCHAR(128))
+BEGIN
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+        BEGIN
+            ROLLBACK;
+            RESIGNAL;
+        END;
+    START TRANSACTION;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-import io.swagger.v3.oas.annotations.media.Schema;
+    -- type check
+    IF ((SELECT COUNT(id) FROM location.host WHERE MD5 = proc_MD5 AND fqhost = proc_fqhost AND host_type != 'relp') >
+        0) THEN
+        SELECT JSON_OBJECT('id', (SELECT id FROM location.host WHERE MD5 = proc_MD5 AND fqhost = proc_fqhost),
+                           'message', 'Host exists with different type')
+        INTO @hid;
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = @hid;
+    END IF;
 
-@JsonInclude(JsonInclude.Include.NON_NULL)
-public class HostRelp {
-    @Schema(accessMode = Schema.AccessMode.READ_ONLY)
-    private int id;
-    private String md5;
-    private String fqHost;
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public String getMd5() {
-        return md5;
-    }
-
-    public void setMd5(String md5) {
-        this.md5 = md5;
-    }
-
-    public String getFqHost() {
-        return fqHost;
-    }
-
-    public void setFqHost(String fqHost) {
-        this.fqHost = fqHost;
-    }
-
-    @Override
-    public String toString() {
-        return "HostRelp{" +
-                "id=" + id +
-                ", md5='" + md5 + '\'' +
-                ", fqHost='" + fqHost + '\'' +
-                '}';
-    }
-}
+    IF ((SELECT COUNT(id)
+         FROM location.host
+         WHERE MD5 = proc_MD5
+           AND fqhost = proc_fqhost
+           AND host_type = 'relp') = 0) THEN
+        INSERT INTO location.host(MD5, fqhost, host_type)
+        VALUES (proc_MD5, proc_fqhost, 'relp');
+        SELECT LAST_INSERT_ID() AS id;
+    ELSE
+        SELECT id AS id FROM location.host WHERE MD5 = proc_MD5 AND fqhost = proc_fqhost AND host_type = 'relp';
+    END IF;
+    COMMIT;
+END;
+//
+DELIMITER ;

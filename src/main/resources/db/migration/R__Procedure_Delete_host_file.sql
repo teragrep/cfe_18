@@ -43,48 +43,25 @@
  * Teragrep, the applicable Commercial License may apply to this file if you as
  * a licensee so wish it.
  */
-package com.teragrep.cfe18.handlers.entities;
+USE location;
+DELIMITER //
+CREATE OR REPLACE PROCEDURE delete_file_host(proc_host_id INT)
+BEGIN
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+        BEGIN
+            ROLLBACK;
+            RESIGNAL;
+        END;
+    START TRANSACTION;
+    IF ((SELECT COUNT(id) FROM location.host WHERE id = proc_host_id) = 0) THEN
+        SELECT JSON_OBJECT('id', proc_host_id, 'message', 'Host does not exist') INTO @h;
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = @h;
+    END IF;
+    DELETE FROM cfe_00.host_type_cfe WHERE host_id = proc_host_id;
+    DELETE FROM location.host WHERE id = proc_host_id;
+    COMMIT;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-import io.swagger.v3.oas.annotations.media.Schema;
+END;
 
-@JsonInclude(JsonInclude.Include.NON_NULL)
-public class HostRelp {
-    @Schema(accessMode = Schema.AccessMode.READ_ONLY)
-    private int id;
-    private String md5;
-    private String fqHost;
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public String getMd5() {
-        return md5;
-    }
-
-    public void setMd5(String md5) {
-        this.md5 = md5;
-    }
-
-    public String getFqHost() {
-        return fqHost;
-    }
-
-    public void setFqHost(String fqHost) {
-        this.fqHost = fqHost;
-    }
-
-    @Override
-    public String toString() {
-        return "HostRelp{" +
-                "id=" + id +
-                ", md5='" + md5 + '\'' +
-                ", fqHost='" + fqHost + '\'' +
-                '}';
-    }
-}
+//
+DELIMITER ;

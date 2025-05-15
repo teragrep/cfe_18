@@ -50,27 +50,28 @@ import io.swagger.v3.oas.annotations.media.Schema;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class HostFile {
+
+    @Schema(accessMode = Schema.AccessMode.READ_ONLY)
     private int id;
     private String md5;
     private String fqHost;
-    @Schema(accessMode = Schema.AccessMode.READ_ONLY)
-    private String host_type;
-    @Schema(accessMode = Schema.AccessMode.READ_ONLY)
-    private int hub;
-    private String hub_fq;
-    @Schema(accessMode = Schema.AccessMode.READ_ONLY)
-    private String hostname;
-    @Schema(accessMode = Schema.AccessMode.READ_ONLY)
-    private int host_meta_id;
+    private int hubId;
+    private String hubFq;
 
-
-    public String getHost_type() {
-        return host_type;
+    public int getId() {
+        return id;
     }
 
+    public void setId(int id) {
+        this.id = id;
+    }
 
-    public void setHost_type(String host_type) {
-        this.host_type = host_type;
+    public String getMd5() {
+        return md5;
+    }
+
+    public void setMd5(String md5) {
+        this.md5 = md5;
     }
 
     public String getFqHost() {
@@ -81,53 +82,20 @@ public class HostFile {
         this.fqHost = fqHost;
     }
 
-    public String getMD5() {
-        return md5;
+    public int getHubId() {
+        return hubId;
     }
 
-    public void setMD5(String md5) {
-        this.md5 = md5;
+    public void setHubId(int hubId) {
+        this.hubId = hubId;
     }
 
-    public int getHub() {
-        return hub;
+    public String getHubFq() {
+        return hubFq;
     }
 
-
-    public void setHub(int hub) {
-        this.hub = hub;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public String getHostname() {
-        return hostname;
-    }
-
-    public void setHostname(String hostname) {
-        this.hostname = hostname;
-    }
-
-    public int getHost_meta_id() {
-        return host_meta_id;
-    }
-
-    public void setHost_meta_id(int host_meta_id) {
-        this.host_meta_id = host_meta_id;
-    }
-
-    public String getHub_fq() {
-        return hub_fq;
-    }
-
-    public void setHub_fq(String hub_fq) {
-        this.hub_fq = hub_fq;
+    public void setHubFq(String hubFq) {
+        this.hubFq = hubFq;
     }
 
     @Override
@@ -136,11 +104,8 @@ public class HostFile {
                 "id=" + id +
                 ", md5='" + md5 + '\'' +
                 ", fqHost='" + fqHost + '\'' +
-                ", host_type='" + host_type + '\'' +
-                ", hub=" + hub +
-                ", hub_fq='" + hub_fq + '\'' +
-                ", hostname='" + hostname + '\'' +
-                ", host_meta_id=" + host_meta_id +
+                ", hubId=" + hubId +
+                ", hubFq='" + hubFq + '\'' +
                 '}';
     }
 }
