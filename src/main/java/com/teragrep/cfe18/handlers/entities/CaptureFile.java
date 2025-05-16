@@ -60,7 +60,7 @@ public class CaptureFile {
     private String retention_time;
     private String category;
     private String application;
-    private String index; 
+    private String index;
     private String source_type;
     private String protocol;
     private String flow;
