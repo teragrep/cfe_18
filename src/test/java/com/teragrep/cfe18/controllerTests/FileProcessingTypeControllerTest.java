@@ -347,9 +347,9 @@ public class FileProcessingTypeControllerTest extends TestSpringBootInformation 
         // insert sink
 
         Sink sink = new Sink();
-        sink.setFlow("capflow");
+        sink.setFlowId(1);
         sink.setPort("cap");
-        sink.setIp_address("capsink");
+        sink.setIpAddress("capsink");
         sink.setProtocol("prot");
 
         String json1 = gson.toJson(sink);
@@ -360,7 +360,7 @@ public class FileProcessingTypeControllerTest extends TestSpringBootInformation 
                 ContentType.APPLICATION_JSON);
 
         // Creates the request
-        HttpPut request1 = new HttpPut("http://localhost:" + port + "/sink/details");
+        HttpPut request1 = new HttpPut("http://localhost:" + port + "/sink");
         // set requestEntity to the put request
         request1.setEntity(requestEntity1);
         // Header
