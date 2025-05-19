@@ -43,9 +43,9 @@
  * Teragrep, the applicable Commercial License may apply to this file if you as
  * a licensee so wish it.
  */
-use cfe_18;
+USE cfe_18;
 DELIMITER //
-CREATE OR REPLACE PROCEDURE remove_capture(capture_id int)
+CREATE OR REPLACE PROCEDURE delete_capture(capture_id INT)
 BEGIN
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
         BEGIN
@@ -53,12 +53,14 @@ BEGIN
             RESIGNAL;
         END;
     START TRANSACTION;
-    if (select id from cfe_18.capture_type where id = capture_id) is null then
-        SELECT JSON_OBJECT('id', null, 'message', 'Capture does not exist') into @c;
-        signal sqlstate '45000' set message_text = @c;
-    end if;
-    delete from cfe_18.capture_type where id = capture_id;
+    IF ((SELECT COUNT(id) FROM cfe_18.capture_definition WHERE id = capture_id) = 0) THEN
+        SELECT JSON_OBJECT('id', capture_id, 'message', 'Capture does not exist') INTO @c;
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = @c;
+    END IF;
+    DELETE FROM cfe_18.capture_type WHERE id = capture_id;
+    DELETE FROM cfe_18.capture_definition WHERE id = capture_id;
     COMMIT;
+
 END;
 
 //

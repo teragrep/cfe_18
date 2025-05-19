@@ -56,22 +56,19 @@ public class CaptureFile {
 
     @Schema(accessMode = Schema.AccessMode.READ_ONLY)
     private Integer id;
-    private String tag;
-    private String retention_time;
-    private String category;
     private String application;
+    private String category;
+    private String sourceType;
     private String index;
-    private String source_type;
-    private String protocol;
+    private String retentionTime;
+    private String tag;
     private String flow;
-    private String tag_path;
-    private String capture_path;
-    private int processing_type_id;
+    private String protocol;
+    private String tagPath;
+    private String capturePath;
+    private int fileProcessingTypeId;
     @Schema(accessMode = Schema.AccessMode.READ_ONLY)
-    private CaptureType captureType;
-    @Schema(accessMode = Schema.AccessMode.READ_ONLY)
-    private String captureGroup;
-
+    private CaptureType type;
 
     public Integer getId() {
         return id;
@@ -79,22 +76,6 @@ public class CaptureFile {
 
     public void setId(Integer id) {
         this.id = id;
-    }
-
-    public String getCaptureGroup() {
-        return captureGroup;
-    }
-
-    public void setCaptureGroup(String captureGroup) {
-        this.captureGroup = captureGroup;
-    }
-
-    public String getTag() {
-        return tag;
-    }
-
-    public void setTag(String tag) {
-        this.tag = tag;
     }
 
     public String getApplication() {
@@ -105,6 +86,22 @@ public class CaptureFile {
         this.application = application;
     }
 
+    public String getCategory() {
+        return category;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
+    }
+
+    public String getSourceType() {
+        return sourceType;
+    }
+
+    public void setSourceType(String sourceType) {
+        this.sourceType = sourceType;
+    }
+
     public String getIndex() {
         return index;
     }
@@ -113,36 +110,20 @@ public class CaptureFile {
         this.index = index;
     }
 
-    public String getRetention_time() {
-        return retention_time;
+    public String getRetentionTime() {
+        return retentionTime;
     }
 
-    public void setRetention_time(String retention_time) {
-        this.retention_time = retention_time;
+    public void setRetentionTime(String retentionTime) {
+        this.retentionTime = retentionTime;
     }
 
-    public String getSource_type() {
-        return source_type;
+    public String getTag() {
+        return tag;
     }
 
-    public void setSource_type(String source_type) {
-        this.source_type = source_type;
-    }
-
-    public String getProtocol() {
-        return protocol;
-    }
-
-    public void setProtocol(String protocol) {
-        this.protocol = protocol;
-    }
-
-    public String getCategory() {
-        return category;
-    }
-
-    public void setCategory(String category) {
-        this.category = category;
+    public void setTag(String tag) {
+        this.tag = tag;
     }
 
     public String getFlow() {
@@ -153,55 +134,62 @@ public class CaptureFile {
         this.flow = flow;
     }
 
-    public String getTag_path() {
-        return tag_path;
+    public String getProtocol() {
+        return protocol;
     }
 
-    public void setTag_path(String tag_path) {
-        this.tag_path = tag_path;
+    public void setProtocol(String protocol) {
+        this.protocol = protocol;
     }
 
-    public String getCapture_path() {
-        return capture_path;
+    public String getTagPath() {
+        return tagPath;
     }
 
-    public void setCapture_path(String capture_path) {
-        this.capture_path = capture_path;
+    public void setTagPath(String tagPath) {
+        this.tagPath = tagPath;
     }
 
-    public int getProcessing_type_id() {
-        return processing_type_id;
+    public String getCapturePath() {
+        return capturePath;
     }
 
-    public void setProcessing_type_id(int processing_type_id) {
-        this.processing_type_id = processing_type_id;
+    public void setCapturePath(String capturePath) {
+        this.capturePath = capturePath;
     }
 
-    public CaptureType getCaptureType() {
-        return captureType;
+    public int getFileProcessingTypeId() {
+        return fileProcessingTypeId;
     }
 
-    public void setCaptureType(CaptureType captureType) {
-        this.captureType = captureType;
+    public void setFileProcessingTypeId(int fileProcessingTypeId) {
+        this.fileProcessingTypeId = fileProcessingTypeId;
+    }
+
+    public CaptureType getType() {
+        return type;
+    }
+
+    public void setType(CaptureType type) {
+        this.type = type;
     }
 
     @Override
     public String toString() {
         return "CaptureFile{" +
                 "id=" + id +
-                ", tag='" + tag + '\'' +
-                ", retention_time='" + retention_time + '\'' +
-                ", category='" + category + '\'' +
                 ", application='" + application + '\'' +
+                ", category='" + category + '\'' +
+                ", sourceType='" + sourceType + '\'' +
                 ", index='" + index + '\'' +
-                ", source_type='" + source_type + '\'' +
-                ", protocol='" + protocol + '\'' +
+                ", retentionTime='" + retentionTime + '\'' +
+                ", tag='" + tag + '\'' +
                 ", flow='" + flow + '\'' +
-                ", tag_path='" + tag_path + '\'' +
-                ", capture_path='" + capture_path + '\'' +
-                ", processing_type_id=" + processing_type_id +
-                ", captureType=" + captureType +
-                ", captureGroup='" + captureGroup + '\'' +
+                ", protocol='" + protocol + '\'' +
+                ", tagPath='" + tagPath + '\'' +
+                ", capturePath='" + capturePath + '\'' +
+                ", fileProcessingTypeId=" + fileProcessingTypeId +
+                ", type=" + type +
                 '}';
     }
 }

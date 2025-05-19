@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.teragrep.cfe18.CaptureRelpMapper">
+
+    <!-- insert relp                        (tag VARCHAR(48), retention_time VARCHAR(255),
+                                                category VARCHAR(48), application VARCHAR(48),
+                                                capture_index VARCHAR(48), source_type VARCHAR(255),
+                                                protocol VARCHAR(64), flow VARCHAR(255)) -->
+    <select id="create" resultMap="id" statementType="CALLABLE">
+        {CALL
+        cfe_18.insert_relp_capture(#{param1},#{param2},#{param3},#{param4},#{param5},#{param6},#{param7},#{param8})}
+    </select>
+
+
+    <!-- select relp                        ( capture_id INT, tx_id INT )  -->
+    <select id="get" resultMap="getCaptureRelp" statementType="CALLABLE">
+        {CALL cfe_18.select_relp_capture(#{param1},#{param2})}
+    </select>
+    <resultMap id="getCaptureRelp" type="com.teragrep.cfe18.handlers.entities.CaptureRelp" >
+        <result property="id"                   column="id"/>
+        <result property="tag"                  column="tag"/>
+        <result property="retentionTime"        column="retention_time"/>
+        <result property="category"             column="category"/>
+        <result property="application"          column="application"/>
+        <result property="index"                column="captureIndex"/>
+        <result property="sourceType"           column="source_type"/>
+        <result property="protocol"             column="L7"/>
+        <result property="flow"                 column="flow"/>
+        <result property="type"                 column="type"/>
+    </resultMap>
+
+
+    <!-- GET ALL RELP captures              ( tx_id INT ) -->
+    <select id="getAll" resultMap="allRelp" statementType="CALLABLE">
+        {CALL cfe_18.select_all_relp_captures(#{param1})}
+    </select>
+    <resultMap id="allRelp" type="com.teragrep.cfe18.handlers.entities.CaptureRelp">
+        <result property="id"                   column="id"/>
+        <result property="tag"                  column="tag"/>
+        <result property="retentionTime"        column="retention"/>
+        <result property="category"             column="category"/>
+        <result property="application"          column="application"/>
+        <result property="index"                column="captureIndex"/>
+        <result property="sourceType"           column="sourcetype"/>
+        <result property="protocol"             column="L7"/>
+        <result property="flow"                 column="flow"/>
+        <result property="type"                 column="type"/>
+    </resultMap>
+
+
+    <!-- Delete                             ( capture_id INT ) -->
+    <select id="delete" statementType="CALLABLE">
+        {CALL cfe_18.delete_capture(#{param1})}
+    </select>
+
+
+    <!-- ID resultmap -->
+    <resultMap id="id" type="com.teragrep.cfe18.handlers.entities.CaptureRelp">
+        <result property="id"                       column="id"/>
+    </resultMap>
+
+</mapper>
+
