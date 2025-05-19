@@ -264,7 +264,7 @@ public class SinkControllerTest extends TestSpringBootInformation {
 
         String responseStringGet = Assertions.assertDoesNotThrow(() ->EntityUtils.toString(entityDelete, "UTF-8"));
 
-        // Parsin respponse as JSONObject
+        // Parsing response as JSONObject
         JSONObject responseAsJson = Assertions.assertDoesNotThrow(() ->new JSONObject(responseStringGet));
 
         // Creating string from Json that was given as a response
@@ -290,7 +290,7 @@ public class SinkControllerTest extends TestSpringBootInformation {
 
         String responseStringGet = Assertions.assertDoesNotThrow(() ->EntityUtils.toString(entityDelete, "UTF-8"));
 
-        // Parsin respponse as JSONObject
+        // Parsing response as JSONObject
         JSONObject responseAsJson = Assertions.assertDoesNotThrow(() ->new JSONObject(responseStringGet));
 
         // Creating string from Json that was given as a response
@@ -343,7 +343,7 @@ public class SinkControllerTest extends TestSpringBootInformation {
 
         String responseStringGet = Assertions.assertDoesNotThrow(() ->EntityUtils.toString(entityDelete, "UTF-8"));
 
-        // Parsin respponse as JSONObject
+        // Parsing response as JSONObject
         JSONObject responseAsJson = Assertions.assertDoesNotThrow(() ->new JSONObject(responseStringGet));
 
         // Creating string from Json that was given as a response
