@@ -82,40 +82,27 @@ public class FlowController {
     @Autowired
     FlowMapper flowMapper;
 
-
-    // Get ALL endpoint
-
-    @RequestMapping(path = "", method = RequestMethod.GET, produces = "application/json")
-    @Operation(summary = "Fetch all flows", description = "Will return empty list if there are no flows to fetch")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Flows types fetched",
-                    content = {@Content(mediaType = "application/json",
-                            schema = @Schema(implementation = Flow.class))})
-    })
-    public List<Flow> getAllFlow(@RequestParam(required = false) Integer version) {
-        return flowMapper.getAllFlow(version);
-    }
-
     @RequestMapping(path = "", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
-    @Operation(summary = "Insert new flow")
+    @Operation(summary = "Create flow")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "New flow created",
                     content = {@Content(mediaType = "application/json",
                             schema = @Schema(implementation = Flow.class))}),
-            @ApiResponse(responseCode = "400", description = "Internal SQL Exception, most likely NULL",
+            @ApiResponse(responseCode = "400", description = "Internal SQL Exception",
                     content = @Content),
             @ApiResponse(responseCode = "500", description = "Internal server error, contact admin", content = @Content)
     })
-    public ResponseEntity<String> newFlow(@RequestBody Flow newFlow) {
-        LOGGER.info("About to insert <[{}]>",newFlow);
+    public ResponseEntity<String> create(@RequestBody Flow newFlow) {
+        LOGGER.info("About to insert <[{}]>", newFlow);
         try {
-            Flow f = flowMapper.addNewFlow(newFlow.getName());
-            LOGGER.debug("Values returned <[{}]>",f);
+            Flow f = flowMapper.create(newFlow.getName());
+            LOGGER.debug("Values returned <[{}]>", f);
             JSONObject jsonObject = new JSONObject();
             jsonObject.put("id", f.getId());
-            jsonObject.put("message", "new flow added with the name = " + f.getName());
+            jsonObject.put("message", "New flow created");
             return new ResponseEntity<>(jsonObject.toString(), HttpStatus.CREATED);
         } catch (RuntimeException ex) {
+            LOGGER.error(ex.getMessage());
             JSONObject jsonErr = new JSONObject();
             jsonErr.put("id", newFlow.getId());
             jsonErr.put("message", ex.getCause().toString());
@@ -123,41 +110,57 @@ public class FlowController {
         }
     }
 
-    // Delete
-    @RequestMapping(path = "/{name}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(path = "", method = RequestMethod.GET, produces = "application/json")
+    @Operation(summary = "Fetch all flows", description = "Will return empty list if there are no flows to fetch")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Successfully retrieved",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = Flow.class))})})
+    public List<Flow> getAll(@RequestParam(required = false) Integer version) {
+        return flowMapper.getAll(version);
+    }
+
+
+    @RequestMapping(path = "/{id}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
     @Operation(summary = "Delete flow")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Flow deleted",
                     content = {@Content(mediaType = "application/json",
                             schema = @Schema(implementation = Flow.class))}),
-            @ApiResponse(responseCode = "400", description = "Flow is being used OR Flow does not exist",
+            @ApiResponse(responseCode = "400", description = "Flow is being used",
                     content = @Content),
-            @ApiResponse(responseCode = "500", description = "Internal server error, contact admin", content = @Content)
-    })
-    public ResponseEntity<String> removeFlow(@PathVariable("name") String name) {
-        LOGGER.info("Deleting flow  <[{}]>",name);
+            @ApiResponse(responseCode = "404", description = "Flow does not exist",
+                    content = @Content),
+            @ApiResponse(responseCode = "500", description = "Internal server error, contact admin", content = @Content)})
+    public ResponseEntity<String> delete(@PathVariable("id") int id) {
+        LOGGER.info("Deleting flow  <[{}]>", id);
         try {
-            flowMapper.deleteFlow(name);
+            flowMapper.delete(id);
             JSONObject j = new JSONObject();
-            j.put("message", "flow " + name + " deleted.");
+            j.put("id", id);
+            j.put("message", "Flow deleted");
             return new ResponseEntity<>(j.toString(), HttpStatus.OK);
-        } catch (Exception ex) {
+        } catch (RuntimeException ex) {
+            LOGGER.error(ex.getMessage());
             JSONObject jsonErr = new JSONObject();
+            jsonErr.put("id", id);
+            jsonErr.put("message", ex.getCause().getMessage());
             final Throwable cause = ex.getCause();
             if (cause instanceof SQLException) {
-                LOGGER.error((cause).getMessage());
                 String state = ((SQLException) cause).getSQLState();
                 if (state.equals("23000")) {
                     jsonErr.put("message", "Is in use");
+                    return new ResponseEntity<>(jsonErr.toString(), HttpStatus.BAD_REQUEST);
                 } else if (state.equals("45000")) {
                     jsonErr.put("message", "Record does not exist");
+                    return new ResponseEntity<>(jsonErr.toString(), HttpStatus.NOT_FOUND);
                 }
-                return new ResponseEntity<>(jsonErr.toString(), HttpStatus.BAD_REQUEST);
             }
-            return new ResponseEntity<>(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(jsonErr.toString(), HttpStatus.BAD_REQUEST);
         }
     }
 }
+
 
 
 
