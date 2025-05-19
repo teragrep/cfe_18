@@ -52,15 +52,12 @@ import java.util.List;
 
 @Mapper
 public interface SinkMapper {
-    Sink addNewSink(
-            String protocol,
-            String ip,
-            String port,
-            String flow);
 
-    Sink getSinkById(int Id,Integer version);
+    Sink create(String protocol, String ip, String port, int flowId);
 
-    List<Sink> getAllSinks(Integer version);
+    Sink get(int id, Integer version);
 
-    Sink deleteSinkById(int id);
+    List<Sink> getAll(Integer version);
+
+    void delete(int id);
 }

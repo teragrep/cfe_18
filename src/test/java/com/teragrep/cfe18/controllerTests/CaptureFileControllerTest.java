@@ -152,9 +152,9 @@ public final class CaptureFileControllerTest extends TestSpringBootInformation {
         // insert sink
 
         Sink sink = new Sink();
-        sink.setFlow("capflow");
+        sink.setFlowId(1);
         sink.setPort("cap");
-        sink.setIp_address("capsink");
+        sink.setIpAddress("capsink");
         sink.setProtocol("prot");
 
         String json1 = gson.toJson(sink);
@@ -165,7 +165,7 @@ public final class CaptureFileControllerTest extends TestSpringBootInformation {
                 ContentType.APPLICATION_JSON);
 
         // Creates the request
-        HttpPut request1 = new HttpPut("http://localhost:" + port + "/sink/details");
+        HttpPut request1 = new HttpPut("http://localhost:" + port + "/sink");
         // set requestEntity to the put request
         request1.setEntity(requestEntity1);
         // Header
@@ -190,7 +190,7 @@ public final class CaptureFileControllerTest extends TestSpringBootInformation {
         // Creating string from Json that was given as a response
         String actual1 = responseJson.get("message").toString();
 
-        String expected2 = "new flow added with the name = capflow";
+        String expected2 = "New flow created";
 
         // Creating string from Json that was given as a response
         String actual2 = responseJson2.get("message").toString();
