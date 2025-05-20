@@ -171,7 +171,7 @@ public class HubControllerTest extends TestSpringBootInformation {
     }
 
     @Test
-    @Order(1)
+    @Order(2)
     public void testInsertHub() {
         Hub hub = new Hub();
         hub.setFqHost("hubfq");
@@ -219,7 +219,7 @@ public class HubControllerTest extends TestSpringBootInformation {
     }
 
     @Test
-    @Order(2)
+    @Order(3)
     public void testGetHub() {
         Hub hub = new Hub();
         hub.setHostId(1);
@@ -246,7 +246,7 @@ public class HubControllerTest extends TestSpringBootInformation {
     }
 
     @Test
-    @Order(3)
+    @Order(4)
     public void testGetAllHubs() {
         ArrayList<Hub> expected = new ArrayList<>();
 
@@ -285,7 +285,7 @@ public class HubControllerTest extends TestSpringBootInformation {
     }
 
     @Test
-    @Order(4)
+    @Order(5)
     public void testDeleteHubInUse() {
         // try to delete given hub when host is using the given hub
 
@@ -313,6 +313,7 @@ public class HubControllerTest extends TestSpringBootInformation {
     }
 
     @Test
+    @Order(6)
     public void testDeleteNonExistentHub() {
         HttpDelete delete = new HttpDelete("http://localhost:" + port + "/host/hub/" + 112412214);
 
@@ -338,6 +339,7 @@ public class HubControllerTest extends TestSpringBootInformation {
     }
 
     @Test
+    @Order(7)
     public void testDeleteHub() {
         HttpDelete delete = new HttpDelete("http://localhost:" + port + "/host/hub/" + 2);
 
