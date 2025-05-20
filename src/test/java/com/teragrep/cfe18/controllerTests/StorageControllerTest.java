@@ -80,7 +80,6 @@ public class StorageControllerTest extends TestSpringBootInformation {
     @LocalServerPort
     private int port;
 
-
     @Test
     @Order(1)
     public void testInsertStorage() {
@@ -112,16 +111,14 @@ public class StorageControllerTest extends TestSpringBootInformation {
         // Entity response string
         String responseString = Assertions.assertDoesNotThrow(() -> EntityUtils.toString(entity));
 
-        // Parsin respponse as JSONObject
+        // Parsing response as JSONObject
         JSONObject responseAsJson = Assertions.assertDoesNotThrow(() -> new JSONObject(responseString));
 
         // Creating expected message as JSON Object from the data that was sent towards endpoint
         String expected = "New storage created";
 
         // Creating string from Json that was given as a response
-        String actual = Assertions.assertDoesNotThrow(() ->
-                responseAsJson.get("message").toString()
-        );
+        String actual = Assertions.assertDoesNotThrow(() -> responseAsJson.get("message").toString());
 
         // Assertions
         assertEquals(expected, actual);
@@ -187,7 +184,6 @@ public class StorageControllerTest extends TestSpringBootInformation {
 
     }
 
-
     @Test
     @Order(4)
     public void testDeleteNonExistentStorage() {
@@ -203,7 +199,7 @@ public class StorageControllerTest extends TestSpringBootInformation {
 
         String responseStringGet = Assertions.assertDoesNotThrow(() -> EntityUtils.toString(entityDelete, "UTF-8"));
 
-        // Parsin respponse as JSONObject
+        // Parsing response as JSONObject
         JSONObject responseAsJson = Assertions.assertDoesNotThrow(() -> new JSONObject(responseStringGet));
 
         // Creating string from Json that was given as a response
@@ -216,10 +212,9 @@ public class StorageControllerTest extends TestSpringBootInformation {
         assertThat(deleteResponse.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_NOT_FOUND));
     }
 
-
     @Test
     @Order(5)
-    public void testDeleteStorage()  {
+    public void testDeleteStorage() {
         HttpDelete delete = new HttpDelete("http://localhost:" + port + "/storage/" + 1);
         // Header
         delete.setHeader("Authorization", "Bearer " + token);
@@ -230,7 +225,7 @@ public class StorageControllerTest extends TestSpringBootInformation {
 
         String responseStringGet = Assertions.assertDoesNotThrow(() -> EntityUtils.toString(entityDelete, "UTF-8"));
 
-        // Parsin respponse as JSONObject
+        // Parsing response as JSONObject
         JSONObject responseAsJson = Assertions.assertDoesNotThrow(() -> new JSONObject(responseStringGet));
 
         // Creating string from Json that was given as a response
