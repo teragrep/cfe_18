@@ -162,7 +162,7 @@ public class HubController {
             @ApiResponse(responseCode = "200", description = "Successfully retrieved",
                     content = {@Content(mediaType = "application/json",
                             schema = @Schema(implementation = Hub.class))})})
-    public List<Hub> getAllHub(@RequestParam(required = false) Integer version) {
+    public List<Hub> getAll(@RequestParam(required = false) Integer version) {
         return hubMapper.getAll(version);
     }
 
