@@ -43,30 +43,42 @@
  * Teragrep, the applicable Commercial License may apply to this file if you as
  * a licensee so wish it.
  */
-use cfe_18;
+USE cfe_00;
 DELIMITER //
-CREATE OR REPLACE PROCEDURE retrieve_all_hubs(tx_id int)
+CREATE OR REPLACE PROCEDURE delete_hub(proc_hub_id INT)
 BEGIN
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
         BEGIN
             ROLLBACK;
             RESIGNAL;
-        end;
-        if(tx_id) is null then
-             set @time = (select max(transaction_id) from mysql.transaction_registry);
-        else
-             set @time=tx_id;
-        end if;
-    select distinct h2.id      as host_id,
-                    h2.fqhost  as hub_fq,
-                    h2.MD5     as hub_md5,
-                    h.ip       as ip,
-                    htc.hub_id as hub_id
-    from cfe_18.hubs for system_time as of transaction @time h
-             inner join cfe_18.host for system_time as of transaction @time h2 on h2.id = h.host_id
-             inner join cfe_18.host_type_cfe for system_time as of transaction @time htc on h.id = htc.hub_id;
+        END;
+    START TRANSACTION;
+    IF ((SELECT COUNT(id) FROM cfe_00.hubs WHERE id = proc_hub_id) = 0) THEN
+        SELECT JSON_OBJECT('id', proc_hub_id, 'message', 'Hub does not exist') INTO @h;
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = @h;
+    END IF;
 
+    -- check if there are hosts using the hub before deleting
+    IF ((SELECT COUNT(htc.host_id)
+         FROM cfe_00.host_type_cfe htc
+         WHERE hub_id = proc_hub_id
+           AND host_id != (SELECT h.id
+                           FROM location.host h
+                                    INNER JOIN hubs h2 ON h.id = h2.host_id
+                           WHERE h2.id = proc_hub_id)) > 0) THEN
+        SELECT JSON_OBJECT('id', proc_hub_id, 'message', 'Hosts use the hub') INTO @ha;
+        -- Signals constraint error since schema design is reversed and allows deleting hub that hosts rely on.
+        -- Should maybe rework schema on this part since it hides flawed design.
+        SIGNAL SQLSTATE '23000' SET MESSAGE_TEXT = @ha;
+    END IF;
+    -- select the host id before deleting hub since it's not accessible later
+    SELECT host_id INTO @Hostid FROM cfe_00.hubs WHERE id = proc_hub_id;
+    DELETE FROM cfe_00.host_type_cfe WHERE hub_id = proc_hub_id;
+    DELETE FROM cfe_00.hubs WHERE id = proc_hub_id;
+    DELETE FROM location.host WHERE id = @Hostid;
+    COMMIT;
 
-end;
+END;
+
 //
 DELIMITER ;
