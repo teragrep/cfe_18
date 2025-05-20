@@ -43,30 +43,30 @@
  * Teragrep, the applicable Commercial License may apply to this file if you as
  * a licensee so wish it.
  */
-use cfe_00;
+USE cfe_00;
 DELIMITER //
-CREATE OR REPLACE PROCEDURE retrieve_all_hubs(tx_id int)
+CREATE OR REPLACE PROCEDURE select_all_hubs(tx_id INT)
 BEGIN
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
         BEGIN
             ROLLBACK;
             RESIGNAL;
-        end;
-        if(tx_id) is null then
-             set @time = (select max(transaction_id) from mysql.transaction_registry);
-        else
-             set @time=tx_id;
-        end if;
-    select distinct h2.id      as host_id,
-                    h2.fqhost  as hub_fq,
-                    h2.MD5     as hub_md5,
-                    h.ip       as ip,
-                    htc.hub_id as hub_id
-    from cfe_00.hubs for system_time as of transaction @time h
-             inner join location.host for system_time as of transaction @time h2 on h2.id = h.host_id
-             inner join cfe_00.host_type_cfe for system_time as of transaction @time htc on h.id = htc.hub_id;
+        END;
+    IF (tx_id) IS NULL THEN
+        SET @time = (SELECT MAX(transaction_id) FROM mysql.transaction_registry);
+    ELSE
+        SET @time = tx_id;
+    END IF;
+    SELECT DISTINCT htc.hub_id AS id,
+                    h2.id      AS host_id,
+                    h2.fqhost  AS hub_fq_host,
+                    h.ip       AS ip,
+                    h2.MD5     AS md5
+    FROM cfe_00.hubs FOR SYSTEM_TIME AS OF TRANSACTION @time h
+             INNER JOIN location.host FOR SYSTEM_TIME AS OF TRANSACTION @time h2 ON h2.id = h.host_id
+             INNER JOIN cfe_00.host_type_cfe FOR SYSTEM_TIME AS OF TRANSACTION @time htc ON h.id = htc.hub_id;
 
 
-end;
+END;
 //
 DELIMITER ;
