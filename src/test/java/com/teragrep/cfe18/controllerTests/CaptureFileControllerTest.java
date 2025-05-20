@@ -190,7 +190,7 @@ public final class CaptureFileControllerTest extends TestSpringBootInformation {
         // Creating string from Json that was given as a response
         String actual1 = responseJson.get("message").toString();
 
-        String expected2 = "new flow added with the name = capflow";
+        String expected2 = "New flow created";
 
         // Creating string from Json that was given as a response
         String actual2 = responseJson2.get("message").toString();

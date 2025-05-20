@@ -43,22 +43,25 @@
  * Teragrep, the applicable Commercial License may apply to this file if you as
  * a licensee so wish it.
  */
-use flow;
+USE flow;
 DELIMITER //
-CREATE OR REPLACE PROCEDURE remove_storage(proc_storage_id int)
+CREATE OR REPLACE PROCEDURE select_all_storages(tx_id INT)
 BEGIN
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
         BEGIN
             ROLLBACK;
             RESIGNAL;
         END;
-    START TRANSACTION;
-    if (select id from flow.storages where id = proc_storage_id) is null then
-        SELECT JSON_OBJECT('id', null, 'message', 'Storage does not exist') into @s;
-        signal sqlstate '45000' set message_text = @s;
-    end if;
-    delete from flow.storages where id = proc_storage_id;
-    COMMIT;
+    IF (tx_id) IS NULL THEN
+        SET @time = (SELECT MAX(transaction_id) FROM mysql.transaction_registry);
+    ELSE
+        SET @time = tx_id;
+    END IF;
+    SELECT s.id           AS id,
+           s.storage_name AS storage_name,
+           s.cfe_type     AS storage_type
+    FROM flow.storages FOR SYSTEM_TIME AS OF TRANSACTION @time s;
 END;
+
 //
 DELIMITER ;

@@ -19,7 +19,7 @@
     <flow.flow_targets id="3" flow_id="1" storage_id="3" storage_type="cfe_11"/>
     <flow.flow_targets id="4" flow_id="1" storage_id="4" storage_type="cfe_12"/>
     <flow.flow_targets id="5" flow_id="1" storage_id="5" storage_type="cfe_19"/>
-    <flow.flow_targets id="6" flow_id="1" storage_id="6" storage_type="cfe_23"/>
+    <flow.flow_targets id="6" flow_id="2" storage_id="6" storage_type="cfe_23"/>
     <flow.flow_targets id="7" flow_id="2" storage_id="1" storage_type="cfe_04"/>
     <flow.L7 id="1" app_protocol="plain"/>
     <flow.capture_sink id="1" L7_id="1" flow_id="1" ip_address="ip1" sink_port="652"/>

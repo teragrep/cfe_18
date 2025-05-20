@@ -43,53 +43,23 @@
  * Teragrep, the applicable Commercial License may apply to this file if you as
  * a licensee so wish it.
  */
-use flow;
+USE flow;
 DELIMITER //
-CREATE OR REPLACE PROCEDURE add_storage_alone(proc_cfe_type varchar(6), proc_storage_name varchar(255))
+CREATE OR REPLACE PROCEDURE delete_storage(proc_storage_id INT)
 BEGIN
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
         BEGIN
             ROLLBACK;
             RESIGNAL;
-        end;
+        END;
     START TRANSACTION;
-    if (select id
-        from flow.storages
-        where cfe_type = proc_cfe_type
-          and storage_name = proc_storage_name) is not null then
-        select id as last from flow.storages where cfe_type = proc_cfe_type and storage_name = proc_storage_name;
-    else
-        if (proc_cfe_type = 'cfe_04') then
-            insert into flow.storages(cfe_type, storage_name) values (proc_cfe_type, proc_storage_name);
-            select last_insert_id() into @id;
-            insert into flow.cfe_04 values (@id, 'cfe_04');
-        elseif (proc_cfe_type = 'cfe_10') then
-            insert into flow.storages(cfe_type, storage_name) values (proc_cfe_type, proc_storage_name);
-            select last_insert_id() into @id;
-            insert into flow.cfe_10 values (@id, 'cfe_10', 'spool');
-        elseif (proc_cfe_type = 'cfe_11') then
-            insert into flow.storages(cfe_type, storage_name) values (proc_cfe_type, proc_storage_name);
-            select last_insert_id() into @id;
-            insert into flow.cfe_11 values (@id, 'cfe_11', 'inspection');
-        elseif (proc_cfe_type = 'cfe_12') then
-            insert into flow.storages(cfe_type, storage_name) values (proc_cfe_type, proc_storage_name);
-            select last_insert_id() into @id;
-            insert into flow.cfe_12 values (@id, 'cfe_12');
-        elseif (proc_cfe_type = 'cfe_19') then
-            insert into flow.storages(cfe_type, storage_name) values (proc_cfe_type, proc_storage_name);
-            select last_insert_id() into @id;
-            insert into flow.cfe_19 values (@id, 'cfe_19');
-        elseif (proc_cfe_type = 'cfe_23') then
-            insert into flow.storages(cfe_type, storage_name) values (proc_cfe_type, proc_storage_name);
-            select last_insert_id() into @id;
-            insert into flow.cfe_23 values (@id, 'cfe_23');
-        else
-            signal sqlstate '42000' set message_text = 'Storage type is not valid';
-        end if;
-        select @id as last;
-
-    end if;
+    IF ((SELECT COUNT(id) FROM flow.storages WHERE id = proc_storage_id) = 0) THEN
+        SELECT JSON_OBJECT('id', proc_storage_id, 'message', 'Storage does not exist') INTO @s;
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = @s;
+    END IF;
+    DELETE FROM flow.storages WHERE id = proc_storage_id;
     COMMIT;
-end;
+
+END;
 //
-delimiter ;
+DELIMITER ;

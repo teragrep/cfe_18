@@ -147,7 +147,7 @@ public class CaptureRelpControllerTest extends TestSpringBootInformation {
         // Parsing response as JSONObject
         JSONObject responseJson3 = new JSONObject(response3);
 
-        String expected2 = "new flow added with the name = capflow";
+        String expected2 = "New flow created";
 
         // Creating string from Json that was given as a response
         String actual2 = responseJson2.get("message").toString();
