@@ -96,7 +96,7 @@ public class ProcedureHostAddCfeFileTest extends DBUnitbase {
                 .build(new File("src/test/resources/XMLProcedureHost/procedureHostExpectedTestData1.xml"));
         ITable expectedTable = expectedDataSet.getTable("cfe_00.host_type_cfe");
 
-        CallableStatement stmnt = conn.prepareCall("{call location.host_add_cfe_hub(?, ?, ?)}");
+        CallableStatement stmnt = conn.prepareCall("{call location.insert_cfe_hub(?, ?, ?)}");
         stmnt.setString(1, "hosit1");
         stmnt.setString(2, "Md5jokaeiosu");
         stmnt.setString(3, "jokuip");
@@ -150,12 +150,12 @@ public class ProcedureHostAddCfeFileTest extends DBUnitbase {
     This test is retrieving cfe hub
     */
     public void testProcedureRetrieveHub() throws Exception {
-        CallableStatement stmnt = conn.prepareCall("{CALL location.retrieve_cfe_hub_details(?,?)}");
+        CallableStatement stmnt = conn.prepareCall("{CALL location.select_cfe_hub(?,?)}");
         stmnt.setInt(1, 1);
         stmnt.setString(2, null);
         ResultSet rs = stmnt.executeQuery();
         rs.next();
-        Assertions.assertEquals(1, rs.getInt("hub_id"));
+        Assertions.assertEquals(1, rs.getInt("id"));
         Assertions.assertEquals(1, rs.getInt("host_id"));
         Assertions.assertEquals("1", rs.getString("hub_fq_host"));
         Assertions.assertEquals("ip?", rs.getString("ip"));
