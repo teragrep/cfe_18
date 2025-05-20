@@ -107,6 +107,7 @@ public class StorageController {
             jsonObject.put("message", "New storage created");
             return new ResponseEntity<>(jsonObject.toString(), HttpStatus.CREATED);
         } catch (RuntimeException ex) {
+            LOGGER.error(ex.getMessage());
             JSONObject jsonErr = new JSONObject();
             jsonErr.put("id", newStorage.getId());
             jsonErr.put("message", ex.getCause().toString());
@@ -135,7 +136,8 @@ public class StorageController {
         try {
             Storage s = storageMapper.get(id, version);
             return new ResponseEntity<>(s, HttpStatus.OK);
-        } catch (Exception ex) {
+        } catch (RuntimeException ex) {
+            LOGGER.error(ex.getMessage());
             JSONObject jsonErr = new JSONObject();
             jsonErr.put("id", id);
             jsonErr.put("message", ex.getCause().toString());
@@ -180,6 +182,7 @@ public class StorageController {
             j.put("message", "Storage deleted");
             return new ResponseEntity<>(j.toString(), HttpStatus.OK);
         } catch (RuntimeException ex) {
+            LOGGER.error(ex.getMessage());
             JSONObject jsonErr = new JSONObject();
             jsonErr.put("id", id);
             jsonErr.put("message", ex.getCause().getMessage());
@@ -198,8 +201,6 @@ public class StorageController {
             return new ResponseEntity<>(jsonErr.toString(), HttpStatus.BAD_REQUEST);
         }
     }
-
-
 }
 
 
