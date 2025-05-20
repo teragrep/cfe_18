@@ -43,9 +43,9 @@
  * Teragrep, the applicable Commercial License may apply to this file if you as
  * a licensee so wish it.
  */
-use cfe_00;
+USE cfe_00;
 DELIMITER //
-CREATE OR REPLACE PROCEDURE remove_hub(proc_hub_id int)
+CREATE OR REPLACE PROCEDURE delete_hub(proc_hub_id INT)
 BEGIN
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
         BEGIN
@@ -53,39 +53,31 @@ BEGIN
             RESIGNAL;
         END;
     START TRANSACTION;
-    if (select id from cfe_00.hubs where id = proc_hub_id) is null then
-        SELECT JSON_OBJECT('id', null, 'message', 'Hub does not exist') into @h;
-        signal sqlstate '45000' set message_text = @h;
-    end if;
+    IF ((SELECT COUNT(id) FROM cfe_00.hubs WHERE id = proc_hub_id) = 0) THEN
+        SELECT JSON_OBJECT('id', proc_hub_id, 'message', 'Hub does not exist') INTO @h;
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = @h;
+    END IF;
 
-
-    select h.id
-    into @hostid
-    from location.host h
-             inner join hubs h2 on h.id = h2.host_id
-    where h2.id = proc_hub_id;
-
-
-    select count(htc.host_id)
-    into @rowcount
-    from cfe_00.host_type_cfe htc
-    where hub_id = proc_hub_id
-      and host_id != @hostid;
-
-    if (@rowcount > 0) then
-        select count(htc2.host_id)
-        into @hamount
-        from cfe_00.host_type_cfe htc2
-        where hub_id = proc_hub_id;
-        SELECT JSON_OBJECT('amount', @hamount, 'message', 'Hosts use the given hub')
-        into @ha;
-        signal sqlstate '23000' set message_text = @ha;
-    end if;
-
-    delete from cfe_00.host_type_cfe where hub_id = proc_hub_id;
-    delete from cfe_00.hubs where id = proc_hub_id;
-    delete from location.host where id = @hostid;
+    -- check if there are hosts using the hub before deleting
+    IF ((SELECT COUNT(htc.host_id)
+         FROM cfe_00.host_type_cfe htc
+         WHERE hub_id = proc_hub_id
+           AND host_id != (SELECT h.id
+                           FROM location.host h
+                                    INNER JOIN hubs h2 ON h.id = h2.host_id
+                           WHERE h2.id = proc_hub_id)) > 0) THEN
+        SELECT JSON_OBJECT('id', proc_hub_id, 'message', 'Hosts use the hub') INTO @ha;
+        -- Signals constraint error since schema design is reversed and allows deleting hub that hosts rely on.
+        -- Should maybe rework schema on this part since it hides flawed design.
+        SIGNAL SQLSTATE '23000' SET MESSAGE_TEXT = @ha;
+    END IF;
+    -- select the host id before deleting hub since it's not accessible later
+    SELECT host_id INTO @Hostid FROM cfe_00.hubs WHERE id = proc_hub_id;
+    DELETE FROM cfe_00.host_type_cfe WHERE hub_id = proc_hub_id;
+    DELETE FROM cfe_00.hubs WHERE id = proc_hub_id;
+    DELETE FROM location.host WHERE id = @Hostid;
     COMMIT;
+
 END;
 
 //
