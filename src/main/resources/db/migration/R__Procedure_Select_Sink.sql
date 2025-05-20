@@ -45,8 +45,7 @@
  */
 USE flow;
 DELIMITER //
-CREATE OR REPLACE PROCEDURE add_sink(protocol varchar(20), sink_ip_address varchar(16), sink_portti varchar(5),
-                                     flow varchar(255))
+CREATE OR REPLACE PROCEDURE select_sink(sink_id INT, tx_id INT)
 BEGIN
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
         BEGIN
@@ -55,40 +54,29 @@ BEGIN
         END;
     START TRANSACTION;
 
-    if (select id from flow.L7 where app_protocol = protocol) is null then
-        insert into flow.L7(app_protocol)
-        values (protocol);
-        select last_insert_id() into @ProtocolId;
-    else
-        select id into @ProtocolId from flow.L7 where app_protocol = protocol;
-    end if;
+    IF (tx_id) IS NULL THEN
+        SET @time = (SELECT MAX(transaction_id) FROM mysql.transaction_registry);
+    ELSE
+        SET @time = tx_id;
+    END IF;
 
-    select id into @FlowId from flows where name = flow;
+    IF ((SELECT COUNT(id) FROM capture_sink FOR SYSTEM_TIME AS OF TRANSACTION @time WHERE id = sink_id) = 0) THEN
+        SELECT JSON_OBJECT('id', sink_id, 'message', 'Sink does not exist') INTO @sink;
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = @sink;
+    END IF;
 
-    if @FlowId is null then
-        SELECT JSON_OBJECT('id', @FlowId, 'message', 'Flow does not exist') into @flow;
-        signal sqlstate '45000' set message_text = @flow;
-    end if;
-
-    if (select id
-        from flow.capture_sink
-        where L7_id = @ProtocolId
-          and flow_id = @FlowId
-          and ip_address = sink_ip_address
-          and sink_port = sink_portti) is null then
-        insert into flow.capture_sink(L7_id, flow_id, ip_address, sink_port)
-        values (@ProtocolId, @FlowId, sink_ip_address, sink_portti);
-        select last_insert_id() as last;
-    else
-        select id as last
-        from flow.capture_sink
-        where L7_id = @ProtocolId
-          and flow_id = @FlowId
-          and ip_address = sink_ip_address
-          and sink_port = sink_portti;
-    end if;
+    SELECT cs.id          AS id,
+           cs.ip_address  AS ip,
+           cs.sink_port   AS port,
+           L.app_protocol AS protocol,
+           f.id           AS flow_id
+    FROM capture_sink FOR SYSTEM_TIME AS OF TRANSACTION @time cs
+             INNER JOIN L7 FOR SYSTEM_TIME AS OF TRANSACTION @time L ON cs.L7_id = L.id
+             INNER JOIN flows FOR SYSTEM_TIME AS OF TRANSACTION @time f ON cs.flow_id = f.id
+    WHERE cs.id = sink_id
+      AND L.id = cs.L7_id
+      AND f.id = cs.flow_id;
     COMMIT;
-
 END;
 //
 DELIMITER ;

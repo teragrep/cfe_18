@@ -43,29 +43,45 @@
  * Teragrep, the applicable Commercial License may apply to this file if you as
  * a licensee so wish it.
  */
-use flow;
+USE flow;
 DELIMITER //
-CREATE OR REPLACE PROCEDURE retrieve_all_sinks(tx_id int)
+CREATE OR REPLACE PROCEDURE insert_sink(protocol VARCHAR(20), sink_ip_address VARCHAR(16), sink_portti VARCHAR(5),
+                                        p_flow_id INT)
 BEGIN
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
         BEGIN
             ROLLBACK;
             RESIGNAL;
-        end;
-        if(tx_id) is null then
-             set @time = (select max(transaction_id) from mysql.transaction_registry);
-        else
-             set @time=tx_id;
-        end if;
-    select cs.id          as id,
-           cs.ip_address  as ip,
-           cs.sink_port   as port,
-           L.app_protocol as protocol,
-           f.name         as flow
-    from flow.capture_sink for system_time as of transaction @time cs
-             inner join L7 for system_time as of transaction @time L on cs.L7_id = L.id
-             inner join flows for system_time as of transaction @time f on cs.flow_id = f.id;
+        END;
+    START TRANSACTION;
 
-end;
+    IF ((SELECT COUNT(id) FROM flow.L7 WHERE app_protocol = protocol) = 0) THEN
+        INSERT INTO flow.L7(app_protocol)
+        VALUES (protocol);
+        SELECT LAST_INSERT_ID() INTO @ProtocolId;
+    ELSE
+        SELECT id INTO @ProtocolId FROM flow.L7 WHERE app_protocol = protocol;
+    END IF;
+
+    IF ((SELECT COUNT(id)
+         FROM flow.capture_sink
+         WHERE L7_id = @ProtocolId
+           AND flow_id = @FlowId
+           AND ip_address = sink_ip_address
+           AND sink_port = sink_portti) = 0) THEN
+        INSERT INTO flow.capture_sink(L7_id, flow_id, ip_address, sink_port)
+        VALUES (@ProtocolId, p_flow_id, sink_ip_address, sink_portti);
+        SELECT LAST_INSERT_ID() AS id;
+    ELSE
+        SELECT id AS id
+        FROM flow.capture_sink
+        WHERE L7_id = @ProtocolId
+          AND flow_id = p_flow_id
+          AND ip_address = sink_ip_address
+          AND sink_port = sink_portti;
+    END IF;
+    COMMIT;
+
+END;
 //
 DELIMITER ;
