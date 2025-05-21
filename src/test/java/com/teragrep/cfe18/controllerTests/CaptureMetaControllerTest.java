@@ -82,7 +82,7 @@ public class CaptureMetaControllerTest extends TestSpringBootInformation{
 
     @Test
     @Order(1)
-    public void testAddCaptureMeta() {
+    public void testData() {
         // add flow and sink
 
         Flow flow = new Flow();
@@ -101,7 +101,22 @@ public class CaptureMetaControllerTest extends TestSpringBootInformation{
         // Header
         request2.setHeader("Authorization", "Bearer " + token);
 
-        Assertions.assertDoesNotThrow(() -> {HttpClientBuilder.create().build().execute(request2);});
+        HttpResponse httpResponse = Assertions.assertDoesNotThrow(() -> HttpClientBuilder.create().build().execute(request2));
+
+        // Get the entity from response
+        HttpEntity entity = httpResponse.getEntity();
+
+        // Entity response string
+        String responseString =  Assertions.assertDoesNotThrow(() -> EntityUtils.toString(entity));
+
+        // Parsin respponse as JSONObject
+        JSONObject responseAsJson = Assertions.assertDoesNotThrow(() -> new JSONObject(responseString));
+        // Creating expected message as JSON Object from the data that was sent towards endpoint
+        String expected = "New flow created";
+
+        // Creating string from Json that was given as a response
+        String actual = Assertions.assertDoesNotThrow(() ->  responseAsJson.get("message").toString());
+
 
         // insert sink
 
@@ -126,7 +141,22 @@ public class CaptureMetaControllerTest extends TestSpringBootInformation{
         request1.setHeader("Authorization", "Bearer " + token);
 
         // Get the response from endpoint
-        Assertions.assertDoesNotThrow(() -> {HttpClientBuilder.create().build().execute(request1); });
+        HttpResponse httpResponse2 = Assertions.assertDoesNotThrow(() -> HttpClientBuilder.create().build().execute(request1));
+
+        // Get the entity from response
+        HttpEntity entity2 = httpResponse2.getEntity();
+
+        // Entity response string
+        String responseString2 =  Assertions.assertDoesNotThrow(() -> EntityUtils.toString(entity2));
+
+        // Parsin respponse as JSONObject
+        JSONObject responseAsJson2 = Assertions.assertDoesNotThrow(() -> new JSONObject(responseString2));
+        // Creating expected message as JSON Object from the data that was sent towards endpoint
+        String expected2 = "New sink created";
+
+        // Creating string from Json that was given as a response
+        String actual2 = Assertions.assertDoesNotThrow(() ->  responseAsJson2.get("message").toString());
+
 
         CaptureRelp captureRelp = new CaptureRelp();
         captureRelp.setTag("relpTag");
@@ -152,15 +182,47 @@ public class CaptureMetaControllerTest extends TestSpringBootInformation{
         // Header
         request3.setHeader("Authorization", "Bearer " + token);
 
-        Assertions.assertDoesNotThrow(() -> {HttpClientBuilder.create().build().execute(request3); });
+        HttpResponse httpResponse3 = Assertions.assertDoesNotThrow(() -> HttpClientBuilder.create().build().execute(request3));
+
+        // Get the entity from response
+        HttpEntity entity3 = httpResponse3.getEntity();
+
+        // Entity response string
+        String responseString3 =  Assertions.assertDoesNotThrow(() -> EntityUtils.toString(entity3));
+
+        // Parsin respponse as JSONObject
+        JSONObject responseAsJson3 = Assertions.assertDoesNotThrow(() -> new JSONObject(responseString3));
+        // Creating expected message as JSON Object from the data that was sent towards endpoint
+        String expected3 = "New capture created";
+
+        // Creating string from Json that was given as a response
+        String actual3 = Assertions.assertDoesNotThrow(() ->  responseAsJson3.get("message").toString());
 
 
-        // ******************************************************************************************************
+        // Assertions
+        assertEquals(expected, actual);
+        assertThat(
+                httpResponse.getStatusLine().getStatusCode(),
+                equalTo(HttpStatus.SC_CREATED));
+        assertEquals(expected2, actual2);
+        assertThat(
+                httpResponse.getStatusLine().getStatusCode(),
+                equalTo(HttpStatus.SC_CREATED));
+        assertEquals(expected3, actual3);
+        assertThat(
+                httpResponse.getStatusLine().getStatusCode(),
+                equalTo(HttpStatus.SC_CREATED));
+
+    }
+
+    @Test
+    @Order(2)
+    public void testAddCaptureMeta() {
 
         CaptureMeta captureMeta = new CaptureMeta();
-        captureMeta.setCapture_id(1);
-        captureMeta.setCapture_meta_key("relpKey1");
-        captureMeta.setCapture_meta_value("relpValue1");
+        captureMeta.setCaptureId(1);
+        captureMeta.setCaptureMetaKey("relpKey1");
+        captureMeta.setCaptureMetaValue("relpValue1");
 
         String jsonFileApplication = gson.toJson(captureMeta);
 
@@ -189,26 +251,26 @@ public class CaptureMetaControllerTest extends TestSpringBootInformation{
         // Parsin respponse as JSONObject
         JSONObject responseAsJson = Assertions.assertDoesNotThrow(() -> new JSONObject(responseString));
         // Creating expected message as JSON Object from the data that was sent towards endpoint
-        String expected = "New capture meta created for = 1";
+        String expected = "New capture meta created";
 
         // Creating string from Json that was given as a response
         String actual = Assertions.assertDoesNotThrow(() ->  responseAsJson.get("message").toString());
 
         // Assertions
+        assertEquals(expected, actual);
         assertThat(
                 httpResponse.getStatusLine().getStatusCode(),
                 equalTo(HttpStatus.SC_CREATED));
-        assertEquals(expected, actual);
     }
 
     @Test
-    @Order(2)
+    @Order(3)
     public void testRetrieveCaptureMeta(){
         ArrayList<CaptureMeta> expected = new ArrayList<>();
         CaptureMeta captureMeta = new CaptureMeta();
-        captureMeta.setCapture_id(1);
-        captureMeta.setCapture_meta_key("relpKey1");
-        captureMeta.setCapture_meta_value("relpValue1");
+        captureMeta.setCaptureId(1);
+        captureMeta.setCaptureMetaKey("relpKey1");
+        captureMeta.setCaptureMetaValue("relpValue1");
         expected.add(captureMeta);
 
         String json = gson.toJson(expected);
@@ -231,12 +293,12 @@ public class CaptureMetaControllerTest extends TestSpringBootInformation{
     }
 
     @Test
-    @Order(3)
+    @Order(4)
     public void testNoCaptureForInsertingMeta(){
         CaptureMeta captureMeta = new CaptureMeta();
-        captureMeta.setCapture_id(123);
-        captureMeta.setCapture_meta_key("relpKey1");
-        captureMeta.setCapture_meta_value("relpValue1");
+        captureMeta.setCaptureId(123);
+        captureMeta.setCaptureMetaKey("relpKey1");
+        captureMeta.setCaptureMetaValue("relpValue1");
 
         String jsonFileApplication = gson.toJson(captureMeta);
 
@@ -270,14 +332,14 @@ public class CaptureMetaControllerTest extends TestSpringBootInformation{
         String actual = Assertions.assertDoesNotThrow(() ->  responseAsJson.get("message").toString());
 
         // Assertions
+        assertEquals(expected, actual);
         assertThat(
                 httpResponse.getStatusLine().getStatusCode(),
-                equalTo(HttpStatus.SC_BAD_REQUEST));
-        assertEquals(expected, actual);
+                equalTo(HttpStatus.SC_NOT_FOUND));
     }
 
     @Test
-    @Order(4)
+    @Order(5)
     public void testNoMetaForCapture() {
         CaptureRelp captureRelp = new CaptureRelp();
         captureRelp.setTag("a");
@@ -321,26 +383,26 @@ public class CaptureMetaControllerTest extends TestSpringBootInformation{
         // Parsin respponse as JSONObject
         JSONObject responseAsJson = Assertions.assertDoesNotThrow(() -> new JSONObject(responseStringGet));
         // Creating expected message as JSON Object from the data that was sent towards endpoint
-        String expected = "Capture meta does not exist with given ID";
+        String expected = "Capture meta does not exist";
 
         // Creating string from Json that was given as a response
         String actual = Assertions.assertDoesNotThrow(() -> responseAsJson.get("message").toString());
 
         // Assertions
+        assertEquals(expected, actual);
         assertThat(
                 responseGet.getStatusLine().getStatusCode(),
-                equalTo(HttpStatus.SC_BAD_REQUEST));
-        assertEquals(expected, actual);
+                equalTo(HttpStatus.SC_NOT_FOUND));
     }
 
     @Test
-    @Order(5)
+    @Order(6)
     public void testGetAllCaptureMetas()   {
         // add another capture meta for capture
         CaptureMeta captureMeta = new CaptureMeta();
-        captureMeta.setCapture_id(1);
-        captureMeta.setCapture_meta_key("relpKey2");
-        captureMeta.setCapture_meta_value("relpValue2");
+        captureMeta.setCaptureId(1);
+        captureMeta.setCaptureMetaKey("relpKey2");
+        captureMeta.setCaptureMetaValue("relpValue2");
 
         String jsonFileApplication = gson.toJson(captureMeta);
 
@@ -362,9 +424,9 @@ public class CaptureMetaControllerTest extends TestSpringBootInformation{
         // Creating a list of existing capture metas
         ArrayList<CaptureMeta> expected = new ArrayList<>();
         CaptureMeta captureMeta2 = new CaptureMeta();
-        captureMeta2.setCapture_id(1);
-        captureMeta2.setCapture_meta_key("relpKey1");
-        captureMeta2.setCapture_meta_value("relpValue1");
+        captureMeta2.setCaptureId(1);
+        captureMeta2.setCaptureMetaKey("relpKey1");
+        captureMeta2.setCaptureMetaValue("relpValue1");
 
         expected.add(captureMeta2);
         expected.add(captureMeta);
@@ -382,15 +444,14 @@ public class CaptureMetaControllerTest extends TestSpringBootInformation{
         String responseStringGet = Assertions.assertDoesNotThrow(() ->  EntityUtils.toString(entityGet, "UTF-8"));
 
         // Assertions
+        assertEquals(json, responseStringGet);
         assertThat(
                 responseGet.getStatusLine().getStatusCode(),
                 equalTo(HttpStatus.SC_OK));
-        assertEquals(json, responseStringGet);
     }
 
-
     @Test
-    @Order(6)
+    @Order(7)
     public void testCaptureMetaKeyValue() {
         // expected capture
         ArrayList<CaptureDefinition> expected = new ArrayList<>();
@@ -422,7 +483,7 @@ public class CaptureMetaControllerTest extends TestSpringBootInformation{
 
     }
     @Test
-    @Order(7)
+    @Order(8)
     public void testCaptureMetaKeyValueNoKey() {
         // Fetching capture definition via key value pair from capture meta
         HttpGet requestGet = new HttpGet("http://localhost:" + port + "/capture/meta/missingKey/relpValue2");
@@ -446,11 +507,11 @@ public class CaptureMetaControllerTest extends TestSpringBootInformation{
         assertEquals(expected, actual);
         assertThat(
                 responseGet.getStatusLine().getStatusCode(),
-                equalTo(HttpStatus.SC_BAD_REQUEST));
+                equalTo(HttpStatus.SC_NOT_FOUND));
 
     }
     @Test
-    @Order(8)
+    @Order(9)
     public void testCaptureMetaKeyValueNoValue() {
         // Fetching capture definition via key value pair from capture meta
         HttpGet requestGet = new HttpGet("http://localhost:" + port + "/capture/meta/relpKey2/missingValue");
@@ -474,11 +535,11 @@ public class CaptureMetaControllerTest extends TestSpringBootInformation{
         assertEquals(expected, actual);
         assertThat(
                 responseGet.getStatusLine().getStatusCode(),
-                equalTo(HttpStatus.SC_BAD_REQUEST));
+                equalTo(HttpStatus.SC_NOT_FOUND));
 
     }
     @Test
-    @Order(9)
+    @Order(10)
     public void testDeleteCaptureMeta()   {
         HttpDelete delete = new HttpDelete("http://localhost:" + port + "/capture/meta/"+1);
 
@@ -498,14 +559,14 @@ public class CaptureMetaControllerTest extends TestSpringBootInformation{
         String actual = Assertions.assertDoesNotThrow(() ->  responseAsJson.get("message").toString());
 
         // Creating expected message as JSON Object from the data that was sent towards endpoint
-        String expected = "capture meta 1 deleted.";
+        String expected = "Capture meta deleted";
 
-        assertThat(deleteResponse.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_OK));
         assertEquals(expected, actual);
+        assertThat(deleteResponse.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_OK));
     }
 
     @Test
-    @Order(10)
+    @Order(11)
     public void testDeleteNonExistentCaptureMeta()   {
         HttpDelete delete = new HttpDelete("http://localhost:" + port + "/capture/meta/"+122);
 
@@ -527,8 +588,8 @@ public class CaptureMetaControllerTest extends TestSpringBootInformation{
         // Creating expected message as JSON Object from the data that was sent towards endpoint
         String expected = "Record does not exist";
 
-        assertThat(deleteResponse.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_BAD_REQUEST));
         assertEquals(expected, actual);
+        assertThat(deleteResponse.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_NOT_FOUND));
     }
 
 }
