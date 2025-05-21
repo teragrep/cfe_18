@@ -43,32 +43,26 @@
  * Teragrep, the applicable Commercial License may apply to this file if you as
  * a licensee so wish it.
  */
-use flow;
+USE flow;
 DELIMITER //
-CREATE OR REPLACE PROCEDURE retrieve_cfe_04_transforms(cfe04_id int,tx_id int)
+CREATE OR REPLACE PROCEDURE delete_cfe_04_transform(transform_id INT)
 BEGIN
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
         BEGIN
             ROLLBACK;
             RESIGNAL;
         END;
-        if(tx_id) is null then
-             set @time = (select max(transaction_id) from mysql.transaction_registry);
-        else
-             set @time=tx_id;
-        end if;
-
-        select t.id                 as id,
-               t.cfe_04_id          as cfe_04_id,
-               t.name               as name,
-               t.write_meta         as write_meta,
-               t.write_default      as write_default,
-               t.default_value      as default_value,
-               t.destination_key    as destination_key,
-               t.regex              as regex,
-               t.format             as format
-        from flow.cfe_04_transforms for system_time as of transaction @time t
-    where cfe_04_id = cfe04_id;
+    START TRANSACTION;
+    IF ((SELECT COUNT(id)
+         FROM flow.cfe_04_transforms
+         WHERE id = transform_id) = 0) THEN
+        SELECT JSON_OBJECT('id', transform_id, 'message', 'Transform does not exist') INTO @c4t;
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = @c4t;
+    END IF;
+    DELETE
+    FROM flow.cfe_04_transforms
+    WHERE id = transform_id;
+    COMMIT;
 
 END;
 //

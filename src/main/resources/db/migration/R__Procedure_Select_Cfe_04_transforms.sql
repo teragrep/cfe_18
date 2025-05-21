@@ -43,35 +43,33 @@
  * Teragrep, the applicable Commercial License may apply to this file if you as
  * a licensee so wish it.
  */
-package com.teragrep.cfe18;
+USE flow;
+DELIMITER //
+CREATE OR REPLACE PROCEDURE select_cfe_04_transforms(cfe04_id INT, tx_id INT)
+BEGIN
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+        BEGIN
+            ROLLBACK;
+            RESIGNAL;
+        END;
+    IF (tx_id) IS NULL THEN
+        SET @time = (SELECT MAX(transaction_id) FROM mysql.transaction_registry);
+    ELSE
+        SET @time = tx_id;
+    END IF;
 
-import com.teragrep.cfe18.handlers.entities.Cfe04Transform;
-import org.apache.ibatis.annotations.Mapper;
+    SELECT t.id              AS id,
+           t.cfe_04_id       AS cfe_04_id,
+           t.name            AS name,
+           t.write_meta      AS write_meta,
+           t.write_default   AS write_default,
+           t.default_value   AS default_value,
+           t.destination_key AS destination_key,
+           t.regex           AS regex,
+           t.format          AS format
+    FROM flow.cfe_04_transforms FOR SYSTEM_TIME AS OF TRANSACTION @time t
+    WHERE cfe_04_id = cfe04_id;
 
-import java.util.List;
-
-@Mapper
-public interface Cfe04TransformMapper {
-
-     Cfe04Transform create(
-             Integer cfe04Id,
-             String name,
-             Boolean writeMeta,
-             Boolean writeDefault,
-             String defaultValue,
-             String destinationKey,
-             String regex,
-             String format);
-
-     /**
-      *
-      * @param cfe04Id cfe04 id
-      * @param version Which point in time records want to be fetched at. NULL fetches latest
-      * @return Returns all transforms linked to Cfe04
-      */
-     List<Cfe04Transform> get(Integer cfe04Id, Integer version);
-
-     List<Cfe04Transform> getAll(Integer version);
-
-     void delete(Integer id);
-}
+END;
+//
+DELIMITER ;

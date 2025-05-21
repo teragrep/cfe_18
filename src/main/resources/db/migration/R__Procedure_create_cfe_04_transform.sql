@@ -43,32 +43,55 @@
  * Teragrep, the applicable Commercial License may apply to this file if you as
  * a licensee so wish it.
  */
-use flow;
+USE flow;
 DELIMITER //
-CREATE OR REPLACE PROCEDURE retrieve_all_cfe_04_transforms(tx_id int)
+CREATE OR REPLACE PROCEDURE insert_cfe_04_transform(p_cfe_04_id INT,
+                                                      p_name VARCHAR(255),
+                                                      p_write_meta BOOLEAN,
+                                                      p_write_default BOOLEAN,
+                                                      p_default_value VARCHAR(255),
+                                                      p_destination_key VARCHAR(255),
+                                                      p_regex VARCHAR(255),
+                                                      p_format VARCHAR(255))
 BEGIN
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
         BEGIN
             ROLLBACK;
             RESIGNAL;
         END;
-        if(tx_id) is null then
-             set @time = (select max(transaction_id) from mysql.transaction_registry);
-        else
-             set @time=tx_id;
-        end if;
+    START TRANSACTION;
+    -- check if row exists before inserting new one, if so then just return that ID
+    IF ((SELECT COUNT(id)
+         FROM flow.cfe_04_transforms t
+         WHERE t.cfe_04_id = p_cfe_04_id
+           AND t.name = p_name
+           AND t.write_meta = p_write_meta
+           AND t.write_default = p_write_default
+           AND t.default_value = p_default_value
+           AND t.destination_key = p_destination_key
+           AND t.regex = p_regex
+           AND t.format = p_format) > 0) THEN
 
-        select t.id                 as id,
-               t.cfe_04_id          as cfe_04_id,
-               t.name               as name,
-               t.write_meta         as write_meta,
-               t.write_default      as write_default,
-               t.default_value      as default_value,
-               t.destination_key    as destination_key,
-               t.regex              as regex,
-               t.format             as format
-        from flow.cfe_04_transforms for system_time as of transaction @time t;
+        SELECT t.id AS id
+        FROM flow.cfe_04_transforms t
+        WHERE t.cfe_04_id = p_cfe_04_id
+          AND t.name = p_name
+          AND t.write_meta = p_write_meta
+          AND t.write_default = p_write_default
+          AND t.default_value = p_default_value
+          AND t.destination_key = p_destination_key
+          AND t.regex = p_regex
+          AND t.format = p_format;
+    ELSE
+        INSERT INTO flow.cfe_04_transforms(cfe_04_id, name, write_meta, write_default, default_value, destination_key,
+                                           regex, format)
+        VALUES (p_cfe_04_id, p_name, p_write_meta, p_write_default, p_default_value, p_destination_key, p_regex,
+                p_format);
 
+        -- return ID
+        SELECT LAST_INSERT_ID() AS id;
+    END IF;
+    COMMIT;
 END;
 //
 DELIMITER ;
