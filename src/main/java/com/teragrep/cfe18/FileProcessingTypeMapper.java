@@ -52,16 +52,17 @@ import java.util.List;
 
 @Mapper
 public interface FileProcessingTypeMapper {
-    FileProcessing get(int id, Integer version);
 
     FileProcessing create(
             String template,
             String rule,
             String name,
-            String inputtype,
-            String inputvalue);
+            String inputType,
+            String inputValue);
+
+    FileProcessing get(int id, Integer version);
 
     List<FileProcessing> getAll(Integer version);
 
-    FileProcessing delete(int id);
+    void delete(Integer id);
 };

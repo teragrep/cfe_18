@@ -43,41 +43,24 @@
  * Teragrep, the applicable Commercial License may apply to this file if you as
  * a licensee so wish it.
  */
-use cfe_18;
+USE cfe_18;
 DELIMITER //
-CREATE OR REPLACE PROCEDURE insert_file_processing_type(template_filename varchar(255), rule varchar(1000),
-                                                            rule_name varchar(255),
-                                                            inputtype enum('regex','newline'), inputvalue varchar(255)
-)
+CREATE OR REPLACE PROCEDURE delete_file_processing_type(p_id INT)
 BEGIN
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
         BEGIN
             ROLLBACK;
             RESIGNAL;
-        end;
+        END;
+    START TRANSACTION;
+    IF ((SELECT COUNT(id) FROM cfe_18.file_processing_type WHERE p_id = id) = 0) THEN
+        SELECT JSON_OBJECT('id', p_id, 'message', 'File processing type does not exist') INTO @pt;
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = @pt;
+    END IF;
 
-    -- if record does not exist then insert new one
-    if((select count(id) from cfe_18.file_processing_type fpt
-                         where fpt.name=rule_name
-                           and fpt.inputtype=inputtype
-                           and fpt.inputvalue=inputvalue
-                           and fpt.ruleset=rule
-                           and fpt.template=template_filename)=0) then
+    DELETE FROM cfe_18.file_processing_type WHERE p_id = id;
+    COMMIT;
 
-        insert into cfe_18.file_processing_type(name,inputtype,inputvalue,ruleset,template)
-        values (rule_name,inputtype,inputvalue,rule,template_filename);
-        select last_insert_id() as id;
-
-    -- if record exists then select the ID
-    else
-        select id as id from cfe_18.file_processing_type fpt
-                         where fpt.name=rule_name
-                           and fpt.inputtype=inputtype
-                           and fpt.inputvalue=inputvalue
-                           and fpt.ruleset=rule
-                           and fpt.template=template_filename;
-    end if;
-
-end;
+END;
 //
 DELIMITER ;
