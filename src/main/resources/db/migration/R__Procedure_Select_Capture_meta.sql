@@ -43,9 +43,9 @@
  * Teragrep, the applicable Commercial License may apply to this file if you as
  * a licensee so wish it.
  */
-use cfe_18;
+USE cfe_18;
 DELIMITER //
-CREATE OR REPLACE PROCEDURE remove_capture_meta(capture_id int)
+CREATE OR REPLACE PROCEDURE select_capture_meta(capture_id INT, tx_id INT)
 BEGIN
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
         BEGIN
@@ -53,19 +53,31 @@ BEGIN
             RESIGNAL;
         END;
     START TRANSACTION;
-        -- check if metadata exists for capture
-    if((select count(cm.capture_id) from cfe_18.capture_meta cm where cm.capture_id=capture_id)=0)  then
+
+    IF (tx_id) IS NULL THEN
+        SET @time = (SELECT MAX(transaction_id) FROM mysql.transaction_registry);
+    ELSE
+        SET @time = tx_id;
+    END IF;
+
+    -- check for existence of capture meta before attempting retrieval. Throws custom error.
+    IF ((SELECT COUNT(cm.capture_id)
+         FROM capture_meta FOR SYSTEM_TIME AS OF TRANSACTION @time cm
+         WHERE cm.capture_id = capture_id) = 0) THEN
         -- standardized JSON error response
-        SELECT JSON_OBJECT('id', capture_id, 'message', 'Meta data does not exist for capture') into @nometa;
-        signal sqlstate '45000' set message_text = @nometa;
-    end if;
-        delete cm.*, cmk.*
-        from cfe_18.capture_meta cm
-            inner join cfe_18.capture_meta_key cross join capture_meta_key cmk on cm.meta_key_id = cmk.meta_key_id
-        where cm.capture_id=capture_id;
+        SELECT JSON_OBJECT('id', capture_id, 'message', 'Capture meta does not exist with given ID') INTO @nometa;
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = @nometa;
+    END IF;
+
+    SELECT cd.id             AS capture_id,
+           cmk.meta_key_name AS capture_meta_key,
+           cm.meta_value     AS capture_meta_value
+    FROM cfe_18.capture_meta FOR SYSTEM_TIME AS OF TRANSACTION @time cm
+             INNER JOIN cfe_18.capture_definition FOR SYSTEM_TIME AS OF TRANSACTION @time cd ON cd.id = cm.capture_id
+             INNER JOIN cfe_18.capture_meta_key FOR SYSTEM_TIME AS OF TRANSACTION @time cmk
+                        ON cm.meta_key_id = cmk.meta_key_id
+    WHERE cm.capture_id = capture_id;
     COMMIT;
-    -- Return capture_id as signal
-    select capture_id as capture_id;
 END;
 //
 DELIMITER ;
