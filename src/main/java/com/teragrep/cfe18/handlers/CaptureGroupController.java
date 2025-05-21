@@ -68,7 +68,7 @@ import java.sql.SQLException;
 import java.util.List;
 
 @RestController
-@RequestMapping(path = "capture")
+@RequestMapping(path = "capture/group")
 @SecurityRequirement(name = "api")
 public class CaptureGroupController {
     private static final Logger LOGGER = LoggerFactory.getLogger(CaptureGroupController.class);
@@ -83,26 +83,52 @@ public class CaptureGroupController {
     CaptureGroupMapper captureGroupMapper;
 
 
-    @RequestMapping(path = "/group/{name}", method = RequestMethod.GET, produces = "application/json")
-    @Operation(summary = "Fetch capture group by name")
+    @RequestMapping(path = "", method = RequestMethod.PUT, produces = "application/json")
+    @Operation(summary = "Create capture group")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Found the capture group",
+            @ApiResponse(responseCode = "201", description = "Capture group created",
                     content = {@Content(mediaType = "application/json",
                             schema = @Schema(implementation = CaptureGroup.class))}),
-            @ApiResponse(responseCode = "400", description = "Capture group does not exist or there are no captures linked to the group",
+            @ApiResponse(responseCode = "500", description = "Internal server error, contact admin", content = @Content)})
+    public ResponseEntity<String> create(@RequestBody CaptureGroup newCaptureGroup) {
+        LOGGER.info("About to insert <[{}]>", newCaptureGroup);
+        try {
+            CaptureGroup c = captureGroupMapper.create(
+                    newCaptureGroup.getCaptureGroupName(),
+                    newCaptureGroup.getCaptureGroupType()
+            );
+            LOGGER.debug("Values returned <[{}]>", c);
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("id", c.getId());
+            jsonObject.put("message", "New capture group created");
+            return new ResponseEntity<>(jsonObject.toString(), HttpStatus.CREATED);
+        } catch (RuntimeException ex) {
+            LOGGER.error(ex.getMessage());
+            JSONObject jsonErr = new JSONObject();
+            jsonErr.put("id", newCaptureGroup.getId());
+            jsonErr.put("message", ex.getCause().getMessage());
+            return new ResponseEntity<>(jsonErr.toString(), HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @RequestMapping(path = "/{id}", method = RequestMethod.GET, produces = "application/json")
+    @Operation(summary = "Fetch capture group")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Found capture group",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = CaptureGroup.class))}),
+            @ApiResponse(responseCode = "400", description = "Capture group does not exist",
                     content = @Content)
     })
-    public ResponseEntity<?> getResults(@PathVariable("name") String name, @RequestParam(required = false) Integer version) {
-        JSONObject jsonErr = new JSONObject();
-        jsonErr.put("message", "Unexpected error");
+    public ResponseEntity<?> get(@PathVariable("id") int id, @RequestParam(required = false) Integer version) {
         try {
-            List<CaptureGroup> cg = captureGroupMapper.getCaptureGroupByName(name,version);
-            if (cg.isEmpty()) {
-                throw new Exception("Empty group");
-            } else {
-                return new ResponseEntity<>(cg, HttpStatus.OK);
-            }
-        } catch (Exception ex) {
+            CaptureGroup cg = captureGroupMapper.get(id, version);
+            return new ResponseEntity<>(cg, HttpStatus.OK);
+        } catch (RuntimeException ex) {
+            LOGGER.error(ex.getMessage());
+            JSONObject jsonErr = new JSONObject();
+            jsonErr.put("id", id);
+            jsonErr.put("message", ex.getCause().getMessage());
             final Throwable cause = ex.getCause();
             if (cause instanceof SQLException) {
                 LOGGER.error((cause).getMessage());
@@ -110,76 +136,22 @@ public class CaptureGroupController {
                 if (state.equals("45000")) {
                     jsonErr.put("message", "Capture group does not exist");
                 }
-            } else if (ex.getMessage().equals("Empty group")) {
-                LOGGER.error(ex.getMessage());
-                jsonErr.put("message", "No records found");
             }
             return new ResponseEntity<>(jsonErr.toString(), HttpStatus.BAD_REQUEST);
         }
     }
 
-    // GET ALL
-    @RequestMapping(path = "/group", method = RequestMethod.GET, produces = "application/json")
-    @Operation(summary = "Fetch all capture groups with captures", description = "Will return empty list if there are no capture groups to fetch")
+    @RequestMapping(path = "", method = RequestMethod.GET, produces = "application/json")
+    @Operation(summary = "Fetch all capture groups", description = "Will return empty list if there are no capture groups to fetch")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Found capture groups",
+            @ApiResponse(responseCode = "200", description = "Successfully retrieved",
                     content = {@Content(mediaType = "application/json",
                             schema = @Schema(implementation = CaptureGroup.class))})})
-    public List<CaptureGroup> getAllCaptureGroup(@RequestParam(required = false) Integer version) {
-        return captureGroupMapper.getAllCaptureGroup(version);
+    public List<CaptureGroup> getAll(@RequestParam(required = false) Integer version) {
+        return captureGroupMapper.getAll(version);
     }
 
-
-    @RequestMapping(path = "/group", method = RequestMethod.PUT, produces = "application/json")
-    @Operation(summary = "Insert capture group with capture")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "201", description = "Capture group created and/or capture linked to capture group",
-                    content = {@Content(mediaType = "application/json",
-                            schema = @Schema(implementation = CaptureGroup.class))}),
-            @ApiResponse(responseCode = "400", description = "Type mismatch between capture group and capture or capture does not exist",
-                    content = @Content),
-            @ApiResponse(responseCode = "500", description = "Internal server error, contact admin", content = @Content)
-    })
-    public ResponseEntity<String> newCaptureGroup(@RequestBody CaptureGroup newCaptureGroup) {
-        LOGGER.info("About to insert <[{}]>",newCaptureGroup);
-        JSONObject jsonErr = new JSONObject();
-        jsonErr.put("id", newCaptureGroup.getCapture_definition_id());
-        try {
-            CaptureGroup c = captureGroupMapper.addNewCaptureGroup(
-                    newCaptureGroup.getCapture_def_group_name(),
-                    newCaptureGroup.getCapture_definition_id()
-            );
-            LOGGER.debug("Values returned <[{}]>",c);
-            JSONObject jsonObject = new JSONObject();
-            jsonObject.put("capture_group_id", c.getId());
-            jsonObject.put("message", "New capture group created with name = " + c.getCapture_def_group_name());
-            return new ResponseEntity<>(jsonObject.toString(), HttpStatus.CREATED);
-        } catch (RuntimeException ex) {
-            final Throwable cause = ex.getCause();
-            if (cause instanceof SQLException) {
-                LOGGER.error((cause).getMessage());
-                // Get specific error type
-                int error = ((SQLException) cause).getErrorCode();
-                // Link error with state to get accurate error status
-                String state = error + "-" + ((SQLException) cause).getSQLState();
-                if (state.equals("1452-23000")) {
-                    jsonErr.put("message", "Type mismatch between capture group and capture");
-                } else if (state.equals("1644-45000")) {
-                    jsonErr.put("message", "Capture does not exist");
-                } else if (state.equals("1062-23000")) {
-                    jsonErr.put("message","Tag already exists within given group");
-                } else {
-                    jsonErr.put("message", "Error unrecognized, contact admin");
-                }
-                return new ResponseEntity<>(jsonErr.toString(), HttpStatus.BAD_REQUEST);
-            }
-            return new ResponseEntity<>("Unexpected error", HttpStatus.INTERNAL_SERVER_ERROR);
-
-        }
-    }
-
-    // Delete
-    @RequestMapping(path = "group/{name}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(path = "/{id}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
     @Operation(summary = "Delete capture group")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Capture group deleted",
@@ -187,30 +159,35 @@ public class CaptureGroupController {
                             schema = @Schema(implementation = CaptureGroup.class))}),
             @ApiResponse(responseCode = "400", description = "Capture group does not exist OR Capture group is being used",
                     content = @Content),
-            @ApiResponse(responseCode = "500", description = "Internal server error, contact admin", content = @Content)
-                })
-    public ResponseEntity<String> removeCaptureGroup(@PathVariable("name") String name) {
-        LOGGER.info("Deleting Capture group <[{}]>", name);
-        JSONObject jsonErr = new JSONObject();
+            @ApiResponse(responseCode = "500", description = "Internal server error, contact admin", content = @Content)})
+    public ResponseEntity<String> delete(@PathVariable("id") int id) {
+        LOGGER.info("Deleting Capture group <[{}]>", id);
         try {
-            captureGroupMapper.deleteCaptureGroup(name);
+            captureGroupMapper.delete(id);
             JSONObject j = new JSONObject();
-            j.put("message", "Capture group " + name + " deleted.");
+            j.put("id", id);
+            j.put("message", "Capture group deleted");
             return new ResponseEntity<>(j.toString(), HttpStatus.OK);
-        } catch (Exception ex) {
+        } catch (RuntimeException ex) {
+            LOGGER.error(ex.getMessage());
+            JSONObject jsonErr = new JSONObject();
+            jsonErr.put("id", id);
+            jsonErr.put("message", ex.getCause().getMessage());
             final Throwable cause = ex.getCause();
             if (cause instanceof SQLException) {
                 LOGGER.error((cause).getMessage());
                 String state = ((SQLException) cause).getSQLState();
                 if (state.equals("23000")) {
                     jsonErr.put("message", "Is in use");
+                    return new ResponseEntity<>(jsonErr.toString(), HttpStatus.BAD_REQUEST);
                 } else if (state.equals("45000")) {
                     jsonErr.put("message", "Record does not exist");
+                    return new ResponseEntity<>(jsonErr.toString(), HttpStatus.NOT_FOUND);
                 }
-                return new ResponseEntity<>(jsonErr.toString(), HttpStatus.BAD_REQUEST);
             }
-            return new ResponseEntity<>("Unexpected error", HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(jsonErr.toString(), HttpStatus.BAD_REQUEST);
         }
     }
+
 }
 
