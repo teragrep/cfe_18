@@ -45,7 +45,7 @@
  */
 USE cfe_18;
 DELIMITER //
-CREATE OR REPLACE PROCEDURE retrieve_capture_group_details(grp_name varchar(255),tx_id int)
+CREATE OR REPLACE PROCEDURE insert_capture_group(group_name VARCHAR(255), type VARCHAR(255), p_flow_id INT)
 BEGIN
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
         BEGIN
@@ -53,31 +53,22 @@ BEGIN
             RESIGNAL;
         END;
     START TRANSACTION;
-
-    if(tx_id) is null then
-         set @time = (select max(transaction_id) from mysql.transaction_registry);
-    else
-         set @time=tx_id;
+    if ((select COUNT(id) from flow.flows f where f.id =p_flow_id)=0) then
+        SELECT JSON_OBJECT('id', p_flow_id, 'message', 'Invalid flow_id') INTO @f;
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = @f;
     end if;
 
-    if (select capture_def_group.capture_def_group_name
-        from capture_def_group for system_time as of transaction @time
-        where capture_def_group.capture_def_group_name = grp_name) is null then
-        SELECT JSON_OBJECT('id', NULL, 'message', 'capture group not found') into @gc;
-        signal sqlstate '45000' set message_text = @gc;
-    end if;
-
-
-    select cdg.capture_def_group_name as group_name,
-           cd.id                      as capture_definition_id,
-           cdgxcd.capture_type        as capture_type,
-           cdg.id                     as capture_group_id
-    from cfe_18.capture_def_group for system_time as of transaction @time cdg
-             inner join capture_def_group_x_capture_def for system_time as of transaction @time cdgxcd on cdg.id = cdgxcd.capture_def_group_id
-             inner join capture_definition for system_time as of transaction @time cd on cdgxcd.capture_def_id = cd.id and cdgxcd.tag_id = cd.tag_id
-    where capture_def_group_name = grp_name
-      and cd.id = cdgxcd.capture_def_id
-      and cd.tag_id = cdgxcd.tag_id;
+    IF ((SELECT COUNT(id)
+         FROM cfe_18.capture_def_group cdg
+         WHERE cdg.capture_def_group_name = group_name) = 0) THEN
+        INSERT INTO cfe_18.capture_def_group(capture_def_group_name, capture_type, flow_id)
+        VALUES (group_name, type, p_flow_id);
+        SELECT LAST_INSERT_ID() AS id;
+    ELSE
+        SELECT id AS id
+        FROM cfe_18.capture_def_group cdg
+        WHERE cdg.capture_def_group_name = group_name;
+    END IF;
     COMMIT;
 END;
 //

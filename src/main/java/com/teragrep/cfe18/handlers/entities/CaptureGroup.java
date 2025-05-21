@@ -51,42 +51,17 @@ import io.swagger.v3.oas.annotations.media.Schema;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class CaptureGroup {
 
-    public enum group_type {
+    public enum groupType {
         cfe, relp
     }
 
-    private String capture_def_group_name;
-    private Integer capture_definition_id;
-    @Schema(accessMode = Schema.AccessMode.READ_ONLY)
-    private group_type capture_group_type;
-    @Schema(accessMode = Schema.AccessMode.READ_ONLY)
     private int id;
+    private String captureGroupName;
+    private groupType captureGroupType;
     @Schema(accessMode = Schema.AccessMode.READ_ONLY)
     private String tag;
-
-    public String getTag() {
-        return tag;
-    }
-
-    public void setTag(String tag) {
-        this.tag = tag;
-    }
-
-    public String getCapture_def_group_name() {
-        return capture_def_group_name;
-    }
-
-    public void setCapture_def_group_name(String capture_def_group_name) {
-        this.capture_def_group_name = capture_def_group_name;
-    }
-
-    public Integer getCapture_definition_id() {
-        return capture_definition_id;
-    }
-
-    public void setCapture_definition_id(Integer capture_definition_id) {
-        this.capture_definition_id = capture_definition_id;
-    }
+    private Integer captureDefinitionId;
+    private Integer flowId;
 
     public int getId() {
         return id;
@@ -96,18 +71,49 @@ public class CaptureGroup {
         this.id = id;
     }
 
-    public group_type getCapture_group_type() {
-        return capture_group_type;
+    public String getCaptureGroupName() {
+        return captureGroupName;
     }
 
-    public void setCapture_group_type(group_type capture_group_type) {
-        this.capture_group_type = capture_group_type;
+    public void setCaptureGroupName(String captureGroupName) {
+        this.captureGroupName = captureGroupName;
+    }
+
+    public groupType getCaptureGroupType() {
+        return captureGroupType;
+    }
+
+    public void setCaptureGroupType(groupType captureGroupType) {
+        this.captureGroupType = captureGroupType;
+    }
+
+    public String getTag() {
+        return tag;
+    }
+
+    public void setTag(String tag) {
+        this.tag = tag;
+    }
+
+    public Integer getCaptureDefinitionId() {
+        return captureDefinitionId;
+    }
+
+    public void setCaptureDefinitionId(Integer captureDefinitionId) {
+        this.captureDefinitionId = captureDefinitionId;
+    }
+
+    public Integer getFlowId() {
+        return flowId;
+    }
+
+    public void setFlowId(Integer flowId) {
+        this.flowId = flowId;
     }
 
     @Override
     public String toString() {
-        return "CaptureGroup{" + "capture_def_group_name='" + capture_def_group_name + '\'' + ", capture_definition_id="
-                + capture_definition_id + ", capture_group_type=" + capture_group_type + ", id=" + id + ", tag='" + tag
-                + '\'' + '}';
+        return "CaptureGroup{" + "id=" + id + ", captureGroupName='" + captureGroupName + '\'' + ", captureGroupType="
+                + captureGroupType + ", tag='" + tag + '\'' + ", captureDefinitionId=" + captureDefinitionId + '}';
     }
 }
