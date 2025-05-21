@@ -54,16 +54,16 @@ import java.util.List;
 @Mapper
 public interface CaptureMetaMapper {
 
-     CaptureMeta create(
-             int captureId,
-             String captureMetaKey,
-             String captureMetaValue);
+    CaptureMeta create(
+            int captureId,
+            String captureMetaKey,
+            String captureMetaValue);
 
-     List<CaptureMeta> get(int captureId,Integer version);
+    List<CaptureMeta> get(int captureId, Integer version);
 
-     List<CaptureMeta> getAll(Integer version);
+    List<CaptureMeta> getAll(Integer version);
 
-     void delete(int captureId);
+    void delete(int captureId);
 
-     List<CaptureDefinition> getKeyValue(String key, String value, Integer version);
+    List<CaptureDefinition> getKeyValue(String key, String value, Integer version);
 }
