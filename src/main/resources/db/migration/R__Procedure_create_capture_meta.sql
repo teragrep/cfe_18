@@ -43,9 +43,10 @@
  * Teragrep, the applicable Commercial License may apply to this file if you as
  * a licensee so wish it.
  */
- use cfe_18;
+USE cfe_18;
 DELIMITER //
-CREATE OR REPLACE PROCEDURE retrieve_capture_meta_key_value(meta_key varchar(1024),meta_value varchar(1024),tx_id int)
+CREATE OR REPLACE PROCEDURE insert_capture_meta(capture_id INT, capture_meta_key VARCHAR(1024),
+                                                capture_meta_value VARCHAR(1024))
 BEGIN
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
         BEGIN
@@ -53,36 +54,34 @@ BEGIN
             RESIGNAL;
         END;
     START TRANSACTION;
+    -- check if capture exists for metadata
+    IF ((SELECT COUNT(id) FROM cfe_18.capture_definition WHERE id = capture_id) = 0) THEN
+        -- standardized JSON error response
+        SELECT JSON_OBJECT('id', capture_id, 'message', 'Capture does not exist with given ID') INTO @nocapture;
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = @nocapture;
+    END IF;
 
-    if(tx_id) is null then
-        set @time = (select max(transaction_id) from mysql.transaction_registry);
-    else
-        set @time=tx_id;
-    end if;
+    -- check if capture already has key value
+    IF ((SELECT COUNT(cd.id)
+         FROM cfe_18.capture_definition cd
+                  INNER JOIN capture_meta cm ON cd.id = cm.capture_id
+                  INNER JOIN capture_meta_key cmk ON cm.meta_key_id = cmk.meta_key_id
+         WHERE cd.id = capture_id
+           AND cm.meta_value = capture_meta_value
+           AND cmk.meta_key_name = capture_meta_key) = 0) THEN
+        -- insert new record
+        INSERT INTO cfe_18.capture_meta_key(meta_key_name) VALUES (capture_meta_key);
+        -- insert with subquery to insert correct key
+        INSERT INTO cfe_18.capture_meta(capture_id, meta_key_id, meta_value)
+        VALUES (capture_id, (SELECT LAST_INSERT_ID()), capture_meta_value);
+        -- return ID
+        SELECT cd.id AS id FROM capture_definition cd WHERE cd.id = capture_id;
 
-        if((select count(c.meta_key_name) from cfe_18.capture_meta_key for system_time as of transaction @time c
-                                          inner join cfe_18.capture_meta for system_time as of transaction @time cm
-                                          where c.meta_key_name=meta_key AND cm.meta_value=meta_value)=0) then
-            -- standardized JSON error response
-            SELECT JSON_OBJECT('id', 0, 'message', 'No such key value pair exists') into @nokey;
-            signal sqlstate '42000' set message_text = @nokey;
-        end if;
-    -- return list of capture_definitions which are linked to the given key value pair.
-        select cd.id as capture_id,
-               t.tag as tag,
-               cS.captureSourceType as sourcetype,
-               a.app as application,
-               cI.captureIndex as captureIndex
-        from cfe_18.capture_definition for system_time as of transaction @time cd
-            inner join capture_meta for system_time as of transaction @time c on cd.id = c.capture_id
-            inner join capture_meta_key for system_time as of transaction @time cmk on c.meta_key_id = cmk.meta_key_id
-            inner join tags for system_time as of transaction @time t on cd.tag_id=t.id
-            inner join captureSourcetype for system_time as of transaction @time cS on cd.captureSourcetype_id = cS.id
-            inner join application for system_time as of transaction @time a on cd.application_id = a.id
-            inner join captureIndex for system_time as of transaction @time cI  on cd.captureIndex_id = cI.id
-                 WHERE c.meta_value=meta_value AND
-                      cmk.meta_key_name=meta_key;
-
+        -- else just return ID
+    ELSE
+        -- return ID
+        SELECT cd.id AS id FROM capture_definition cd WHERE cd.id = capture_id;
+    END IF;
     COMMIT;
 END;
 //
