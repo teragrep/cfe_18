@@ -43,30 +43,43 @@
  * Teragrep, the applicable Commercial License may apply to this file if you as
  * a licensee so wish it.
  */
-use cfe_18;
+USE cfe_18;
 DELIMITER //
-CREATE OR REPLACE PROCEDURE select_all_file_processing_types(tx_id int)
+CREATE OR REPLACE PROCEDURE insert_file_processing_type(meta_template_filename VARCHAR(255), meta_rule VARCHAR(1000),
+                                                        meta_rule_name VARCHAR(255),
+                                                        meta_inputtype ENUM ('regex','newline'),
+                                                        meta_inputvalue VARCHAR(255))
 BEGIN
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
         BEGIN
             ROLLBACK;
             RESIGNAL;
-        end;
-        if(tx_id) is null then
-             set @time = (select max(transaction_id) from mysql.transaction_registry);
-        else
-             set @time=tx_id;
-        end if;
+        END;
 
-         select id          as id,
-                name        as name,
-                inputtype   as inputtype,
-                inputvalue  as inputvalue,
-                ruleset     as ruleset,
-                template    as template
-        from cfe_18.file_processing_type for system_time as of transaction @time;
+    -- if record does not exist then insert new one
+    IF ((SELECT COUNT(id)
+         FROM cfe_18.file_processing_type fpt
+         WHERE fpt.name = meta_rule_name
+           AND fpt.inputtype = meta_inputtype
+           AND fpt.inputvalue = meta_inputvalue
+           AND fpt.ruleset = meta_rule
+           AND fpt.template = meta_template_filename) = 0) THEN
 
-end;
+        INSERT INTO cfe_18.file_processing_type(name, inputtype, inputvalue, ruleset, template)
+        VALUES (meta_rule_name, meta_inputtype, meta_inputvalue, meta_rule, meta_template_filename);
+        SELECT LAST_INSERT_ID() AS id;
+
+        -- if record exists then select the ID
+    ELSE
+        SELECT id AS id
+        FROM cfe_18.file_processing_type fpt
+        WHERE fpt.name = meta_rule_name
+          AND fpt.inputtype = meta_inputtype
+          AND fpt.inputvalue = meta_inputvalue
+          AND fpt.ruleset = meta_rule
+          AND fpt.template = meta_template_filename;
+    END IF;
+
+END;
 //
 DELIMITER ;
-
