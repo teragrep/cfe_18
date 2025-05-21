@@ -43,29 +43,28 @@
  * Teragrep, the applicable Commercial License may apply to this file if you as
  * a licensee so wish it.
  */
-use cfe_18;
+USE cfe_18;
 DELIMITER //
-CREATE OR REPLACE PROCEDURE retrieve_all_capture_groups(tx_id int)
+CREATE OR REPLACE PROCEDURE insert_capture_group(group_name VARCHAR(255), type VARCHAR(255))
 BEGIN
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
         BEGIN
             ROLLBACK;
             RESIGNAL;
-        end;
-    if(tx_id) is null then
-        set @time = (select max(transaction_id) from mysql.transaction_registry);
-    else
-        set @time=tx_id;
-    end if;
-    select cdg.capture_def_group_name as group_name,
-           cdg.capture_type           as group_type,
-           t.tag                      as capture_tag,
-           cd.id                      as capture_id
-    from cfe_18.capture_def_group for system_time as of transaction @time cdg
-             inner join capture_def_group_x_capture_def for system_time as of transaction @time cdgxcd  on cdg.id = cdgxcd.capture_def_group_id
-             inner join capture_definition  for system_time as of transaction @time cd
-                        on cdgxcd.capture_def_id = cd.id and cdgxcd.capture_type = cd.capture_type
-             inner join tags for system_time as of transaction @time t  on cd.tag_id = t.id ;
-end;
+        END;
+    START TRANSACTION;
+    IF ((SELECT COUNT(id)
+         FROM cfe_18.capture_def_group cdg
+         WHERE cdg.capture_def_group_name = group_name) = 0) THEN
+        INSERT INTO cfe_18.capture_def_group(capture_def_group_name, capture_type)
+        VALUES (group_name, type);
+        SELECT LAST_INSERT_ID() AS id;
+    ELSE
+        SELECT id AS id
+        FROM cfe_18.capture_def_group cdg
+        WHERE cdg.capture_def_group_name = group_name;
+    END IF;
+    COMMIT;
+END;
 //
 DELIMITER ;

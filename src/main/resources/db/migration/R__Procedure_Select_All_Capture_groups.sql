@@ -43,24 +43,24 @@
  * Teragrep, the applicable Commercial License may apply to this file if you as
  * a licensee so wish it.
  */
-use cfe_18;
+USE cfe_18;
 DELIMITER //
-CREATE OR REPLACE PROCEDURE remove_capture_group(capture_group_name varchar(255))
+CREATE OR REPLACE PROCEDURE select_all_capture_groups(tx_id INT)
 BEGIN
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
         BEGIN
             ROLLBACK;
             RESIGNAL;
         END;
-    START TRANSACTION;
-
-    if (select id from cfe_18.capture_def_group where capture_def_group_name = capture_group_name) is null then
-        SELECT JSON_OBJECT('id', null, 'message', 'Capture group does not exist') into @cg;
-        signal sqlstate '45000' set message_text = @cg;
-    end if;
-
-    delete from cfe_18.capture_def_group where capture_def_group_name = capture_group_name;
-    COMMIT;
+    IF (tx_id) IS NULL THEN
+        SET @time = (SELECT MAX(transaction_id) FROM mysql.transaction_registry);
+    ELSE
+        SET @time = tx_id;
+    END IF;
+    SELECT cdg.id                     AS id,
+           cdg.capture_def_group_name AS group_name,
+           cdg.capture_type           AS group_type
+    FROM cfe_18.capture_def_group FOR SYSTEM_TIME AS OF TRANSACTION @time cdg;
 END;
 //
 DELIMITER ;
