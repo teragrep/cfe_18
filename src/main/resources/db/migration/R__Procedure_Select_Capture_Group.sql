@@ -45,7 +45,7 @@
  */
 USE cfe_18;
 DELIMITER //
-CREATE OR REPLACE PROCEDURE add_capture_group_with_capture(group_name varchar(255), capture_id int)
+CREATE OR REPLACE PROCEDURE select_capture_group(capture_group_id INT, tx_id INT)
 BEGIN
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
         BEGIN
@@ -53,41 +53,26 @@ BEGIN
             RESIGNAL;
         END;
     START TRANSACTION;
-    if (select id from cfe_18.capture_definition where id = capture_id) is null then
-        signal sqlstate '45000' set message_text = 'Capture does not exist';
-    end if;
 
-    -- Gathering type from capture is required
-    select capture_type into @type from capture_definition where id = capture_id;
-    -- check if capture_group exists. If not then create one with that name.
-    if (select capture_def_group_name from cfe_18.capture_def_group where capture_def_group_name = group_name) is null
-    then
-        insert into cfe_18.capture_def_group(capture_def_group_name, capture_type)
-        values (group_name, @type);
-        select last_insert_id() into @GroupId;
-    else
-        select id into @GroupId from cfe_18.capture_def_group where capture_def_group_name = group_name;
-    end if;
+    IF (tx_id) IS NULL THEN
+        SET @time = (SELECT MAX(transaction_id) FROM mysql.transaction_registry);
+    ELSE
+        SET @time = tx_id;
+    END IF;
 
-    -- Select tag_id for the capture_definition. Null value is fine.
-    select tag_id into @TagId from cfe_18.capture_definition where id = capture_id;
+    IF ((SELECT COUNT(cdg.id)
+         FROM capture_def_group FOR SYSTEM_TIME AS OF TRANSACTION @time cdg
+         WHERE cdg.id = capture_group_id) = 0) THEN
+        SELECT JSON_OBJECT('id', capture_group_id, 'message', 'Capture group not found') INTO @gc;
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = @gc;
+    END IF;
 
-    -- insert final value into junction table. Will give out constraint errors automatically if there is record that exists already.
-    -- If the tag is conflicting with Host. Before insert trigger gives out error code of = 17001
-
-    -- duplicate check before linkage
-    if (select id
-        from cfe_18.capture_def_group_x_capture_def
-        where capture_def_id = capture_id
-          and capture_def_group_id = @GroupId
-          and tag_id = @TagId
-          and capture_type = @type) is null then
-        insert into cfe_18.capture_def_group_x_capture_def(capture_def_id, capture_def_group_id, tag_id, capture_type)
-        values (capture_id, @GroupId, @TagId, @type);
-    end if;
-    select group_name as name, @GroupId as last;
+    SELECT cdg.id                     AS id,
+           cdg.capture_def_group_name AS group_name,
+           cdg.capture_type           AS capture_type
+    FROM cfe_18.capture_def_group FOR SYSTEM_TIME AS OF TRANSACTION @time cdg
+    WHERE cdg.id = capture_group_id;
     COMMIT;
-
 END;
 //
 DELIMITER ;
