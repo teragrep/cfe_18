@@ -155,7 +155,7 @@ public class ProcedureStorageTest extends DBUnitbase {
         SQLException state = Assertions.assertThrows(SQLException.class, () -> {
             CallableStatement stmnt = conn.prepareCall("{CALL flow.add_storage_for_capture(?,?)}");
             stmnt.setInt(1, 1);
-            stmnt.setInt(2, 6);
+            stmnt.setInt(2, 7);
             stmnt.execute();
         });
         Assertions.assertEquals("23000", state.getSQLState());
