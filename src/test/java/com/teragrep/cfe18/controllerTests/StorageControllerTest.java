@@ -530,7 +530,7 @@ public class StorageControllerTest extends TestSpringBootInformation {
         String expected = "Is in use";
 
         assertEquals(expected, actual);
-        assertThat(deleteResponse.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_BAD_REQUEST));
+        assertThat(deleteResponse.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_CONFLICT));
     }
 
     @Test

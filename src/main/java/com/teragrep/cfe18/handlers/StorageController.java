@@ -185,7 +185,7 @@ public class StorageController {
     }
 
     @RequestMapping(path = "/{id}", method = RequestMethod.GET, produces = "application/json")
-    @Operation(summary = "Fetch storage", description = "Will return empty list if there are no storages to fetch")
+    @Operation(summary = "Fetch storage", description = "Returns details about one storage")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Storage fetched",
                     content = {@Content(mediaType = "application/json",
@@ -296,8 +296,7 @@ public class StorageController {
                             schema = @Schema(implementation = Storage.class))}),
             @ApiResponse(responseCode = "400", description = "Storage name already exists",
                     content = @Content),
-            @ApiResponse(responseCode = "500", description = "Internal server error, contact admin", content = @Content)
-    })
+            @ApiResponse(responseCode = "500", description = "Internal server error, contact admin", content = @Content)})
     public ResponseEntity<String> create(@RequestBody Storage newStorage) {
         LOGGER.info("About to insert <[{}]>", newStorage);
         try {
@@ -333,7 +332,9 @@ public class StorageController {
             @ApiResponse(responseCode = "200", description = "Storage deleted",
                     content = {@Content(mediaType = "application/json",
                             schema = @Schema(implementation = Storage.class))}),
-            @ApiResponse(responseCode = "400", description = "Storage is being used OR Storage does not exist",
+            @ApiResponse(responseCode = "404", description = "Storage does not exist",
+                    content = @Content),
+            @ApiResponse(responseCode = "409", description = "Storage is being used",
                     content = @Content),
             @ApiResponse(responseCode = "500", description = "Internal server error, contact admin", content = @Content)})
     public ResponseEntity<String> delete(@PathVariable("id") int id) {
@@ -355,7 +356,7 @@ public class StorageController {
                 String state = ((SQLException) cause).getSQLState();
                 if (state.equals("23000")) {
                     jsonErr.put("message", "Is in use");
-                    return new ResponseEntity<>(jsonErr.toString(), HttpStatus.BAD_REQUEST);
+                    return new ResponseEntity<>(jsonErr.toString(), HttpStatus.CONFLICT);
                 } else if (state.equals("45000")) {
                     jsonErr.put("message", "Record does not exist");
                     return new ResponseEntity<>(jsonErr.toString(), HttpStatus.NOT_FOUND);
