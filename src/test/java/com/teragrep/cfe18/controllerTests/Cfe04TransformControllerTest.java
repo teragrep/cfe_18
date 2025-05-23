@@ -92,8 +92,8 @@ public class Cfe04TransformControllerTest extends TestSpringBootInformation{
 
         // Insert base cfe_04 storage first
         Storage storage = new Storage();
-        storage.setCfe_type(Storage.Cfe_type.cfe_04);
-        storage.setTarget_name("cfe_04");
+        storage.setStorageType(Storage.StorageType.cfe_04);
+        storage.setStorageName("cfe_04");
         String json2 = gson.toJson(storage);
 
         // forms the json to requestEntity

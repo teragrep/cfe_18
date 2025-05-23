@@ -45,12 +45,15 @@
  */
 package com.teragrep.cfe18.procedureTests;
 
+import com.teragrep.cfe18.handlers.HostMetaController;
 import org.dbunit.Assertion;
 import org.dbunit.dataset.IDataSet;
 import org.dbunit.dataset.ITable;
 import org.dbunit.dataset.xml.FlatXmlDataSetBuilder;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.TestInstance;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.nio.file.Files;
@@ -68,7 +71,6 @@ public class ProcedureStorageTest extends DBUnitbase {
     protected IDataSet getDataSet() throws Exception {
         return new FlatXmlDataSetBuilder().build(Files.newInputStream(Paths.get("src/test/resources/XMLProcedureStorage/procedureStorageData.xml")));
     }
-
 
     /*
     -Check that flow exists when inserting storage with flow
@@ -147,7 +149,7 @@ public class ProcedureStorageTest extends DBUnitbase {
     /*
     -Check that capture can not be linked to indifferent flow storage
     -Takes capture_id and storage_id
-    -Throws 45000 when indifferent
+    -Throws 23000 when indifferent
   */
     public void testStorageDifferentFlowLinkage() throws Exception {
         SQLException state = Assertions.assertThrows(SQLException.class, () -> {
@@ -155,7 +157,6 @@ public class ProcedureStorageTest extends DBUnitbase {
             stmnt.setInt(1, 1);
             stmnt.setInt(2, 7);
             stmnt.execute();
-
         });
         Assertions.assertEquals("23000", state.getSQLState());
     }

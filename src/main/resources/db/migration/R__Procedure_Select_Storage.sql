@@ -43,54 +43,32 @@
  * Teragrep, the applicable Commercial License may apply to this file if you as
  * a licensee so wish it.
  */
-package com.teragrep.cfe18.handlers.entities;
+USE flow;
+DELIMITER //
+CREATE OR REPLACE PROCEDURE select_storage(storage_id INT, tx_id INT)
+BEGIN
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+        BEGIN
+            ROLLBACK;
+            RESIGNAL;
+        END;
+    IF (tx_id) IS NULL THEN
+        SET @time = (SELECT MAX(transaction_id) FROM mysql.transaction_registry);
+    ELSE
+        SET @time = tx_id;
+    END IF;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-import io.swagger.v3.oas.annotations.media.Schema;
+    IF ((SELECT COUNT(id) FROM flow.storages WHERE id = storage_id) = 0) THEN
+        SELECT JSON_OBJECT('id', storage_id, 'message', 'Storage does not exist') INTO @pt;
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = @pt;
+    END IF;
 
-@JsonInclude(JsonInclude.Include.NON_NULL)
-public class Storage {
+    SELECT s.id           AS id,
+           s.storage_name AS storage_name,
+           s.cfe_type     AS storage_type
+    FROM flow.storages FOR SYSTEM_TIME AS OF TRANSACTION @time s
+    WHERE id = storage_id;
+END;
 
-    public enum StorageType {
-        cfe_04, cfe_10, cfe_11, cfe_12, cfe_19, cfe_23
-    }
-
-    @Schema(accessMode = Schema.AccessMode.READ_ONLY)
-    private int id;
-    private String storageName;
-    private StorageType storageType;
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public String getStorageName() {
-        return storageName;
-    }
-
-    public void setStorageName(String storageName) {
-        this.storageName = storageName;
-    }
-
-    public StorageType getStorageType() {
-        return storageType;
-    }
-
-    public void setStorageType(StorageType storageType) {
-        this.storageType = storageType;
-    }
-
-    @Override
-    public String toString() {
-        return "Storage{" +
-                "id=" + id +
-                ", storageName='" + storageName + '\'' +
-                ", storageType=" + storageType +
-                '}';
-    }
-}
-
+//
+DELIMITER ;

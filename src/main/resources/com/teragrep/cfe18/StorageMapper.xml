@@ -4,6 +4,39 @@
         "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.teragrep.cfe18.StorageMapper">
 
+    <!-- insert         ( proc_cfe_type VARCHAR(6), proc_storage_name VARCHAR(255) )-->
+    <select id="create" resultMap="insertedID" statementType="CALLABLE">
+        {CALL flow.insert_storage(#{param1},#{param2})}
+    </select>
+
+
+    <!-- get            ( storage_id INT, tx_id INT ) -->
+    <select id="get" resultMap="storage" statementType="CALLABLE">
+        {CALL flow.select_storage(#{param1},#{param2})}
+    </select>
+    <resultMap id="storage" type="com.teragrep.cfe18.handlers.entities.Storage">
+        <result property="id"           column="id"/>
+        <result property="storageName"  column="storage_name"/>
+        <result property="storageType"      column="storage_type"/>
+    </resultMap>
+
+
+    <!-- GET ALL        ( tx_id INT ) -->
+    <select id="getAll" resultMap="allStorages" statementType="CALLABLE">
+        {CALL flow.select_all_storages(#{param1})}
+    </select>
+    <resultMap id="allStorages" type="com.teragrep.cfe18.handlers.entities.Storage">
+        <result property="id"           column="id"/>
+        <result property="storageName"  column="storage_name"/>
+        <result property="storageType"      column="storage_type"/>
+    </resultMap>
+
+
+    <!-- Delete         ( proc_storage_id INT ) -->
+    <select id="delete" statementType="CALLABLE">
+        {CALL flow.delete_storage(#{param1})}
+    </select>
+
     <!-- ADD storage for flow -->
     <select id="addStorageForFlow" resultMap="insertedFlowStorage" statementType="CALLABLE">
         {CALL flow.add_storage(#{param1},#{param2})}
@@ -46,24 +79,7 @@
     </resultMap>
 
 
-    <!-- GET all storages -->
-    <select id="getStorages" resultMap="allStorages" statementType="CALLABLE">
-        {CALL flow.retrieve_storages(#{param1})}
-    </select>
-    <resultMap id="allStorages" type="com.teragrep.cfe18.handlers.entities.Storage">
-        <result property="target_name" column="storage_name"/>
-        <result property="cfe_type" column="storage_type"/>
-        <result property="id" column="storage_id"/>
-    </resultMap>
 
-
-    <!-- add storage standalone -->
-    <select id="addStorage" resultMap="storage" statementType="CALLABLE">
-        {CALL flow.add_storage_alone(#{param1},#{param2})}
-    </select>
-    <resultMap id="storage" type="com.teragrep.cfe18.handlers.entities.Storage">
-        <result property="id" column="last"/>
-    </resultMap>
 
 
     <!-- Get ALL Capture Storages -->
@@ -89,11 +105,6 @@
         <result property="storage_id" column="storage_id"/>
     </resultMap>
 
-    <!-- Delete -->
-    <select id="deleteStorage" statementType="CALLABLE">
-        {CALL flow.remove_storage(#{param1})}
-    </select>
-
     <select id="deleteFlowStorage" statementType="CALLABLE">
         {CALL flow.remove_flow_storage(#{param1},#{param2})}
     </select>
@@ -101,4 +112,9 @@
     <select id="deleteCaptureStorage" statementType="CALLABLE">
         {CALL cfe_18.remove_capture_storage(#{param1},#{param2})}
     </select>
+
+    <!-- ID return map -->
+    <resultMap id="insertedID" type="com.teragrep.cfe18.handlers.entities.Storage">
+        <result property="id"       column="id"/>
+    </resultMap>
 </mapper>

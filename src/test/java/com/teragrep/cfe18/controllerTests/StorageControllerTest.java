@@ -83,11 +83,11 @@ public class StorageControllerTest extends TestSpringBootInformation {
 
     @Test
     @Order(1)
-    public void testInsertStorage() throws Exception {
+    public void testInsertStorage() {
 
         Storage storage = new Storage();
-        storage.setCfe_type(Storage.Cfe_type.cfe_04);
-        storage.setTarget_name("cfe_04");
+        storage.setStorageType(Storage.StorageType.cfe_04);
+        storage.setStorageName("cfe_04");
 
         String json = gson.toJson(storage);
 
@@ -104,39 +104,39 @@ public class StorageControllerTest extends TestSpringBootInformation {
         request.setHeader("Authorization", "Bearer " + token);
 
         // Get the response from endpoint
-        HttpResponse httpResponse = HttpClientBuilder.create().build().execute(request);
+        HttpResponse httpResponse = Assertions.assertDoesNotThrow(() -> HttpClientBuilder.create().build().execute(request));
 
         // Get the entity from response
         HttpEntity entity = httpResponse.getEntity();
 
         // Entity response string
-        String responseString = EntityUtils.toString(entity);
+        String responseString = Assertions.assertDoesNotThrow(() -> EntityUtils.toString(entity));
 
-        // Parsin respponse as JSONObject
-        JSONObject responseAsJson = new JSONObject(responseString);
+        // Parsing response as JSONObject
+        JSONObject responseAsJson = Assertions.assertDoesNotThrow(() -> new JSONObject(responseString));
 
         // Creating expected message as JSON Object from the data that was sent towards endpoint
         String expected = "New storage created";
 
         // Creating string from Json that was given as a response
-        String actual = responseAsJson.get("message").toString();
+        String actual = Assertions.assertDoesNotThrow(() -> responseAsJson.get("message").toString());
 
         // Assertions
+        assertEquals(expected, actual);
         assertThat(
                 httpResponse.getStatusLine().getStatusCode(),
                 equalTo(HttpStatus.SC_CREATED));
-        assertEquals(expected, actual);
 
     }
 
     @Test
     @Order(2)
-    public void testFetchStorages() throws Exception {
+    public void testFetchStorages() {
         ArrayList<Storage> expected = new ArrayList<>();
 
         Storage storage = new Storage();
-        storage.setTarget_name("cfe_04");
-        storage.setCfe_type(Storage.Cfe_type.cfe_04);
+        storage.setStorageName("cfe_04");
+        storage.setStorageType(Storage.StorageType.cfe_04);
         storage.setId(1);
 
         expected.add(storage);
@@ -148,14 +148,40 @@ public class StorageControllerTest extends TestSpringBootInformation {
 
         requestGet.setHeader("Authorization", "Bearer " + token);
 
-        HttpResponse responseGet = HttpClientBuilder.create().build().execute(requestGet);
+        HttpResponse responseGet = Assertions.assertDoesNotThrow(() -> HttpClientBuilder.create().build().execute(requestGet));
 
         HttpEntity entityGet = responseGet.getEntity();
 
-        String responseStringGet = EntityUtils.toString(entityGet, "UTF-8");
+        String responseStringGet = Assertions.assertDoesNotThrow(() -> EntityUtils.toString(entityGet));
 
-        assertThat(responseGet.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_OK));
         assertEquals(expectedJson, responseStringGet);
+        assertThat(responseGet.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_OK));
+
+    }
+
+    @Test
+    @Order(3)
+    public void testFetchStorage() {
+        Storage storage = new Storage();
+        storage.setStorageName("cfe_04");
+        storage.setStorageType(Storage.StorageType.cfe_04);
+        storage.setId(1);
+
+        String expectedJson = new Gson().toJson(storage);
+
+        // Asserting get request
+        HttpGet requestGet = new HttpGet("http://localhost:" + port + "/storage/1");
+
+        requestGet.setHeader("Authorization", "Bearer " + token);
+
+        HttpResponse responseGet = Assertions.assertDoesNotThrow(() -> HttpClientBuilder.create().build().execute(requestGet));
+
+        HttpEntity entityGet = responseGet.getEntity();
+
+        String responseStringGet = Assertions.assertDoesNotThrow(() -> EntityUtils.toString(entityGet));
+
+        assertEquals(expectedJson, responseStringGet);
+        assertThat(responseGet.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_OK));
 
     }
 
@@ -452,33 +478,32 @@ public class StorageControllerTest extends TestSpringBootInformation {
         assertEquals(expectedJson, responseStringGet);
     }
 
-    // Delete
-
     @Test
     @Order(9)
-    public void testDeleteNonExistentStorage() throws Exception {
+    public void testDeleteNonExistentStorage() {
         HttpDelete delete = new HttpDelete("http://localhost:" + port + "/storage/" + 124);
 
         // Header
         delete.setHeader("Authorization", "Bearer " + token);
 
-        HttpResponse deleteResponse = HttpClientBuilder.create().build().execute(delete);
+        HttpResponse deleteResponse = Assertions.assertDoesNotThrow(() -> HttpClientBuilder.create().build().execute(delete));
+
 
         HttpEntity entityDelete = deleteResponse.getEntity();
 
-        String responseStringGet = EntityUtils.toString(entityDelete, "UTF-8");
+        String responseStringGet = Assertions.assertDoesNotThrow(() -> EntityUtils.toString(entityDelete, "UTF-8"));
 
-        // Parsin respponse as JSONObject
-        JSONObject responseAsJson = new JSONObject(responseStringGet);
+        // Parsing response as JSONObject
+        JSONObject responseAsJson = Assertions.assertDoesNotThrow(() -> new JSONObject(responseStringGet));
 
         // Creating string from Json that was given as a response
-        String actual = responseAsJson.get("message").toString();
+        String actual = Assertions.assertDoesNotThrow(() -> responseAsJson.get("message").toString());
 
         // Creating expected message as JSON Object from the data that was sent towards endpoint
         String expected = "Record does not exist";
 
-        assertThat(deleteResponse.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_BAD_REQUEST));
         assertEquals(expected, actual);
+        assertThat(deleteResponse.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_NOT_FOUND));
     }
 
     @Test
@@ -505,7 +530,7 @@ public class StorageControllerTest extends TestSpringBootInformation {
         String expected = "Is in use";
 
         assertEquals(expected, actual);
-        assertThat(deleteResponse.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_BAD_REQUEST));
+        assertThat(deleteResponse.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_CONFLICT));
     }
 
     @Test
@@ -534,7 +559,6 @@ public class StorageControllerTest extends TestSpringBootInformation {
         assertThat(deleteResponse.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_BAD_REQUEST));
     }
 
-
     @Test
     @Order(12)
     public void testDeleteFlowStorageInUse() throws Exception {
@@ -561,7 +585,6 @@ public class StorageControllerTest extends TestSpringBootInformation {
         assertEquals(expected, actual);
         assertThat(deleteResponse.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_BAD_REQUEST));
     }
-
 
     @Test
     @Order(13)
@@ -615,7 +638,6 @@ public class StorageControllerTest extends TestSpringBootInformation {
         assertEquals(expected, actual);
     }
 
-
     @Test
     @Order(15)
     public void testDeleteFlowStorage() throws Exception {
@@ -642,31 +664,30 @@ public class StorageControllerTest extends TestSpringBootInformation {
         assertEquals(expected, actual);
     }
 
-
     @Test
     @Order(16)
-    public void testDeleteStorage() throws Exception {
+    public void testDeleteStorage() {
         HttpDelete delete = new HttpDelete("http://localhost:" + port + "/storage/" + 1);
         // Header
         delete.setHeader("Authorization", "Bearer " + token);
 
-        HttpResponse deleteResponse = HttpClientBuilder.create().build().execute(delete);
+        HttpResponse deleteResponse = Assertions.assertDoesNotThrow(() -> HttpClientBuilder.create().build().execute(delete));
 
         HttpEntity entityDelete = deleteResponse.getEntity();
 
-        String responseStringGet = EntityUtils.toString(entityDelete, "UTF-8");
+        String responseStringGet = Assertions.assertDoesNotThrow(() -> EntityUtils.toString(entityDelete, "UTF-8"));
 
-        // Parsin respponse as JSONObject
-        JSONObject responseAsJson = new JSONObject(responseStringGet);
+        // Parsing response as JSONObject
+        JSONObject responseAsJson = Assertions.assertDoesNotThrow(() -> new JSONObject(responseStringGet));
 
         // Creating string from Json that was given as a response
-        String actual = responseAsJson.get("message").toString();
+        String actual = Assertions.assertDoesNotThrow(() -> responseAsJson.get("message").toString());
 
         // Creating expected message as JSON Object from the data that was sent towards endpoint
-        String expected = "Storage 1 deleted.";
+        String expected = "Storage deleted";
 
-        assertThat(deleteResponse.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_OK));
         assertEquals(expected, actual);
+        assertThat(deleteResponse.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_OK));
     }
 
 

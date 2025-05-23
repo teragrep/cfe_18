@@ -54,12 +54,18 @@ import java.util.List;
 
 @Mapper
 public interface StorageMapper {
+    Storage create(Storage.StorageType storageType, String storageName);
+
+    Storage get(int id, Integer version);
+
+    List<Storage> getAll(Integer version);
+
+    void delete(int id);
+
     FlowStorage addStorageForFlow(String flow,
                                   int storage_id);
 
     CaptureStorage addStorageForCapture(int capture_id, int storage_id);
-
-    Storage addStorage(String cfe_type, String storage_name);
 
     List<FlowStorage> retrieveFlowStorages(String flow,Integer version);
 
@@ -68,10 +74,6 @@ public interface StorageMapper {
     List<CaptureStorage> retrieveCaptureStorages(int capture_id,Integer version);
 
     List<CaptureStorage> getAllCaptureStorage(Integer version);
-
-    List<Storage> getStorages(Integer version);
-
-    Storage deleteStorage(int id);
 
     FlowStorage deleteFlowStorage(String flow, int id);
 

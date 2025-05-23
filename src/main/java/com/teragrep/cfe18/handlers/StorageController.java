@@ -100,7 +100,7 @@ public class StorageController {
     public ResponseEntity<?> getStoragesByFlow(@PathVariable String flow, @RequestParam(required = false) Integer version) {
         try {
             List<FlowStorage> fs = storageMapper.retrieveFlowStorages(flow
-            ,version);
+                    ,version);
             return new ResponseEntity<>(fs, HttpStatus.OK);
         } catch (Exception ex) {
 
@@ -174,16 +174,44 @@ public class StorageController {
     }
 
 
-    // Fetch all storages
     @RequestMapping(path = "", method = RequestMethod.GET, produces = "application/json")
-    @Operation(summary = "Fetch all standalone storages", description = "Will return empty list if there are no storages to fetch")
+    @Operation(summary = "Fetch all storages", description = "Will return empty list if there are no flow storages to fetch")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Storages fetched",
+            @ApiResponse(responseCode = "200", description = "Successfully retrieved",
                     content = {@Content(mediaType = "application/json",
-                            schema = @Schema(implementation = Storage.class))})
-    })
-    public List<Storage> getStorages(@RequestParam(required = false) Integer version) {
-        return storageMapper.getStorages(version);
+                            schema = @Schema(implementation = FlowStorage.class))})})
+    public List<Storage> getAll(@RequestParam(required = false) Integer version) {
+        return storageMapper.getAll(version);
+    }
+
+    @RequestMapping(path = "/{id}", method = RequestMethod.GET, produces = "application/json")
+    @Operation(summary = "Fetch storage", description = "Returns details about one storage")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Storage fetched",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = Storage.class))}),
+            @ApiResponse(responseCode = "404", description = "Storage does not exist",
+                    content = @Content)})
+    public ResponseEntity<?> get(@PathVariable("id") int id, @RequestParam(required = false) Integer version) {
+        try {
+            Storage s = storageMapper.get(id, version);
+            return new ResponseEntity<>(s, HttpStatus.OK);
+        } catch (RuntimeException ex) {
+            LOGGER.error(ex.getMessage());
+            JSONObject jsonErr = new JSONObject();
+            jsonErr.put("id", id);
+            jsonErr.put("message", ex.getCause().toString());
+            final Throwable cause = ex.getCause();
+            if (cause instanceof SQLException) {
+                LOGGER.error((cause).getMessage());
+                String state = ((SQLException) cause).getSQLState();
+                if (state.equals("45000")) {
+                    jsonErr.put("message", "Record does not exist");
+                    return new ResponseEntity<>(jsonErr.toString(), HttpStatus.NOT_FOUND);
+                }
+            }
+            return new ResponseEntity<>(jsonErr.toString(), HttpStatus.BAD_REQUEST);
+        }
     }
 
 
@@ -260,29 +288,28 @@ public class StorageController {
         }
     }
 
-    // Insert standalone storage
     @RequestMapping(path = "", method = RequestMethod.PUT, produces = "application/json")
-    @Operation(summary = "Insert standalone storage")
+    @Operation(summary = "Create storage")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "New storage created",
                     content = {@Content(mediaType = "application/json",
                             schema = @Schema(implementation = Storage.class))}),
             @ApiResponse(responseCode = "400", description = "Storage name already exists",
                     content = @Content),
-            @ApiResponse(responseCode = "500", description = "Internal server error, contact admin", content = @Content)
-    })
-    public ResponseEntity<String> addStorage(@RequestBody Storage newStorage) {
-        LOGGER.info("About to insert <[{}]>",newStorage);
+            @ApiResponse(responseCode = "500", description = "Internal server error, contact admin", content = @Content)})
+    public ResponseEntity<String> create(@RequestBody Storage newStorage) {
+        LOGGER.info("About to insert <[{}]>", newStorage);
         try {
-            Storage s = storageMapper.addStorage(
-                    newStorage.getCfe_type().toString(),
-                    newStorage.getTarget_name());
-            LOGGER.debug("Values returned <[{}]>",s);
+            Storage s = storageMapper.create(
+                    newStorage.getStorageType(),
+                    newStorage.getStorageName());
+            LOGGER.debug("Values returned <[{}]>", s);
             JSONObject jsonObject = new JSONObject();
             jsonObject.put("id", s.getId());
             jsonObject.put("message", "New storage created");
             return new ResponseEntity<>(jsonObject.toString(), HttpStatus.CREATED);
         } catch (RuntimeException ex) {
+            LOGGER.error(ex.getMessage());
             JSONObject jsonErr = new JSONObject();
             jsonErr.put("id", newStorage.getId());
             jsonErr.put("message", ex.getCause().toString());
@@ -291,48 +318,51 @@ public class StorageController {
                 LOGGER.error((cause).getMessage());
                 String state = ((SQLException) cause).getSQLState();
                 if (state.equals("23000")) {
-                    jsonErr.put("message", "Target name already exists");
+                    jsonErr.put("message", "Storage name already exists");
                     return new ResponseEntity<>(jsonErr.toString(), HttpStatus.BAD_REQUEST);
                 }
             }
-            return new ResponseEntity<>("Unexpected error", HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(jsonErr.toString(), HttpStatus.BAD_REQUEST);
         }
     }
 
-    // Delete Storage
     @RequestMapping(path = "/{id}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
-    @Operation(summary = "Delete standalone storage")
+    @Operation(summary = "Delete storage")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Storage deleted",
                     content = {@Content(mediaType = "application/json",
                             schema = @Schema(implementation = Storage.class))}),
-            @ApiResponse(responseCode = "400", description = "Storage is being used OR Storage does not exist",
+            @ApiResponse(responseCode = "404", description = "Storage does not exist",
                     content = @Content),
-            @ApiResponse(responseCode = "500", description = "Internal server error, contact admin", content = @Content)
-    })
-    public ResponseEntity<String> removeStorage(@PathVariable("id") int id) {
+            @ApiResponse(responseCode = "409", description = "Storage is being used",
+                    content = @Content),
+            @ApiResponse(responseCode = "500", description = "Internal server error, contact admin", content = @Content)})
+    public ResponseEntity<String> delete(@PathVariable("id") int id) {
         LOGGER.info("Deleting Storage <[{}]>", id);
-        JSONObject jsonErr = new JSONObject();
-        jsonErr.put("id", id);
         try {
-            storageMapper.deleteStorage(id);
+            storageMapper.delete(id);
             JSONObject j = new JSONObject();
             j.put("id", id);
-            j.put("message", "Storage " + id + " deleted.");
+            j.put("message", "Storage deleted");
             return new ResponseEntity<>(j.toString(), HttpStatus.OK);
-        } catch (Exception ex) {
+        } catch (RuntimeException ex) {
+            LOGGER.error(ex.getMessage());
+            JSONObject jsonErr = new JSONObject();
+            jsonErr.put("id", id);
+            jsonErr.put("message", ex.getCause().getMessage());
             final Throwable cause = ex.getCause();
             if (cause instanceof SQLException) {
                 LOGGER.error((cause).getMessage());
                 String state = ((SQLException) cause).getSQLState();
                 if (state.equals("23000")) {
                     jsonErr.put("message", "Is in use");
+                    return new ResponseEntity<>(jsonErr.toString(), HttpStatus.CONFLICT);
                 } else if (state.equals("45000")) {
                     jsonErr.put("message", "Record does not exist");
+                    return new ResponseEntity<>(jsonErr.toString(), HttpStatus.NOT_FOUND);
                 }
-                return new ResponseEntity<>(jsonErr.toString(), HttpStatus.BAD_REQUEST);
             }
-            return new ResponseEntity<>("Unexpected error", HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(jsonErr.toString(), HttpStatus.BAD_REQUEST);
         }
     }
 
