@@ -51,14 +51,14 @@ import io.swagger.v3.oas.annotations.media.Schema;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class Storage {
 
-    public enum CfeType {
+    public enum StorageType {
         cfe_04, cfe_10, cfe_11, cfe_12, cfe_19, cfe_23
     }
 
     @Schema(accessMode = Schema.AccessMode.READ_ONLY)
     private int id;
     private String storageName;
-    private CfeType cfeType;
+    private StorageType storageType;
 
     public int getId() {
         return id;
@@ -76,12 +76,12 @@ public class Storage {
         this.storageName = storageName;
     }
 
-    public CfeType getCfeType() {
-        return cfeType;
+    public StorageType getStorageType() {
+        return storageType;
     }
 
-    public void setCfeType(CfeType cfeType) {
-        this.cfeType = cfeType;
+    public void setStorageType(StorageType storageType) {
+        this.storageType = storageType;
     }
 
     @Override
@@ -89,7 +89,7 @@ public class Storage {
         return "Storage{" +
                 "id=" + id +
                 ", storageName='" + storageName + '\'' +
-                ", cfeType=" + cfeType +
+                ", storageType=" + storageType +
                 '}';
     }
 }
