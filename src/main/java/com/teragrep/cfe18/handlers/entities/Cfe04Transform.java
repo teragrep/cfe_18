@@ -133,4 +133,19 @@ public class Cfe04Transform {
     public void setFormat(String format) {
         this.format = format;
     }
+
+    @Override
+    public String toString() {
+        return "Cfe04Transform{" +
+                "id=" + id +
+                ", cfe04Id=" + cfe04Id +
+                ", name='" + name + '\'' +
+                ", writeMeta=" + writeMeta +
+                ", writeDefault=" + writeDefault +
+                ", defaultValue='" + defaultValue + '\'' +
+                ", destinationKey='" + destinationKey + '\'' +
+                ", regex='" + regex + '\'' +
+                ", format='" + format + '\'' +
+                '}';
+    }
 }
