@@ -43,10 +43,9 @@
  * Teragrep, the applicable Commercial License may apply to this file if you as
  * a licensee so wish it.
  */
-use flow;
+USE flow;
 DELIMITER //
-CREATE OR REPLACE PROCEDURE add_storage(flow varchar(255), proc_storage_id int
-)
+CREATE OR REPLACE PROCEDURE insert_flow_storage(p_flow_id INT, proc_storage_id INT)
 BEGIN
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
         BEGIN
@@ -55,34 +54,35 @@ BEGIN
         END;
     START TRANSACTION;
 
-    if (select id from flows where name = flow) is null then
-        signal sqlstate '45000' set message_text = 'flow does not exist';
-    else
-        select id into @FlowId from flows where name = flow;
-    end if;
-    if (select id from storages where id = proc_storage_id) is null then
-        signal sqlstate '45000' set message_text = 'Storage is not valid';
-    end if;
+    IF ((SELECT COUNT(id) FROM flows f WHERE f.id = p_flow_id)=0) THEN
+        SELECT JSON_OBJECT('id', p_flow_id, 'message', 'Flow does not exist') INTO @fid;
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = @fid;
+    END IF;
 
-    select cfe_type into @Storage_type from flow.storages where id = proc_storage_id;
+    IF ((SELECT COUNT(id) FROM storages s WHERE s.id = proc_storage_id) = 0) THEN
+        SELECT JSON_OBJECT('id', proc_storage_id, 'message', 'Storage does not exist') INTO @sid;
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = @sid;
+    END IF;
 
-    if (select id
-        from flow.flow_targets
-        where flow_id = @FlowId
-          and storage_id = proc_storage_id
-          and storage_type = @Storage_type) is null then
+    SELECT cfe_type INTO @Storage_type FROM flow.storages WHERE id = proc_storage_id;
 
-        insert into flow.flow_targets(flow_id, storage_id, storage_type)
-        values (@FlowId, proc_storage_id, @Storage_type);
-        select last_insert_id() as last;
-    else
-        select id as last
-        from flow.flow_targets
-        where flow_id = @FlowId
-          and storage_id = proc_storage_id
-          and storage_type = @Storage_type;
+    IF ((SELECT COUNT(ft.id)
+         FROM flow.flow_targets ft
+         WHERE ft.flow_id = p_flow_id
+           AND ft.storage_id = proc_storage_id
+           AND ft.storage_type = @Storage_type) = 0) THEN
 
-    end if;
+        INSERT INTO flow.flow_targets(flow_id, storage_id, storage_type)
+        VALUES (p_flow_id, proc_storage_id, @Storage_type);
+        SELECT LAST_INSERT_ID() AS id;
+    ELSE
+        SELECT ft.id AS id
+        FROM flow.flow_targets ft
+        WHERE ft.flow_id = p_flow_id
+          AND ft.storage_id = proc_storage_id
+          AND ft.storage_type = @Storage_type;
+
+    END IF;
     COMMIT;
 END;
 //
