@@ -79,8 +79,8 @@ public class ProcedureStorageTest extends DBUnitbase {
     */
     public void testStorageFlowExistence() throws Exception {
         SQLException state = Assertions.assertThrows(SQLException.class, () -> {
-            CallableStatement stmnt = conn.prepareCall("{CALL flow.add_storage(?,?)}");
-            stmnt.setString(1, "FlowThatDontExist");
+            CallableStatement stmnt = conn.prepareCall("{CALL flow.insert_flow_storage(?,?)}");
+            stmnt.setInt(1, 222);
             stmnt.setInt(2, 2);
             stmnt.execute();
 
@@ -100,8 +100,8 @@ public class ProcedureStorageTest extends DBUnitbase {
 
         ITable expectedTable = expectedDataSet.getTable("flow.flow_targets");
 
-        CallableStatement stmnt = conn.prepareCall("CALL flow.add_storage(?,?)");
-        stmnt.setString(1, "flow");
+        CallableStatement stmnt = conn.prepareCall("CALL flow.insert_flow_storage(?,?)");
+        stmnt.setInt(1, 2);
         stmnt.setInt(2, 2);
         stmnt.execute();
 
