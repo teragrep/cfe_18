@@ -53,20 +53,13 @@ import org.apache.ibatis.annotations.Mapper;
 import java.util.List;
 
 @Mapper
-public interface StorageMapper {
-    Storage create(Storage.StorageType cfeType, String storageName);
+public interface FlowStorageMapper {
+    FlowStorage create(int flowId, int storageId);
 
-    CaptureStorage createCaptureStorage(int capture_id, int storage_id);
+    List<FlowStorage> get(int flowId, Integer version);
 
-    Storage getStorage(int id, Integer version);
+    List<FlowStorage> getAll(Integer version);
 
-    List<CaptureStorage> getCaptureStorage(int captureId, Integer version);
+    void delete(int flowId, int id);
 
-    List<Storage> getAll(Integer version);
-
-    List<CaptureStorage> getAllCapture(Integer version);
-
-    Storage delete(int id);
-
-    CaptureStorage deleteCaptureStorage(int captureId, int storageId);
 }

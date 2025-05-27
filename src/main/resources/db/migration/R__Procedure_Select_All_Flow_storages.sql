@@ -43,37 +43,28 @@
  * Teragrep, the applicable Commercial License may apply to this file if you as
  * a licensee so wish it.
  */
-use flow;
+USE flow;
 DELIMITER //
-CREATE OR REPLACE PROCEDURE retrieve_flow_storages(flow varchar(255),tx_id int)
+CREATE OR REPLACE PROCEDURE select_all_flow_storages(tx_id INT)
 BEGIN
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
         BEGIN
             ROLLBACK;
             RESIGNAL;
         END;
-    START TRANSACTION;
-            if(tx_id) is null then
-             set @time = (select max(transaction_id) from mysql.transaction_registry);
-        else
-             set @time=tx_id;
-    end if;
-    if (select id from flows for system_time as of transaction @time where name = flow) is null then
-        SELECT JSON_OBJECT('id', NULL, 'message', 'Flow does not exist') into @fs;
-        signal sqlstate '45000' set message_text = @fs;
-    else
-        select s.storage_name  as target,
-               f.name          as flow,
-               ft.storage_type as storage_type,
-               ft.id           as last,
-               s.id            as storage_id
-        from flow.flow_targets for system_time as of transaction @time ft
-                 inner join flows for system_time as of transaction @time f on ft.flow_id = f.id
-                 left join storages for system_time as of transaction @time s on ft.storage_id = s.id
-        where flow_id = f.id
-          and f.name = flow;
-    end if;
-    COMMIT;
+    IF (tx_id) IS NULL THEN
+        SET @time = (SELECT MAX(transaction_id) FROM mysql.transaction_registry);
+    ELSE
+        SET @time = tx_id;
+    END IF;
+    SELECT ft.id          AS id,
+           f.id           AS flow_id,
+           ft.storage_id  AS storage_id,
+           s.storage_name AS storage_name,
+           s.cfe_type     AS storage_type
+    FROM flow.flows FOR SYSTEM_TIME AS OF TRANSACTION @time f
+             INNER JOIN flow_targets FOR SYSTEM_TIME AS OF TRANSACTION @time ft ON f.id = ft.flow_id
+             INNER JOIN storages FOR SYSTEM_TIME AS OF TRANSACTION @time s ON ft.storage_id = s.id;
 END;
 //
 DELIMITER ;

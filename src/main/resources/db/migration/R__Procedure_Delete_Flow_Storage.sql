@@ -43,28 +43,28 @@
  * Teragrep, the applicable Commercial License may apply to this file if you as
  * a licensee so wish it.
  */
-use flow;
+USE flow;
 DELIMITER //
-CREATE OR REPLACE PROCEDURE retrieve_all_flow_storages(tx_id int)
+CREATE OR REPLACE PROCEDURE delete_flow_storage(proc_flow_id INT, proc_storage_id INT)
 BEGIN
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
         BEGIN
             ROLLBACK;
             RESIGNAL;
-        end;
-    if(tx_id) is null then
-         set @time = (select max(transaction_id) from mysql.transaction_registry);
-    else
-         set @time=tx_id;
-    end if;
-    select ft.id          as id,
-           f.name         as flow,
-           s.storage_name as storage_name,
-           s.cfe_type     as storage_type,
-           ft.storage_id  as storage_id
-    from flow.flows for system_time as of transaction @time f
-             inner join flow_targets for system_time as of transaction @time ft on f.id = ft.flow_id
-             inner join storages for system_time as of transaction @time s on ft.storage_id = s.id;
-end;
+        END;
+    START TRANSACTION;
+
+    IF ((SELECT COUNT(id)
+         FROM flow.flow_targets ft
+         WHERE ft.flow_id = proc_flow_id
+           AND ft.storage_id = proc_storage_id) = 0) THEN
+        SELECT JSON_OBJECT('id', proc_flow_id, 'message', 'Flow storage does not exist') INTO @fs;
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = @fs;
+    END IF;
+    DELETE FROM flow.flow_targets WHERE storage_id = proc_storage_id AND flow_id = proc_flow_id;
+
+    COMMIT;
+
+END;
 //
 DELIMITER ;
