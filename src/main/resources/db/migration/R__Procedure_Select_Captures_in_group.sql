@@ -43,72 +43,40 @@
  * Teragrep, the applicable Commercial License may apply to this file if you as
  * a licensee so wish it.
  */
-package com.teragrep.cfe18.handlers.entities;
+USE cfe_18;
+DELIMITER //
+CREATE OR REPLACE PROCEDURE select_captures_in_group(capture_group_id INT, tx_id INT)
+BEGIN
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+        BEGIN
+            ROLLBACK;
+            RESIGNAL;
+        END;
+    START TRANSACTION;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-import io.swagger.v3.oas.annotations.media.Schema;
+    IF (tx_id) IS NULL THEN
+        SET @time = (SELECT MAX(transaction_id) FROM mysql.transaction_registry);
+    ELSE
+        SET @time = tx_id;
+    END IF;
 
-@JsonInclude(JsonInclude.Include.NON_NULL)
-public class CaptureGroup {
-    public enum groupType {
-        cfe, relp
-    }
+    IF ((SELECT COUNT(cdg.id)
+         FROM capture_def_group FOR SYSTEM_TIME AS OF TRANSACTION @time cdg
+         WHERE cdg.id = capture_group_id) = 0) THEN
+        SELECT JSON_OBJECT('id', capture_group_id, 'message', 'Capture group not found') INTO @gc;
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = @gc;
+    END IF;
 
-    private int id;
-    private String captureGroupName;
-    private groupType captureGroupType;
-    @Schema(accessMode = Schema.AccessMode.READ_ONLY)
-    private String tag;
-    private Integer captureDefinitionId;
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public String getCaptureGroupName() {
-        return captureGroupName;
-    }
-
-    public void setCaptureGroupName(String captureGroupName) {
-        this.captureGroupName = captureGroupName;
-    }
-
-    public groupType getCaptureGroupType() {
-        return captureGroupType;
-    }
-
-    public void setCaptureGroupType(groupType captureGroupType) {
-        this.captureGroupType = captureGroupType;
-    }
-
-    public String getTag() {
-        return tag;
-    }
-
-    public void setTag(String tag) {
-        this.tag = tag;
-    }
-
-    public Integer getCaptureDefinitionId() {
-        return captureDefinitionId;
-    }
-
-    public void setCaptureDefinitionId(Integer captureDefinitionId) {
-        this.captureDefinitionId = captureDefinitionId;
-    }
-
-    @Override
-    public String toString() {
-        return "CaptureGroup{" +
-                "id=" + id +
-                ", captureGroupName='" + captureGroupName + '\'' +
-                ", captureGroupType=" + captureGroupType +
-                ", tag='" + tag + '\'' +
-                ", captureDefinitionId=" + captureDefinitionId +
-                '}';
-    }
-}
+    SELECT cd.id AS capture_definition_id
+    FROM cfe_18.capture_def_group FOR SYSTEM_TIME AS OF TRANSACTION @time cdg
+             INNER JOIN capture_def_group_x_capture_def FOR SYSTEM_TIME AS OF TRANSACTION @time cdgxcd
+                        ON cdg.id = cdgxcd.capture_def_group_id
+             INNER JOIN capture_definition FOR SYSTEM_TIME AS OF TRANSACTION @time cd
+                        ON cdgxcd.capture_def_id = cd.id AND cdgxcd.tag_id = cd.tag_id
+    WHERE cdg.id = capture_group_id
+      AND cd.id = cdgxcd.capture_def_id
+      AND cd.tag_id = cdgxcd.tag_id;
+    COMMIT;
+END;
+//
+DELIMITER ;
