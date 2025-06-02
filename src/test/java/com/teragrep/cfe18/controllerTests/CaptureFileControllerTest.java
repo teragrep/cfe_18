@@ -99,7 +99,7 @@ public final class CaptureFileControllerTest extends TestSpringBootInformation {
                 ContentType.APPLICATION_JSON);
 
         // Creates the request
-        HttpPut request = new HttpPut("http://localhost:" + port + "/file/capture/meta/rule");
+        HttpPut request = new HttpPut("http://localhost:" + port + "/file/capture/meta");
         // set requestEntity to the put request
         request.setEntity(requestEntity);
         // Header
