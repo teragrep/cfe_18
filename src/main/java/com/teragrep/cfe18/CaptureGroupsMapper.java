@@ -43,72 +43,23 @@
  * Teragrep, the applicable Commercial License may apply to this file if you as
  * a licensee so wish it.
  */
-package com.teragrep.cfe18.handlers.entities;
+package com.teragrep.cfe18;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-import io.swagger.v3.oas.annotations.media.Schema;
+import com.teragrep.cfe18.handlers.entities.CaptureGroup;
+import com.teragrep.cfe18.handlers.entities.CaptureGroups;
+import org.apache.ibatis.annotations.Mapper;
 
-@JsonInclude(JsonInclude.Include.NON_NULL)
-public class CaptureGroup {
-    public enum groupType {
-        cfe, relp
-    }
+import java.util.List;
 
-    private int id;
-    private String captureGroupName;
-    private groupType captureGroupType;
-    @Schema(accessMode = Schema.AccessMode.READ_ONLY)
-    private String tag;
-    private Integer captureDefinitionId;
+@Mapper
+public interface CaptureGroupsMapper {
 
-    public int getId() {
-        return id;
-    }
+    CaptureGroups create(String groupName, CaptureGroups.groupType type);
 
-    public void setId(int id) {
-        this.id = id;
-    }
+    CaptureGroups get(int id,Integer version);
 
-    public String getCaptureGroupName() {
-        return captureGroupName;
-    }
+    List<CaptureGroups> getAll(Integer version);
 
-    public void setCaptureGroupName(String captureGroupName) {
-        this.captureGroupName = captureGroupName;
-    }
+    void delete(int id);
 
-    public groupType getCaptureGroupType() {
-        return captureGroupType;
-    }
-
-    public void setCaptureGroupType(groupType captureGroupType) {
-        this.captureGroupType = captureGroupType;
-    }
-
-    public String getTag() {
-        return tag;
-    }
-
-    public void setTag(String tag) {
-        this.tag = tag;
-    }
-
-    public Integer getCaptureDefinitionId() {
-        return captureDefinitionId;
-    }
-
-    public void setCaptureDefinitionId(Integer captureDefinitionId) {
-        this.captureDefinitionId = captureDefinitionId;
-    }
-
-    @Override
-    public String toString() {
-        return "CaptureGroup{" +
-                "id=" + id +
-                ", captureGroupName='" + captureGroupName + '\'' +
-                ", captureGroupType=" + captureGroupType +
-                ", tag='" + tag + '\'' +
-                ", captureDefinitionId=" + captureDefinitionId +
-                '}';
-    }
 }

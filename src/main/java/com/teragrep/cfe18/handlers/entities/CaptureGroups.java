@@ -49,7 +49,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class CaptureGroup {
+public class CaptureGroups {
     public enum groupType {
         cfe, relp
     }
@@ -57,9 +57,6 @@ public class CaptureGroup {
     private int id;
     private String captureGroupName;
     private groupType captureGroupType;
-    @Schema(accessMode = Schema.AccessMode.READ_ONLY)
-    private String tag;
-    private Integer captureDefinitionId;
 
     public int getId() {
         return id;
@@ -85,21 +82,6 @@ public class CaptureGroup {
         this.captureGroupType = captureGroupType;
     }
 
-    public String getTag() {
-        return tag;
-    }
-
-    public void setTag(String tag) {
-        this.tag = tag;
-    }
-
-    public Integer getCaptureDefinitionId() {
-        return captureDefinitionId;
-    }
-
-    public void setCaptureDefinitionId(Integer captureDefinitionId) {
-        this.captureDefinitionId = captureDefinitionId;
-    }
 
     @Override
     public String toString() {
@@ -107,8 +89,6 @@ public class CaptureGroup {
                 "id=" + id +
                 ", captureGroupName='" + captureGroupName + '\'' +
                 ", captureGroupType=" + captureGroupType +
-                ", tag='" + tag + '\'' +
-                ", captureDefinitionId=" + captureDefinitionId +
-                '}';
+              '}';
     }
 }
