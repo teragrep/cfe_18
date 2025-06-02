@@ -112,6 +112,7 @@ public class CaptureGroup_Controller {
             jsonObject.put("message", "Capture linked with group");
             return new ResponseEntity<>(jsonObject.toString(), HttpStatus.CREATED);
         } catch (RuntimeException ex) {
+            LOGGER.error(ex.getMessage());
             JSONObject jsonErr = new JSONObject();
             jsonErr.put("id", newCaptureGroup.getId());
             jsonErr.put("message", ex.getCause().getMessage());
