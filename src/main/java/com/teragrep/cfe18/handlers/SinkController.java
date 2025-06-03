@@ -117,7 +117,7 @@ public class SinkController {
                 // 23000 = Constraint exception, Foreign key constract fails
                 if (state.equals("23000")) {
                     jsonErr.put("message", "Flow and protocol combination already exists");
-                    // 22001 = Constraint exception, Foreign key constract fails for too long data column
+                // 22001 = Constraint exception, Foreign key constract fails for too long data column
                 } else if (state.equals("22001")) {
                     jsonErr.put("message", "Port length exceeded");
                 }
@@ -200,7 +200,7 @@ public class SinkController {
                 if (state.equals("23000")) {
                     jsonErr.put("message", "Is in use");
                     return new ResponseEntity<>(jsonErr.toString(), HttpStatus.CONFLICT);
-                    // 45000 = Custom error, row does not exist
+                // 45000 = Custom error, row does not exist
                 } else if (state.equals("45000")) {
                     jsonErr.put("message", "Record does not exist");
                     return new ResponseEntity<>(jsonErr.toString(), HttpStatus.NOT_FOUND);
