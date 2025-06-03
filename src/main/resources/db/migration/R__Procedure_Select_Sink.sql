@@ -69,7 +69,7 @@ BEGIN
            cs.ip_address  AS ip,
            cs.sink_port   AS port,
            L.app_protocol AS protocol,
-           cs.id          AS flow_id
+           cs.flow_id     AS flow_id
     FROM capture_sink FOR SYSTEM_TIME AS OF TRANSACTION @time cs
              INNER JOIN L7 FOR SYSTEM_TIME AS OF TRANSACTION @time L ON cs.L7_id = L.id
     WHERE cs.id = sink_id
