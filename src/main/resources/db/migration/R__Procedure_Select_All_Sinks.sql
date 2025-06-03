@@ -61,10 +61,9 @@ BEGIN
            cs.ip_address  AS ip,
            cs.sink_port   AS port,
            L.app_protocol AS protocol,
-           f.id           AS flow_id
+           cs.id          AS flow_id
     FROM flow.capture_sink FOR SYSTEM_TIME AS OF TRANSACTION @time cs
-             INNER JOIN L7 FOR SYSTEM_TIME AS OF TRANSACTION @time L ON cs.L7_id = L.id
-             INNER JOIN flows FOR SYSTEM_TIME AS OF TRANSACTION @time f ON cs.flow_id = f.id;
+             INNER JOIN L7 FOR SYSTEM_TIME AS OF TRANSACTION @time L ON cs.L7_id = L.id;
 
 END;
 //

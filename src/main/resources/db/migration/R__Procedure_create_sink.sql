@@ -45,8 +45,8 @@
  */
 USE flow;
 DELIMITER //
-CREATE OR REPLACE PROCEDURE insert_sink(protocol VARCHAR(20), sink_ip_address VARCHAR(16), sink_portti VARCHAR(5),
-                                        p_flow_id INT)
+CREATE OR REPLACE PROCEDURE insert_sink(protocol VARCHAR(20), ip_address VARCHAR(16), sink_port VARCHAR(5),
+                                        flow_id INT)
 BEGIN
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
         BEGIN
@@ -64,21 +64,21 @@ BEGIN
     END IF;
 
     IF ((SELECT COUNT(id)
-         FROM flow.capture_sink
-         WHERE L7_id = @ProtocolId
-           AND flow_id = @FlowId
-           AND ip_address = sink_ip_address
-           AND sink_port = sink_portti) = 0) THEN
+         FROM flow.capture_sink cs
+         WHERE cs.L7_id = @ProtocolId
+           AND cs.flow_id = flow_id
+           AND cs.ip_address = ip_address
+           AND cs.sink_port = sink_port) = 0) THEN
         INSERT INTO flow.capture_sink(L7_id, flow_id, ip_address, sink_port)
-        VALUES (@ProtocolId, p_flow_id, sink_ip_address, sink_portti);
+        VALUES (@ProtocolId, flow_id, ip_address, sink_port);
         SELECT LAST_INSERT_ID() AS id;
     ELSE
         SELECT id AS id
-        FROM flow.capture_sink
-        WHERE L7_id = @ProtocolId
-          AND flow_id = p_flow_id
-          AND ip_address = sink_ip_address
-          AND sink_port = sink_portti;
+        FROM flow.capture_sink cs
+        WHERE cs.L7_id = @ProtocolId
+          AND cs.flow_id = flow_id
+          AND cs.ip_address = ip_address
+          AND cs.sink_port = sink_port;
     END IF;
     COMMIT;
 
