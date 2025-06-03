@@ -4,8 +4,8 @@
         "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.teragrep.cfe18.SinkMapper">
 
-    <!-- insert             ( protocol VARCHAR(20), sink_ip_address VARCHAR(16), sink_portti VARCHAR(5),
-                                        p_flow_id INT ) -->
+    <!-- insert             ( protocol VARCHAR(20), ip_address VARCHAR(16), sink_port VARCHAR(5),
+                                        flow_id INT ) -->
     <select id="create" resultMap="insertedID" statementType="CALLABLE">
         {CALL flow.insert_sink(#{param1},#{param2},#{param3},#{param4})}
     </select>
