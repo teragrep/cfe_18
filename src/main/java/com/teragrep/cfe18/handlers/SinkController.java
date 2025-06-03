@@ -106,6 +106,7 @@ public class SinkController {
             jsonObject.put("message", "New sink created");
             return new ResponseEntity<>(jsonObject.toString(), HttpStatus.CREATED);
         } catch (RuntimeException ex) {
+            LOGGER.error(ex.getMessage());
             JSONObject jsonErr = new JSONObject();
             jsonErr.put("id", newSink.getId());
             jsonErr.put("message", ex.getCause().getMessage());
@@ -137,6 +138,7 @@ public class SinkController {
             Sink s = sinkMapper.get(id,version);
             return new ResponseEntity<>(s, HttpStatus.OK);
         } catch (RuntimeException ex) {
+            LOGGER.error(ex.getMessage());
             JSONObject jsonErr = new JSONObject();
             jsonErr.put("id", id);
             jsonErr.put("message", ex.getCause().getMessage());
@@ -169,7 +171,9 @@ public class SinkController {
             @ApiResponse(responseCode = "200", description = "Capture sink deleted",
                     content = {@Content(mediaType = "application/json",
                             schema = @Schema(implementation = Sink.class))}),
-            @ApiResponse(responseCode = "400", description = "Capture sink is being used OR Capture sink does not exist",
+            @ApiResponse(responseCode = "404", description = "Capture sink does not exist",
+                    content = @Content),
+            @ApiResponse(responseCode = "409", description = "Capture sink is being used",
                     content = @Content),
             @ApiResponse(responseCode = "500", description = "Internal server error, contact admin", content = @Content)})
     public ResponseEntity<String> delete(@PathVariable("id") int id) {
@@ -181,6 +185,7 @@ public class SinkController {
             j.put("message", "Sink deleted");
             return new ResponseEntity<>(j.toString(), HttpStatus.OK);
         } catch (RuntimeException ex) {
+            LOGGER.error(ex.getMessage());
             JSONObject jsonErr = new JSONObject();
             jsonErr.put("id", id);
             jsonErr.put("message", ex.getCause().getMessage());
@@ -190,7 +195,7 @@ public class SinkController {
                 String state = ((SQLException) cause).getSQLState();
                 if (state.equals("23000")) {
                     jsonErr.put("message", "Is in use");
-                    return new ResponseEntity<>(jsonErr.toString(), HttpStatus.BAD_REQUEST);
+                    return new ResponseEntity<>(jsonErr.toString(), HttpStatus.CONFLICT);
                 } else if (state.equals("45000")) {
                     jsonErr.put("message", "Record does not exist");
                     return new ResponseEntity<>(jsonErr.toString(), HttpStatus.NOT_FOUND);
