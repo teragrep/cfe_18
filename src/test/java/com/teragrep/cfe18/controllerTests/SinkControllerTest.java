@@ -60,10 +60,7 @@ import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.util.EntityUtils;
 import org.json.JSONObject;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
@@ -104,11 +101,35 @@ public class SinkControllerTest extends TestSpringBootInformation {
         // Header
         request2.setHeader("Authorization", "Bearer " + token);
 
-        Assertions.assertDoesNotThrow(() -> HttpClientBuilder.create().build().execute(request2));
+
+        // Get the response from endpoint
+        HttpResponse httpResponse = Assertions.assertDoesNotThrow(() -> HttpClientBuilder.create().build().execute(request2));
+
+        // Get the entity from response
+        HttpEntity entity = httpResponse.getEntity();
+
+        // Entity response string
+        String responseString =  Assertions.assertDoesNotThrow(() -> EntityUtils.toString(entity));
+
+        // Parsin respponse as JSONObject
+        JSONObject responseAsJson = Assertions.assertDoesNotThrow(() -> new JSONObject(responseString));
+
+        // Creating expected message as JSON Object from the data that was sent towards endpoint
+        String expected = "New flow created";
+
+        // Creating string from Json that was given as a response
+        String actual = Assertions.assertDoesNotThrow(() -> responseAsJson.get("message").toString());
+
+        // Assertions
+        assertEquals(expected, actual);
+        assertThat(
+                httpResponse.getStatusLine().getStatusCode(),
+                equalTo(HttpStatus.SC_CREATED));
     }
 
 
     @Test
+    @Order(1)
     public void testSink()  {
         // insert sink
         Sink sink = new Sink();
@@ -160,6 +181,7 @@ public class SinkControllerTest extends TestSpringBootInformation {
     // Test getting the inserted sink
 
     @Test
+    @Order(2)
     public void testGetSink()  {
 
         // create expected Sink to match
@@ -189,6 +211,7 @@ public class SinkControllerTest extends TestSpringBootInformation {
 
     // Test get ALL Sinks
     @Test
+    @Order(3)
     public void testGetAllSinks()  {
         // list of expected values
         ArrayList<Sink> expected = new ArrayList<>();
@@ -232,8 +255,6 @@ public class SinkControllerTest extends TestSpringBootInformation {
 
         String expectedJson = new Gson().toJson(expected);
 
-        // Test Get ALL
-
         // Asserting get request
         HttpGet requestGet = new HttpGet("http://localhost:" + port + "/sink");
 
@@ -252,6 +273,7 @@ public class SinkControllerTest extends TestSpringBootInformation {
     // Delete
 
     @Test
+    @Order(4)
     public void testDeleteSink()  {
         HttpDelete delete = new HttpDelete("http://localhost:" + port + "/sink/1");
 
@@ -278,6 +300,7 @@ public class SinkControllerTest extends TestSpringBootInformation {
     }
 
     @Test
+    @Order(5)
     public void testDeleteNonExistentSink()  {
         HttpDelete delete = new HttpDelete("http://localhost:" + port + "/sink/" + 1245);
 
@@ -303,6 +326,7 @@ public class SinkControllerTest extends TestSpringBootInformation {
     }
 
     @Test
+    @Order(6)
     public void testSinkInUse()  {
         CaptureRelp captureRelp = new CaptureRelp();
         captureRelp.setTag("relpTag");
@@ -353,7 +377,7 @@ public class SinkControllerTest extends TestSpringBootInformation {
         String expected = "Is in use";
 
         assertEquals(expected, actual);
-        assertThat(deleteResponse.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_BAD_REQUEST));
+        assertThat(deleteResponse.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_CONFLICT));
     }
 
 }
