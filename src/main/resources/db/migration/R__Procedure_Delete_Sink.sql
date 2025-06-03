@@ -43,23 +43,23 @@
  * Teragrep, the applicable Commercial License may apply to this file if you as
  * a licensee so wish it.
  */
-use flow;
+USE flow;
 DELIMITER //
-CREATE OR REPLACE PROCEDURE remove_sink(proc_id int)
+CREATE OR REPLACE PROCEDURE delete_sink(sink_id INT)
 BEGIN
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
         BEGIN
             ROLLBACK;
             RESIGNAL;
-        end;
+        END;
     START TRANSACTION;
-    if (select id from flow.capture_sink where id = proc_id) is null then
-        SELECT JSON_OBJECT('id', null, 'message', 'Capture sink does not exist') into @cs;
-        signal sqlstate '45000' set message_text = @cs;
-    end if;
-
-    delete from flow.capture_sink where id = proc_id;
+    IF ((SELECT COUNT(id) FROM flow.capture_sink WHERE id = sink_id) = 0) THEN
+        SELECT JSON_OBJECT('id', sink_id, 'message', 'Capture sink does not exist') INTO @cs;
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = @cs;
+    END IF;
+    DELETE FROM flow.capture_sink WHERE id = sink_id;
     COMMIT;
-end;
+
+END;
 //
 DELIMITER ;

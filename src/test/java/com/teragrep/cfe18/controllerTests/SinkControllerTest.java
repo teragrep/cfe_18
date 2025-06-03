@@ -60,8 +60,7 @@ import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.util.EntityUtils;
 import org.json.JSONObject;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
@@ -82,9 +81,9 @@ public class SinkControllerTest extends TestSpringBootInformation {
     @LocalServerPort
     private int port;
 
-
     @Test
-    public void testSink() throws Exception {
+    @BeforeAll
+    public void testData() {
         // insert flow before sink so database has something to stick to.
         Flow flow = new Flow();
         flow.setName("flow1");
@@ -102,15 +101,41 @@ public class SinkControllerTest extends TestSpringBootInformation {
         // Header
         request2.setHeader("Authorization", "Bearer " + token);
 
-        HttpClientBuilder.create().build().execute(request2);
+
+        // Get the response from endpoint
+        HttpResponse httpResponse = Assertions.assertDoesNotThrow(() -> HttpClientBuilder.create().build().execute(request2));
+
+        // Get the entity from response
+        HttpEntity entity = httpResponse.getEntity();
+
+        // Entity response string
+        String responseString =  Assertions.assertDoesNotThrow(() -> EntityUtils.toString(entity));
+
+        // Parsin respponse as JSONObject
+        JSONObject responseAsJson = Assertions.assertDoesNotThrow(() -> new JSONObject(responseString));
+
+        // Creating expected message as JSON Object from the data that was sent towards endpoint
+        String expected = "New flow created";
+
+        // Creating string from Json that was given as a response
+        String actual = Assertions.assertDoesNotThrow(() -> responseAsJson.get("message").toString());
+
+        // Assertions
+        assertEquals(expected, actual);
+        assertThat(
+                httpResponse.getStatusLine().getStatusCode(),
+                equalTo(HttpStatus.SC_CREATED));
+    }
 
 
+    @Test
+    @Order(1)
+    public void testSink()  {
         // insert sink
-
         Sink sink = new Sink();
-        sink.setFlow("flow1");
+        sink.setFlowId(1);
         sink.setPort("601");
-        sink.setIp_address("ip1");
+        sink.setIpAddress("ip1");
         sink.setProtocol("prot1");
 
         String json = gson.toJson(sink);
@@ -121,79 +146,82 @@ public class SinkControllerTest extends TestSpringBootInformation {
                 ContentType.APPLICATION_JSON);
 
         // Creates the request
-        HttpPut request = new HttpPut("http://localhost:" + port + "/sink/details");
+        HttpPut request = new HttpPut("http://localhost:" + port + "/sink");
         // set requestEntity to the put request
         request.setEntity(requestEntity);
         // Header
         request.setHeader("Authorization", "Bearer " + token);
 
         // Get the response from endpoint
-        HttpResponse httpResponse = HttpClientBuilder.create().build().execute(request);
+        HttpResponse httpResponse = Assertions.assertDoesNotThrow(() ->  HttpClientBuilder.create().build().execute(request));
 
         // Get the entity from response
         HttpEntity entity = httpResponse.getEntity();
 
         // Entity response string
-        String responseString = EntityUtils.toString(entity);
+        String responseString =Assertions.assertDoesNotThrow(() -> EntityUtils.toString(entity));
 
 
-        // Parsin respponse as JSONObject
-        JSONObject responseAsJson = new JSONObject(responseString);
+        // Parse response as JsonObject
+        JSONObject responseAsJson = Assertions.assertDoesNotThrow(() -> new JSONObject(responseString));
 
         // Creating expected message as JSON Object from the data that was sent towards endpoint
         String expected = "New sink created";
 
         // Creating string from Json that was given as a response
-        String actual = responseAsJson.get("message").toString();
+        String actual = Assertions.assertDoesNotThrow(() ->responseAsJson.get("message").toString());
 
         // Assertions
+        assertEquals(expected, actual);
         assertThat(
                 httpResponse.getStatusLine().getStatusCode(),
                 equalTo(HttpStatus.SC_CREATED));
-        assertEquals(expected, actual);
     }
 
     // Test getting the inserted sink
 
     @Test
-    public void testGetSink() throws Exception {
+    @Order(2)
+    public void testGetSink()  {
 
         // create expected Sink to match
         Sink sink = new Sink();
-        sink.setFlow("flow1");
+        sink.setId(1);
+        sink.setFlowId(1);
         sink.setPort("601");
-        sink.setIp_address("ip1");
+        sink.setIpAddress("ip1");
         sink.setProtocol("prot1");
 
         String json = gson.toJson(sink);
 
         // Asserting get request. Here the ID is hardcoded as one since Sink inserted earlier is Sink id = 1
-        HttpGet requestGet = new HttpGet("http://localhost:" + port + "/sink/id/" + 1);
+        HttpGet requestGet = new HttpGet("http://localhost:" + port + "/sink/1");
 
         requestGet.setHeader("Authorization", "Bearer " + token);
 
-        HttpResponse responseGet = HttpClientBuilder.create().build().execute(requestGet);
+        HttpResponse responseGet =  Assertions.assertDoesNotThrow(() -> HttpClientBuilder.create().build().execute(requestGet));
 
         HttpEntity entityGet = responseGet.getEntity();
 
-        String responseStringGet = EntityUtils.toString(entityGet, "UTF-8");
+        String responseStringGet =  Assertions.assertDoesNotThrow(() ->EntityUtils.toString(entityGet, "UTF-8"));
 
-        assertThat(responseGet.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_OK));
         assertEquals(json, responseStringGet);
+        assertThat(responseGet.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_OK));
     }
 
     // Test get ALL Sinks
     @Test
-    public void testGetAllSinks() throws Exception {
+    @Order(3)
+    public void testGetAllSinks()  {
         // list of expected values
         ArrayList<Sink> expected = new ArrayList<>();
 
         // insert sink another sink
 
         Sink sink = new Sink();
-        sink.setFlow("flow1");
+        sink.setFlowId(1);
         sink.setPort("601");
-        sink.setIp_address("IPaddress2");
+        sink.setIpAddress("IPaddress2");
         sink.setProtocol("tcp/ip");
         sink.setId(2);
 
@@ -205,20 +233,20 @@ public class SinkControllerTest extends TestSpringBootInformation {
                 ContentType.APPLICATION_JSON);
 
         // Creates the request
-        HttpPut request = new HttpPut("http://localhost:" + port + "/sink/details");
+        HttpPut request = new HttpPut("http://localhost:" + port + "/sink");
         // set requestEntity to the put request
         request.setEntity(requestEntity);
         // Header
         request.setHeader("Authorization", "Bearer " + token);
 
         // Get the response from endpoint
-        HttpClientBuilder.create().build().execute(request);
+        Assertions.assertDoesNotThrow(() -> {HttpClientBuilder.create().build().execute(request);});
 
         // adding the earlier sink to expected list
         Sink sink2 = new Sink();
-        sink2.setFlow("flow1");
+        sink2.setFlowId(1);
         sink2.setPort("601");
-        sink2.setIp_address("ip1");
+        sink2.setIpAddress("ip1");
         sink2.setProtocol("prot1");
         sink2.setId(1);
 
@@ -227,78 +255,79 @@ public class SinkControllerTest extends TestSpringBootInformation {
 
         String expectedJson = new Gson().toJson(expected);
 
-        // Test Get ALL
-
         // Asserting get request
         HttpGet requestGet = new HttpGet("http://localhost:" + port + "/sink");
 
         requestGet.setHeader("Authorization", "Bearer " + token);
 
-        HttpResponse responseGet = HttpClientBuilder.create().build().execute(requestGet);
+        HttpResponse responseGet = Assertions.assertDoesNotThrow(() ->HttpClientBuilder.create().build().execute(requestGet));
 
         HttpEntity entityGet = responseGet.getEntity();
 
-        String responseStringGet = EntityUtils.toString(entityGet, "UTF-8");
+        String responseStringGet = Assertions.assertDoesNotThrow(() ->EntityUtils.toString(entityGet, "UTF-8"));
 
-        assertThat(responseGet.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_OK));
         assertEquals(expectedJson, responseStringGet);
+        assertThat(responseGet.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_OK));
     }
 
     // Delete
 
     @Test
-    public void testDeleteSink() throws Exception {
-        HttpDelete delete = new HttpDelete("http://localhost:" + port + "/sink/id/" + 1);
+    @Order(4)
+    public void testDeleteSink()  {
+        HttpDelete delete = new HttpDelete("http://localhost:" + port + "/sink/1");
 
         // Header
         delete.setHeader("Authorization", "Bearer " + token);
 
-        HttpResponse deleteResponse = HttpClientBuilder.create().build().execute(delete);
+        HttpResponse deleteResponse = Assertions.assertDoesNotThrow(() ->HttpClientBuilder.create().build().execute(delete));
 
         HttpEntity entityDelete = deleteResponse.getEntity();
 
-        String responseStringGet = EntityUtils.toString(entityDelete, "UTF-8");
+        String responseStringGet = Assertions.assertDoesNotThrow(() ->EntityUtils.toString(entityDelete, "UTF-8"));
 
-        // Parsin respponse as JSONObject
-        JSONObject responseAsJson = new JSONObject(responseStringGet);
+        // Parsing response as JSONObject
+        JSONObject responseAsJson = Assertions.assertDoesNotThrow(() ->new JSONObject(responseStringGet));
 
         // Creating string from Json that was given as a response
-        String actual = responseAsJson.get("message").toString();
+        String actual = Assertions.assertDoesNotThrow(() ->responseAsJson.get("message").toString());
 
         // Creating expected message as JSON Object from the data that was sent towards endpoint
-        String expected = "Sink with id = 1 deleted.";
+        String expected = "Sink deleted";
 
-        assertThat(deleteResponse.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_OK));
         assertEquals(expected, actual);
+        assertThat(deleteResponse.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_OK));
     }
 
     @Test
-    public void testDeleteNonExistentSink() throws Exception {
-        HttpDelete delete = new HttpDelete("http://localhost:" + port + "/sink/id/" + 1245);
+    @Order(5)
+    public void testDeleteNonExistentSink()  {
+        HttpDelete delete = new HttpDelete("http://localhost:" + port + "/sink/" + 1245);
 
         // Header
         delete.setHeader("Authorization", "Bearer " + token);
 
-        HttpResponse deleteResponse = HttpClientBuilder.create().build().execute(delete);
+        HttpResponse deleteResponse = Assertions.assertDoesNotThrow(() ->HttpClientBuilder.create().build().execute(delete));
 
         HttpEntity entityDelete = deleteResponse.getEntity();
 
-        String responseStringGet = EntityUtils.toString(entityDelete, "UTF-8");
+        String responseStringGet = Assertions.assertDoesNotThrow(() ->EntityUtils.toString(entityDelete, "UTF-8"));
 
-        // Parsin respponse as JSONObject
-        JSONObject responseAsJson = new JSONObject(responseStringGet);
+        // Parsing response as JSONObject
+        JSONObject responseAsJson = Assertions.assertDoesNotThrow(() ->new JSONObject(responseStringGet));
 
         // Creating string from Json that was given as a response
-        String actual = responseAsJson.get("message").toString();
+        String actual = Assertions.assertDoesNotThrow(() ->responseAsJson.get("message").toString());
         // Creating expected message as JSON Object from the data that was sent towards endpoint
         String expected = "Record does not exist";
 
-        assertThat(deleteResponse.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_BAD_REQUEST));
         assertEquals(expected, actual);
+        assertThat(deleteResponse.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_NOT_FOUND));
     }
 
     @Test
-    public void testSinkInUse() throws Exception {
+    @Order(6)
+    public void testSinkInUse()  {
         CaptureRelp captureRelp = new CaptureRelp();
         captureRelp.setTag("relpTag");
         captureRelp.setRetentionTime("P30D");
@@ -324,31 +353,31 @@ public class SinkControllerTest extends TestSpringBootInformation {
         request3.setHeader("Authorization", "Bearer " + token);
 
         // Get the response from endpoint
-        HttpClientBuilder.create().build().execute(request3);
+        Assertions.assertDoesNotThrow(() -> {HttpClientBuilder.create().build().execute(request3);});
 
 
-        HttpDelete delete = new HttpDelete("http://localhost:" + port + "/sink/id/" + 2);
+        HttpDelete delete = new HttpDelete("http://localhost:" + port + "/sink/2");
 
         // Header
         delete.setHeader("Authorization", "Bearer " + token);
 
-        HttpResponse deleteResponse = HttpClientBuilder.create().build().execute(delete);
+        HttpResponse deleteResponse = Assertions.assertDoesNotThrow(() ->HttpClientBuilder.create().build().execute(delete));
 
         HttpEntity entityDelete = deleteResponse.getEntity();
 
-        String responseStringGet = EntityUtils.toString(entityDelete, "UTF-8");
+        String responseStringGet = Assertions.assertDoesNotThrow(() ->EntityUtils.toString(entityDelete, "UTF-8"));
 
-        // Parsin respponse as JSONObject
-        JSONObject responseAsJson = new JSONObject(responseStringGet);
+        // Parsing response as JSONObject
+        JSONObject responseAsJson = Assertions.assertDoesNotThrow(() ->new JSONObject(responseStringGet));
 
         // Creating string from Json that was given as a response
-        String actual = responseAsJson.get("message").toString();
+        String actual = Assertions.assertDoesNotThrow(() -> responseAsJson.get("message").toString());
 
         // Creating expected message as JSON Object from the data that was sent towards endpoint
         String expected = "Is in use";
 
-        assertThat(deleteResponse.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_BAD_REQUEST));
         assertEquals(expected, actual);
+        assertThat(deleteResponse.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_CONFLICT));
     }
 
 }
