@@ -90,9 +90,9 @@ public class CaptureMetaController {
             @ApiResponse(responseCode = "201", description = "Capture meta created for capture",
                     content = {@Content(mediaType = "application/json",
                             schema = @Schema(implementation = CaptureMeta.class))}),
-            @ApiResponse(responseCode = "400", description = "Capture does not exist",
+            @ApiResponse(responseCode = "404", description = "Capture does not exist",
                     content = @Content),
-            @ApiResponse(responseCode = "500", description = "Internal server error, contact admin", content = @Content)})
+            @ApiResponse(responseCode = "400", description = "Internal server error, contact admin", content = @Content)})
     public ResponseEntity<String> create(@RequestBody CaptureMeta newCaptureMeta) {
         LOGGER.info("About to insert <[{}]>", newCaptureMeta);
         try {
@@ -115,6 +115,7 @@ public class CaptureMetaController {
             if (cause instanceof SQLException) {
                 LOGGER.error((cause).getMessage());
                 String state = ((SQLException) cause).getSQLState();
+                // 45000 = Custom error, row does not exist
                 if (state.equals("45000")) {
                     jsonErr.put("message", "Capture does not exist");
                     return new ResponseEntity<>(jsonErr.toString(), HttpStatus.NOT_FOUND);
@@ -130,7 +131,7 @@ public class CaptureMetaController {
             @ApiResponse(responseCode = "200", description = "Found the capture meta",
                     content = {@Content(mediaType = "application/json",
                             schema = @Schema(implementation = CaptureMeta.class))}),
-            @ApiResponse(responseCode = "400", description = "Capture meta does not exist",
+            @ApiResponse(responseCode = "404", description = "Capture meta does not exist",
                     content = @Content)})
     public ResponseEntity<?> get(@PathVariable("captureId") int captureId, @RequestParam(required = false) Integer version) {
         try {
@@ -145,6 +146,7 @@ public class CaptureMetaController {
             if (cause instanceof SQLException) {
                 LOGGER.error((cause).getMessage());
                 String state = ((SQLException) cause).getSQLState();
+                // 45000 = Custom error, row does not exist
                 if (state.equals("45000")) {
                     jsonErr.put("message", "Capture meta does not exist");
                     return new ResponseEntity<>(jsonErr.toString(), HttpStatus.NOT_FOUND);
@@ -170,9 +172,9 @@ public class CaptureMetaController {
             @ApiResponse(responseCode = "200", description = "Capture meta deleted",
                     content = {@Content(mediaType = "application/json",
                             schema = @Schema(implementation = CaptureMeta.class))}),
-            @ApiResponse(responseCode = "400", description = "Capture meta does not exist",
+            @ApiResponse(responseCode = "404", description = "Capture meta does not exist",
                     content = @Content),
-            @ApiResponse(responseCode = "500", description = "Internal server error, contact admin", content = @Content)})
+            @ApiResponse(responseCode = "400", description = "Internal server error, contact admin", content = @Content)})
     public ResponseEntity<String> delete(@PathVariable("captureId") int captureId) {
         LOGGER.info("Deleting Capture meta <[{}]>", captureId);
         try {
@@ -182,6 +184,7 @@ public class CaptureMetaController {
             j.put("message", "Capture meta deleted");
             return new ResponseEntity<>(j.toString(), HttpStatus.OK);
         } catch (RuntimeException ex) {
+            LOGGER.error(ex.getMessage());
             JSONObject jsonErr = new JSONObject();
             jsonErr.put("id", captureId);
             jsonErr.put("message", ex.getCause().getMessage());
@@ -189,6 +192,7 @@ public class CaptureMetaController {
             if (cause instanceof SQLException) {
                 LOGGER.error((cause).getMessage());
                 String state = ((SQLException) cause).getSQLState();
+                // 45000 = Custom error, row does not exist
                 if (state.equals("45000")) {
                     jsonErr.put("message", "Record does not exist");
                     return new ResponseEntity<>(jsonErr.toString(), HttpStatus.NOT_FOUND);
@@ -204,11 +208,10 @@ public class CaptureMetaController {
             @ApiResponse(responseCode = "200", description = "Found the capture definitions",
                     content = {@Content(mediaType = "application/json",
                             schema = @Schema(implementation = CaptureMeta.class))}),
-            @ApiResponse(responseCode = "400", description = "Capture meta key or value does not exist",
-                    content = @Content)})
+            @ApiResponse(responseCode = "404", description = "Capture meta key or value does not exist", content = @Content)})
     public ResponseEntity<?> get(@PathVariable("key") String key, @PathVariable("value") String value, @RequestParam(required = false) Integer version) {
         try {
-            List<CaptureDefinition> am = captureMetaMapper.getKeyValue(key, value, version);
+            List<CaptureDefinition> am = captureMetaMapper.getByKeyValue(key, value, version);
             return new ResponseEntity<>(am, HttpStatus.OK);
         } catch (RuntimeException ex) {
             LOGGER.error(ex.getMessage());
@@ -217,6 +220,7 @@ public class CaptureMetaController {
             if (cause instanceof SQLException) {
                 LOGGER.error((cause).getMessage());
                 String state = ((SQLException) cause).getSQLState();
+                // 45000 = Custom error, row does not exist
                 if (state.equals("45000")) {
                     jsonErr.put("message", "No such key value pair exists");
                     return new ResponseEntity<>(jsonErr.toString(), HttpStatus.NOT_FOUND);
