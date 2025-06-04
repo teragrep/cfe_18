@@ -65,8 +65,6 @@ import org.springframework.boot.test.web.server.LocalServerPort;
 
 import java.util.ArrayList;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.equalTo;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -198,17 +196,17 @@ public class CaptureMetaControllerTest extends TestSpringBootInformation {
 
         // Assertions
         assertEquals(expected, actual);
-        assertThat(
-                httpResponse.getStatusLine().getStatusCode(),
-                equalTo(HttpStatus.SC_CREATED));
+        assertEquals(
+                HttpStatus.SC_CREATED,
+                httpResponse.getStatusLine().getStatusCode());
         assertEquals(expected2, actual2);
-        assertThat(
-                httpResponse.getStatusLine().getStatusCode(),
-                equalTo(HttpStatus.SC_CREATED));
+        assertEquals(
+                HttpStatus.SC_CREATED,
+                httpResponse2.getStatusLine().getStatusCode());
         assertEquals(expected3, actual3);
-        assertThat(
-                httpResponse.getStatusLine().getStatusCode(),
-                equalTo(HttpStatus.SC_CREATED));
+        assertEquals(
+                HttpStatus.SC_CREATED,
+                httpResponse3.getStatusLine().getStatusCode());
 
     }
 
@@ -255,9 +253,9 @@ public class CaptureMetaControllerTest extends TestSpringBootInformation {
 
         // Assertions
         assertEquals(expected, actual);
-        assertThat(
-                httpResponse.getStatusLine().getStatusCode(),
-                equalTo(HttpStatus.SC_CREATED));
+        assertEquals(
+                HttpStatus.SC_CREATED,
+                httpResponse.getStatusLine().getStatusCode());
     }
 
     @Test
@@ -285,7 +283,7 @@ public class CaptureMetaControllerTest extends TestSpringBootInformation {
 
 
         assertEquals(json, responseStringGet);
-        assertThat(responseGet.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_OK));
+        assertEquals(HttpStatus.SC_OK, responseGet.getStatusLine().getStatusCode());
 
     }
 
@@ -330,9 +328,9 @@ public class CaptureMetaControllerTest extends TestSpringBootInformation {
 
         // Assertions
         assertEquals(expected, actual);
-        assertThat(
-                httpResponse.getStatusLine().getStatusCode(),
-                equalTo(HttpStatus.SC_NOT_FOUND));
+        assertEquals(
+                HttpStatus.SC_NOT_FOUND,
+                httpResponse.getStatusLine().getStatusCode());
     }
 
     @Test
@@ -389,9 +387,9 @@ public class CaptureMetaControllerTest extends TestSpringBootInformation {
 
         // Assertions
         assertEquals(expected, actual);
-        assertThat(
-                responseGet.getStatusLine().getStatusCode(),
-                equalTo(HttpStatus.SC_NOT_FOUND));
+        assertEquals(
+                HttpStatus.SC_NOT_FOUND,
+                responseGet.getStatusLine().getStatusCode());
     }
 
     @Test
@@ -446,9 +444,9 @@ public class CaptureMetaControllerTest extends TestSpringBootInformation {
 
         // Assertions
         assertEquals(json, responseStringGet);
-        assertThat(
-                responseGet.getStatusLine().getStatusCode(),
-                equalTo(HttpStatus.SC_OK));
+        assertEquals(
+                HttpStatus.SC_OK,
+                responseGet.getStatusLine().getStatusCode());
     }
 
     @Test
@@ -478,9 +476,9 @@ public class CaptureMetaControllerTest extends TestSpringBootInformation {
 
         // Assertions
         assertEquals(jsonFile, responseStringGet);
-        assertThat(
-                responseGet.getStatusLine().getStatusCode(),
-                equalTo(HttpStatus.SC_OK));
+        assertEquals(
+                HttpStatus.SC_OK,
+                responseGet.getStatusLine().getStatusCode());
 
     }
 
@@ -507,9 +505,9 @@ public class CaptureMetaControllerTest extends TestSpringBootInformation {
         String expected = "No such key value pair exists";
         // Assertions
         assertEquals(expected, actual);
-        assertThat(
-                responseGet.getStatusLine().getStatusCode(),
-                equalTo(HttpStatus.SC_NOT_FOUND));
+        assertEquals(
+                HttpStatus.SC_NOT_FOUND,
+                responseGet.getStatusLine().getStatusCode());
 
     }
 
@@ -536,9 +534,9 @@ public class CaptureMetaControllerTest extends TestSpringBootInformation {
         String expected = "No such key value pair exists";
         // Assertions
         assertEquals(expected, actual);
-        assertThat(
-                responseGet.getStatusLine().getStatusCode(),
-                equalTo(HttpStatus.SC_NOT_FOUND));
+        assertEquals(
+                HttpStatus.SC_NOT_FOUND,
+                responseGet.getStatusLine().getStatusCode());
 
     }
 
@@ -566,7 +564,7 @@ public class CaptureMetaControllerTest extends TestSpringBootInformation {
         String expected = "Capture meta deleted";
 
         assertEquals(expected, actual);
-        assertThat(deleteResponse.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_OK));
+        assertEquals(HttpStatus.SC_OK, deleteResponse.getStatusLine().getStatusCode());
     }
 
     @Test
@@ -593,7 +591,7 @@ public class CaptureMetaControllerTest extends TestSpringBootInformation {
         String expected = "Record does not exist";
 
         assertEquals(expected, actual);
-        assertThat(deleteResponse.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_NOT_FOUND));
+        assertEquals(HttpStatus.SC_NOT_FOUND, deleteResponse.getStatusLine().getStatusCode());
     }
 
 }
