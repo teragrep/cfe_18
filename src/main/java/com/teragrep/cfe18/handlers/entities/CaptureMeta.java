@@ -47,41 +47,40 @@ package com.teragrep.cfe18.handlers.entities;
 
 public class CaptureMeta {
 
-    public int capture_id;
-    public String capture_meta_key;
-    public String capture_meta_value;
+    public int captureId;
+    public String captureMetaKey;
+    public String captureMetaValue;
 
-    public int getCapture_id() {
-        return capture_id;
+    public int getCaptureId() {
+        return captureId;
     }
 
-    public void setCapture_id(int capture_id) {
-        this.capture_id = capture_id;
+    public void setCaptureId(int captureId) {
+        this.captureId = captureId;
     }
 
-
-    public String getCapture_meta_key() {
-        return capture_meta_key;
+    public String getCaptureMetaKey() {
+        return captureMetaKey;
     }
 
-    public void setCapture_meta_key(String capture_meta_key) {
-        this.capture_meta_key = capture_meta_key;
+    public void setCaptureMetaKey(String captureMetaKey) {
+        this.captureMetaKey = captureMetaKey;
     }
 
-    public String getCapture_meta_value() {
-        return capture_meta_value;
+    public String getCaptureMetaValue() {
+        return captureMetaValue;
     }
 
-    public void setCapture_meta_value(String capture_meta_value) {
-        this.capture_meta_value = capture_meta_value;
+    public void setCaptureMetaValue(String captureMetaValue) {
+        this.captureMetaValue = captureMetaValue;
     }
 
     @Override
     public String toString() {
         return "CaptureMeta{" +
-                "capture_id=" + capture_id +
-                ", capture_meta_key='" + capture_meta_key + '\'' +
-                ", capture_meta_value='" + capture_meta_value + '\'' +
+                "captureId=" + captureId +
+                ", captureMetaKey='" + captureMetaKey + '\'' +
+                ", captureMetaValue='" + captureMetaValue + '\'' +
                 '}';
     }
 }

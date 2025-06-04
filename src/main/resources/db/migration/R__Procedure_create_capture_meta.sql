@@ -43,9 +43,10 @@
  * Teragrep, the applicable Commercial License may apply to this file if you as
  * a licensee so wish it.
  */
- use cfe_18;
+USE cfe_18;
 DELIMITER //
-CREATE OR REPLACE PROCEDURE retrieve_capture_meta(capture_id int,tx_id int)
+CREATE OR REPLACE PROCEDURE insert_capture_meta(capture_id INT, capture_meta_key VARCHAR(1024),
+                                                capture_meta_value VARCHAR(1024))
 BEGIN
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
         BEGIN
@@ -53,27 +54,32 @@ BEGIN
             RESIGNAL;
         END;
     START TRANSACTION;
-
-    if(tx_id) is null then
-        set @time = (select max(transaction_id) from mysql.transaction_registry);
-    else
-        set @time=tx_id;
-    end if;
-
-    -- check for existence of capture meta before attempting retrieval. Throws custom error.
-    if((select count(cm.capture_id) from capture_meta for system_time as of transaction @time cm where cm.capture_id=capture_id)=0) then
+    -- check if capture exists for metadata
+    IF ((SELECT COUNT(id) FROM cfe_18.capture_definition WHERE id = capture_id) = 0) THEN
         -- standardized JSON error response
-        SELECT JSON_OBJECT('id', capture_id, 'message', 'Capture meta does not exist with given ID') into @nometa;
-        signal sqlstate '42000' set message_text = @nometa;
-    end if;
+        SELECT JSON_OBJECT('id', capture_id, 'message', 'Capture does not exist with given ID') INTO @nocapture;
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = @nocapture;
+    END IF;
 
-    select cd.id                as         capture_id,
-           cmk.meta_key_name    as         capture_meta_key,
-           cm.meta_value        as         capture_meta_value
-    from  cfe_18.capture_meta for system_time as of transaction @time cm
-                inner join cfe_18.capture_definition for system_time as of transaction @time cd on cd.id=cm.capture_id
-                inner join cfe_18.capture_meta_key for system_time as of transaction @time cmk on cm.meta_key_id = cmk.meta_key_id
-                 where cm.capture_id=capture_id;
+    -- check if capture already has key value
+    IF ((SELECT COUNT(cd.id)
+         FROM cfe_18.capture_definition cd
+                  INNER JOIN capture_meta cm ON cd.id = cm.capture_id
+                  INNER JOIN capture_meta_key cmk ON cm.meta_key_id = cmk.meta_key_id
+         WHERE cd.id = capture_id
+           AND cm.meta_value = capture_meta_value
+           AND cmk.meta_key_name = capture_meta_key) = 0) THEN
+        -- insert new record
+        INSERT INTO cfe_18.capture_meta_key(meta_key_name) VALUES (capture_meta_key);
+        -- insert with subquery to insert correct key
+        INSERT INTO cfe_18.capture_meta(capture_id, meta_key_id, meta_value)
+        VALUES (capture_id, (SELECT LAST_INSERT_ID()), capture_meta_value);
+        -- return ID
+    END IF;
+
+    -- return ID
+    SELECT cd.id AS id FROM capture_definition cd WHERE cd.id = capture_id;
+
     COMMIT;
 END;
 //
