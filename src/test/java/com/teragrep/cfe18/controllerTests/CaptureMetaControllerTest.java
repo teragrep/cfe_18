@@ -85,35 +85,35 @@ public class CaptureMetaControllerTest extends TestSpringBootInformation {
 
         Flow flow = new Flow();
         flow.setName("capflow");
-        String json2 = gson.toJson(flow);
+        String jsonFlow = gson.toJson(flow);
 
         // forms the json to requestEntity
-        StringEntity requestEntity2 = new StringEntity(
-                String.valueOf(json2),
+        StringEntity requestEntityFlow = new StringEntity(
+                String.valueOf(jsonFlow),
                 ContentType.APPLICATION_JSON);
 
         // Creates the request
-        HttpPut request2 = new HttpPut("http://localhost:" + port + "/flow");
+        HttpPut requestFlow = new HttpPut("http://localhost:" + port + "/flow");
         // set requestEntity to the put request
-        request2.setEntity(requestEntity2);
+        requestFlow.setEntity(requestEntityFlow);
         // Header
-        request2.setHeader("Authorization", "Bearer " + token);
+        requestFlow.setHeader("Authorization", "Bearer " + token);
 
-        HttpResponse httpResponse = Assertions.assertDoesNotThrow(() -> HttpClientBuilder.create().build().execute(request2));
+        HttpResponse httpResponseFlow = Assertions.assertDoesNotThrow(() -> HttpClientBuilder.create().build().execute(requestFlow));
 
         // Get the entity from response
-        HttpEntity entity = httpResponse.getEntity();
+        HttpEntity entityFlow = httpResponseFlow.getEntity();
 
         // Entity response string
-        String responseString = Assertions.assertDoesNotThrow(() -> EntityUtils.toString(entity));
+        String responseStringFlow = Assertions.assertDoesNotThrow(() -> EntityUtils.toString(entityFlow));
 
         // Parsing response as JSONObject
-        JSONObject responseAsJson = Assertions.assertDoesNotThrow(() -> new JSONObject(responseString));
+        JSONObject responseAsJsonFlow = Assertions.assertDoesNotThrow(() -> new JSONObject(responseStringFlow));
         // Creating expected message as JSON Object from the data that was sent towards endpoint
-        String expected = "New flow created";
+        String expectedFlow = "New flow created";
 
         // Creating string from Json that was given as a response
-        String actual = Assertions.assertDoesNotThrow(() -> responseAsJson.get("message").toString());
+        String actualFlow = Assertions.assertDoesNotThrow(() -> responseAsJsonFlow.get("message").toString());
 
         Sink sink = new Sink();
         sink.setFlow("capflow");
@@ -121,36 +121,36 @@ public class CaptureMetaControllerTest extends TestSpringBootInformation {
         sink.setIp_address("capsink");
         sink.setProtocol("prot");
 
-        String json1 = gson.toJson(sink);
+        String jsonSink = gson.toJson(sink);
 
         // forms the json to requestEntity
-        StringEntity requestEntity1 = new StringEntity(
-                String.valueOf(json1),
+        StringEntity requestEntitySink = new StringEntity(
+                String.valueOf(jsonSink),
                 ContentType.APPLICATION_JSON);
 
         // Creates the request
-        HttpPut request1 = new HttpPut("http://localhost:" + port + "/sink/details");
+        HttpPut requestSink = new HttpPut("http://localhost:" + port + "/sink/details");
         // set requestEntity to the put request
-        request1.setEntity(requestEntity1);
+        requestSink.setEntity(requestEntitySink);
         // Header
-        request1.setHeader("Authorization", "Bearer " + token);
+        requestSink.setHeader("Authorization", "Bearer " + token);
 
         // Get the response from endpoint
-        HttpResponse httpResponse2 = Assertions.assertDoesNotThrow(() -> HttpClientBuilder.create().build().execute(request1));
+        HttpResponse httpResponseSink = Assertions.assertDoesNotThrow(() -> HttpClientBuilder.create().build().execute(requestSink));
 
         // Get the entity from response
-        HttpEntity entity2 = httpResponse2.getEntity();
+        HttpEntity entitySink = httpResponseSink.getEntity();
 
         // Entity response string
-        String responseString2 = Assertions.assertDoesNotThrow(() -> EntityUtils.toString(entity2));
+        String responseStringSink = Assertions.assertDoesNotThrow(() -> EntityUtils.toString(entitySink));
 
         // Parsing response as JSONObject
-        JSONObject responseAsJson2 = Assertions.assertDoesNotThrow(() -> new JSONObject(responseString2));
+        JSONObject responseAsJsonSink = Assertions.assertDoesNotThrow(() -> new JSONObject(responseStringSink));
         // Creating expected message as JSON Object from the data that was sent towards endpoint
-        String expected2 = "New sink created";
+        String expectedSink = "New sink created";
 
         // Creating string from Json that was given as a response
-        String actual2 = Assertions.assertDoesNotThrow(() -> responseAsJson2.get("message").toString());
+        String actualSink = Assertions.assertDoesNotThrow(() -> responseAsJsonSink.get("message").toString());
 
 
         CaptureRelp captureRelp = new CaptureRelp();
@@ -163,50 +163,50 @@ public class CaptureMetaControllerTest extends TestSpringBootInformation {
         captureRelp.setProtocol("prot");
         captureRelp.setFlow("capFlow");
 
-        String jsonFile = gson.toJson(captureRelp);
+        String jsonCapture = gson.toJson(captureRelp);
 
         // forms the json to requestEntity
-        StringEntity requestEntity3 = new StringEntity(
-                String.valueOf(jsonFile),
+        StringEntity requestEntityCapture = new StringEntity(
+                String.valueOf(jsonCapture),
                 ContentType.APPLICATION_JSON);
 
         // Creates the request
-        HttpPut request3 = new HttpPut("http://localhost:" + port + "/capture/relp");
+        HttpPut requestCapture = new HttpPut("http://localhost:" + port + "/capture/relp");
         // set requestEntity to the put request
-        request3.setEntity(requestEntity3);
+        requestCapture.setEntity(requestEntityCapture);
         // Header
-        request3.setHeader("Authorization", "Bearer " + token);
+        requestCapture.setHeader("Authorization", "Bearer " + token);
 
-        HttpResponse httpResponse3 = Assertions.assertDoesNotThrow(() -> HttpClientBuilder.create().build().execute(request3));
+        HttpResponse httpResponseCapture = Assertions.assertDoesNotThrow(() -> HttpClientBuilder.create().build().execute(requestCapture));
 
         // Get the entity from response
-        HttpEntity entity3 = httpResponse3.getEntity();
+        HttpEntity entityCapture = httpResponseCapture.getEntity();
 
         // Entity response string
-        String responseString3 = Assertions.assertDoesNotThrow(() -> EntityUtils.toString(entity3));
+        String responseStringCapture = Assertions.assertDoesNotThrow(() -> EntityUtils.toString(entityCapture));
 
         // Parsing response as JSONObject
-        JSONObject responseAsJson3 = Assertions.assertDoesNotThrow(() -> new JSONObject(responseString3));
+        JSONObject responseAsJsonCapture = Assertions.assertDoesNotThrow(() -> new JSONObject(responseStringCapture));
         // Creating expected message as JSON Object from the data that was sent towards endpoint
-        String expected3 = "New capture created";
+        String expectedCapture = "New capture created";
 
         // Creating string from Json that was given as a response
-        String actual3 = Assertions.assertDoesNotThrow(() -> responseAsJson3.get("message").toString());
+        String actualCapture = Assertions.assertDoesNotThrow(() -> responseAsJsonCapture.get("message").toString());
 
 
         // Assertions
-        assertEquals(expected, actual);
+        assertEquals(expectedFlow, actualFlow);
         assertEquals(
                 HttpStatus.SC_CREATED,
-                httpResponse.getStatusLine().getStatusCode());
-        assertEquals(expected2, actual2);
+                httpResponseFlow.getStatusLine().getStatusCode());
+        assertEquals(expectedSink, actualSink);
         assertEquals(
                 HttpStatus.SC_CREATED,
-                httpResponse2.getStatusLine().getStatusCode());
-        assertEquals(expected3, actual3);
+                httpResponseSink.getStatusLine().getStatusCode());
+        assertEquals(expectedCapture, actualCapture);
         assertEquals(
                 HttpStatus.SC_CREATED,
-                httpResponse3.getStatusLine().getStatusCode());
+                httpResponseCapture.getStatusLine().getStatusCode());
 
     }
 
