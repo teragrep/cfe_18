@@ -132,10 +132,13 @@ public class CaptureMetaController {
                     content = {@Content(mediaType = "application/json",
                             schema = @Schema(implementation = CaptureMeta.class))}),
             @ApiResponse(responseCode = "404", description = "Capture meta does not exist",
-                    content = @Content)})
+                    content = @Content),
+            @ApiResponse(responseCode = "400", description = "Internal server error, contact admin", content = @Content)})
     public ResponseEntity<?> get(@PathVariable("captureId") int captureId, @RequestParam(required = false) Integer version) {
+        LOGGER.info("Retrieving Capture meta <[{}]>", captureId);
         try {
             List<CaptureMeta> am = captureMetaMapper.get(captureId, version);
+            LOGGER.info("Capture meta retrieved <[{}]>", am);
             return new ResponseEntity<>(am, HttpStatus.OK);
         } catch (RuntimeException ex) {
             LOGGER.error(ex.getMessage());
@@ -210,8 +213,10 @@ public class CaptureMetaController {
                             schema = @Schema(implementation = CaptureMeta.class))}),
             @ApiResponse(responseCode = "404", description = "Capture meta key or value does not exist", content = @Content)})
     public ResponseEntity<?> get(@PathVariable("key") String key, @PathVariable("value") String value, @RequestParam(required = false) Integer version) {
+        LOGGER.info("Retrieving Capture meta <[{}][{}]>", key, value);
         try {
             List<CaptureDefinition> am = captureMetaMapper.getByKeyValue(key, value, version);
+            LOGGER.info("Retrieving Capture meta <[{}]>", am);
             return new ResponseEntity<>(am, HttpStatus.OK);
         } catch (RuntimeException ex) {
             LOGGER.error(ex.getMessage());
