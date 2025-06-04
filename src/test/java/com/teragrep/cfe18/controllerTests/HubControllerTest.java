@@ -309,7 +309,7 @@ public class HubControllerTest extends TestSpringBootInformation {
         String expected = "Hosts use the hub";
 
         assertEquals(expected, actual);
-        assertThat(deleteResponse.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_BAD_REQUEST));
+        assertThat(deleteResponse.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_CONFLICT));
     }
 
     @Test
