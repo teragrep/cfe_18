@@ -89,9 +89,9 @@ public class HubController {
             @ApiResponse(responseCode = "201", description = "New hub created",
                     content = {@Content(mediaType = "application/json",
                             schema = @Schema(implementation = Hub.class))}),
-            @ApiResponse(responseCode = "400", description = "ID,MD5 or fqhost already exists",
+            @ApiResponse(responseCode = "409", description = "ID,MD5 or fqhost already exists",
                     content = @Content),
-            @ApiResponse(responseCode = "500", description = "Internal server error, contact admin", content = @Content)})
+            @ApiResponse(responseCode = "400", description = "Internal server error, contact admin", content = @Content)})
     public ResponseEntity<String> create(@RequestBody Hub newHub) {
         LOGGER.info("About to insert <[{}]>", newHub);
         try {
@@ -113,9 +113,10 @@ public class HubController {
             if (cause instanceof SQLException) {
                 LOGGER.error((cause).getMessage());
                 String state = ((SQLException) cause).getSQLState();
+                // 23000 = Constraint exception, Foreign key constraint fails
                 if (state.equals("23000")) {
                     jsonErr.put("message", "ID,MD5 or fqhost already exists");
-                    return new ResponseEntity<>(jsonErr.toString(), HttpStatus.BAD_REQUEST);
+                    return new ResponseEntity<>(jsonErr.toString(), HttpStatus.CONFLICT);
                 }
             }
             return new ResponseEntity<>(jsonErr.toString(), HttpStatus.BAD_REQUEST);
@@ -128,9 +129,9 @@ public class HubController {
             @ApiResponse(responseCode = "200", description = "Hub retrieved",
                     content = {@Content(mediaType = "application/json",
                             schema = @Schema(implementation = Hub.class))}),
-            @ApiResponse(responseCode = "400", description = "Hub does not exist with the given ID",
+            @ApiResponse(responseCode = "404", description = "Hub does not exist with the given ID",
                     content = @Content),
-            @ApiResponse(responseCode = "500", description = "Internal server error, contact admin", content = @Content)})
+            @ApiResponse(responseCode = "400", description = "Internal server error, contact admin", content = @Content)})
     public ResponseEntity<?> get(@PathVariable("id") int id, @RequestParam(required = false) Integer version) {
         LOGGER.info("About to fetch <[{}]>", id);
         try {
@@ -145,6 +146,7 @@ public class HubController {
             if (cause instanceof SQLException) {
                 LOGGER.error((cause).getMessage());
                 String state = ((SQLException) cause).getSQLState();
+                // 45000 = Custom error, row does not exist
                 if (state.equals("45000")) {
                     jsonErr.put("message", "Record does not exist");
                     return new ResponseEntity<>(jsonErr.toString(), HttpStatus.NOT_FOUND);
@@ -170,7 +172,9 @@ public class HubController {
             @ApiResponse(responseCode = "200", description = "Hub deleted",
                     content = {@Content(mediaType = "application/json",
                             schema = @Schema(implementation = Hub.class))}),
-            @ApiResponse(responseCode = "400", description = "Hub is being used OR Hub does not exist",
+            @ApiResponse(responseCode = "404", description = "Hub does not exist",
+                    content = @Content),
+            @ApiResponse(responseCode = "409", description = "Hub is being used",
                     content = @Content),
             @ApiResponse(responseCode = "500", description = "Internal server error, contact admin", content = @Content)})
     public ResponseEntity<String> delete(@PathVariable("id") int id) {
@@ -190,9 +194,11 @@ public class HubController {
             if (cause instanceof SQLException) {
                 LOGGER.error((cause).getMessage());
                 String state = ((SQLException) cause).getSQLState();
+                // 23000 = Constraint exception, Foreign key constraint fails
                 if (state.equals("23000")) {
                     jsonErr.put("message", "Is in use");
-                    return new ResponseEntity<>(jsonErr.toString(), HttpStatus.BAD_REQUEST);
+                    return new ResponseEntity<>(jsonErr.toString(), HttpStatus.CONFLICT);
+                // 45000 = Custom error, row does not exist
                 } else if (state.equals("45000")) {
                     jsonErr.put("message", "Record does not exist");
                     return new ResponseEntity<>(jsonErr.toString(), HttpStatus.NOT_FOUND);
