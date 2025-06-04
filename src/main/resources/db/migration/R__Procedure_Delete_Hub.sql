@@ -45,7 +45,7 @@
  */
 USE cfe_00;
 DELIMITER //
-CREATE OR REPLACE PROCEDURE delete_hub(proc_hub_id INT)
+CREATE OR REPLACE PROCEDURE delete_hub(input_hub_id INT)
 BEGIN
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
         BEGIN
@@ -53,29 +53,29 @@ BEGIN
             RESIGNAL;
         END;
     START TRANSACTION;
-    IF ((SELECT COUNT(id) FROM cfe_00.hubs WHERE id = proc_hub_id) = 0) THEN
-        SELECT JSON_OBJECT('id', proc_hub_id, 'message', 'Hub does not exist') INTO @h;
+    IF ((SELECT COUNT(id) FROM cfe_00.hubs WHERE id = input_hub_id) = 0) THEN
+        SELECT JSON_OBJECT('id', input_hub_id, 'message', 'Hub does not exist') INTO @h;
         SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = @h;
     END IF;
 
     -- check if there are hosts using the hub before deleting
     IF ((SELECT COUNT(htc.host_id)
          FROM cfe_00.host_type_cfe htc
-         WHERE hub_id = proc_hub_id
-           AND host_id != (SELECT h.id
+         WHERE htc.hub_id = input_hub_id
+           AND htc.host_id != (SELECT h.id
                            FROM location.host h
                                     INNER JOIN hubs h2 ON h.id = h2.host_id
-                           WHERE h2.id = proc_hub_id)) > 0) THEN
-        SELECT JSON_OBJECT('id', proc_hub_id, 'message', 'Hosts use the hub') INTO @ha;
+                           WHERE h2.id = input_hub_id)) > 0) THEN
+        SELECT JSON_OBJECT('id', input_hub_id, 'message', 'Hosts use the hub') INTO @ha;
         -- Signals constraint error since schema design is reversed and allows deleting hub that hosts rely on.
         -- Should maybe rework schema on this part since it hides flawed design.
         SIGNAL SQLSTATE '23000' SET MESSAGE_TEXT = @ha;
     END IF;
     -- select the host id before deleting hub since it's not accessible later
-    SELECT host_id INTO @Hostid FROM cfe_00.hubs WHERE id = proc_hub_id;
-    DELETE FROM cfe_00.host_type_cfe WHERE hub_id = proc_hub_id;
-    DELETE FROM cfe_00.hubs WHERE id = proc_hub_id;
-    DELETE FROM location.host WHERE id = @Hostid;
+    SELECT host_id INTO @HostId FROM cfe_00.hubs WHERE id = input_hub_id;
+    DELETE FROM cfe_00.host_type_cfe WHERE hub_id = input_hub_id;
+    DELETE FROM cfe_00.hubs WHERE id = input_hub_id;
+    DELETE FROM location.host WHERE id = @HostId;
     COMMIT;
 
 END;
