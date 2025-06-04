@@ -75,13 +75,11 @@ BEGIN
         INSERT INTO cfe_18.capture_meta(capture_id, meta_key_id, meta_value)
         VALUES (capture_id, (SELECT LAST_INSERT_ID()), capture_meta_value);
         -- return ID
-        SELECT cd.id AS id FROM capture_definition cd WHERE cd.id = capture_id;
-
-        -- else just return ID
-    ELSE
-        -- return ID
-        SELECT cd.id AS id FROM capture_definition cd WHERE cd.id = capture_id;
     END IF;
+
+    -- return ID
+    SELECT cd.id AS id FROM capture_definition cd WHERE cd.id = capture_id;
+
     COMMIT;
 END;
 //
