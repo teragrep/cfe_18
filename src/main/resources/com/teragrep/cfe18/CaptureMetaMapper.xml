@@ -43,7 +43,7 @@
 
 
     <!-- get key value      ( meta_key VARCHAR(1024), meta_value VARCHAR(1024), tx_id INT )  -->
-    <select id="getKeyValue" resultMap="keyValue" statementType="CALLABLE">
+    <select id="getByKeyValue" resultMap="keyValue" statementType="CALLABLE">
         {CALL cfe_18.select_capture_meta_key_value(#{param1},#{param2},#{param3})}
     </select>
     <resultMap id="keyValue" type="com.teragrep.cfe18.handlers.entities.CaptureDefinition">
