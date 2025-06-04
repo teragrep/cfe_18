@@ -45,8 +45,8 @@
  */
 USE location;
 DELIMITER //
-CREATE OR REPLACE PROCEDURE insert_cfe_hub(proc_fqhost VARCHAR(128), proc_md5 VARCHAR(32),
-                                           proc_ip VARCHAR(255))
+CREATE OR REPLACE PROCEDURE insert_cfe_hub(fqhost VARCHAR(128), md5 VARCHAR(32),
+                                           ip VARCHAR(255))
 BEGIN
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
         BEGIN
@@ -55,36 +55,36 @@ BEGIN
         END;
     START TRANSACTION;
     IF ((SELECT COUNT(id)
-         FROM location.host
-         WHERE MD5 = proc_md5
-           AND fqhost = proc_fqhost
-           AND host_type = 'cfe') = 0) THEN
+         FROM location.host h
+         WHERE h.MD5 = md5
+           AND h.fqhost = fqhost
+           AND h.host_type = 'cfe') = 0) THEN
 
         INSERT INTO location.host(MD5, fqhost, host_type)
-        VALUES (proc_md5, proc_fqhost, 'cfe');
+        VALUES (md5, fqhost, 'cfe');
         SELECT LAST_INSERT_ID() INTO @hid;
     ELSE
-        SELECT id INTO @hid FROM location.host WHERE MD5 = proc_md5 AND fqhost = proc_fqhost AND host_type = 'cfe';
+        SELECT id INTO @hid FROM location.host h WHERE h.MD5 = md5 AND h.fqhost = fqhost AND h.host_type = 'cfe';
     END IF;
 
     IF ((SELECT COUNT(h.host_id)
          FROM cfe_00.hubs h
          WHERE h.host_id = @hid
-           AND h.ip = proc_ip
+           AND h.ip = ip
            AND h.host_type = 'cfe') = 0) THEN
 
         INSERT INTO cfe_00.hubs(host_id, ip, host_type)
-        VALUES (@hid, proc_ip, 'cfe');
+        VALUES (@hid, ip, 'cfe');
         SELECT LAST_INSERT_ID() INTO @id;
     ELSE
-        SELECT id INTO @id FROM cfe_00.hubs WHERE host_id = @hid AND ip = proc_ip AND host_type = 'cfe';
+        SELECT id INTO @id FROM cfe_00.hubs h WHERE h.host_id = @hid AND h.ip = ip AND h.host_type = 'cfe';
     END IF;
 
     IF ((SELECT COUNT(host_id)
-         FROM cfe_00.host_type_cfe
-         WHERE host_id = @hid
-           AND host_type = 'cfe'
-           AND hub_id = @id) = 0) THEN
+         FROM cfe_00.host_type_cfe htc
+         WHERE htc.host_id = @hid
+           AND htc.host_type = 'cfe'
+           AND htc.hub_id = @id) = 0) THEN
 
         INSERT INTO cfe_00.host_type_cfe(host_id, host_type, hub_id)
         VALUES (@hid, 'cfe', @id);

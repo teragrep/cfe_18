@@ -45,7 +45,7 @@
  */
 USE location;
 DELIMITER //
-CREATE OR REPLACE PROCEDURE select_cfe_hub(proc_hub_id INT, tx_id INT)
+CREATE OR REPLACE PROCEDURE select_cfe_hub(hub_id INT, tx_id INT)
 BEGIN
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
         BEGIN
@@ -58,8 +58,8 @@ BEGIN
     ELSE
         SET @time = tx_id;
     END IF;
-    IF ((SELECT COUNT(id) FROM cfe_00.hubs FOR SYSTEM_TIME AS OF TRANSACTION @time WHERE id = proc_hub_id) = 0) THEN
-        SELECT JSON_OBJECT('id', proc_hub_id, 'message', 'Hub does not exist with given ID') INTO @hub;
+    IF ((SELECT COUNT(id) FROM cfe_00.hubs FOR SYSTEM_TIME AS OF TRANSACTION @time WHERE id = hub_id) = 0) THEN
+        SELECT JSON_OBJECT('id', hub_id, 'message', 'Hub does not exist with given ID') INTO @hub;
         SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = @hub;
     END IF;
 
@@ -70,7 +70,7 @@ BEGIN
            h.md5      AS md5
     FROM cfe_00.hubs FOR SYSTEM_TIME AS OF TRANSACTION @time hu
              INNER JOIN location.host FOR SYSTEM_TIME AS OF TRANSACTION @time h ON hu.host_id = h.id
-    WHERE hu.id = proc_hub_id;
+    WHERE hu.id = hub_id;
     COMMIT;
 END;
 //
