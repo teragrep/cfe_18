@@ -43,29 +43,38 @@
  * Teragrep, the applicable Commercial License may apply to this file if you as
  * a licensee so wish it.
  */
-use flow;
+USE flow;
 DELIMITER //
-CREATE OR REPLACE PROCEDURE retrieve_all_sinks(tx_id int)
+CREATE OR REPLACE PROCEDURE select_sink(sink_id INT, tx_id INT)
 BEGIN
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
         BEGIN
             ROLLBACK;
             RESIGNAL;
-        end;
-        if(tx_id) is null then
-             set @time = (select max(transaction_id) from mysql.transaction_registry);
-        else
-             set @time=tx_id;
-        end if;
-    select cs.id          as id,
-           cs.ip_address  as ip,
-           cs.sink_port   as port,
-           L.app_protocol as protocol,
-           f.name         as flow
-    from flow.capture_sink for system_time as of transaction @time cs
-             inner join L7 for system_time as of transaction @time L on cs.L7_id = L.id
-             inner join flows for system_time as of transaction @time f on cs.flow_id = f.id;
+        END;
+    START TRANSACTION;
 
-end;
+    IF (tx_id) IS NULL THEN
+        SET @time = (SELECT MAX(transaction_id) FROM mysql.transaction_registry);
+    ELSE
+        SET @time = tx_id;
+    END IF;
+
+    IF ((SELECT COUNT(id) FROM capture_sink FOR SYSTEM_TIME AS OF TRANSACTION @time WHERE id = sink_id) = 0) THEN
+        SELECT JSON_OBJECT('id', sink_id, 'message', 'Sink does not exist') INTO @sink;
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = @sink;
+    END IF;
+
+    SELECT cs.id          AS id,
+           cs.ip_address  AS ip,
+           cs.sink_port   AS port,
+           L.app_protocol AS protocol,
+           cs.flow_id     AS flow_id
+    FROM capture_sink FOR SYSTEM_TIME AS OF TRANSACTION @time cs
+             INNER JOIN L7 FOR SYSTEM_TIME AS OF TRANSACTION @time L ON cs.L7_id = L.id
+    WHERE cs.id = sink_id
+      AND L.id = cs.L7_id;
+    COMMIT;
+END;
 //
 DELIMITER ;

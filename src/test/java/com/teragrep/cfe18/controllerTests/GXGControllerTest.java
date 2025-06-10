@@ -108,9 +108,9 @@ public class GXGControllerTest extends TestSpringBootInformation {
         // insert sink
 
         Sink sink = new Sink();
-        sink.setFlow("testflow1");
+        sink.setFlowId(1);
         sink.setPort("601");
-        sink.setIp_address("ip1");
+        sink.setIpAddress("ip1");
         sink.setProtocol("prot");
 
         String json = gson.toJson(sink);
@@ -121,7 +121,7 @@ public class GXGControllerTest extends TestSpringBootInformation {
                 ContentType.APPLICATION_JSON);
 
         // Creates the request
-        HttpPut request = new HttpPut("http://localhost:" + port + "/sink/details");
+        HttpPut request = new HttpPut("http://localhost:" + port + "/sink");
         // set requestEntity to the put request
         request.setEntity(requestEntity);
         // Header

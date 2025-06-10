@@ -43,9 +43,10 @@
  * Teragrep, the applicable Commercial License may apply to this file if you as
  * a licensee so wish it.
  */
-use flow;
+USE flow;
 DELIMITER //
-CREATE OR REPLACE PROCEDURE retrieve_sink_by_id(proc_id int,tx_id int)
+CREATE OR REPLACE PROCEDURE insert_sink(protocol VARCHAR(20), ip_address VARCHAR(16), sink_port VARCHAR(5),
+                                        flow_id INT)
 BEGIN
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
         BEGIN
@@ -53,26 +54,34 @@ BEGIN
             RESIGNAL;
         END;
     START TRANSACTION;
-            if(tx_id) is null then
-             set @time = (select max(transaction_id) from mysql.transaction_registry);
-        else
-             set @time=tx_id;
-        end if;
-    if (select id from capture_sink for system_time as of transaction @time where id = proc_id) is null then
-        SELECT JSON_OBJECT('id', proc_id, 'message', 'Sink does not exist') into @sink;
-        signal sqlstate '45000' set message_text = @sink;
-    end if;
-    select cs.ip_address  as ip,
-           cs.sink_port   as port,
-           L.app_protocol as protocol,
-           f.name         as flow
-    from capture_sink for system_time as of transaction @time cs
-             inner join L7 for system_time as of transaction @time L on cs.L7_id = L.id
-             inner join flows for system_time as of transaction @time f on cs.flow_id = f.id
-    where cs.id = proc_id
-      and L.id = cs.L7_id
-      and f.id = cs.flow_id;
+
+    IF ((SELECT COUNT(id) FROM flow.L7 WHERE app_protocol = protocol) = 0) THEN
+        INSERT INTO flow.L7(app_protocol)
+        VALUES (protocol);
+        SELECT LAST_INSERT_ID() INTO @ProtocolId;
+    ELSE
+        SELECT id INTO @ProtocolId FROM flow.L7 WHERE app_protocol = protocol;
+    END IF;
+
+    IF ((SELECT COUNT(id)
+         FROM flow.capture_sink cs
+         WHERE cs.L7_id = @ProtocolId
+           AND cs.flow_id = flow_id
+           AND cs.ip_address = ip_address
+           AND cs.sink_port = sink_port) = 0) THEN
+        INSERT INTO flow.capture_sink(L7_id, flow_id, ip_address, sink_port)
+        VALUES (@ProtocolId, flow_id, ip_address, sink_port);
+        SELECT LAST_INSERT_ID() AS id;
+    ELSE
+        SELECT id AS id
+        FROM flow.capture_sink cs
+        WHERE cs.L7_id = @ProtocolId
+          AND cs.flow_id = flow_id
+          AND cs.ip_address = ip_address
+          AND cs.sink_port = sink_port;
+    END IF;
     COMMIT;
+
 END;
 //
 DELIMITER ;
