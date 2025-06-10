@@ -43,52 +43,42 @@
  * Teragrep, the applicable Commercial License may apply to this file if you as
  * a licensee so wish it.
  */
-use location;
+USE cfe_00;
 DELIMITER //
-CREATE OR REPLACE PROCEDURE host_add_cfe_hub(proc_fqhost varchar(128), proc_md5 varchar(32),
-                                             proc_ip varchar(255))
+CREATE OR REPLACE PROCEDURE delete_hub(input_hub_id INT)
 BEGIN
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
         BEGIN
             ROLLBACK;
             RESIGNAL;
-        end;
-    start transaction;
-    if (select id
-        from location.host
-        where MD5 = proc_md5
-          and fqhost = proc_fqhost
-          and host_type = 'cfe') is null then
-        insert into location.host(MD5, fqhost, host_type)
-        values (proc_md5, proc_fqhost, 'cfe');
-        select last_insert_id() into @hid;
-    else
-        select id into @hid from location.host where MD5 = proc_md5 and fqhost = proc_fqhost and host_type = 'cfe';
-    end if;
+        END;
+    START TRANSACTION;
+    IF ((SELECT COUNT(id) FROM cfe_00.hubs WHERE id = input_hub_id) = 0) THEN
+        SELECT JSON_OBJECT('id', input_hub_id, 'message', 'Hub does not exist') INTO @h;
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = @h;
+    END IF;
 
-    if (select host_id
-        from cfe_00.hubs
-        where host_id = @hid
-          and ip = proc_ip
-          and host_type = 'cfe') is null then
-        insert into cfe_00.hubs(host_id, ip, host_type)
-        values (@hid, proc_ip, 'cfe');
-        select last_insert_id() into @id;
-    else
-        select id into @id from cfe_00.hubs where host_id = @hid and ip = proc_ip and host_type = 'cfe';
-    end if;
-
-    if (select host_id
-        from cfe_00.host_type_cfe
-        where host_id = @hid
-          and host_type = 'cfe'
-          and hub_id = @id) is null then
-        insert into cfe_00.host_type_cfe(host_id, host_type, hub_id)
-        values (@hid, 'cfe', @id);
-    end if;
+    -- check if there are hosts using the hub before deleting
+    IF ((SELECT COUNT(htc.host_id)
+         FROM cfe_00.host_type_cfe htc
+         WHERE htc.hub_id = input_hub_id
+           AND htc.host_id != (SELECT h.id
+                           FROM location.host h
+                                    INNER JOIN hubs h2 ON h.id = h2.host_id
+                           WHERE h2.id = input_hub_id)) > 0) THEN
+        SELECT JSON_OBJECT('id', input_hub_id, 'message', 'Hosts use the hub') INTO @ha;
+        -- Signals constraint error since schema design is reversed and allows deleting hub that hosts rely on.
+        -- Should maybe rework schema on this part since it hides flawed design.
+        SIGNAL SQLSTATE '23000' SET MESSAGE_TEXT = @ha;
+    END IF;
+    -- select the host id before deleting hub since it's not accessible later
+    SELECT host_id INTO @HostId FROM cfe_00.hubs WHERE id = input_hub_id;
+    DELETE FROM cfe_00.host_type_cfe WHERE hub_id = input_hub_id;
+    DELETE FROM cfe_00.hubs WHERE id = input_hub_id;
+    DELETE FROM location.host WHERE id = @HostId;
     COMMIT;
-    select @id as last;
 
 END;
+
 //
 DELIMITER ;
