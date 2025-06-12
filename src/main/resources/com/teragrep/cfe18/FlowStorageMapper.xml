@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.teragrep.cfe18.FlowStorageMapper">
+
+    <!-- insert         ( p_flow_id INT, proc_storage_id INT ) -->
+    <select id="create" resultMap="insertedID" statementType="CALLABLE">
+        {CALL flow.insert_flow_storage(#{param1},#{param2})}
+    </select>
+
+
+    <!-- get            ( flow_id INT, tx_id INT ) -->
+    <select id="get" resultMap="flowStorages" statementType="CALLABLE">
+        {CALL flow.select_flow_storages(#{param1},#{param2})}
+    </select>
+    <resultMap id="flowStorages" type="com.teragrep.cfe18.handlers.entities.FlowStorage">
+        <result property="id"           column="id"/>
+        <result property="flowId"       column="flow_id"/>
+        <result property="storageId"    column="storage_id"/>
+        <result property="storageName"  column="storage_name"/>
+        <result property="storageType"  column="storage_type"/>
+    </resultMap>
+
+
+    <!-- GET ALL        ( tx_id INT ) -->
+    <select id="getAll" resultMap="allFlowStorages" statementType="CALLABLE">
+        {CALL flow.select_all_flow_storages(#{param1})}
+    </select>
+    <resultMap id="allFlowStorages" type="com.teragrep.cfe18.handlers.entities.FlowStorage">
+        <result property="id"           column="id"/>
+        <result property="flowId"       column="flow_id"/>
+        <result property="storageId"    column="storage_id"/>
+        <result property="storageName"  column="storage_name"/>
+        <result property="storageType"  column="storage_type"/>
+    </resultMap>
+
+
+    <!-- Delete         ( proc_flow_id INT, proc_storage_id INT ) -->
+    <select id="delete" statementType="CALLABLE">
+        {CALL flow.delete_flow_storage(#{param1},#{param2})}
+    </select>
+
+
+    <!-- ID return map -->
+    <resultMap id="insertedID" type="com.teragrep.cfe18.handlers.entities.FlowStorage">
+        <result property="id"       column="id"/>
+    </resultMap>
+
+
+</mapper>
