@@ -43,72 +43,27 @@
  * Teragrep, the applicable Commercial License may apply to this file if you as
  * a licensee so wish it.
  */
-package com.teragrep.cfe18.handlers.entities;
-
-import com.fasterxml.jackson.annotation.JsonInclude;
-import io.swagger.v3.oas.annotations.media.Schema;
-
-@JsonInclude(JsonInclude.Include.NON_NULL)
-public class CaptureGroup {
-    public enum groupType {
-        cfe, relp
-    }
-
-    private int id;
-    private String captureGroupName;
-    private groupType captureGroupType;
-    @Schema(accessMode = Schema.AccessMode.READ_ONLY)
-    private String tag;
-    private Integer captureDefinitionId;
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public String getCaptureGroupName() {
-        return captureGroupName;
-    }
-
-    public void setCaptureGroupName(String captureGroupName) {
-        this.captureGroupName = captureGroupName;
-    }
-
-    public groupType getCaptureGroupType() {
-        return captureGroupType;
-    }
-
-    public void setCaptureGroupType(groupType captureGroupType) {
-        this.captureGroupType = captureGroupType;
-    }
-
-    public String getTag() {
-        return tag;
-    }
-
-    public void setTag(String tag) {
-        this.tag = tag;
-    }
-
-    public Integer getCaptureDefinitionId() {
-        return captureDefinitionId;
-    }
-
-    public void setCaptureDefinitionId(Integer captureDefinitionId) {
-        this.captureDefinitionId = captureDefinitionId;
-    }
-
-    @Override
-    public String toString() {
-        return "CaptureGroup{" +
-                "id=" + id +
-                ", captureGroupName='" + captureGroupName + '\'' +
-                ", captureGroupType=" + captureGroupType +
-                ", tag='" + tag + '\'' +
-                ", captureDefinitionId=" + captureDefinitionId +
-                '}';
-    }
-}
+USE cfe_18;
+DELIMITER //
+CREATE OR REPLACE PROCEDURE select_all_captures_in_groups(tx_id INT)
+BEGIN
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+        BEGIN
+            ROLLBACK;
+            RESIGNAL;
+        END;
+    IF (tx_id) IS NULL THEN
+        SET @time = (SELECT MAX(transaction_id) FROM mysql.transaction_registry);
+    ELSE
+        SET @time = tx_id;
+    END IF;
+    SELECT cdgxcd.capture_def_group_id AS capture_group_id,
+           cdgxcd.capture_type         AS type,
+           cd.id                       AS capture_id,
+           t.tag                       AS tag
+    FROM cfe_18.capture_def_group_x_capture_def FOR SYSTEM_TIME AS OF TRANSACTION @time cdgxcd
+             INNER JOIN capture_definition FOR SYSTEM_TIME AS OF TRANSACTION @time cd ON cdgxcd.capture_def_id = cd.id
+             INNER JOIN tags FOR SYSTEM_TIME AS OF TRANSACTION @time t ON cd.tag_id = t.id;
+END;
+//
+DELIMITER ;

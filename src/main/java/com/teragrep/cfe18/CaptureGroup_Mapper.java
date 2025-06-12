@@ -51,16 +51,18 @@ import org.apache.ibatis.annotations.Mapper;
 import java.util.List;
 
 @Mapper
-public interface CaptureGroupMapper {
+public interface CaptureGroup_Mapper {
 
-    List<CaptureGroup> getCaptureGroupByName(String capture_def_group_name,Integer version);
+    CaptureGroup create(int captureId, int id);
 
-    CaptureGroup addNewCaptureGroup(
-            String capture_def_group_name,
-            Integer capture_definition_id
-    );
+    List<CaptureGroup> get(int id,Integer version);
 
-    List<CaptureGroup> getAllCaptureGroup(Integer version);
+    /**
+     * Maximizes information regarding linked groups
+     * @param version
+     * @return All groups with linked captures
+     */
+    List<CaptureGroup> getAll(Integer version);
 
-    CaptureGroup deleteCaptureGroup(String name);
+    void delete(int captureId, int id);
 }

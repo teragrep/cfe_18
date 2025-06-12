@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.teragrep.cfe18.CaptureGroup_Mapper">
+
+
+    <!-- Link capture to group      ( capture_id INT, capture_group_id INT )-->
+    <select id="create" resultMap="insertedID" statementType="CALLABLE">
+        {CALL cfe_18.insert_capture_to_group(#{param1},#{param2})}
+    </select>
+
+
+    <!-- get captures in group      ( capture_group_id INT, tx_id INT ) -->
+    <select id="get" resultMap="capture" statementType="CALLABLE">
+        {CALL cfe_18.select_captures_in_group(#{param1},#{param2})}
+    </select>
+    <resultMap id="capture" type="com.teragrep.cfe18.handlers.entities.CaptureGroup">
+        <result property="captureDefinitionId"      column="capture_definition_id"/>
+    </resultMap>
+
+
+    <!-- GET ALL                    ( tx_id INT ) -->
+    <select id="getAll" resultMap="all" statementType="CALLABLE">
+        {CALL cfe_18.select_all_captures_in_groups(#{param1})}
+    </select>
+    <resultMap id="all" type="com.teragrep.cfe18.handlers.entities.CaptureGroup">
+        <result property="id"                       column="capture_group_id"/>
+        <result property="captureGroupName"         column="group_name"/>
+        <result property="captureGroupType"         column="type"/>
+        <result property="captureDefinitionId"      column="capture_id"/>
+        <result property="tag"                      column="tag"/>
+    </resultMap>
+
+
+    <!-- Delete capture from group ( capture_id INT, capture_group_id INT ) -->
+    <select id="delete" statementType="CALLABLE">
+        {CALL cfe_18.delete_capture_from_group(#{param1},#{param2})}
+    </select>
+
+
+    <!-- ID return map -->
+    <resultMap id="insertedID" type="com.teragrep.cfe18.handlers.entities.CaptureGroup">
+        <result property="id"                       column="id"/>
+    </resultMap>
+
+</mapper>
+
