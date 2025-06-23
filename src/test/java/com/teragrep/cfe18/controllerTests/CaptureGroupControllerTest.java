@@ -64,9 +64,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
 
 import java.util.ArrayList;
+import java.util.List;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.equalTo;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -84,7 +83,29 @@ public class CaptureGroupControllerTest extends TestSpringBootInformation {
 
     @Test
     @Order(1)
-    public void testAddCaptureGroup() {
+    public void testSelectAllEmpty() {
+        // Asserting get request
+        HttpGet requestGet = new HttpGet("http://localhost:" + port + "/capture/group");
+
+        requestGet.setHeader("Authorization", "Bearer " + token);
+
+        HttpResponse responseGet = Assertions.assertDoesNotThrow(() -> HttpClientBuilder.create().build().execute(requestGet));
+
+        HttpEntity entityGet = responseGet.getEntity();
+
+        String responseStringGet = Assertions.assertDoesNotThrow(() -> EntityUtils.toString(entityGet, "UTF-8"));
+
+        List<CaptureGroup> expectedCaptureGroups = new ArrayList<>();
+
+        String expected = gson.toJson(expectedCaptureGroups);
+
+        assertEquals(expected, responseStringGet);
+        assertEquals(HttpStatus.SC_OK, responseGet.getStatusLine().getStatusCode());
+    }
+
+    @Test
+    @Order(2)
+    public void testCreateCaptureGroup() {
 
         // Capture Group
         CaptureGroup captureGroup = new CaptureGroup();
@@ -124,21 +145,21 @@ public class CaptureGroupControllerTest extends TestSpringBootInformation {
         String actual = Assertions.assertDoesNotThrow(() -> responseAsJson.get("message").toString());
 
         // Assertions
-        assertThat(
-                httpResponse.getStatusLine().getStatusCode(),
-                equalTo(HttpStatus.SC_CREATED));
+        assertEquals(
+                HttpStatus.SC_CREATED,
+                httpResponse.getStatusLine().getStatusCode());
         assertEquals(expected, actual);
     }
 
     @Test
-    @Order(2)
-    public void testRetrieveCaptureGroup() {
+    @Order(3)
+    public void testSelectCaptureGroup() {
         CaptureGroup captureGroup = new CaptureGroup();
         captureGroup.setCaptureGroupType(CaptureGroup.groupType.relp);
         captureGroup.setId(1);
         captureGroup.setCaptureGroupName("groupRelp");
 
-        String expectedJson = new Gson().toJson(captureGroup);
+        String expectedJson = gson.toJson(captureGroup);
 
         // Asserting get request
         HttpGet requestGet = new HttpGet("http://localhost:" + port + "/capture/group/1");
@@ -152,22 +173,48 @@ public class CaptureGroupControllerTest extends TestSpringBootInformation {
         String responseStringGet = Assertions.assertDoesNotThrow(() -> EntityUtils.toString(entityGet, "UTF-8"));
 
         assertEquals(expectedJson, responseStringGet);
-        assertThat(responseGet.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_OK));
+        assertEquals(HttpStatus.SC_OK, responseGet.getStatusLine().getStatusCode());
 
     }
 
     @Test
-    @Order(3)
-    public void testRetrieveAllCaptureGroups() {
+    @Order(4)
+    public void testSelectAllCaptureGroups() {
+
+        // Capture Group 2
+        CaptureGroup captureGroup2 = new CaptureGroup();
+        captureGroup2.setId(2);
+        captureGroup2.setCaptureGroupName("groupRelp2");
+        captureGroup2.setCaptureGroupType(CaptureGroup.groupType.relp);
+
+        String cgJson = gson.toJson(captureGroup2);
+
+        // forms the json to requestEntity
+        StringEntity requestEntityCaptureGroup = new StringEntity(
+                String.valueOf(cgJson),
+                ContentType.APPLICATION_JSON);
+
+        // Creates the request
+        HttpPut requestCaptureGroup = new HttpPut("http://localhost:" + port + "/capture/group");
+        // set requestEntity to the put request
+        requestCaptureGroup.setEntity(requestEntityCaptureGroup);
+        // Header
+        requestCaptureGroup.setHeader("Authorization", "Bearer " + token);
+
+        Assertions.assertDoesNotThrow(() -> HttpClientBuilder.create().build().execute(requestCaptureGroup));
+
+
         ArrayList<CaptureGroup> expected = new ArrayList<>();
         CaptureGroup captureGroup = new CaptureGroup();
         captureGroup.setId(1);
         captureGroup.setCaptureGroupName("groupRelp");
         captureGroup.setCaptureGroupType(CaptureGroup.groupType.relp);
 
-        expected.add(captureGroup);
 
-        String expectedJson = new Gson().toJson(expected);
+        expected.add(captureGroup);
+        expected.add(captureGroup2);
+
+        String expectedJson = gson.toJson(expected);
 
         // Asserting get request
         HttpGet requestGet = new HttpGet("http://localhost:" + port + "/capture/group");
@@ -181,7 +228,7 @@ public class CaptureGroupControllerTest extends TestSpringBootInformation {
         String responseStringGet = Assertions.assertDoesNotThrow(() -> EntityUtils.toString(entityGet, "UTF-8"));
 
         assertEquals(expectedJson, responseStringGet);
-        assertThat(responseGet.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_OK));
+        assertEquals(HttpStatus.SC_OK, responseGet.getStatusLine().getStatusCode());
 
     }
 
@@ -208,7 +255,7 @@ public class CaptureGroupControllerTest extends TestSpringBootInformation {
         String expected = "Record does not exist";
 
         assertEquals(expected, actual);
-        assertThat(deleteResponse.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_NOT_FOUND));
+        assertEquals(HttpStatus.SC_NOT_FOUND, deleteResponse.getStatusLine().getStatusCode());
     }
 
     @Test
@@ -236,7 +283,32 @@ public class CaptureGroupControllerTest extends TestSpringBootInformation {
         String expected = "Capture group deleted";
 
         assertEquals(expected, actual);
-        assertThat(deleteResponse.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_OK));
+        assertEquals(HttpStatus.SC_OK, deleteResponse.getStatusLine().getStatusCode());
+    }
+
+    @Test
+    @Order(7)
+    public void testSelectNonExistentCaptureGroup() {
+        // Asserting get request
+        HttpGet requestGet = new HttpGet("http://localhost:" + port + "/capture/group/112233");
+
+        requestGet.setHeader("Authorization", "Bearer " + token);
+
+        HttpResponse responseGet = Assertions.assertDoesNotThrow(() -> HttpClientBuilder.create().build().execute(requestGet));
+
+        HttpEntity entityGet = responseGet.getEntity();
+
+        String responseStringGet = Assertions.assertDoesNotThrow(() -> EntityUtils.toString(entityGet, "UTF-8"));
+
+        JSONObject responseAsJson = Assertions.assertDoesNotThrow(() -> new JSONObject(responseStringGet));
+
+        String actual = Assertions.assertDoesNotThrow(() -> responseAsJson.getString("message"));
+
+        String expected = "Record does not exist";
+
+        assertEquals(expected, actual);
+        assertEquals(HttpStatus.SC_NOT_FOUND, responseGet.getStatusLine().getStatusCode());
+
     }
 
 }
