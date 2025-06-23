@@ -43,9 +43,9 @@
  * Teragrep, the applicable Commercial License may apply to this file if you as
  * a licensee so wish it.
  */
-use cfe_18;
+USE cfe_18;
 DELIMITER //
-CREATE OR REPLACE PROCEDURE add_capture_meta(capture_id int,capture_meta_key varchar(1024), capture_meta_value varchar(1024))
+CREATE OR REPLACE PROCEDURE select_capture_meta(capture_id INT, tx_id INT)
 BEGIN
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
         BEGIN
@@ -53,32 +53,30 @@ BEGIN
             RESIGNAL;
         END;
     START TRANSACTION;
-    -- check if capture exists for metadata
-    if(select id from cfe_18.capture_definition where id=capture_id) is null then
-        -- standardized JSON error response
-        SELECT JSON_OBJECT('id', capture_id, 'message', 'Capture does not exist with given ID') into @nocapture;
-        signal sqlstate '42000' set message_text = @nocapture;
-    end if;
 
-    -- check if similar row exists already to avoid duplication
-    if(select cd.id
-        from cfe_18.capture_definition cd
-                    inner join capture_meta cm on cd.id = cm.capture_id
-                    inner join capture_meta_key cmk on cm.meta_key_id = cmk.meta_key_id
-                     where cd.id=capture_id
-                     and cm.meta_value=capture_meta_value
-                     and cmk.meta_key_name=capture_meta_key) is null then
-    -- insert new record
-    insert into cfe_18.capture_meta_key(meta_key_name) values (capture_meta_key);
-        insert into cfe_18.capture_meta(capture_id,meta_key_id,meta_value) values(
-            capture_id
-            ,(select last_insert_id())
-            ,capture_meta_value);
-    end if;
-    -- return given application name and capture_id as signal
-       select cd.id as capture_id
-       from capture_definition cd
-        where cd.id=capture_id;
+    IF (tx_id) IS NULL THEN
+        SET @time = (SELECT MAX(transaction_id) FROM mysql.transaction_registry);
+    ELSE
+        SET @time = tx_id;
+    END IF;
+
+    -- check for existence of capture meta before attempting retrieval. Throws custom error.
+    IF ((SELECT COUNT(cm.capture_id)
+         FROM capture_meta FOR SYSTEM_TIME AS OF TRANSACTION @time cm
+         WHERE cm.capture_id = capture_id) = 0) THEN
+        -- standardized JSON error response
+        SELECT JSON_OBJECT('id', capture_id, 'message', 'Capture meta does not exist with given ID') INTO @nometa;
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = @nometa;
+    END IF;
+
+    SELECT cd.id             AS capture_id,
+           cmk.meta_key_name AS capture_meta_key,
+           cm.meta_value     AS capture_meta_value
+    FROM cfe_18.capture_meta FOR SYSTEM_TIME AS OF TRANSACTION @time cm
+             INNER JOIN cfe_18.capture_definition FOR SYSTEM_TIME AS OF TRANSACTION @time cd ON cd.id = cm.capture_id
+             INNER JOIN cfe_18.capture_meta_key FOR SYSTEM_TIME AS OF TRANSACTION @time cmk
+                        ON cm.meta_key_id = cmk.meta_key_id
+    WHERE cm.capture_id = capture_id;
     COMMIT;
 END;
 //
