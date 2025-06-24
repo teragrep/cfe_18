@@ -90,10 +90,8 @@ public class FileProcessingTypeController {
             @ApiResponse(responseCode = "201", description = "New file processing type created",
                     content = {@Content(mediaType = "application/json",
                             schema = @Schema(implementation = FileProcessing.class))}),
-            @ApiResponse(responseCode = "400", description = "Inputvalue must be regex or newline",
-                    content = @Content),
-            @ApiResponse(responseCode = "500", description = "Internal server error, contact admin", content = @Content)
-    })
+            @ApiResponse(responseCode = "400", description = "Inputvalue must be regex or newline", content = @Content),
+            @ApiResponse(responseCode = "400", description = "Internal server error, contact admin", content = @Content)})
     public ResponseEntity<String> create(@RequestBody FileProcessing newFileProcessing) {
         LOGGER.info("About to insert <[{}]>", newFileProcessing);
         try {
@@ -123,10 +121,8 @@ public class FileProcessingTypeController {
             @ApiResponse(responseCode = "200", description = "File processing type retrieved",
                     content = {@Content(mediaType = "application/json",
                             schema = @Schema(implementation = FileProcessing.class))}),
-            @ApiResponse(responseCode = "404", description = "File processing type does not exist",
-                    content = @Content),
-            @ApiResponse(responseCode = "500", description = "Internal server error, contact admin", content = @Content)
-                })
+            @ApiResponse(responseCode = "404", description = "File processing type does not exist", content = @Content),
+            @ApiResponse(responseCode = "400", description = "Internal server error, contact admin", content = @Content)})
     public ResponseEntity<?> get(@PathVariable("id") int id, @RequestParam(required = false) Integer version) {
         try {
             FileProcessing fc = fileProcessingTypeMapper.get(id,version);
@@ -141,7 +137,7 @@ public class FileProcessingTypeController {
                 LOGGER.error((cause).getMessage());
                 String state = ((SQLException) cause).getSQLState();
                 if (state.equals("45000")) {
-                    jsonErr.put("message", "Record does not exist with the given id");
+                    jsonErr.put("message", "Record does not exist");
                     return new ResponseEntity<>(jsonErr.toString(), HttpStatus.NOT_FOUND);
                 }
             }
@@ -165,12 +161,9 @@ public class FileProcessingTypeController {
             @ApiResponse(responseCode = "200", description = "File processing type deleted",
                     content = {@Content(mediaType = "application/json",
                             schema = @Schema(implementation = FileProcessing.class))}),
-            @ApiResponse(responseCode = "400", description = "File processing type is being used",
-                    content = @Content),
-            @ApiResponse(responseCode = "404", description = "File processing type does not exist",
-                    content = @Content),
-            @ApiResponse(responseCode = "500", description = "Internal server error, contact admin", content = @Content)
-    })
+            @ApiResponse(responseCode = "409", description = "File processing type is being used", content = @Content),
+            @ApiResponse(responseCode = "404", description = "File processing type does not exist", content = @Content),
+            @ApiResponse(responseCode = "400", description = "Internal server error, contact admin", content = @Content)})
     public ResponseEntity<String> delete(@PathVariable("id") Integer id) {
         LOGGER.info("Deleting file processing type  <[{}]>",id);
         try {
@@ -190,7 +183,7 @@ public class FileProcessingTypeController {
                 String state = ((SQLException) cause).getSQLState();
                 if (state.equals("23000")) {
                     jsonErr.put("message", "Is in use");
-                    return new ResponseEntity<>(jsonErr.toString(), HttpStatus.BAD_REQUEST);
+                    return new ResponseEntity<>(jsonErr.toString(), HttpStatus.CONFLICT);
                 } else if (state.equals("45000")) {
                     jsonErr.put("message", "Record does not exist");
                     return new ResponseEntity<>(jsonErr.toString(), HttpStatus.NOT_FOUND);

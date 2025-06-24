@@ -72,8 +72,6 @@ import org.springframework.boot.test.web.server.LocalServerPort;
 
 import java.util.ArrayList;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.equalTo;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -89,6 +87,29 @@ public class FileProcessingTypeControllerTest extends TestSpringBootInformation 
 
     @Test
     @Order(1)
+    public void testGetAllEmpty() {
+        // Declare list of expected values
+        ArrayList<FileProcessing> expectedList = new ArrayList<>();
+
+        HttpGet requestGet = new HttpGet("http://localhost:" + port + "/file/capture/meta");
+
+        requestGet.setHeader("Authorization", "Bearer " + token);
+
+        HttpResponse responseGet = Assertions.assertDoesNotThrow(() -> HttpClientBuilder.create().build().execute(requestGet));
+
+        HttpEntity entityGet = responseGet.getEntity();
+
+        String responseStringGet = Assertions.assertDoesNotThrow(() -> EntityUtils.toString(entityGet, "UTF-8"));
+
+        String expected = gson.toJson(expectedList);
+
+        // Asserting
+        assertEquals(expected, responseStringGet);
+        assertEquals(HttpStatus.SC_OK, responseGet.getStatusLine().getStatusCode());
+    }
+
+    @Test
+    @Order(2)
     public void testFileProcessingType() {
         FileProcessing file = new FileProcessing();
         file.setInputtype(FileProcessing.InputType.regex);
@@ -131,14 +152,12 @@ public class FileProcessingTypeControllerTest extends TestSpringBootInformation 
 
         // Assertions
         assertEquals(expected, actual);
-        assertThat(
-                httpResponse.getStatusLine().getStatusCode(),
-                equalTo(HttpStatus.SC_CREATED));
+        assertEquals(HttpStatus.SC_CREATED, httpResponse.getStatusLine().getStatusCode());
 
     }
 
     @Test
-    @Order(2)
+    @Order(3)
     public void testGetFileProcessingTypeById() {
 
         FileProcessing file2 = new FileProcessing();
@@ -188,14 +207,38 @@ public class FileProcessingTypeControllerTest extends TestSpringBootInformation 
         String responseStringGet = Assertions.assertDoesNotThrow(() -> EntityUtils.toString(entityGet, "UTF-8"));
 
         assertEquals(json, responseStringGet);
-        assertThat(responseGet.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_OK));
+        assertEquals(HttpStatus.SC_OK, responseGet.getStatusLine().getStatusCode());
     }
 
     @Test
-    @Order(3)
+    @Order(4)
+    public void testGetFileProcessingTypeByInvalidId() {
+        // Asserting get request
+        HttpGet requestGet = new HttpGet("http://localhost:" + port + "/file/capture/meta/" + 112233);
+
+        requestGet.setHeader("Authorization", "Bearer " + token);
+
+        HttpResponse responseGet = Assertions.assertDoesNotThrow(() -> HttpClientBuilder.create().build().execute(requestGet));
+
+        HttpEntity entityGet = responseGet.getEntity();
+
+        String responseStringGet = Assertions.assertDoesNotThrow(() -> EntityUtils.toString(entityGet, "UTF-8"));
+
+        // Parsing response as JSONObject
+        JSONObject responseAsJson = Assertions.assertDoesNotThrow(() -> new JSONObject(responseStringGet));
+
+        String expected = "Record does not exist";
+
+        // Creating string from Json that was given as a response
+        String actual = Assertions.assertDoesNotThrow(() -> responseAsJson.get("message").toString());
+
+        assertEquals(expected, actual);
+        assertEquals(HttpStatus.SC_NOT_FOUND, responseGet.getStatusLine().getStatusCode());
+    }
+
+    @Test
+    @Order(5)
     public void testGetAllFileProcessingTypes() {
-        GsonBuilder gson2 = new GsonBuilder().serializeNulls();
-        Gson real = gson2.create();
         // Declare list of expected values
         ArrayList<FileProcessing> expected = new ArrayList<>();
 
@@ -207,7 +250,7 @@ public class FileProcessingTypeControllerTest extends TestSpringBootInformation 
         file1.setRuleset("test");
         file1.setName("test");
         file1.setTemplate("test");
-        String json1 = real.toJson(file1);
+        String json1 = gson.toJson(file1);
 
 
         // forms the json to requestEntity
@@ -236,7 +279,7 @@ public class FileProcessingTypeControllerTest extends TestSpringBootInformation 
         // add the expected values to json
         expected.add(file2);
         expected.add(file1);
-        String expectedJson = real.toJson(expected);
+        String expectedJson = gson.toJson(expected);
 
         HttpGet requestGet = new HttpGet("http://localhost:" + port + "/file/capture/meta");
 
@@ -250,11 +293,11 @@ public class FileProcessingTypeControllerTest extends TestSpringBootInformation 
 
         // Asserting
         assertEquals(expectedJson, responseStringGet);
-        assertThat(responseGet.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_OK));
+        assertEquals(HttpStatus.SC_OK, responseGet.getStatusLine().getStatusCode());
     }
 
     @Test
-    @Order(4)
+    @Order(6)
     public void testDeleteProcessingType() {
 
         HttpDelete delete = new HttpDelete("http://localhost:" + port + "/file/capture/meta/" + 2);
@@ -278,12 +321,12 @@ public class FileProcessingTypeControllerTest extends TestSpringBootInformation 
         String expected = "File processing type deleted";
 
         assertEquals(expected, actual);
-        assertThat(deleteResponse.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_OK));
+        assertEquals(HttpStatus.SC_OK, deleteResponse.getStatusLine().getStatusCode());
 
     }
 
     @Test
-    @Order(5)
+    @Order(7)
     public void testDeleteNonExistentProcessingType() {
 
         HttpDelete delete = new HttpDelete("http://localhost:" + port + "/file/capture/meta/" + 2222);
@@ -307,12 +350,12 @@ public class FileProcessingTypeControllerTest extends TestSpringBootInformation 
         String expected = "Record does not exist";
 
         assertEquals(expected, actual);
-        assertThat(deleteResponse.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_NOT_FOUND));
+        assertEquals(HttpStatus.SC_NOT_FOUND, deleteResponse.getStatusLine().getStatusCode());
 
     }
 
     @Test
-    @Order(6)
+    @Order(8)
     public void testDeleteProcessingTypeInUse() {
         // add flow and sink
 
@@ -337,9 +380,9 @@ public class FileProcessingTypeControllerTest extends TestSpringBootInformation 
         // insert sink
 
         Sink sink = new Sink();
-        sink.setFlow("capFlow");
+        sink.setFlowId(1);
         sink.setPort("cap");
-        sink.setIp_address("capsink");
+        sink.setIpAddress("capsink");
         sink.setProtocol("prot");
 
         String json1 = gson.toJson(sink);
@@ -350,7 +393,7 @@ public class FileProcessingTypeControllerTest extends TestSpringBootInformation 
                 ContentType.APPLICATION_JSON);
 
         // Creates the request
-        HttpPut request1 = new HttpPut("http://localhost:" + port + "/sink/details");
+        HttpPut request1 = new HttpPut("http://localhost:" + port + "/sink");
         // set requestEntity to the put request
         request1.setEntity(requestEntity1);
         // Header
@@ -411,7 +454,7 @@ public class FileProcessingTypeControllerTest extends TestSpringBootInformation 
         String expected = "Is in use";
 
         assertEquals(expected, actual);
-        assertThat(deleteResponse.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_BAD_REQUEST));
+        assertEquals(HttpStatus.SC_CONFLICT, deleteResponse.getStatusLine().getStatusCode());
 
     }
 

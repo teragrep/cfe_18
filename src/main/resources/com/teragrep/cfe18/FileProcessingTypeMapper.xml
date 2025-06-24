@@ -9,8 +9,7 @@
                                                     meta_inputtype ENUM ('regex','newline'),
                                                     meta_inputvalue VARCHAR(255) ) -->
     <select id="create" resultMap="insertedID" statementType="CALLABLE">
-        {CALL
-        cfe_18.insert_file_processing_type(#{param1},#{param2},#{param3},#{param4},#{param5})}
+        {CALL cfe_18.insert_file_processing_type(#{param1},#{param2},#{param3},#{param4},#{param5})}
     </select>
 
 
@@ -50,7 +49,7 @@
 
     <!-- ID return map -->
     <resultMap id="insertedID" type="com.teragrep.cfe18.handlers.entities.FileProcessing">
-        <result property="id"                       column="id"/>
+        <result property="id"               column="id"/>
     </resultMap>
 
 </mapper>
