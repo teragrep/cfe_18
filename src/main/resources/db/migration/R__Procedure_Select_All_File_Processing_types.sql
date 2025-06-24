@@ -43,23 +43,30 @@
  * Teragrep, the applicable Commercial License may apply to this file if you as
  * a licensee so wish it.
  */
-use cfe_18;
+USE cfe_18;
 DELIMITER //
-CREATE OR REPLACE PROCEDURE delete_file_processing_type(p_id int)
+CREATE OR REPLACE PROCEDURE select_all_file_processing_types(tx_id INT)
 BEGIN
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
         BEGIN
             ROLLBACK;
             RESIGNAL;
-        end;
-    START TRANSACTION;
-    if ((select count(id) from cfe_18.file_processing_type where p_id=id)=0) then
-        SELECT JSON_OBJECT('id', p_id, 'message', 'File processing type does not exist') into @pt;
-        signal sqlstate '45000' set message_text = @pt;
-    end if;
+        END;
+    IF (tx_id) IS NULL THEN
+        SET @time = (SELECT MAX(transaction_id) FROM mysql.transaction_registry);
+    ELSE
+        SET @time = tx_id;
+    END IF;
 
-    delete from cfe_18.file_processing_type where p_id = id;
-    COMMIT;
-end;
+    SELECT id         AS id,
+           name       AS name,
+           inputtype  AS inputtype,
+           inputvalue AS inputvalue,
+           ruleset    AS ruleset,
+           template   AS template
+    FROM cfe_18.file_processing_type FOR SYSTEM_TIME AS OF TRANSACTION @time;
+
+END;
 //
 DELIMITER ;
+
