@@ -89,11 +89,9 @@ public class Cfe04TransformController {
             @ApiResponse(responseCode = "201", description = "New cfe04 transform created",
                     content = {@Content(mediaType = "application/json",
                             schema = @Schema(implementation = Cfe04Transform.class))}),
-            @ApiResponse(responseCode = "400", description = "SQL Constraint error",
-                    content = @Content),
-            @ApiResponse(responseCode = "404", description = "Cfe04 does not exist",
-                    content = @Content),
-            @ApiResponse(responseCode = "500", description = "Internal server error, contact admin", content = @Content)})
+            @ApiResponse(responseCode = "400", description = "SQL Constraint error", content = @Content),
+            @ApiResponse(responseCode = "404", description = "Cfe04 does not exist", content = @Content),
+            @ApiResponse(responseCode = "400", description = "Internal server error, contact admin", content = @Content)})
     public ResponseEntity<String> create(@RequestBody Cfe04Transform newCfe04Transform) {
         LOGGER.info("About to insert <[{}]>", newCfe04Transform);
         try {
@@ -119,8 +117,8 @@ public class Cfe04TransformController {
             final Throwable cause = ex.getCause();
             if (cause instanceof SQLException) {
                 int error = ((SQLException) cause).getErrorCode();
-                String state = error + "-" + ((SQLException) cause).getSQLState();
-                if (state.equals("1452-23000")) {
+                String state = ((SQLException) cause).getSQLState();
+                if (error == 1452 && state.equals("23000")) {
                     jsonErr.put("message", "Record does not exist");
                     return new ResponseEntity<>(jsonErr.toString(), HttpStatus.NOT_FOUND);
                 }
@@ -132,15 +130,9 @@ public class Cfe04TransformController {
     @RequestMapping(path = "/{id}", method = RequestMethod.GET, produces = "application/json")
     @Operation(summary = "Fetch transforms for cfe_04")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "400", description = "SQL Constraint error",
-                    content = @Content),
-            @ApiResponse(responseCode = "404", description = "Transform does not exist",
-                    content = @Content),
-            @ApiResponse(responseCode = "200", description = "cfe_04 transforms retrieved",
-                    content = {@Content(mediaType = "application/json",
-                            schema = @Schema(implementation = Cfe04Transform.class))}),
-            @ApiResponse(responseCode = "500", description = "Internal server error, contact admin", content = @Content)
-    })
+            @ApiResponse(responseCode = "200", description = "cfe_04 transforms retrieved", content = {@Content(mediaType = "application/json", schema = @Schema(implementation = Cfe04Transform.class))}),
+            @ApiResponse(responseCode = "404", description = "Transform does not exist", content = @Content),
+            @ApiResponse(responseCode = "400", description = "Internal server error, contact admin", content = @Content)})
     public ResponseEntity<?> get(@PathVariable Integer id, @RequestParam(required = false) Integer version) {
         try {
             List<Cfe04Transform> cfe04Transforms = cfe04TransformMapper.get(id, version);
@@ -154,7 +146,7 @@ public class Cfe04TransformController {
             if (cause instanceof SQLException) {
                 String state = ((SQLException) cause).getSQLState();
                 if (state.equals("45000")) {
-                    jsonErr.put("message", "Record does not exist with the given id");
+                    jsonErr.put("message", "Record does not exist");
                     return new ResponseEntity<>(jsonErr.toString(), HttpStatus.NOT_FOUND);
                 }
             }
@@ -175,12 +167,9 @@ public class Cfe04TransformController {
     @RequestMapping(path = "/{id}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
     @Operation(summary = "Delete cfe04 transform")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Cfe04 transform deleted",
-                    content = {@Content(mediaType = "application/json",
-                            schema = @Schema(implementation = Cfe04Transform.class))}),
-            @ApiResponse(responseCode = "400", description = "Cfe04 transform does not exist",
-                    content = @Content),
-            @ApiResponse(responseCode = "500", description = "Internal server error, contact admin", content = @Content)})
+            @ApiResponse(responseCode = "200", description = "Cfe04 transform deleted", content = {@Content(mediaType = "application/json", schema = @Schema(implementation = Cfe04Transform.class))}),
+            @ApiResponse(responseCode = "404", description = "Cfe04 transform does not exist", content = @Content),
+            @ApiResponse(responseCode = "400", description = "Internal server error, contact admin", content = @Content)})
     public ResponseEntity<String> delete(@PathVariable("id") Integer id) {
         LOGGER.info("Deleting cfe_04 transforms with id <[{}]>", id);
         try {
@@ -200,7 +189,7 @@ public class Cfe04TransformController {
                 String state = ((SQLException) cause).getSQLState();
                 if (state.equals("23000")) {
                     jsonErr.put("message", "Is in use");
-                    return new ResponseEntity<>(jsonErr.toString(), HttpStatus.BAD_REQUEST);
+                    return new ResponseEntity<>(jsonErr.toString(), HttpStatus.CONFLICT);
                 } else if (state.equals("45000")) {
                     jsonErr.put("message", "Record does not exist");
                     return new ResponseEntity<>(jsonErr.toString(), HttpStatus.NOT_FOUND);

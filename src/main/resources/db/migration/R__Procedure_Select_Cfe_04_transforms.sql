@@ -58,6 +58,11 @@ BEGIN
         SET @time = tx_id;
     END IF;
 
+    IF ((SELECT COUNT(id) FROM flow.cfe_04_transforms FOR SYSTEM_TIME AS OF TRANSACTION @time WHERE cfe_04_id = cfe04_id) = 0) THEN
+        SELECT JSON_OBJECT('id', cfe04_id, 'message', 'Transforms do not exist for given cfe_04 id') INTO @ctid;
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = @ctid;
+    END IF;
+
     SELECT t.id              AS id,
            t.cfe_04_id       AS cfe_04_id,
            t.name            AS name,
