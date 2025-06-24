@@ -43,30 +43,38 @@
  * Teragrep, the applicable Commercial License may apply to this file if you as
  * a licensee so wish it.
  */
-use flow;
+USE flow;
 DELIMITER //
-CREATE OR REPLACE PROCEDURE delete_cfe_04_transform(transforms_id int)
+CREATE OR REPLACE PROCEDURE select_cfe_04_transforms(cfe04_id INT, tx_id INT)
 BEGIN
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
         BEGIN
             ROLLBACK;
             RESIGNAL;
         END;
-    START TRANSACTION;
-    if (select id
-        from flow.cfe_04_transforms
-        where id = transforms_id) is null then
-        SELECT JSON_OBJECT('id', null, 'message', 'Transform record does not exist') into @c4t;
-        signal sqlstate '45000' set message_text = @c4t;
-    end if;
-    delete
-    from flow.cfe_04_transforms
-    where id = transforms_id;
-    -- Return the ID of deleted row as signal
-    select transforms_id as id;
-    COMMIT;
+    IF (tx_id) IS NULL THEN
+        SET @time = (SELECT MAX(transaction_id) FROM mysql.transaction_registry);
+    ELSE
+        SET @time = tx_id;
+    END IF;
+
+    IF ((SELECT COUNT(id) FROM flow.cfe_04_transforms FOR SYSTEM_TIME AS OF TRANSACTION @time WHERE cfe_04_id = cfe04_id) = 0) THEN
+        SELECT JSON_OBJECT('id', cfe04_id, 'message', 'Transforms do not exist for given cfe_04 id') INTO @ctid;
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = @ctid;
+    END IF;
+
+    SELECT t.id              AS id,
+           t.cfe_04_id       AS cfe_04_id,
+           t.name            AS name,
+           t.write_meta      AS write_meta,
+           t.write_default   AS write_default,
+           t.default_value   AS default_value,
+           t.destination_key AS destination_key,
+           t.regex           AS regex,
+           t.format          AS format
+    FROM flow.cfe_04_transforms FOR SYSTEM_TIME AS OF TRANSACTION @time t
+    WHERE cfe_04_id = cfe04_id;
+
 END;
-
-
 //
 DELIMITER ;

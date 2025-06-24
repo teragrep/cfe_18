@@ -68,15 +68,13 @@ import org.springframework.context.annotation.Description;
 
 import java.util.ArrayList;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.equalTo;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @ExtendWith(MigrateDatabaseExtension.class)
-public class Cfe04TransformControllerTest extends TestSpringBootInformation{
+public class Cfe04TransformControllerTest extends TestSpringBootInformation {
 
 
     Gson gson = new Gson();
@@ -87,14 +85,47 @@ public class Cfe04TransformControllerTest extends TestSpringBootInformation{
 
     @Test
     @Order(1)
-    @Description("Tests successful add of cfe_04 transform")
-    public void testAddCfe04Transforms() {
-
+    public void testData() {
         // Insert base cfe_04 storage first
         Storage storage = new Storage();
         storage.setStorageType(Storage.StorageType.cfe_04);
         storage.setStorageName("cfe_04");
-        String json2 = gson.toJson(storage);
+        String json = gson.toJson(storage);
+
+        // forms the json to requestEntity
+        StringEntity requestEntity = new StringEntity(
+                String.valueOf(json),
+                ContentType.APPLICATION_JSON);
+
+        // Creates the request
+        HttpPut request = new HttpPut("http://localhost:" + port + "/storage");
+        // set requestEntity to the put request
+        request.setEntity(requestEntity);
+        // Header
+        request.setHeader("Authorization", "Bearer " + token);
+
+        HttpResponse response = Assertions.assertDoesNotThrow(() -> HttpClientBuilder.create().build().execute(request));
+
+        // Get the entity from response
+        HttpEntity entity = response.getEntity();
+
+        // Entity response string
+        String responseString = Assertions.assertDoesNotThrow(() -> EntityUtils.toString(entity));
+
+        // Parsing response as JSONObject
+        JSONObject responseAsJson = Assertions.assertDoesNotThrow(() -> new JSONObject(responseString));
+
+        // Creating expected message as JSON Object from the data that was sent towards endpoint
+        String expected = "New storage created";
+
+        // Creating string from Json that was given as a response
+        String actual = Assertions.assertDoesNotThrow(() -> responseAsJson.get("message").toString());
+
+        // Insert base cfe_04 storage first
+        Storage storage2 = new Storage();
+        storage2.setStorageType(Storage.StorageType.cfe_04);
+        storage2.setStorageName("cfe_042");
+        String json2 = gson.toJson(storage2);
 
         // forms the json to requestEntity
         StringEntity requestEntity2 = new StringEntity(
@@ -108,11 +139,57 @@ public class Cfe04TransformControllerTest extends TestSpringBootInformation{
         // Header
         request2.setHeader("Authorization", "Bearer " + token);
 
-        Assertions.assertDoesNotThrow(() -> {
-            HttpClientBuilder.create().build().execute(request2);});
+        HttpResponse response2 = Assertions.assertDoesNotThrow(() -> HttpClientBuilder.create().build().execute(request2));
 
+        // Get the entity from response
+        HttpEntity entity2 = response2.getEntity();
 
+        // Entity response string
+        String responseString2 = Assertions.assertDoesNotThrow(() -> EntityUtils.toString(entity2));
 
+        // Parsing response as JSONObject
+        JSONObject responseAsJson2 = Assertions.assertDoesNotThrow(() -> new JSONObject(responseString2));
+
+        // Creating expected message as JSON Object from the data that was sent towards endpoint
+        String expected2 = "New storage created";
+
+        // Creating string from Json that was given as a response
+        String actual2 = Assertions.assertDoesNotThrow(() -> responseAsJson2.get("message").toString());
+
+        // Assertions
+        assertEquals(expected, actual);
+        assertEquals(HttpStatus.SC_CREATED, response.getStatusLine().getStatusCode());
+        assertEquals(expected2, actual2);
+        assertEquals(HttpStatus.SC_CREATED, response2.getStatusLine().getStatusCode());
+    }
+
+    @Test
+    @Order(2)
+    @Description("Tests that empty list is returned when there is no cfe_04 transforms")
+    public void testGetALLCfe04TransformsEmpty() {
+        ArrayList<Cfe04Transform> expected = new ArrayList<>();
+
+        String json2 = gson.toJson(expected);
+        // Fetching all capture metas
+        HttpGet requestGet = new HttpGet("http://localhost:" + port + "/storage/cfe04/transforms");
+
+        requestGet.setHeader("Authorization", "Bearer " + token);
+
+        HttpResponse responseGet = Assertions.assertDoesNotThrow(() -> HttpClientBuilder.create().build().execute(requestGet));
+
+        HttpEntity entityGet = responseGet.getEntity();
+
+        String responseStringGet = Assertions.assertDoesNotThrow(() -> EntityUtils.toString(entityGet, "UTF-8"));
+
+        // Assertions
+        assertEquals(json2, responseStringGet);
+        assertEquals(HttpStatus.SC_OK, responseGet.getStatusLine().getStatusCode());
+    }
+
+    @Test
+    @Order(3)
+    @Description("Tests successful add of cfe_04 transform")
+    public void testAddCfe04Transforms() {
         Cfe04Transform cfe04Transform = new Cfe04Transform();
         cfe04Transform.setCfe04Id(1);
         cfe04Transform.setName("transform1");
@@ -136,39 +213,38 @@ public class Cfe04TransformControllerTest extends TestSpringBootInformation{
         // Header
         request.setHeader("Authorization", "Bearer " + token);
 
-       HttpResponse response =  Assertions.assertDoesNotThrow(() ->
-            HttpClientBuilder.create().build().execute(request));
+        HttpResponse response = Assertions.assertDoesNotThrow(() ->
+                HttpClientBuilder.create().build().execute(request));
 
         // Get the entity from response
         HttpEntity entity = response.getEntity();
 
         // Entity response string
-        String responseString =  Assertions.assertDoesNotThrow(() -> EntityUtils.toString(entity));
+        String responseString = Assertions.assertDoesNotThrow(() -> EntityUtils.toString(entity));
 
-        // Parsin respponse as JSONObject
+        // Parsing response as JSONObject
         JSONObject responseAsJson = Assertions.assertDoesNotThrow(() -> new JSONObject(responseString));
+
         // Creating expected message as JSON Object from the data that was sent towards endpoint
-        String expected = "New cfe_04 transforms created";
+        String expected = "New cfe04 transform created";
         int expectedId = 1;
         // Creating string from Json that was given as a response
-        String actual = Assertions.assertDoesNotThrow(() ->  responseAsJson.get("message").toString());
-        int actualId = Assertions.assertDoesNotThrow(() ->  responseAsJson.getInt("id"));
+        String actual = Assertions.assertDoesNotThrow(() -> responseAsJson.get("message").toString());
+        int actualId = Assertions.assertDoesNotThrow(() -> responseAsJson.getInt("id"));
 
         // Assertions
-        assertThat(
-                response.getStatusLine().getStatusCode(),
-                equalTo(HttpStatus.SC_CREATED));
-        assertEquals(expectedId, actualId);
         assertEquals(expected, actual);
+        assertEquals(HttpStatus.SC_CREATED, response.getStatusLine().getStatusCode());
+        assertEquals(expectedId, actualId);
 
 
     }
 
     @Test
-    @Order(2)
+    @Order(4)
     @Description("Tests adding cfe_04 transform for a cfe_04 that does not exist")
-    public void testAddCfe04TransformsMissingCfe04(){
-         Cfe04Transform cfe04Transform = new Cfe04Transform();
+    public void testAddCfe04TransformsMissingCfe04() {
+        Cfe04Transform cfe04Transform = new Cfe04Transform();
         cfe04Transform.setCfe04Id(500);
         cfe04Transform.setName("transform1");
         cfe04Transform.setWriteMeta(true);
@@ -191,39 +267,35 @@ public class Cfe04TransformControllerTest extends TestSpringBootInformation{
         // Header
         request.setHeader("Authorization", "Bearer " + token);
 
-        HttpResponse response =  Assertions.assertDoesNotThrow(() ->
+        HttpResponse response = Assertions.assertDoesNotThrow(() ->
                 HttpClientBuilder.create().build().execute(request));
 
         // Get the entity from response
         HttpEntity entity = response.getEntity();
 
         // Entity response string
-        String responseString =  Assertions.assertDoesNotThrow(() -> EntityUtils.toString(entity));
+        String responseString = Assertions.assertDoesNotThrow(() -> EntityUtils.toString(entity));
 
-        // Parsin respponse as JSONObject
+        // Parsing response as JSONObject
         JSONObject responseAsJson = Assertions.assertDoesNotThrow(() -> new JSONObject(responseString));
         // Creating expected message as JSON Object from the data that was sent towards endpoint
-        String expected = "No such cfe_04 id";
+        String expected = "Record does not exist";
         int expectedId = 0;
 
         // Creating string from Json that was given as a response
-        String actual = Assertions.assertDoesNotThrow(() ->  responseAsJson.get("message").toString());
-        int actualId = Assertions.assertDoesNotThrow(() ->  responseAsJson.getInt("id"));
+        String actual = Assertions.assertDoesNotThrow(() -> responseAsJson.get("message").toString());
+        int actualId = Assertions.assertDoesNotThrow(() -> responseAsJson.getInt("id"));
 
         // Assertions
-        assertThat(
-                response.getStatusLine().getStatusCode(),
-                equalTo(HttpStatus.SC_BAD_REQUEST));
-        assertEquals(expectedId, actualId);
         assertEquals(expected, actual);
+        assertEquals(HttpStatus.SC_NOT_FOUND, response.getStatusLine().getStatusCode());
+        assertEquals(expectedId, actualId);
     }
 
     @Test
-    @Order(3)
+    @Order(5)
     @Description("Tests that ALL cfe_04 transforms can be fetched")
     public void testGetALLCfe04Transforms() {
-
-
         Cfe04Transform cfe04Transform2 = new Cfe04Transform();
         cfe04Transform2.setId(1);
         cfe04Transform2.setCfe04Id(1);
@@ -234,8 +306,6 @@ public class Cfe04TransformControllerTest extends TestSpringBootInformation{
         cfe04Transform2.setDestinationKey("destKey");
         cfe04Transform2.setRegex("regex");
         cfe04Transform2.setFormat("format");
-
-
 
         Cfe04Transform cfe04Transform = new Cfe04Transform();
         cfe04Transform.setId(3);
@@ -264,34 +334,30 @@ public class Cfe04TransformControllerTest extends TestSpringBootInformation{
         Assertions.assertDoesNotThrow(() ->
                 HttpClientBuilder.create().build().execute(request));
 
-
         ArrayList<Cfe04Transform> expected = new ArrayList<>();
         expected.add(cfe04Transform2);
         expected.add(cfe04Transform);
 
         String json2 = gson.toJson(expected);
         // Fetching all capture metas
-        HttpGet requestGet = new HttpGet("http://localhost:" + port + "/storage/cfe04/transforms" );
+        HttpGet requestGet = new HttpGet("http://localhost:" + port + "/storage/cfe04/transforms");
 
         requestGet.setHeader("Authorization", "Bearer " + token);
 
-        HttpResponse responseGet = Assertions.assertDoesNotThrow(() ->  HttpClientBuilder.create().build().execute(requestGet));
+        HttpResponse responseGet = Assertions.assertDoesNotThrow(() -> HttpClientBuilder.create().build().execute(requestGet));
 
         HttpEntity entityGet = responseGet.getEntity();
 
-        String responseStringGet = Assertions.assertDoesNotThrow(() ->  EntityUtils.toString(entityGet, "UTF-8"));
+        String responseStringGet = Assertions.assertDoesNotThrow(() -> EntityUtils.toString(entityGet, "UTF-8"));
 
         // Assertions
-        assertThat(
-                responseGet.getStatusLine().getStatusCode(),
-                equalTo(HttpStatus.SC_OK));
         assertEquals(json2, responseStringGet);
+        assertEquals(HttpStatus.SC_OK, responseGet.getStatusLine().getStatusCode());
 
     }
 
-
     @Test
-    @Order(4)
+    @Order(6)
     @Description("Tests that endpoint is idempotent. First unit test adds same transform as this one. Should return same output")
     public void testIdempotentCfe04Transforms() {
         Cfe04Transform cfe04Transform = new Cfe04Transform();
@@ -317,136 +383,173 @@ public class Cfe04TransformControllerTest extends TestSpringBootInformation{
         // Header
         request.setHeader("Authorization", "Bearer " + token);
 
-        HttpResponse response =  Assertions.assertDoesNotThrow(() ->
+        HttpResponse response = Assertions.assertDoesNotThrow(() ->
                 HttpClientBuilder.create().build().execute(request));
 
         // Get the entity from response
         HttpEntity entity = response.getEntity();
 
         // Entity response string
-        String responseString =  Assertions.assertDoesNotThrow(() -> EntityUtils.toString(entity));
+        String responseString = Assertions.assertDoesNotThrow(() -> EntityUtils.toString(entity));
 
-        // Parsin respponse as JSONObject
+        // Parsing response as JSONObject
         JSONObject responseAsJson = Assertions.assertDoesNotThrow(() -> new JSONObject(responseString));
         // Creating expected message as JSON Object from the data that was sent towards endpoint
-        String expected = "New cfe_04 transforms created";
+        String expected = "New cfe04 transform created";
         int expectedId = 1;
 
         // Creating string from Json that was given as a response
-        String actual = Assertions.assertDoesNotThrow(() ->  responseAsJson.get("message").toString());
-        int actualId = Assertions.assertDoesNotThrow(() ->  responseAsJson.getInt("id"));
+        String actual = Assertions.assertDoesNotThrow(() -> responseAsJson.get("message").toString());
+        int actualId = Assertions.assertDoesNotThrow(() -> responseAsJson.getInt("id"));
 
         // Assertions
-        assertThat(
-                response.getStatusLine().getStatusCode(),
-                equalTo(HttpStatus.SC_CREATED));
-        assertEquals(expectedId, actualId);
         assertEquals(expected, actual);
-
-    }
-
-    @Test
-    @Order(5)
-    @Description("Tests delete endpoint successfully")
-    public void testDeleteCfe04Transforms() {
-        HttpDelete delete = new HttpDelete("http://localhost:" + port + "/storage/cfe04/transforms/"+1);
-
-        // Header
-        delete.setHeader("Authorization", "Bearer " + token);
-
-        HttpResponse deleteResponse = Assertions.assertDoesNotThrow(() ->  HttpClientBuilder.create().build().execute(delete));
-
-        HttpEntity entityDelete = deleteResponse.getEntity();
-
-        String responseStringGet = Assertions.assertDoesNotThrow(() ->  EntityUtils.toString(entityDelete, "UTF-8"));
-
-
-        // Parsin respponse as JSONObject
-        JSONObject responseAsJson = Assertions.assertDoesNotThrow(() ->  new JSONObject(responseStringGet));
-
-        // Creating string from Json that was given as a response
-        String actual = Assertions.assertDoesNotThrow(() ->  responseAsJson.get("message").toString());
-        int actualId = Assertions.assertDoesNotThrow(() ->  responseAsJson.getInt("id"));
-
-        // Creating expected message as JSON Object from the data that was sent towards endpoint
-        String expected = "cfe_04 transforms with id of 1 deleted.";
-        int expectedId = 1;
-
-        assertThat(deleteResponse.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_OK));
+        assertEquals(HttpStatus.SC_CREATED, response.getStatusLine().getStatusCode());
         assertEquals(expectedId, actualId);
-        assertEquals(expected, actual);
 
     }
-
-    @Test
-    @Order(6)
-    @Description("Tests that records for one Cfe_04 can successfully be fetched")
-    public void testGetCfe04TransformsForOneCfe04() {
-        ArrayList<Cfe04Transform> cfe04TransformList = new ArrayList<>();
-        Cfe04Transform cfe04Transform = new Cfe04Transform();
-        cfe04Transform.setId(3);
-        cfe04Transform.setCfe04Id(1);
-        cfe04Transform.setName("transform2");
-        cfe04Transform.setWriteMeta(false);
-        cfe04Transform.setWriteDefault(true);
-        cfe04Transform.setDefaultValue("default");
-        cfe04Transform.setDestinationKey("destKey");
-        cfe04Transform.setRegex("regex");
-        cfe04Transform.setFormat("format");
-        cfe04TransformList.add(cfe04Transform);
-        String expectedJson = gson.toJson(cfe04TransformList);
-
-        HttpGet requestGet = new HttpGet("http://localhost:" + port + "/storage/cfe04/transforms/"+1 );
-
-        requestGet.setHeader("Authorization", "Bearer " + token);
-
-        HttpResponse responseGet = Assertions.assertDoesNotThrow(() ->  HttpClientBuilder.create().build().execute(requestGet));
-
-        HttpEntity entityGet = responseGet.getEntity();
-
-        String responseStringGet = Assertions.assertDoesNotThrow(() ->  EntityUtils.toString(entityGet, "UTF-8"));
-
-        // Assertions
-        assertThat(
-                responseGet.getStatusLine().getStatusCode(),
-                equalTo(HttpStatus.SC_OK));
-        assertEquals(expectedJson, responseStringGet);
-    }
-
-
 
     @Test
     @Order(7)
-    @Description("Tests that something cant be deleted if does not exist")
-    public void testDeleteCfe04TransformsInvalidCfe04() {
-        HttpDelete delete = new HttpDelete("http://localhost:" + port + "/storage/cfe04/transforms/"+12222);
+    @Description("Tests that records for one Cfe_04 can successfully be fetched")
+    public void testGetCfe04TransformsForOneCfe04() {
+        ArrayList<Cfe04Transform> expected = new ArrayList<>();
+        Cfe04Transform cfe04Transform = new Cfe04Transform();
+        cfe04Transform.setId(4);
+        cfe04Transform.setCfe04Id(2);
+        cfe04Transform.setName("transform2");
+        cfe04Transform.setWriteMeta(true);
+        cfe04Transform.setWriteDefault(true);
+        cfe04Transform.setDefaultValue("default2");
+        cfe04Transform.setDestinationKey("destKey2");
+        cfe04Transform.setRegex("regex2");
+        cfe04Transform.setFormat("format2");
+        String json = gson.toJson(cfe04Transform);
+
+        expected.add(cfe04Transform);
+
+        String expectedJson = gson.toJson(expected);
+
+        // forms the json to requestEntity
+        StringEntity requestEntity = new StringEntity(
+                String.valueOf(json),
+                ContentType.APPLICATION_JSON);
+
+        // Creates the request
+        HttpPut request = new HttpPut("http://localhost:" + port + "/storage/cfe04/transforms");
+        // set requestEntity to the put request
+        request.setEntity(requestEntity);
+        // Header
+        request.setHeader("Authorization", "Bearer " + token);
+
+        Assertions.assertDoesNotThrow(() ->
+                HttpClientBuilder.create().build().execute(request));
+
+
+        HttpGet requestGet = new HttpGet("http://localhost:" + port + "/storage/cfe04/transforms/" + 2);
+
+        requestGet.setHeader("Authorization", "Bearer " + token);
+
+        HttpResponse responseGet = Assertions.assertDoesNotThrow(() -> HttpClientBuilder.create().build().execute(requestGet));
+
+        HttpEntity entityGet = responseGet.getEntity();
+
+        String responseStringGet = Assertions.assertDoesNotThrow(() -> EntityUtils.toString(entityGet, "UTF-8"));
+
+        // Assertions
+        assertEquals(expectedJson, responseStringGet);
+        assertEquals(HttpStatus.SC_OK, responseGet.getStatusLine().getStatusCode());
+    }
+
+    @Test
+    @Order(8)
+    @Description("Tests delete endpoint successfully")
+    public void testDeleteCfe04Transforms() {
+        HttpDelete delete = new HttpDelete("http://localhost:" + port + "/storage/cfe04/transforms/" + 1);
 
         // Header
         delete.setHeader("Authorization", "Bearer " + token);
 
-        HttpResponse deleteResponse = Assertions.assertDoesNotThrow(() ->  HttpClientBuilder.create().build().execute(delete));
+        HttpResponse deleteResponse = Assertions.assertDoesNotThrow(() -> HttpClientBuilder.create().build().execute(delete));
 
         HttpEntity entityDelete = deleteResponse.getEntity();
 
-        String responseStringGet = Assertions.assertDoesNotThrow(() ->  EntityUtils.toString(entityDelete, "UTF-8"));
+        String responseStringGet = Assertions.assertDoesNotThrow(() -> EntityUtils.toString(entityDelete, "UTF-8"));
 
-
-        // Parsin respponse as JSONObject
-        JSONObject responseAsJson = Assertions.assertDoesNotThrow(() ->  new JSONObject(responseStringGet));
+        // Parsing response as JSONObject
+        JSONObject responseAsJson = Assertions.assertDoesNotThrow(() -> new JSONObject(responseStringGet));
 
         // Creating string from Json that was given as a response
-        String actual = Assertions.assertDoesNotThrow(() ->  responseAsJson.get("message").toString());
+        String actual = Assertions.assertDoesNotThrow(() -> responseAsJson.get("message").toString());
+        int actualId = Assertions.assertDoesNotThrow(() -> responseAsJson.getInt("id"));
+
+        // Creating expected message as JSON Object from the data that was sent towards endpoint
+        String expected = "Cfe04 transform deleted";
+        int expectedId = 1;
+
+        assertEquals(expected, actual);
+        assertEquals(HttpStatus.SC_OK, deleteResponse.getStatusLine().getStatusCode());
+        assertEquals(expectedId, actualId);
+
+    }
+
+    @Test
+    @Order(9)
+    @Description("Tests that cfe_04 transform can not be fetched with invalid id")
+    public void testGetCfe04TransformsInvalidId() {
+
+        HttpGet requestGet = new HttpGet("http://localhost:" + port + "/storage/cfe04/transforms/" + 112233);
+
+        requestGet.setHeader("Authorization", "Bearer " + token);
+
+        HttpResponse responseGet = Assertions.assertDoesNotThrow(() -> HttpClientBuilder.create().build().execute(requestGet));
+
+        HttpEntity entityGet = responseGet.getEntity();
+
+        String responseStringGet = Assertions.assertDoesNotThrow(() -> EntityUtils.toString(entityGet, "UTF-8"));
+
+        // Parsing response as JSONObject
+        JSONObject responseAsJson = Assertions.assertDoesNotThrow(() -> new JSONObject(responseStringGet));
+
+        // Creating string from Json that was given as a response
+        String actual = Assertions.assertDoesNotThrow(() -> responseAsJson.get("message").toString());
 
         // Creating expected message as JSON Object from the data that was sent towards endpoint
         String expected = "Record does not exist";
 
-        assertThat(deleteResponse.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_BAD_REQUEST));
+        // Assertions
         assertEquals(expected, actual);
-
+        assertEquals(HttpStatus.SC_NOT_FOUND, responseGet.getStatusLine().getStatusCode());
     }
 
+    @Test
+    @Order(10)
+    @Description("Tests that something cant be deleted if does not exist")
+    public void testDeleteCfe04TransformsInvalidCfe04() {
+        HttpDelete delete = new HttpDelete("http://localhost:" + port + "/storage/cfe04/transforms/" + 12222);
 
+        // Header
+        delete.setHeader("Authorization", "Bearer " + token);
 
+        HttpResponse deleteResponse = Assertions.assertDoesNotThrow(() -> HttpClientBuilder.create().build().execute(delete));
+
+        HttpEntity entityDelete = deleteResponse.getEntity();
+
+        String responseStringGet = Assertions.assertDoesNotThrow(() -> EntityUtils.toString(entityDelete, "UTF-8"));
+
+        // Parsing response as JSONObject
+        JSONObject responseAsJson = Assertions.assertDoesNotThrow(() -> new JSONObject(responseStringGet));
+
+        // Creating string from Json that was given as a response
+        String actual = Assertions.assertDoesNotThrow(() -> responseAsJson.get("message").toString());
+
+        // Creating expected message as JSON Object from the data that was sent towards endpoint
+        String expected = "Record does not exist";
+
+        assertEquals(expected, actual);
+        assertEquals(HttpStatus.SC_NOT_FOUND, deleteResponse.getStatusLine().getStatusCode());
+
+    }
 
 }
 

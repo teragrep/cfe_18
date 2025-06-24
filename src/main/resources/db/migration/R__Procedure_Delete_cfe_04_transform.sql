@@ -43,35 +43,27 @@
  * Teragrep, the applicable Commercial License may apply to this file if you as
  * a licensee so wish it.
  */
-package com.teragrep.cfe18;
+USE flow;
+DELIMITER //
+CREATE OR REPLACE PROCEDURE delete_cfe_04_transform(transform_id INT)
+BEGIN
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+        BEGIN
+            ROLLBACK;
+            RESIGNAL;
+        END;
+    START TRANSACTION;
+    IF ((SELECT COUNT(id)
+         FROM flow.cfe_04_transforms
+         WHERE id = transform_id) = 0) THEN
+        SELECT JSON_OBJECT('id', transform_id, 'message', 'Transform does not exist') INTO @c4t;
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = @c4t;
+    END IF;
+    DELETE
+    FROM flow.cfe_04_transforms
+    WHERE id = transform_id;
+    COMMIT;
 
-import com.teragrep.cfe18.handlers.entities.Cfe04Transform;
-import org.apache.ibatis.annotations.Mapper;
-
-import java.util.List;
-
-@Mapper
-public interface Cfe04TransformMapper {
-
-     Cfe04Transform create(
-             Integer cfe04Id,
-             String name,
-             Boolean writeMeta,
-             Boolean writeDefault,
-             String defaultValue,
-             String destinationKey,
-             String regex,
-             String format);
-
-     /**
-      *
-      * @param cfe04Id cfe04 id
-      * @param version Which point in time records want to be fetched at. NULL fetches latest
-      * @return Returns all transforms linked to Cfe04
-      */
-     List<Cfe04Transform> get(Integer cfe04Id, Integer version);
-
-     List<Cfe04Transform> getAll(Integer version);
-
-     void delete(Integer id);
-}
+END;
+//
+DELIMITER ;
