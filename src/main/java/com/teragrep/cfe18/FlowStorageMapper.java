@@ -43,23 +43,23 @@
  * Teragrep, the applicable Commercial License may apply to this file if you as
  * a licensee so wish it.
  */
-use flow;
-DELIMITER //
-CREATE OR REPLACE PROCEDURE remove_flow_storage(proc_flow varchar(255), proc_storage_id int)
-BEGIN
-    DECLARE EXIT HANDLER FOR SQLEXCEPTION
-        BEGIN
-            ROLLBACK;
-            RESIGNAL;
-        END;
-    START TRANSACTION;
-    select id into @FlowId from flow.flows where name = proc_flow;
-    if (select id from flow.flow_targets where flow_id = @FlowId and storage_id = proc_storage_id) is null then
-        SELECT JSON_OBJECT('id', null, 'message', 'Flow storage does not exist') into @fs;
-        signal sqlstate '45000' set message_text = @fs;
-    end if;
-    delete from flow.flow_targets where storage_id = proc_storage_id and flow_id = @FlowId;
-    COMMIT;
-END;
-//
-DELIMITER ;
+package com.teragrep.cfe18;
+
+import com.teragrep.cfe18.handlers.entities.CaptureStorage;
+import com.teragrep.cfe18.handlers.entities.FlowStorage;
+import com.teragrep.cfe18.handlers.entities.Storage;
+import org.apache.ibatis.annotations.Mapper;
+
+import java.util.List;
+
+@Mapper
+public interface FlowStorageMapper {
+    FlowStorage create(int flowId, int storageId);
+
+    List<FlowStorage> get(int flowId, Integer version);
+
+    List<FlowStorage> getAll(Integer version);
+
+    void delete(int flowId, int storageId);
+
+}

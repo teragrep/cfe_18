@@ -43,30 +43,36 @@
  * Teragrep, the applicable Commercial License may apply to this file if you as
  * a licensee so wish it.
  */
-package com.teragrep.cfe18;
-
-import com.teragrep.cfe18.handlers.entities.CaptureStorage;
-import com.teragrep.cfe18.handlers.entities.FlowStorage;
-import com.teragrep.cfe18.handlers.entities.Storage;
-import org.apache.ibatis.annotations.Mapper;
-
-import java.util.List;
-
-@Mapper
-public interface StorageMapper {
-    Storage create(Storage.StorageType cfeType, String storageName);
-
-    CaptureStorage createCaptureStorage(int capture_id, int storage_id);
-
-    Storage getStorage(int id, Integer version);
-
-    List<CaptureStorage> getCaptureStorage(int captureId, Integer version);
-
-    List<Storage> getAll(Integer version);
-
-    List<CaptureStorage> getAllCapture(Integer version);
-
-    Storage delete(int id);
-
-    CaptureStorage deleteCaptureStorage(int captureId, int storageId);
-}
+USE flow;
+DELIMITER //
+CREATE OR REPLACE PROCEDURE select_flow_storages(flow_id INT, tx_id INT)
+BEGIN
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+        BEGIN
+            ROLLBACK;
+            RESIGNAL;
+        END;
+    START TRANSACTION;
+    IF (tx_id) IS NULL THEN
+        SET @time = (SELECT MAX(transaction_id) FROM mysql.transaction_registry);
+    ELSE
+        SET @time = tx_id;
+    END IF;
+    IF ((SELECT COUNT(id) FROM flows FOR SYSTEM_TIME AS OF TRANSACTION @time WHERE id = flow_id) = 0) THEN
+        SELECT JSON_OBJECT('id', flow_id, 'message', 'Flow does not exist') INTO @fs;
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = @fs;
+    ELSE
+        SELECT ft.id           AS id,
+               f.id            AS flow_id,
+               s.id            AS storage_id,
+               s.storage_name  AS storage_name,
+               ft.storage_type AS storage_type
+        FROM flow.flow_targets FOR SYSTEM_TIME AS OF TRANSACTION @time ft
+                 INNER JOIN flows FOR SYSTEM_TIME AS OF TRANSACTION @time f ON ft.flow_id = f.id
+                 LEFT JOIN storages FOR SYSTEM_TIME AS OF TRANSACTION @time s ON ft.storage_id = s.id
+        WHERE f.id = flow_id;
+    END IF;
+    COMMIT;
+END;
+//
+DELIMITER ;
