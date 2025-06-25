@@ -65,8 +65,6 @@ import org.springframework.boot.test.web.server.LocalServerPort;
 
 import java.util.ArrayList;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.equalTo;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -84,7 +82,6 @@ public class FlowStorageControllerTest extends TestSpringBootInformation {
     @Test
     @Order(1)
     public void testData() {
-
         Flow flow = new Flow();
         flow.setName("Testflow");
 
@@ -160,14 +157,10 @@ public class FlowStorageControllerTest extends TestSpringBootInformation {
 
         // Assertions
         assertEquals(expectedFlow, actualFlow);
-        assertThat(
-                httpResponseStorage.getStatusLine().getStatusCode(),
-                equalTo(HttpStatus.SC_CREATED));
+        assertEquals(HttpStatus.SC_CREATED, httpResponseFlow.getStatusLine().getStatusCode());
         // Assertions
         assertEquals(expectedStorage, actualStorage);
-        assertThat(
-                httpResponseStorage.getStatusLine().getStatusCode(),
-                equalTo(HttpStatus.SC_CREATED));
+        assertEquals(HttpStatus.SC_CREATED, httpResponseStorage.getStatusLine().getStatusCode());
 
 
     }
@@ -215,9 +208,7 @@ public class FlowStorageControllerTest extends TestSpringBootInformation {
         // Assertions
 
         assertEquals(expected, actual);
-        assertThat(
-                httpResponse.getStatusLine().getStatusCode(),
-                equalTo(HttpStatus.SC_CREATED));
+        assertEquals(HttpStatus.SC_CREATED, httpResponse.getStatusLine().getStatusCode());
     }
 
     @Test
@@ -245,9 +236,9 @@ public class FlowStorageControllerTest extends TestSpringBootInformation {
 
         String responseStringGet = Assertions.assertDoesNotThrow(() -> EntityUtils.toString(entityGet, "UTF-8"));
 
-        String expectedJson = new Gson().toJson(expected);
+        String expectedJson = gson.toJson(expected);
 
-        assertThat(responseGet.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_OK));
+        assertEquals(HttpStatus.SC_OK, responseGet.getStatusLine().getStatusCode());
         assertEquals(expectedJson, responseStringGet);
     }
 
@@ -279,7 +270,7 @@ public class FlowStorageControllerTest extends TestSpringBootInformation {
 
         String expectedJson = new Gson().toJson(expected);
 
-        assertThat(responseGet.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_OK));
+        assertEquals(HttpStatus.SC_OK, responseGet.getStatusLine().getStatusCode());
         assertEquals(expectedJson, responseStringGet);
     }
 
@@ -306,7 +297,7 @@ public class FlowStorageControllerTest extends TestSpringBootInformation {
         // Creating expected message as JSON Object from the data that was sent towards endpoint
         String expected = "Record does not exist";
         assertEquals(expected, actual);
-        assertThat(deleteResponse.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_NOT_FOUND));
+        assertEquals(HttpStatus.SC_NOT_FOUND, deleteResponse.getStatusLine().getStatusCode());
     }
 
     @Test
@@ -314,9 +305,9 @@ public class FlowStorageControllerTest extends TestSpringBootInformation {
     public void testDeleteFlowStorageInUse() {
 
         Sink sink = new Sink();
-        sink.setFlow("Testflow");
+        sink.setFlowId(1);
         sink.setPort("cap");
-        sink.setIp_address("capsink");
+        sink.setIpAddress("capsink");
         sink.setProtocol("prot");
 
         String json1 = gson.toJson(sink);
@@ -327,7 +318,7 @@ public class FlowStorageControllerTest extends TestSpringBootInformation {
                 ContentType.APPLICATION_JSON);
 
         // Creates the request
-        HttpPut request1 = new HttpPut("http://localhost:" + port + "/sink/details");
+        HttpPut request1 = new HttpPut("http://localhost:" + port + "/sink");
         // set requestEntity to the put request
         request1.setEntity(requestEntity1);
         // Header
@@ -412,7 +403,7 @@ public class FlowStorageControllerTest extends TestSpringBootInformation {
         String expected = "Is in use";
 
         assertEquals(expected, actual);
-        assertThat(deleteResponse.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_BAD_REQUEST));
+        assertEquals(HttpStatus.SC_CONFLICT, deleteResponse.getStatusLine().getStatusCode());
     }
 
     @Test
@@ -477,8 +468,7 @@ public class FlowStorageControllerTest extends TestSpringBootInformation {
         // Creating expected message as JSON Object from the data that was sent towards endpoint
         String expectedFlowStorage = "Flow storage deleted";
 
-
-        assertEquals(actualFlowStorage, expectedFlowStorage);
-        assertThat(deleteResponse.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_OK));
+        assertEquals(expectedFlowStorage, actualFlowStorage);
+        assertEquals(HttpStatus.SC_OK, deleteResponse.getStatusLine().getStatusCode());
     }
 }

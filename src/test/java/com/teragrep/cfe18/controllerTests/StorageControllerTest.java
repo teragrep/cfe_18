@@ -210,12 +210,12 @@ public class StorageControllerTest extends TestSpringBootInformation {
     }
 
     @Test
-    @Order(1)
+    @Order(2)
     public void testInsertStorage() {
 
         Storage storage = new Storage();
         storage.setStorageType(Storage.StorageType.cfe_04);
-        storage.setStorageName("cfe_04");
+        storage.setStorageName("cfe_042");
 
         String json = gson.toJson(storage);
 
@@ -258,7 +258,7 @@ public class StorageControllerTest extends TestSpringBootInformation {
     }
 
     @Test
-    @Order(2)
+    @Order(3)
     public void testFetchStorages() {
         ArrayList<Storage> expected = new ArrayList<>();
 
@@ -267,7 +267,13 @@ public class StorageControllerTest extends TestSpringBootInformation {
         storage.setStorageType(Storage.StorageType.cfe_04);
         storage.setId(1);
 
+        Storage storage2 = new Storage();
+        storage2.setStorageName("cfe_042");
+        storage2.setStorageType(Storage.StorageType.cfe_04);
+        storage2.setId(2);
+
         expected.add(storage);
+        expected.add(storage2);
 
         String expectedJson = new Gson().toJson(expected);
 
@@ -288,7 +294,7 @@ public class StorageControllerTest extends TestSpringBootInformation {
     }
 
     @Test
-    @Order(3)
+    @Order(4)
     public void testFetchStorage() {
         Storage storage = new Storage();
         storage.setStorageName("cfe_04");
@@ -314,7 +320,7 @@ public class StorageControllerTest extends TestSpringBootInformation {
     }
 
     @Test
-    @Order(6)
+    @Order(5)
     public void testInsertCaptureStorage() throws Exception {
 
         Sink sink = new Sink();
@@ -369,10 +375,6 @@ public class StorageControllerTest extends TestSpringBootInformation {
         // Get the response from endpoint
         HttpClientBuilder.create().build().execute(request3);
 
-
-        // link the cfe_04 storage to capture
-
-
         CaptureStorage captureStorage = new CaptureStorage();
         captureStorage.setCapture_id(1);
         captureStorage.setStorage_id(1);
@@ -419,7 +421,7 @@ public class StorageControllerTest extends TestSpringBootInformation {
     }
 
     @Test
-    @Order(7)
+    @Order(6)
     public void testRetrieveCaptureStorage() throws Exception {
         ArrayList<CaptureStorage> expected = new ArrayList<>();
         CaptureStorage captureStorage = new CaptureStorage();
@@ -446,7 +448,7 @@ public class StorageControllerTest extends TestSpringBootInformation {
     }
 
     @Test
-    @Order(8)
+    @Order(7)
     public void testRetrieveCaptureStorages() throws Exception {
         ArrayList<CaptureStorage> expected = new ArrayList<>();
         CaptureStorage captureStorage = new CaptureStorage();
@@ -473,7 +475,7 @@ public class StorageControllerTest extends TestSpringBootInformation {
     }
 
     @Test
-    @Order(9)
+    @Order(8)
     public void testDeleteNonExistentStorage() {
         HttpDelete delete = new HttpDelete("http://localhost:" + port + "/storage/" + 124);
 
@@ -501,7 +503,7 @@ public class StorageControllerTest extends TestSpringBootInformation {
     }
 
     @Test
-    @Order(10)
+    @Order(9)
     public void testDeleteStorageInUse() throws Exception {
 
         HttpDelete delete = new HttpDelete("http://localhost:" + port + "/storage/" + 1);
@@ -528,7 +530,7 @@ public class StorageControllerTest extends TestSpringBootInformation {
     }
 
     @Test
-    @Order(13)
+    @Order(10)
     public void testDeleteNonExistentCaptureStorage() throws Exception {
         HttpDelete delete = new HttpDelete("http://localhost:" + port + "/storage/capture/" + 112 + "/" + 112);
 
@@ -550,11 +552,11 @@ public class StorageControllerTest extends TestSpringBootInformation {
         // Creating expected message as JSON Object from the data that was sent towards endpoint
         String expected = "Record does not exist";
         assertEquals(expected, actual);
-        assertThat(deleteResponse.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_BAD_REQUEST));
+        assertThat(deleteResponse.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_NOT_FOUND));
     }
 
     @Test
-    @Order(14)
+    @Order(11)
     public void testDeleteCaptureStorage() throws Exception {
         HttpDelete delete = new HttpDelete("http://localhost:" + port + "/storage/capture/" + 1 + "/" + 1);
         // Header
@@ -573,16 +575,17 @@ public class StorageControllerTest extends TestSpringBootInformation {
         String actual = responseAsJson.get("message").toString();
 
         // Creating expected message as JSON Object from the data that was sent towards endpoint
-        String expected = "Capture = " + 1 + ", with Storage " + 1 + " deleted.";
+        String expected = "Capture storage deleted";
 
         assertThat(deleteResponse.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_OK));
         assertEquals(expected, actual);
     }
 
     @Test
-    @Order(16)
+    @Order(12)
     public void testDeleteStorage() {
-        HttpDelete delete = new HttpDelete("http://localhost:" + port + "/storage/" + 1);
+
+        HttpDelete delete = new HttpDelete("http://localhost:" + port + "/storage/" + 2);
         // Header
         delete.setHeader("Authorization", "Bearer " + token);
 
@@ -604,6 +607,5 @@ public class StorageControllerTest extends TestSpringBootInformation {
         assertEquals(expected, actual);
         assertThat(deleteResponse.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_OK));
     }
-
 
 }

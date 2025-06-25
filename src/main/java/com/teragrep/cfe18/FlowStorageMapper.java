@@ -60,6 +60,6 @@ public interface FlowStorageMapper {
 
     List<FlowStorage> getAll(Integer version);
 
-    void delete(int flowId, int id);
+    void delete(int flowId, int storageId);
 
 }

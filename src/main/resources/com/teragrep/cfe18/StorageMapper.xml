@@ -30,10 +30,10 @@
 
     <!-- get            ( capture_id INT, tx_id INT ) -->
     <select id="getCaptureStorage" resultMap="captureStorage" statementType="CALLABLE">
-        {CALL cfe_18.select_capture_storages(#{param1},#{param2})}
+        {CALL cfe_18.retrieve_capture_storages(#{param1},#{param2})}
     </select>
     <resultMap id="captureStorage" type="com.teragrep.cfe18.handlers.entities.CaptureStorage">
-        <result property="capture_d"    column="capture_id"/>
+        <result property="capture_id"    column="capture_id"/>
         <result property="storage_id"    column="storage_id"/>
         <result property="storage_name"  column="storage_name"/>
     </resultMap>
@@ -53,7 +53,7 @@
 
     <!-- GET ALL        ( tx_id INT ) -->
     <select id="getAllCapture" resultMap="allCaptureStorages" statementType="CALLABLE">
-        {CALL cfe_18.select_all_capture_storages(#{param2})}
+        {CALL cfe_18.retrieve_all_capture_storages(#{param1})}
     </select>
     <resultMap id="allCaptureStorages" type="com.teragrep.cfe18.handlers.entities.CaptureStorage">
         <result property="capture_id"    column="capture_id"/>
@@ -70,7 +70,7 @@
 
     <!-- Delete         ( capture_id INT, proc_storage_id INT ) -->
     <select id="deleteCaptureStorage" statementType="CALLABLE">
-        {CALL cfe_18.delete_capture_storage(#{param1},#{param2})}
+        {CALL cfe_18.remove_capture_storage(#{param1},#{param2})}
     </select>
 
 
@@ -81,7 +81,7 @@
 
     <!-- ID return map -->
     <resultMap id="insertedIDCapture" type="com.teragrep.cfe18.handlers.entities.CaptureStorage">
-        <result property="capture_id"       column="id"/>
+        <result property="capture_id"       column="last"/>
     </resultMap>
 
 </mapper>
