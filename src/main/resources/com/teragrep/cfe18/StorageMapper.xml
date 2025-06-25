@@ -33,9 +33,9 @@
         {CALL cfe_18.select_capture_storages(#{param1},#{param2})}
     </select>
     <resultMap id="captureStorage" type="com.teragrep.cfe18.handlers.entities.CaptureStorage">
-        <result property="captureId"    column="capture_id"/>
-        <result property="storageId"    column="storage_id"/>
-        <result property="storageName"  column="storage_name"/>
+        <result property="capture_d"    column="capture_id"/>
+        <result property="storage_id"    column="storage_id"/>
+        <result property="storage_name"  column="storage_name"/>
     </resultMap>
 
 
@@ -56,9 +56,9 @@
         {CALL cfe_18.select_all_capture_storages(#{param2})}
     </select>
     <resultMap id="allCaptureStorages" type="com.teragrep.cfe18.handlers.entities.CaptureStorage">
-        <result property="captureId"    column="capture_id"/>
-        <result property="storageId"    column="storage_id"/>
-        <result property="storageName"  column="storage_name"/>
+        <result property="capture_id"    column="capture_id"/>
+        <result property="storage_id"    column="storage_id"/>
+        <result property="storage_name"  column="storage_name"/>
     </resultMap>
 
 
@@ -81,7 +81,7 @@
 
     <!-- ID return map -->
     <resultMap id="insertedIDCapture" type="com.teragrep.cfe18.handlers.entities.CaptureStorage">
-        <result property="captureId"       column="id"/>
+        <result property="capture_id"       column="id"/>
     </resultMap>
 
 </mapper>
