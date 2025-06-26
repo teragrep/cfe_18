@@ -78,7 +78,7 @@ public class ProcedureCaptureGroupTest extends DBUnitbase {
     }
 
     /*
-    This test checks that new capture group can be added with proper capture_type and capture_definition.
+    This test checks that new capture group can be added with proper capture_type.
 
     NB! As database incremental status is not resetted. ID starts with 21 for the capture_group. Same happens with capture_def_group_x_capture_def.
     This could be solved by resetting the incremental rotation or by ignoring the ID columns. XML test is still accurate as it creates the rows and connects the values
@@ -86,19 +86,16 @@ public class ProcedureCaptureGroupTest extends DBUnitbase {
      */
     public void testProcedureAddCaptureGroupSuccess() throws Exception {
         IDataSet expectedDataSet = new FlatXmlDataSetBuilder().build(new File("src/test/resources/XMLProcedureCaptureGroup/procedureCaptureGroupTestDataExpectedData1.xml"));
-        ITable expectedTable1 = expectedDataSet.getTable("cfe_18.capture_def_group_x_capture_def");
         ITable expectedTable2 = expectedDataSet.getTable("cfe_18.capture_def_group");
 
-        CallableStatement stmnt = conn.prepareCall("{call cfe_18.add_capture_group_with_capture(?,?)}");
+        CallableStatement stmnt = conn.prepareCall("{call cfe_18.insert_capture_group(?,?)}");
         stmnt.setString(1, "group1");
-        stmnt.setInt(2, 1);
+        stmnt.setString(2, "cfe");
         stmnt.execute();
 
-        ITable actualTable1 = databaseConnection.createQueryTable("result", "select * from cfe_18.capture_def_group_x_capture_def");
         ITable actualTable2 = databaseConnection.createQueryTable("result", "select * from cfe_18.capture_def_group");
 
         Assertion.assertEqualsIgnoreCols(expectedTable2, actualTable2, new String[]{"id"});
-        Assertion.assertEqualsIgnoreCols(expectedTable1, actualTable1, new String[]{"id", "capture_def_group_id"});
 
     }
 
@@ -110,9 +107,9 @@ public class ProcedureCaptureGroupTest extends DBUnitbase {
         ITable expectedTable1 = expectedDataSet.getTable("cfe_18.capture_def_group_x_capture_def");
         ITable expectedTable2 = expectedDataSet.getTable("cfe_18.capture_def_group");
 
-        CallableStatement stmnt = conn.prepareCall("{call cfe_18.add_capture_group_with_capture(?,?)}");
-        stmnt.setString(1, "group1");
-        stmnt.setInt(2, 2);
+        CallableStatement stmnt = conn.prepareCall("{call cfe_18.insert_capture_to_group(?,?)}");
+        stmnt.setInt(1, 2);
+        stmnt.setInt(2, 6);
         stmnt.execute();
 
         ITable actualTable1 = databaseConnection.createQueryTable("result", "select * from cfe_18.capture_def_group_x_capture_def");
