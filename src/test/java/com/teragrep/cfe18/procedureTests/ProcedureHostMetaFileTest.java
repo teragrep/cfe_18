@@ -150,7 +150,7 @@ public class ProcedureHostMetaFileTest extends DBUnitbase {
         IDataSet expectedDataSet = new FlatXmlDataSetBuilder().build(new File("src/test/resources/XMLProcedureHostMeta/procedureHostMetaTestDataExpected3.xml"));
         ITable expectedTable2 = expectedDataSet.getTable("cfe_03.host_meta");
         // käytetään aiempia arvoja mitä on jo testidatassa. Halutaan vain nähdä syntyykö uusi host meta hostille jolla ei ole host metaa vielä.
-        CallableStatement stmnt = conn.prepareCall("{CALL cfe_03.add_host_meta_data(?,?,?,?,?,?)}");
+        CallableStatement stmnt = conn.prepareCall("{CALL cfe_03.insert_host_meta(?,?,?,?,?,?)}");
         stmnt.setString(1, "arch1");
         stmnt.setString(2, "flavor1");
         stmnt.setString(3, "host3");
@@ -172,7 +172,7 @@ public class ProcedureHostMetaFileTest extends DBUnitbase {
      */
     public void testHostExistenceOnHostMeta() throws Exception {
         SQLException state = Assertions.assertThrows(SQLException.class, () -> {
-            CallableStatement stmnt = conn.prepareCall("{CALL cfe_03.add_host_meta_data(?,?,?,?,?,?)}");
+            CallableStatement stmnt = conn.prepareCall("{CALL cfe_03.insert_host_meta(?,?,?,?,?,?)}");
             stmnt.setString(1, "arch1");
             stmnt.setString(2, "flavor1");
             stmnt.setString(3, "host1");
@@ -189,43 +189,19 @@ public class ProcedureHostMetaFileTest extends DBUnitbase {
     Testi millä katsotaan onnistuuko host metan palautus oikeilla arvoilla.
     */
     public void testHostMetaRetrieve() throws Exception {
-        List<String> IpList = new ArrayList<>();
-        List<String> InterfaceList = new ArrayList<>();
-        CallableStatement stmnt = conn.prepareCall("{CALL cfe_03.retrieve_host_meta(?,?)}");
+        CallableStatement stmnt = conn.prepareCall("{CALL cfe_03.select_host_meta(?,?)}");
         stmnt.setInt(1, 1);
         stmnt.setString(2, null);
         ResultSet rs = stmnt.executeQuery();
-        while (rs.next()) {
-            IpList.add(rs.getString("ip_address"));
-            InterfaceList.add(rs.getString("interface"));
-            Assertions.assertEquals(1, rs.getInt("host_meta_id"));
-            Assertions.assertEquals("arch1", rs.getString("arch"));
-            Assertions.assertEquals("release_version1", rs.getString("release_version"));
-            Assertions.assertEquals("flavor1", rs.getString("flavor"));
-            Assertions.assertEquals("Linux1", rs.getString("os"));
-            Assertions.assertEquals("host1", rs.getString("hostname"));
-        }
-        Assertions.assertEquals(Arrays.asList("ip1", "ip1", "ip2", "ip2", "ip3", "ip3"), IpList);
-        Assertions.assertEquals(Arrays.asList("ens192", "ens256", "ens192", "ens256", "ens192", "ens256"), InterfaceList);
-    }
-
-    /*
-    Testi millä tarkastetaan cfe hostin palautus missä host_meta_id tulee mukana. Testidatan vuoksi hostin testi täälä.
-*/
-    public void testProcedureRetrieveCfeHost() throws Exception {
-        CallableStatement stmnt = conn.prepareCall("{CALL cfe_00.retrieve_host_details(?,?)}");
-        stmnt.setInt(1, 2);
-        stmnt.setString(2, null);
-        ResultSet rs = stmnt.executeQuery();
         rs.next();
-        Assertions.assertEquals(2, rs.getInt("host_id")); // host_id
-        Assertions.assertEquals("12322", rs.getString("host_md5")); // md5
-        Assertions.assertEquals("2", rs.getString("host_fq")); // fqhost
-        Assertions.assertEquals("cfe", rs.getString("host_type")); // host_type
-        Assertions.assertEquals(1, rs.getInt("hub_id")); // hub_id
-        Assertions.assertEquals("host1", rs.getString("host_name")); // hostname
-        Assertions.assertEquals(1, rs.getInt("host_meta_id")); // host_meta_id
-        Assertions.assertEquals("1", rs.getString("hub_fq")); // hub_fq
-    }
+        Assertions.assertEquals(1, rs.getInt("id"));
+        Assertions.assertEquals("arch1", rs.getString("arch"));
+        Assertions.assertEquals("release_version1", rs.getString("release_version"));
+        Assertions.assertEquals("flavor1", rs.getString("flavor"));
+        Assertions.assertEquals("Linux1", rs.getString("os"));
+        Assertions.assertEquals("host1", rs.getString("hostname"));
+        Assertions.assertEquals(2, rs.getInt("host_id"));
+}
+
 }
 
