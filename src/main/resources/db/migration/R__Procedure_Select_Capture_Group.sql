@@ -69,7 +69,8 @@ BEGIN
 
     SELECT cdg.id                     AS id,
            cdg.capture_def_group_name AS group_name,
-           cdg.capture_type           AS capture_type
+           cdg.capture_type           AS capture_type,
+           cdg.flow_id                AS flow_id
     FROM cfe_18.capture_def_group FOR SYSTEM_TIME AS OF TRANSACTION @time cdg
     WHERE cdg.id = capture_group_id;
     COMMIT;
