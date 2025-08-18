@@ -205,6 +205,8 @@ create table capture_def_group
     capture_type           varchar(64)        not null check (capture_type in
                                                               ('aws', 'manual', 'cfe', 'windows', 'hec', 'azure',
                                                                'relp')),
+    flow_id int not null,
+    unique (id, flow_id),
     unique (id, capture_type),
     start_trxid BIGINT UNSIGNED GENERATED ALWAYS AS ROW START INVISIBLE,
     end_trxid BIGINT UNSIGNED GENERATED ALWAYS AS ROW END INVISIBLE,
@@ -221,6 +223,9 @@ create table capture_def_group_x_capture_def
     capture_type         varchar(64) not null check (capture_type in
                                                      ('aws', 'manual', 'cfe', 'windows', 'hec',
                                                       'azure', 'relp')),
+    flow_id int not null,
+    constraint sameFlowCapture FOREIGN KEY (capture_def_id,flow_id) REFERENCES cfe_18.capture_definition(id,flow_id),
+    constraint sameFlowGroup FOREIGN KEY (capture_def_group_id,flow_id) REFERENCES cfe_18.capture_def_group(id, flow_id),
     constraint captureToCaptureGroupType foreign key (capture_def_id, capture_type) references cfe_18.capture_definition (id, capture_type) on delete cascade,
     constraint captureTypeToCaptureGroup foreign key (capture_def_group_id, capture_type) references cfe_18.capture_def_group (id, capture_type) on delete cascade,
     unique key (capture_def_group_id, capture_def_id),
