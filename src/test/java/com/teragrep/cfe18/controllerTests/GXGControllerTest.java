@@ -83,10 +83,46 @@ public class GXGControllerTest extends TestSpringBootInformation {
     @Test
     @Order(1)
     public void testData() throws Exception {
+        // add flow
+        Flow flow = new Flow();
+        flow.setName("capflow");
+        String json2 = gson.toJson(flow);
+
+        // forms the json to requestEntity
+        StringEntity requestEntity2 = new StringEntity(
+                String.valueOf(json2),
+                ContentType.APPLICATION_JSON);
+
+        // Creates the request
+        HttpPut request2 = new HttpPut("http://localhost:" + port + "/flow");
+        // set requestEntity to the put request
+        request2.setEntity(requestEntity2);
+        // Header
+        request2.setHeader("Authorization", "Bearer " + token);
+
+        // Get the response from endpoint
+        HttpResponse httpResponse2 = HttpClientBuilder.create().build().execute(request2);
+
+        // Get the entity from response
+        HttpEntity entity2 = httpResponse2.getEntity();
+
+        // Entity response string
+        String response2 = EntityUtils.toString(entity2);
+
+        // Parsing response as JSONObject
+        JSONObject responseJson2 = new JSONObject(response2);
+
+        String expected2 = "New flow created";
+
+        // Creating string from Json that was given as a response
+        String actual2 = responseJson2.get("message").toString();
+
+
         // Capture Group
         CaptureGroup captureGroup = new CaptureGroup();
         captureGroup.setCaptureGroupName("groupRelp");
         captureGroup.setCaptureGroupType(CaptureGroup.groupType.relp);
+        captureGroup.setFlowId(1);
 
         String cgJson = gson.toJson(captureGroup);
 
@@ -125,6 +161,10 @@ public class GXGControllerTest extends TestSpringBootInformation {
                 httpResponse.getStatusLine().getStatusCode(),
                 equalTo(HttpStatus.SC_CREATED));
         assertEquals(expected, actual);
+        assertEquals(expected2, actual2);
+        assertThat(
+                httpResponse2.getStatusLine().getStatusCode(),
+                equalTo(HttpStatus.SC_CREATED));
     }
 
     @Test

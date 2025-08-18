@@ -47,6 +47,8 @@ package com.teragrep.cfe18.controllerTests;
 
 import com.google.gson.Gson;
 import com.teragrep.cfe18.handlers.entities.CaptureGroup;
+import com.teragrep.cfe18.handlers.entities.Flow;
+import com.teragrep.cfe18.handlers.entities.Sink;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
@@ -66,6 +68,8 @@ import org.springframework.boot.test.web.server.LocalServerPort;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.equalTo;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -79,6 +83,49 @@ public class CaptureGroupControllerTest extends TestSpringBootInformation {
 
     @LocalServerPort
     private int port;
+
+    @Test
+    @BeforeAll
+    public void testData() throws Exception {
+        // add flow
+        Flow flow = new Flow();
+        flow.setName("capflow");
+        String json2 = gson.toJson(flow);
+
+        // forms the json to requestEntity
+        StringEntity requestEntity2 = new StringEntity(
+                String.valueOf(json2),
+                ContentType.APPLICATION_JSON);
+
+        // Creates the request
+        HttpPut request2 = new HttpPut("http://localhost:" + port + "/flow");
+        // set requestEntity to the put request
+        request2.setEntity(requestEntity2);
+        // Header
+        request2.setHeader("Authorization", "Bearer " + token);
+
+        // Get the response from endpoint
+        HttpResponse httpResponse2 = HttpClientBuilder.create().build().execute(request2);
+
+        // Get the entity from response
+        HttpEntity entity2 = httpResponse2.getEntity();
+
+        // Entity response string
+        String response2 = EntityUtils.toString(entity2);
+
+        // Parsing response as JSONObject
+        JSONObject responseJson2 = new JSONObject(response2);
+
+        String expected2 = "New flow created";
+
+        // Creating string from Json that was given as a response
+        String actual2 = responseJson2.get("message").toString();
+
+        assertEquals(expected2, actual2);
+        assertThat(
+                httpResponse2.getStatusLine().getStatusCode(),
+                equalTo(HttpStatus.SC_CREATED));
+    }
 
 
     @Test
@@ -105,12 +152,62 @@ public class CaptureGroupControllerTest extends TestSpringBootInformation {
 
     @Test
     @Order(2)
+    public void testCreateCaptureGroupInvalidFlow() {
+
+        // Capture Group
+        CaptureGroup captureGroup = new CaptureGroup();
+        captureGroup.setCaptureGroupName("groupRelp");
+        captureGroup.setCaptureGroupType(CaptureGroup.groupType.relp);
+        captureGroup.setFlowId(555);
+
+        String cgJson = gson.toJson(captureGroup);
+
+        // forms the json to requestEntity
+        StringEntity requestEntityCaptureGroup = new StringEntity(
+                String.valueOf(cgJson),
+                ContentType.APPLICATION_JSON);
+
+        // Creates the request
+        HttpPut requestCaptureGroup = new HttpPut("http://localhost:" + port + "/capture/group");
+        // set requestEntity to the put request
+        requestCaptureGroup.setEntity(requestEntityCaptureGroup);
+        // Header
+        requestCaptureGroup.setHeader("Authorization", "Bearer " + token);
+
+        // Get the response from endpoint
+        HttpResponse httpResponse = Assertions.assertDoesNotThrow(() -> HttpClientBuilder.create().build().execute(requestCaptureGroup));
+
+        // Get the entity from response
+        HttpEntity entity = httpResponse.getEntity();
+
+        // Entity response string
+        String responseString = Assertions.assertDoesNotThrow(() -> EntityUtils.toString(entity));
+
+        // Parsing response as JSONObject
+        JSONObject responseAsJson = Assertions.assertDoesNotThrow(() -> new JSONObject(responseString));
+
+        // Creating expected message as JSON Object from the data that was sent towards endpoint
+        String expected = "Record does not exist";
+
+        // Creating string from Json that was given as a response
+        String actual = Assertions.assertDoesNotThrow(() -> responseAsJson.get("message").toString());
+
+        // Assertions
+        assertEquals(
+                HttpStatus.SC_NOT_FOUND,
+                httpResponse.getStatusLine().getStatusCode());
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    @Order(3)
     public void testCreateCaptureGroup() {
 
         // Capture Group
         CaptureGroup captureGroup = new CaptureGroup();
         captureGroup.setCaptureGroupName("groupRelp");
         captureGroup.setCaptureGroupType(CaptureGroup.groupType.relp);
+        captureGroup.setFlowId(1);
 
         String cgJson = gson.toJson(captureGroup);
 
@@ -152,12 +249,13 @@ public class CaptureGroupControllerTest extends TestSpringBootInformation {
     }
 
     @Test
-    @Order(3)
+    @Order(4)
     public void testSelectCaptureGroup() {
         CaptureGroup captureGroup = new CaptureGroup();
         captureGroup.setCaptureGroupType(CaptureGroup.groupType.relp);
         captureGroup.setId(1);
         captureGroup.setCaptureGroupName("groupRelp");
+        captureGroup.setFlowId(1);
 
         String expectedJson = gson.toJson(captureGroup);
 
@@ -178,7 +276,7 @@ public class CaptureGroupControllerTest extends TestSpringBootInformation {
     }
 
     @Test
-    @Order(4)
+    @Order(5)
     public void testSelectAllCaptureGroups() {
 
         // Capture Group 2
@@ -186,6 +284,7 @@ public class CaptureGroupControllerTest extends TestSpringBootInformation {
         captureGroup2.setId(2);
         captureGroup2.setCaptureGroupName("groupRelp2");
         captureGroup2.setCaptureGroupType(CaptureGroup.groupType.relp);
+        captureGroup2.setFlowId(1);
 
         String cgJson = gson.toJson(captureGroup2);
 
@@ -209,6 +308,7 @@ public class CaptureGroupControllerTest extends TestSpringBootInformation {
         captureGroup.setId(1);
         captureGroup.setCaptureGroupName("groupRelp");
         captureGroup.setCaptureGroupType(CaptureGroup.groupType.relp);
+        captureGroup.setFlowId(1);
 
 
         expected.add(captureGroup);
@@ -233,7 +333,7 @@ public class CaptureGroupControllerTest extends TestSpringBootInformation {
     }
 
     @Test
-    @Order(5)
+    @Order(6)
     public void testDeleteNonExistentCaptureGroup() {
         HttpDelete delete = new HttpDelete("http://localhost:" + port + "/capture/group/125412");
 
@@ -259,7 +359,7 @@ public class CaptureGroupControllerTest extends TestSpringBootInformation {
     }
 
     @Test
-    @Order(6)
+    @Order(7)
     public void testDeleteCaptureGroup() {
         //groupRelp
         HttpDelete delete = new HttpDelete("http://localhost:" + port + "/capture/group/1");
@@ -287,7 +387,7 @@ public class CaptureGroupControllerTest extends TestSpringBootInformation {
     }
 
     @Test
-    @Order(7)
+    @Order(8)
     public void testSelectNonExistentCaptureGroup() {
         // Asserting get request
         HttpGet requestGet = new HttpGet("http://localhost:" + port + "/capture/group/112233");
@@ -310,5 +410,6 @@ public class CaptureGroupControllerTest extends TestSpringBootInformation {
         assertEquals(HttpStatus.SC_NOT_FOUND, responseGet.getStatusLine().getStatusCode());
 
     }
+
 
 }

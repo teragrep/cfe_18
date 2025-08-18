@@ -89,9 +89,10 @@ public class ProcedureCaptureGroupTest extends DBUnitbase {
         ITable expectedTable1 = expectedDataSet.getTable("cfe_18.capture_def_group_x_capture_def");
         ITable expectedTable2 = expectedDataSet.getTable("cfe_18.capture_def_group");
 
-        CallableStatement stmnt = conn.prepareCall("{call cfe_18.insert_capture_group(?,?)}");
+        CallableStatement stmnt = conn.prepareCall("{call cfe_18.insert_capture_group(?,?,?)}");
         stmnt.setString(1, "group1");
         stmnt.setString(2, "cfe");
+        stmnt.setInt(3, 1);
         stmnt.execute();
 
         ITable actualTable1 = databaseConnection.createQueryTable("result", "select * from cfe_18.capture_def_group_x_capture_def");
@@ -110,9 +111,10 @@ public class ProcedureCaptureGroupTest extends DBUnitbase {
         ITable expectedTable1 = expectedDataSet.getTable("cfe_18.capture_def_group_x_capture_def");
         ITable expectedTable2 = expectedDataSet.getTable("cfe_18.capture_def_group");
 
-        CallableStatement stmnt = conn.prepareCall("{call cfe_18.insert_capture_group(?,?)}");
+        CallableStatement stmnt = conn.prepareCall("{call cfe_18.insert_capture_group(?,?,?)}");
         stmnt.setString(1, "capturegroup6");
         stmnt.setString(2, "cfe");
+        stmnt.setInt(3, 1);
         stmnt.execute();
 
         ITable actualTable1 = databaseConnection.createQueryTable("result", "select * from cfe_18.capture_def_group_x_capture_def");
