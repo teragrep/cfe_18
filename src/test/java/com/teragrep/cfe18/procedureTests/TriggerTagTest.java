@@ -78,7 +78,7 @@ public class TriggerTagTest extends DBUnitbase {
         SQLException state = Assertions.assertThrows(SQLException.class, () -> {
             Statement stmnt = conn.createStatement();
             stmnt.addBatch("insert into location.host_group_x_host values(60,3,2,'cfe')");
-            stmnt.addBatch("insert into cfe_18.capture_def_group_x_capture_def values(60,1,3,1,'cfe')");
+            stmnt.addBatch("insert into cfe_18.capture_def_group_x_capture_def values(60,1,3,1,'cfe',1)");
             stmnt.executeBatch();
         });
         Assertions.assertEquals("17001", state.getSQLState());
@@ -94,9 +94,9 @@ public class TriggerTagTest extends DBUnitbase {
         // Execute the tested code that modify the database here
         // execute statement here
         Statement stmnt = conn.createStatement();
-        stmnt.addBatch("insert into cfe_18.capture_def_group(id,capture_def_group_name,capture_type) values(20,'capture_group20','cfe')");
+        stmnt.addBatch("insert into cfe_18.capture_def_group(id,capture_def_group_name,capture_type,flow_id) values(20,'capture_group20','cfe',1)");
         stmnt.executeBatch();
-        stmnt.addBatch("insert into cfe_18.capture_def_group_x_capture_def values(20,5,5,5,'cfe')");
+        stmnt.addBatch("insert into cfe_18.capture_def_group_x_capture_def values(20,5,5,5,'cfe',1)");
         stmnt.executeBatch();
 
         // Fetch database data after executing your code
