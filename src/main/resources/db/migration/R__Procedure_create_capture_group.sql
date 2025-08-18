@@ -45,7 +45,7 @@
  */
 USE cfe_18;
 DELIMITER //
-CREATE OR REPLACE PROCEDURE insert_capture_group(group_name VARCHAR(255), type VARCHAR(255))
+CREATE OR REPLACE PROCEDURE insert_capture_group(group_name VARCHAR(255), type VARCHAR(255), p_flow_id INT)
 BEGIN
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
         BEGIN
@@ -53,11 +53,16 @@ BEGIN
             RESIGNAL;
         END;
     START TRANSACTION;
+    if ((select COUNT(id) from flow.flows f where f.id =p_flow_id)=0) then
+        SELECT JSON_OBJECT('id', p_flow_id, 'message', 'Invalid flow_id') INTO @f;
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = @f;
+    end if;
+
     IF ((SELECT COUNT(id)
          FROM cfe_18.capture_def_group cdg
          WHERE cdg.capture_def_group_name = group_name) = 0) THEN
-        INSERT INTO cfe_18.capture_def_group(capture_def_group_name, capture_type)
-        VALUES (group_name, type);
+        INSERT INTO cfe_18.capture_def_group(capture_def_group_name, capture_type, flow_id)
+        VALUES (group_name, type, p_flow_id);
         SELECT LAST_INSERT_ID() AS id;
     ELSE
         SELECT id AS id
