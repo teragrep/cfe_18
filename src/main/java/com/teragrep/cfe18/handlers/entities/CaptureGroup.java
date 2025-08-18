@@ -60,6 +60,7 @@ public class CaptureGroup {
     @Schema(accessMode = Schema.AccessMode.READ_ONLY)
     private String tag;
     private Integer captureDefinitionId;
+    private Integer flowId;
 
     public int getId() {
         return id;
@@ -99,6 +100,14 @@ public class CaptureGroup {
 
     public void setCaptureDefinitionId(Integer captureDefinitionId) {
         this.captureDefinitionId = captureDefinitionId;
+    }
+
+    public Integer getFlowId() {
+        return flowId;
+    }
+
+    public void setFlowId(Integer flowId) {
+        this.flowId = flowId;
     }
 
     @Override

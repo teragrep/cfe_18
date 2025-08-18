@@ -53,7 +53,7 @@ import java.util.List;
 @Mapper
 public interface CaptureGroupMapper {
 
-    CaptureGroup create(String groupName, CaptureGroup.groupType type);
+    CaptureGroup create(String groupName, CaptureGroup.groupType type, Integer flowId);
 
     CaptureGroup get(int id, Integer version);
 

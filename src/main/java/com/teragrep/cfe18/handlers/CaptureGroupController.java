@@ -89,13 +89,15 @@ public class CaptureGroupController {
             @ApiResponse(responseCode = "201", description = "Capture group created",
                     content = {@Content(mediaType = "application/json",
                             schema = @Schema(implementation = CaptureGroup.class))}),
+            @ApiResponse(responseCode = "404", description = "Invalid flow", content = @Content),
             @ApiResponse(responseCode = "400", description = "Internal server error, contact admin", content = @Content)})
     public ResponseEntity<String> create(@RequestBody CaptureGroup newCaptureGroup) {
         LOGGER.info("About to insert <[{}]>", newCaptureGroup);
         try {
             CaptureGroup c = captureGroupMapper.create(
                     newCaptureGroup.getCaptureGroupName(),
-                    newCaptureGroup.getCaptureGroupType()
+                    newCaptureGroup.getCaptureGroupType(),
+                    newCaptureGroup.getFlowId()
             );
             LOGGER.debug("Values returned <[{}]>", c);
             JSONObject jsonObject = new JSONObject();
@@ -107,6 +109,15 @@ public class CaptureGroupController {
             JSONObject jsonErr = new JSONObject();
             jsonErr.put("id", newCaptureGroup.getId());
             jsonErr.put("message", ex.getCause().getMessage());
+            final Throwable cause = ex.getCause();
+            if (cause instanceof SQLException) {
+                LOGGER.error((cause).getMessage());
+                String state = ((SQLException) cause).getSQLState();
+                if (state.equals("45000")) {
+                    jsonErr.put("message", "Record does not exist");
+                    return new ResponseEntity<>(jsonErr.toString(), HttpStatus.NOT_FOUND);
+                }
+            }
             return new ResponseEntity<>(jsonErr.toString(), HttpStatus.BAD_REQUEST);
         }
     }

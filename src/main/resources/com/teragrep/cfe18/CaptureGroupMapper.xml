@@ -7,7 +7,7 @@
 
     <!-- Insert group               ( group_name VARCHAR(255), type VARCHAR(255) )-->
     <select id="create" resultMap="insertedID" statementType="CALLABLE">
-        {CALL cfe_18.insert_capture_group(#{param1},#{param2})}
+        {CALL cfe_18.insert_capture_group(#{param1},#{param2},#{param3})}
     </select>
 
 
@@ -19,6 +19,7 @@
         <result property="id"                       column="id"/>
         <result property="captureGroupName"         column="group_name"/>
         <result property="captureGroupType"         column="capture_type"/>
+        <result property="flowId"         column="flow_id"/>
     </resultMap>
 
 
@@ -30,6 +31,7 @@
         <result property="id"                       column="id"/>
         <result property="captureGroupName"         column="group_name"/>
         <result property="captureGroupType"         column="group_type"/>
+        <result property="flowId"         column="flow_id"/>
     </resultMap>
 
 
