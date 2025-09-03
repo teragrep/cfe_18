@@ -135,6 +135,8 @@ create table capture_definition
     constraint ´tag_id_TO_tags´ foreign key (tag_id) references tags (id),
     constraint ´flow_id_TO_flows´ foreign key (flow_id) references flow.flows (id),
     constraint ´flow_L7_id_TO_sink´ foreign key (flow_id, L7_id) references flow.capture_sink (flow_id, L7_id),
+    unique key(id,captureIndex_id),
+    unique key(id,captureSourcetype_id),
     unique key (id, capture_type),
     unique key (id, tag_id),
     unique key (id, flow_id),
@@ -246,18 +248,4 @@ create table host_groups_x_capture_def_group
 ) WITH SYSTEM VERSIONING;
 
 
-
-create table capture_def_x_flow_targets
-(
-    id             int primary key auto_increment,
-    capture_def_id int not null,
-    flow_id        int not null,
-    flow_target_id int not null,
-    constraint ´target_id_TO_flow_targets´ foreign key (flow_id, flow_target_id) references flow.flow_targets (flow_id, storage_id),
-    constraint ´capture_def_id_TO_capture_definition´ foreign key (flow_id, capture_def_id) references cfe_18.capture_definition (flow_id, id) on delete cascade,
-    unique (capture_def_id, flow_id, flow_target_id),
-    start_trxid BIGINT UNSIGNED GENERATED ALWAYS AS ROW START INVISIBLE,
-    end_trxid BIGINT UNSIGNED GENERATED ALWAYS AS ROW END INVISIBLE,
-    PERIOD FOR SYSTEM_TIME(start_trxid, end_trxid)
-) WITH SYSTEM VERSIONING;
 
