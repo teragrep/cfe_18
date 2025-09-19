@@ -43,22 +43,46 @@
  * Teragrep, the applicable Commercial License may apply to this file if you as
  * a licensee so wish it.
  */
-use cfe_03;
+USE cfe_03;
 DELIMITER //
-CREATE OR REPLACE PROCEDURE remove_hostmeta(proc_host_meta_id int)
+CREATE OR REPLACE PROCEDURE select_host_meta(proc_host_meta_id INT, tx_id INT)
 BEGIN
+
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
         BEGIN
             ROLLBACK;
             RESIGNAL;
         END;
     START TRANSACTION;
-    if (select id from cfe_03.host_meta where id = proc_host_meta_id) is null then
-        SELECT JSON_OBJECT('id', null, 'message', 'Hostmeta does not exist') into @hm;
-        signal sqlstate '45000' set message_text = @hm;
-    end if;
-    delete from cfe_03.host_meta where id = proc_host_meta_id;
+    IF (tx_id) IS NULL THEN
+        SET @time = (SELECT MAX(transaction_id) FROM mysql.transaction_registry);
+    ELSE
+        SET @time = tx_id;
+    END IF;
+    IF ((SELECT COUNT(id) FROM host_meta FOR SYSTEM_TIME AS OF TRANSACTION @time WHERE id = proc_host_meta_id) = 0)
+    THEN
+        SELECT JSON_OBJECT('id', proc_host_meta_id, 'message', 'Host metadata does not exist')
+        INTO @hmd;
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = @hmd;
+    END IF;
+
+    SELECT hm.id       AS id,
+           a.arch      AS arch,
+           rv.rel_ver  AS release_version,
+           ft.flavor   AS flavor,
+           ot.os       AS os,
+           hm.hostname AS hostname,
+           hm.host_id  AS host_id
+    FROM host_meta FOR SYSTEM_TIME AS OF TRANSACTION @time hm
+             INNER JOIN arch_type FOR SYSTEM_TIME AS OF TRANSACTION @time a ON hm.arch_id = a.id
+             INNER JOIN release_version FOR SYSTEM_TIME AS OF TRANSACTION @time rv ON hm.release_ver_id = rv.id
+             INNER JOIN flavor_type FOR SYSTEM_TIME AS OF TRANSACTION @time ft ON hm.flavor_id = ft.id
+             INNER JOIN os_type FOR SYSTEM_TIME AS OF TRANSACTION @time ot ON hm.os_id = ot.id
+    WHERE hm.id = proc_host_meta_id
+      AND a.id = hm.arch_id
+      AND rv.id = hm.release_ver_id
+      AND ft.id = hm.flavor_id
+      AND ot.id = hm.os_id;
     COMMIT;
+
 END;
-//
-DELIMITER ;

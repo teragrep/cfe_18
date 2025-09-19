@@ -43,46 +43,33 @@
  * Teragrep, the applicable Commercial License may apply to this file if you as
  * a licensee so wish it.
  */
-package com.teragrep.cfe18;
+USE cfe_03;
+DELIMITER //
+CREATE OR REPLACE PROCEDURE select_all_host_metas(tx_id INT)
+BEGIN
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+        BEGIN
+            ROLLBACK;
+            RESIGNAL;
+        END;
+    IF (tx_id) IS NULL THEN
+        SET @time = (SELECT MAX(transaction_id) FROM mysql.transaction_registry);
+    ELSE
+        SET @time = tx_id;
+    END IF;
+    SELECT hm.id       AS id,
+           a.arch      AS arch,
+           rv.rel_ver  AS release_version,
+           ft.flavor   AS flavor,
+           ot.os       AS os,
+           hm.hostname AS hostname,
+           hm.host_id  AS host_id
+    FROM cfe_03.host_meta FOR SYSTEM_TIME AS OF TRANSACTION @time hm
+             INNER JOIN cfe_03.os_type FOR SYSTEM_TIME AS OF TRANSACTION @time ot ON hm.os_id = ot.id
+             INNER JOIN cfe_03.flavor_type FOR SYSTEM_TIME AS OF TRANSACTION @time ft ON hm.flavor_id = ft.id
+             INNER JOIN cfe_03.arch_type FOR SYSTEM_TIME AS OF TRANSACTION @time a ON hm.arch_id = a.id
+             INNER JOIN cfe_03.release_version FOR SYSTEM_TIME AS OF TRANSACTION @time rv ON hm.release_ver_id = rv.id;
 
-import com.teragrep.cfe18.handlers.entities.HostMeta;
-import com.teragrep.cfe18.handlers.entities.InterfaceType;
-import com.teragrep.cfe18.handlers.entities.IPAddress;
-import org.apache.ibatis.annotations.Mapper;
-
-import java.util.List;
-
-@Mapper
-public interface HostMetaMapper {
-
-    HostMeta create(String arch,
-                    String flavor,
-                    String hostname,
-                    int hostId,
-                    String os,
-                    String releaseVersion);
-
-    HostMeta get(int id, Integer version);
-
-    List<HostMeta> getAll(Integer version);
-
-    HostMeta delete(int id);
-
-
-    InterfaceType addInterface_type(String interface_type,
-                                    int host_meta_id);
-
-    IPAddress addIpAddress(int host_meta_id,
-                           String ip_address);
-
-
-    List<IPAddress> getAllHostMetaIp(Integer version);
-
-
-    List<InterfaceType> getAllHostMetaInterface(Integer version);
-
-    IPAddress deleteIp(int id);
-
-    InterfaceType deleteInterface(int id);
-
-}
+END;
+//
+DELIMITER ;
