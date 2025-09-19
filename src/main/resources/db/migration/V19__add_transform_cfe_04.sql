@@ -55,6 +55,7 @@ create table flow.cfe_04_transforms (
     destination_key varchar(255) not null,
     regex varchar(255) not null,
     format varchar(255) not null,
+    unique key(id, cfe_04_id),
     constraint unique(cfe_04_id,name),
     constraint foreign key (cfe_04_id) references flow.cfe_04(id),
     start_trxid BIGINT UNSIGNED GENERATED ALWAYS AS ROW START INVISIBLE,
