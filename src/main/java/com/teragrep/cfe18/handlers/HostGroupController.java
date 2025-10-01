@@ -128,6 +128,17 @@ public class HostGroupController {
         return hostGroupMapper.getAllHostGroup(version,pageSize,lastId);
     }
 
+    @RequestMapping(path = "/group/{pageSize}/{lastId}", method = RequestMethod.GET, produces = "application/json")
+    @Operation(summary = "Fetch all host groups", description = "Will return empty list if there are no host groups to fetch")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Host groups fetched",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = HostGroup.class))})})
+    public List<HostGroup> getAllHostGroupSliced(@RequestParam(required = false) Integer version, @PathParam("pageSize") Integer pageSize, @PathParam("lastId") Integer lastId) {
+        return hostGroupMapper.getAllHostGroupSliced(version,pageSize,lastId);
+    }
+
+
 
 
     // Insert host group with host

@@ -180,6 +180,16 @@ public class HostController {
         return hostMapper.getAllHost(version,pageSize,lastId);
     }
 
+    @RequestMapping(path = "/{pageSize}/{lastId}", method = RequestMethod.GET, produces = "application/json")
+    @Operation(summary = "Fetch all hosts", description = "Will return empty list if there are no hosts to fetch")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Hosts fetched",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = HostFile.class))})})
+    public List<HostFile> getAllHostSliced(@RequestParam(required = false) Integer version, @PathParam("pageSize") Integer pageSize, @PathParam("lastId") Integer lastId) {
+        return hostMapper.getAllHostSliced(version,pageSize,lastId);
+    }
+
 
     //Insert new host with cfe type
     @RequestMapping(path = "/file", method = RequestMethod.PUT, produces = "application/json")
