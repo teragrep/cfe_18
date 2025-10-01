@@ -513,7 +513,6 @@ public class HostControllerTest extends TestSpringBootInformation {
     @Order(11)
     public void testGetAllHosts() throws Exception {
 
-
         ArrayList<HostFile> expectedListFile = new ArrayList<>();
 
         HostFile host = new HostFile();
@@ -532,7 +531,6 @@ public class HostControllerTest extends TestSpringBootInformation {
         relpHost.setMD5("relpHostmd5");
         relpHost.setFqHost("relpHostfq");
         relpHost.setHost_type("relp");
-
 
         HostFile hub1 = new HostFile();
         hub1.setId(2);
@@ -563,10 +561,85 @@ public class HostControllerTest extends TestSpringBootInformation {
 
     }
 
+    @Test
+    @Order(12)
+    public void testGetAllHostsSlicedOneRecord() throws Exception {
+
+        ArrayList<HostFile> expectedListFile = new ArrayList<>();
+
+        HostFile relpHost = new HostFile();
+        relpHost.setId(1);
+        relpHost.setMD5("relpHostmd5");
+        relpHost.setFqHost("relpHostfq");
+        relpHost.setHost_type("relp");
+
+        expectedListFile.add(relpHost);
+        String expectedJson = gson.toJson(expectedListFile);
+
+        // Asserting get request
+        HttpGet requestGet = new HttpGet("http://localhost:" + port + "/host/1/0?pageSize=1&lastId=0");
+
+        requestGet.setHeader("Authorization", "Bearer " + token);
+
+        HttpResponse responseGet = HttpClientBuilder.create().build().execute(requestGet);
+
+        HttpEntity entityGet = responseGet.getEntity();
+
+        String responseStringGet = EntityUtils.toString(entityGet, "UTF-8");
+
+        assertEquals(expectedJson, responseStringGet);
+        assertThat(responseGet.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_OK));
+
+    }
+
+    @Test
+    @Order(13)
+    public void testGetAllHostsSlicedSecondRecords() throws Exception {
+
+        ArrayList<HostFile> expectedListFile = new ArrayList<>();
+
+        HostFile hub1 = new HostFile();
+        hub1.setId(2);
+        hub1.setFqHost("hubfq");
+        hub1.setMD5("hubmd5");
+        hub1.setHost_type("cfe");
+        hub1.setHub(1);
+        hub1.setHub_fq("hubfq");
+
+        HostFile host = new HostFile();
+        host.setId(3);
+        host.setMD5("randommd5value");
+        host.setFqHost("hostFq");
+        host.setHost_type("cfe");
+        host.setHub(1);
+        host.setHostname("hostname1");
+        host.setHost_meta_id(1);
+        host.setHub_fq("hubfq");
+
+        expectedListFile.add(hub1);
+        expectedListFile.add(host);
+        String expectedJson = gson.toJson(expectedListFile);
+
+        // Asserting get request
+        HttpGet requestGet = new HttpGet("http://localhost:" + port + "/host/2/1?pageSize=2&lastId=1");
+
+        requestGet.setHeader("Authorization", "Bearer " + token);
+
+        HttpResponse responseGet = HttpClientBuilder.create().build().execute(requestGet);
+
+        HttpEntity entityGet = responseGet.getEntity();
+
+        String responseStringGet = EntityUtils.toString(entityGet, "UTF-8");
+
+        assertEquals(expectedJson, responseStringGet);
+        assertThat(responseGet.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_OK));
+
+    }
+
     // Delete
 
     @Test
-    @Order(12)
+    @Order(14)
     public void testDeleteHost() throws Exception {
         HttpDelete delete = new HttpDelete("http://localhost:" + port + "/host/" + 1);
 
@@ -593,7 +666,7 @@ public class HostControllerTest extends TestSpringBootInformation {
     }
 
     @Test
-    @Order(13)
+    @Order(15)
     public void testDeleteNonExistentHost() throws Exception {
         HttpDelete delete = new HttpDelete("http://localhost:" + port + "/host/" + 99999);
 
@@ -619,7 +692,7 @@ public class HostControllerTest extends TestSpringBootInformation {
     }
 
     @Test
-    @Order(14)
+    @Order(16)
     public void testDeleteNonExistentHostMeta() throws Exception {
         HttpDelete delete = new HttpDelete("http://localhost:" + port + "/host/meta/" + 99999);
 
@@ -644,9 +717,8 @@ public class HostControllerTest extends TestSpringBootInformation {
         assertThat(deleteResponse.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_BAD_REQUEST));
     }
 
-
     @Test
-    @Order(15)
+    @Order(17)
     public void testDeleteNonExistentHostMetaIp() throws Exception {
         HttpDelete delete = new HttpDelete("http://localhost:" + port + "/host/meta/ip/" + 99999);
 
@@ -673,7 +745,7 @@ public class HostControllerTest extends TestSpringBootInformation {
     }
 
     @Test
-    @Order(16)
+    @Order(18)
     public void testDeleteHostMetaIpInUse() throws Exception {
         HttpDelete delete = new HttpDelete("http://localhost:" + port + "/host/meta/ip/" + 1);
 
@@ -698,9 +770,8 @@ public class HostControllerTest extends TestSpringBootInformation {
         assertThat(deleteResponse.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_BAD_REQUEST));
     }
 
-
     @Test
-    @Order(17)
+    @Order(19)
     public void testDeleteNonExistentHostMetaInterface() throws Exception {
         HttpDelete delete = new HttpDelete("http://localhost:" + port + "/host/meta/ip/" + 99999);
 
@@ -727,7 +798,7 @@ public class HostControllerTest extends TestSpringBootInformation {
     }
 
     @Test
-    @Order(18)
+    @Order(20)
     public void testDeleteHostMetaInterfaceInUse() throws Exception {
         HttpDelete delete = new HttpDelete("http://localhost:" + port + "/host/meta/interface/" + 1);
 
@@ -752,9 +823,8 @@ public class HostControllerTest extends TestSpringBootInformation {
         assertThat(deleteResponse.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_BAD_REQUEST));
     }
 
-
     @Test
-    @Order(19)
+    @Order(21)
     public void testDeleteHostMeta() throws Exception {
         HttpDelete delete = new HttpDelete("http://localhost:" + port + "/host/meta/" + 1);
 
@@ -782,7 +852,7 @@ public class HostControllerTest extends TestSpringBootInformation {
     }
 
     @Test
-    @Order(20)
+    @Order(22)
     public void testDeleteHostMetaIp() throws Exception {
         HttpDelete delete = new HttpDelete("http://localhost:" + port + "/host/meta/ip/" + 1);
 
@@ -810,7 +880,7 @@ public class HostControllerTest extends TestSpringBootInformation {
     }
 
     @Test
-    @Order(21)
+    @Order(23)
     public void testDeleteHostMetaInterface() throws Exception {
         HttpDelete delete = new HttpDelete("http://localhost:" + port + "/host/meta/interface/" + 1);
 

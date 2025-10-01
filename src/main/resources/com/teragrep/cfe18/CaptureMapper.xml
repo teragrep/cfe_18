@@ -83,6 +83,27 @@
         <result property="processing_type" column="processing_type"/>
     </resultMap>
 
+    <!-- GET ALL captures sliced -->
+    <select id="getAllCaptureSliced" resultMap="allCaptureSliced" statementType="CALLABLE">
+        {CALL cfe_18.retrieve_all_captures_pagination(#{param1},#{param2},#{param3})}
+    </select>
+    <resultMap id="allCaptureSliced" type="com.teragrep.cfe18.handlers.entities.CaptureFile">
+        <result property="id" column="captureID"/>
+        <result property="application" column="application"/>
+        <result property="category" column="category"/>
+        <result property="source_type" column="sourcetype"/>
+        <result property="index" column="captureIndex"/>
+        <result property="retention_time" column="retention"/>
+        <result property="tag" column="tag"/>
+        <result property="flow" column="flow"/>
+        <result property="protocol" column="L7"/>
+        <result property="captureType" column="type"/>
+        <result property="captureGroup" column="groupName"/>
+        <result property="tag_path" column="tagpath"/>
+        <result property="capture_path" column="capturepath"/>
+        <result property="processing_type" column="processing_type"/>
+    </resultMap>
+
 
     <!-- Delete -->
     <select id="deleteCapture" statementType="CALLABLE">

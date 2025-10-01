@@ -69,6 +69,7 @@ public interface HostMapper {
             String FqHost);
 
     List<HostFile> getAllHost(Integer version);
+    List<HostFile> getAllHostSliced(Integer version,Integer pageSize, Integer lastId);
 
     HostFile deleteHost(int host_id);
 

@@ -61,6 +61,7 @@ public interface HostGroupMapper {
     );
 
     List<HostGroup> getAllHostGroup(Integer version);
+    List<HostGroup> getAllHostGroupSliced(Integer version,Integer pageSize, Integer lastId);
 
     HostGroup deleteHostGroup(String name);
 }

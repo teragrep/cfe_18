@@ -340,8 +340,6 @@ public class CaptureControllerTest extends TestSpringBootInformation {
         assertThat(responseGet.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_OK));
     }
 
-    // Get All captures
-
     @Test
     @Order(5)
     public void testgetAllCaptures() throws Exception {
@@ -380,8 +378,6 @@ public class CaptureControllerTest extends TestSpringBootInformation {
 
         String expectedJson = gson.toJson(expected);
 
-        // Test Get ALL
-
         // Asserting get request
         HttpGet requestGet = new HttpGet("http://localhost:" + port + "/capture/");
 
@@ -398,10 +394,88 @@ public class CaptureControllerTest extends TestSpringBootInformation {
 
     }
 
+    @Test
+    @Order(6)
+    public void testgetAllCapturesSlicedOneRecord() throws Exception {
+
+        ArrayList<CaptureFile> expected = new ArrayList<>();
+
+        CaptureFile captureFile2 = new CaptureFile();
+        captureFile2.setId(1);
+        captureFile2.setTag("f466e5a4-tagpath1");
+        captureFile2.setRetention_time("P30D");
+        captureFile2.setCategory("audit");
+        captureFile2.setApplication("app1");
+        captureFile2.setIndex("app1_audit");
+        captureFile2.setSource_type("sourcetype1");
+        captureFile2.setProtocol("prot");
+        captureFile2.setFlow("capflow");
+        captureFile2.setTag_path("tagpath1");
+        captureFile2.setCapture_path("capturepath1");
+        captureFile2.setProcessing_type("capname");
+        captureFile2.setCaptureType(CaptureFile.CaptureType.cfe);
+
+        expected.add(captureFile2);
+
+        String expectedJson = gson.toJson(expected);
+
+        // Asserting get request
+        HttpGet requestGet = new HttpGet("http://localhost:" + port + "/capture/1/0?pageSize=1&lastId=0");
+
+        requestGet.setHeader("Authorization", "Bearer " + token);
+
+        HttpResponse responseGet = HttpClientBuilder.create().build().execute(requestGet);
+
+        HttpEntity entityGet = responseGet.getEntity();
+
+        String responseStringGet = EntityUtils.toString(entityGet, "UTF-8");
+
+        assertThat(responseGet.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_OK));
+        assertEquals(expectedJson, responseStringGet);
+    }
+
+    @Test
+    @Order(7)
+    public void testgetAllCapturesSlicedSecondRecord() throws Exception {
+
+        ArrayList<CaptureFile> expected = new ArrayList<>();
+
+        CaptureFile captureRelp2 = new CaptureFile();
+        captureRelp2.setId(2);
+        captureRelp2.setTag("relpTag");
+        captureRelp2.setRetention_time("P30D");
+        captureRelp2.setCategory("audit");
+        captureRelp2.setApplication("relp");
+        captureRelp2.setIndex("audit_relp");
+        captureRelp2.setSource_type("relpsource1");
+        captureRelp2.setProtocol("prot");
+        captureRelp2.setFlow("capflow");
+        captureRelp2.setCaptureType(CaptureFile.CaptureType.relp);
+
+        expected.add(captureRelp2);
+
+        String expectedJson = gson.toJson(expected);
+
+        // Test Get ALL
+
+        // Asserting get request
+        HttpGet requestGet = new HttpGet("http://localhost:" + port + "/capture/1/1?pageSize=1&lastId=1");
+
+        requestGet.setHeader("Authorization", "Bearer " + token);
+
+        HttpResponse responseGet = HttpClientBuilder.create().build().execute(requestGet);
+
+        HttpEntity entityGet = responseGet.getEntity();
+
+        String responseStringGet = EntityUtils.toString(entityGet, "UTF-8");
+
+        assertThat(responseGet.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_OK));
+        assertEquals(expectedJson, responseStringGet);
+    }
 
     // Delete
     @Test
-    @Order(6)
+    @Order(8)
     public void testDeleteNonExistentCapture() throws Exception {
         HttpDelete delete = new HttpDelete("http://localhost:" + port + "/capture/124124");
 
@@ -428,7 +502,7 @@ public class CaptureControllerTest extends TestSpringBootInformation {
     }
 
     @Test
-    @Order(7)
+    @Order(9)
     public void testDeleteCapture() throws Exception {
         HttpDelete delete = new HttpDelete("http://localhost:" + port + "/capture/" + 1);
 

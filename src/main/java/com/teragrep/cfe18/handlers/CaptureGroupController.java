@@ -64,6 +64,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.sql.DataSource;
+import javax.websocket.server.PathParam;
 import java.sql.SQLException;
 import java.util.List;
 
@@ -128,6 +129,16 @@ public class CaptureGroupController {
                             schema = @Schema(implementation = CaptureGroup.class))})})
     public List<CaptureGroup> getAllCaptureGroup(@RequestParam(required = false) Integer version) {
         return captureGroupMapper.getAllCaptureGroup(version);
+    }
+
+    @RequestMapping(path = "/group/{pageSize}/{lastId}", method = RequestMethod.GET, produces = "application/json")
+    @Operation(summary = "Fetch all capture groups with captures", description = "Will return empty list if there are no capture groups to fetch")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Found capture groups",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = CaptureGroup.class))})})
+    public List<CaptureGroup> getAllCaptureGroup(@RequestParam(required = false) Integer version, @PathParam("pageSize") Integer pageSize, @PathParam("lastId") Integer lastId) {
+        return captureGroupMapper.getAllCaptureGroupSliced(version,pageSize,lastId);
     }
 
 

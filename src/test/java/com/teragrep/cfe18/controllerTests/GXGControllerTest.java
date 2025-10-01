@@ -454,7 +454,35 @@ public class GXGControllerTest extends TestSpringBootInformation {
         assertEquals(expectedJson, responseStringGet);
 
     }
+    @Test
+    @Order(7)
+    public void testRetrieveAllCaptureGroupsSliced() throws Exception {
+        ArrayList<CaptureGroup> expected = new ArrayList<>();
+        CaptureGroup captureGroup = new CaptureGroup();
+        captureGroup.setCapture_def_group_name("groupRelp");
+        captureGroup.setCapture_group_type(CaptureGroup.group_type.relp);
+        captureGroup.setTag("relpTag");
+        captureGroup.setCapture_definition_id(1);
 
+        expected.add(captureGroup);
+
+        String expectedJson = new Gson().toJson(expected);
+
+        // Asserting get request
+        HttpGet requestGet = new HttpGet("http://localhost:" + port + "/capture/group/1/0?pageSize=1&lastId=0");
+
+        requestGet.setHeader("Authorization", "Bearer " + token);
+
+        HttpResponse responseGet = HttpClientBuilder.create().build().execute(requestGet);
+
+        HttpEntity entityGet = responseGet.getEntity();
+
+        String responseStringGet = EntityUtils.toString(entityGet, "UTF-8");
+
+        assertThat(responseGet.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_OK));
+        assertEquals(expectedJson, responseStringGet);
+
+    }
 
     @Test
     @Order(8)
@@ -473,6 +501,37 @@ public class GXGControllerTest extends TestSpringBootInformation {
 
         // Asserting get request
         HttpGet requestGet = new HttpGet("http://localhost:" + port + "/host/group");
+
+        requestGet.setHeader("Authorization", "Bearer " + token);
+
+        HttpResponse responseGet = HttpClientBuilder.create().build().execute(requestGet);
+
+        HttpEntity entityGet = responseGet.getEntity();
+
+        String responseStringGet = EntityUtils.toString(entityGet, "UTF-8");
+
+        assertEquals(expectedJson, responseStringGet);
+        assertThat(responseGet.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_OK));
+
+    }
+
+    @Test
+    @Order(8)
+    public void testRetrieveAllHostGroupsSliced() throws Exception {
+        ArrayList<HostGroup> expected = new ArrayList<>();
+        HostGroup hostGroup = new HostGroup();
+        hostGroup.setMd5("relpHostmd5");
+        hostGroup.setHost_id(1);
+        hostGroup.setHost_group_name("hostgroup1");
+        hostGroup.setHost_group_type(HostGroup.group_type.relp);
+        hostGroup.setId(1);
+
+        expected.add(hostGroup);
+
+        String expectedJson = new Gson().toJson(expected);
+
+        // Asserting get request
+        HttpGet requestGet = new HttpGet("http://localhost:" + port + "/host/group/1/0?pageSize=1&lastId=0");
 
         requestGet.setHeader("Authorization", "Bearer " + token);
 

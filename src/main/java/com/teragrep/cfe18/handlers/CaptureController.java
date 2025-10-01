@@ -67,6 +67,7 @@ import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.*;
 
 import javax.sql.DataSource;
+import javax.websocket.server.PathParam;
 import java.sql.SQLException;
 import java.util.List;
 
@@ -179,6 +180,17 @@ public class CaptureController {
     })
     public List<CaptureFile> getAllCapture(@RequestParam(required = false) Integer version) {
         return captureMapper.getAllCapture(version);
+    }
+
+    // GET ALL with pagination Captures
+    @RequestMapping(path = "/{pageSize}/{lastId}", method = RequestMethod.GET, produces = "application/json")
+    @Operation(summary = "Fetch all captures", description = "Will return empty list if there are no captures to fetch")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Found Captures",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = CaptureFile.class))}),})
+    public List<CaptureFile> getAllCaptureSliced(@RequestParam(required = false) Integer version, @PathParam("pageSize") Integer pageSize, @PathParam("lastId") Integer lastId) {
+        return captureMapper.getAllCaptureSliced(version,pageSize,lastId);
     }
 
 

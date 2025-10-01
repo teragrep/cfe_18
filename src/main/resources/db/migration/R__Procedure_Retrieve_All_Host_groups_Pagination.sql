@@ -43,25 +43,31 @@
  * Teragrep, the applicable Commercial License may apply to this file if you as
  * a licensee so wish it.
  */
-package com.teragrep.cfe18;
-
-import com.teragrep.cfe18.handlers.entities.CaptureGroup;
-import org.apache.ibatis.annotations.Mapper;
-
-import java.util.List;
-
-@Mapper
-public interface CaptureGroupMapper {
-
-    List<CaptureGroup> getCaptureGroupByName(String capture_def_group_name,Integer version);
-
-    CaptureGroup addNewCaptureGroup(
-            String capture_def_group_name,
-            Integer capture_definition_id
-    );
-
-    List<CaptureGroup> getAllCaptureGroup(Integer version);
-    List<CaptureGroup> getAllCaptureGroupSliced(Integer version,Integer pageSize, Integer lastId);
-
-    CaptureGroup deleteCaptureGroup(String name);
-}
+use location;
+DELIMITER //
+CREATE OR REPLACE PROCEDURE retrieve_all_host_groups_pagination(tx_id int, page_size int, last_id int)
+BEGIN
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+        BEGIN
+            ROLLBACK;
+            RESIGNAL;
+        end;
+        if(tx_id) is null then
+             set @time = (select max(transaction_id) from mysql.transaction_registry);
+        else
+             set @time=tx_id;
+        end if;
+    select hg.id        as host_group_id,
+           hg.groupName as host_group_name,
+           hg.host_type as host_group_type,
+           h.id         as host_id,
+           h.MD5        as host_md5
+    from location.host_group for system_time as of transaction @time hg
+             inner join location.host_group_x_host for system_time as of transaction @time hgxh on hg.id = hgxh.host_group_id
+             inner join location.host for system_time as of transaction @time h on hgxh.host_id = h.id
+        JOIN (SELECT hg2.id FROM location.host_group_x_host for SYSTEM_TIME as of TRANSACTION @time hg2 where hg2.id>last_id ORDER BY hg2.id LIMIT page_size)
+                 AS page_ids ON hgxh.id = page_ids.id
+            ORDER BY hgxh.id;
+end;
+//
+DELIMITER ;
