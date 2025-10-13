@@ -454,6 +454,7 @@ public class GXGControllerTest extends TestSpringBootInformation {
         assertEquals(expectedJson, responseStringGet);
 
     }
+
     @Test
     @Order(7)
     public void testRetrieveAllCaptureGroupsSliced() throws Exception {
@@ -479,7 +480,7 @@ public class GXGControllerTest extends TestSpringBootInformation {
 
         String responseStringGet = EntityUtils.toString(entityGet, "UTF-8");
 
-        assertThat(responseGet.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_OK));
+        assertEquals(HttpStatus.SC_OK, responseGet.getStatusLine().getStatusCode());
         assertEquals(expectedJson, responseStringGet);
 
     }
@@ -745,6 +746,7 @@ public class GXGControllerTest extends TestSpringBootInformation {
         assertThat(deleteResponse.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_OK));
         assertEquals(expected, actual);
     }
+
     @Test
     @Order(16)
     public void testNoTwoTagsInCaptureGroup() throws Exception {
@@ -823,7 +825,6 @@ public class GXGControllerTest extends TestSpringBootInformation {
                 equalTo(HttpStatus.SC_BAD_REQUEST));
         assertEquals(expected, actual);
     }
-
 
 
     @Test

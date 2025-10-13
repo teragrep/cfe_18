@@ -588,7 +588,7 @@ public class HostControllerTest extends TestSpringBootInformation {
         String responseStringGet = EntityUtils.toString(entityGet, "UTF-8");
 
         assertEquals(expectedJson, responseStringGet);
-        assertThat(responseGet.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_OK));
+        assertEquals(HttpStatus.SC_OK, responseGet.getStatusLine().getStatusCode());
 
     }
 
@@ -632,8 +632,7 @@ public class HostControllerTest extends TestSpringBootInformation {
         String responseStringGet = EntityUtils.toString(entityGet, "UTF-8");
 
         assertEquals(expectedJson, responseStringGet);
-        assertThat(responseGet.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_OK));
-
+        assertEquals(HttpStatus.SC_OK, responseGet.getStatusLine().getStatusCode());
     }
 
     // Delete

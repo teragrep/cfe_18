@@ -430,7 +430,7 @@ public class CaptureControllerTest extends TestSpringBootInformation {
 
         String responseStringGet = EntityUtils.toString(entityGet, "UTF-8");
 
-        assertThat(responseGet.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_OK));
+        assertEquals(HttpStatus.SC_OK, responseGet.getStatusLine().getStatusCode());
         assertEquals(expectedJson, responseStringGet);
     }
 
@@ -469,7 +469,7 @@ public class CaptureControllerTest extends TestSpringBootInformation {
 
         String responseStringGet = EntityUtils.toString(entityGet, "UTF-8");
 
-        assertThat(responseGet.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_OK));
+        assertEquals(HttpStatus.SC_OK, responseGet.getStatusLine().getStatusCode());
         assertEquals(expectedJson, responseStringGet);
     }
 

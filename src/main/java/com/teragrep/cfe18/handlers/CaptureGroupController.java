@@ -132,7 +132,7 @@ public class CaptureGroupController {
     }
 
     @RequestMapping(path = "/group/{pageSize}/{lastId}", method = RequestMethod.GET, produces = "application/json")
-    @Operation(summary = "Fetch all capture groups with captures", description = "Will return empty list if there are no capture groups to fetch")
+    @Operation(summary = "Fetch all capture groups with captures from lastId and amount based on pageSize", description = "Will return empty list if there are no capture groups to fetch")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Found capture groups",
                     content = {@Content(mediaType = "application/json",

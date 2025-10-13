@@ -184,7 +184,7 @@ public class CaptureController {
 
     // GET ALL with pagination Captures
     @RequestMapping(path = "/{pageSize}/{lastId}", method = RequestMethod.GET, produces = "application/json")
-    @Operation(summary = "Fetch all captures", description = "Will return empty list if there are no captures to fetch")
+    @Operation(summary = "Fetch all captures from lastId and amount based on pageSize", description = "Will return empty list if there are no captures to fetch")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Found Captures",
                     content = {@Content(mediaType = "application/json",
