@@ -129,7 +129,7 @@ public class HostGroupController {
     }
 
     @RequestMapping(path = "/group/{pageSize}/{lastId}", method = RequestMethod.GET, produces = "application/json")
-    @Operation(summary = "Fetch all host groups", description = "Will return empty list if there are no host groups to fetch")
+    @Operation(summary = "Fetch all host groups from lastId and amount based on pageSize", description = "Will return empty list if there are no host groups to fetch")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Host groups fetched",
                     content = {@Content(mediaType = "application/json",

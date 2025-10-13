@@ -181,7 +181,7 @@ public class HostController {
     }
 
     @RequestMapping(path = "/{pageSize}/{lastId}", method = RequestMethod.GET, produces = "application/json")
-    @Operation(summary = "Fetch all hosts", description = "Will return empty list if there are no hosts to fetch")
+    @Operation(summary = "Fetch all hosts from lastId and amount based on pageSize", description = "Will return empty list if there are no hosts to fetch")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Hosts fetched",
                     content = {@Content(mediaType = "application/json",
