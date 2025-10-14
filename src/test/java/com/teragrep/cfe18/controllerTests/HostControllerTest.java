@@ -577,7 +577,7 @@ public class HostControllerTest extends TestSpringBootInformation {
         String expectedJson = gson.toJson(expectedListFile);
 
         // Asserting get request
-        HttpGet requestGet = new HttpGet("http://localhost:" + port + "/host/1/0?pageSize=1&lastId=0");
+        HttpGet requestGet = new HttpGet("http://localhost:" + port + "/host/sliced?pageSize=1&lastId=0");
 
         requestGet.setHeader("Authorization", "Bearer " + token);
 
@@ -621,7 +621,7 @@ public class HostControllerTest extends TestSpringBootInformation {
         String expectedJson = gson.toJson(expectedListFile);
 
         // Asserting get request
-        HttpGet requestGet = new HttpGet("http://localhost:" + port + "/host/2/1?pageSize=2&lastId=1");
+        HttpGet requestGet = new HttpGet("http://localhost:" + port + "/host/sliced?pageSize=2&lastId=1");
 
         requestGet.setHeader("Authorization", "Bearer " + token);
 

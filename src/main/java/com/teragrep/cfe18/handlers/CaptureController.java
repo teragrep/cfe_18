@@ -183,13 +183,13 @@ public class CaptureController {
     }
 
     // GET ALL with pagination Captures
-    @RequestMapping(path = "/{pageSize}/{lastId}", method = RequestMethod.GET, produces = "application/json")
+    @RequestMapping(path = "/sliced", method = RequestMethod.GET, produces = "application/json")
     @Operation(summary = "Fetch all captures from lastId and amount based on pageSize", description = "Will return empty list if there are no captures to fetch")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Found Captures",
                     content = {@Content(mediaType = "application/json",
                             schema = @Schema(implementation = CaptureFile.class))}),})
-    public List<CaptureFile> getAllCaptureSliced(@RequestParam(required = false) Integer version, @PathParam("pageSize") Integer pageSize, @PathParam("lastId") Integer lastId) {
+    public List<CaptureFile> getAllCaptureSliced(@RequestParam(required = false) Integer version, @RequestParam Integer pageSize, @RequestParam Integer lastId) {
         return captureMapper.getAllCaptureSliced(version,pageSize,lastId);
     }
 

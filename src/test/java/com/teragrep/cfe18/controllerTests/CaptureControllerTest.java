@@ -420,7 +420,7 @@ public class CaptureControllerTest extends TestSpringBootInformation {
         String expectedJson = gson.toJson(expected);
 
         // Asserting get request
-        HttpGet requestGet = new HttpGet("http://localhost:" + port + "/capture/1/0?pageSize=1&lastId=0");
+        HttpGet requestGet = new HttpGet("http://localhost:" + port + "/capture/sliced?lastId=0&pageSize=1");
 
         requestGet.setHeader("Authorization", "Bearer " + token);
 
@@ -459,7 +459,7 @@ public class CaptureControllerTest extends TestSpringBootInformation {
         // Test Get ALL
 
         // Asserting get request
-        HttpGet requestGet = new HttpGet("http://localhost:" + port + "/capture/1/1?pageSize=1&lastId=1");
+        HttpGet requestGet = new HttpGet("http://localhost:" + port + "/capture/sliced?lastId=1&pageSize=1");
 
         requestGet.setHeader("Authorization", "Bearer " + token);
 
