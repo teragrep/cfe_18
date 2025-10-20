@@ -45,7 +45,7 @@
  */
 use location;
 DELIMITER //
-CREATE OR REPLACE PROCEDURE retrieve_all_host_groups(tx_id int)
+CREATE OR REPLACE PROCEDURE retrieve_all_host_groups(tx_id int, page_size int, last_id int)
 BEGIN
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
         BEGIN
@@ -64,7 +64,10 @@ BEGIN
            h.MD5        as host_md5
     from location.host_group for system_time as of transaction @time hg
              inner join location.host_group_x_host for system_time as of transaction @time hgxh on hg.id = hgxh.host_group_id
-             inner join location.host for system_time as of transaction @time h on hgxh.host_id = h.id;
+             inner join location.host for system_time as of transaction @time h on hgxh.host_id = h.id
+        JOIN (SELECT hg2.id FROM location.host_group_x_host for SYSTEM_TIME as of TRANSACTION @time hg2 where hg2.id>last_id ORDER BY hg2.id LIMIT page_size)
+                 AS page_ids ON hgxh.id = page_ids.id
+            ORDER BY hgxh.id;
 end;
 //
 DELIMITER ;

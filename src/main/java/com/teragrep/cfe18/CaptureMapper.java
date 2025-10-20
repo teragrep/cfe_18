@@ -80,8 +80,7 @@ public interface CaptureMapper {
     );
 
 
-    List<CaptureFile> getAllCapture(Integer version);
-    List<CaptureFile> getAllCaptureSliced(Integer version,Integer pageSize, Integer lastId);
+    List<CaptureFile> getAllCapture(Integer version,Integer pageSize, Integer lastId);
 
     CaptureFile deleteCapture(int id);
 }

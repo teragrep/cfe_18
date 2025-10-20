@@ -45,7 +45,7 @@
  */
 use cfe_18;
 DELIMITER //
-CREATE OR REPLACE PROCEDURE retrieve_all_captures(tx_id int)
+CREATE OR REPLACE PROCEDURE retrieve_all_captures(tx_id int, page_size int, last_id int)
 BEGIN
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
         BEGIN
@@ -71,7 +71,7 @@ BEGIN
            cmf.tagPath               as tagpath,
            cmf.capturePath           as capturepath,
            pt.type_name              as processing_type
-    from cfe_18.capture_definition for system_time as of transaction @time cd
+    from cfe_18.capture_definition  for system_time as of transaction  @time  cd
              inner join application for system_time as of transaction @time a on cd.application_id = a.id
              inner join category for system_time as of transaction @time c on cd.category_id = c.id
              inner join captureSourcetype for system_time as of transaction @time cS on cd.captureSourcetype_id = cS.id
@@ -87,7 +87,11 @@ BEGIN
                           t.id = cdgxcd.tag_id
              left join capture_def_group for system_time as of transaction @time cg on cdgxcd.capture_def_group_id = cg.id
              left join capture_meta_file for system_time as of transaction @time cmf on ct.id = cmf.id and ct.capture_type = cmf.capture_type
-             left join processing_type for system_time as of transaction @time pt on cmf.processing_type_id = pt.id;
+             left join processing_type for system_time as of transaction @time pt on cmf.processing_type_id = pt.id
+             JOIN (SELECT cd2.id FROM cfe_18.capture_definition for SYSTEM_TIME as of TRANSACTION @time cd2 where cd2.id>last_id ORDER BY cd2.id LIMIT page_size)
+                 AS page_ids ON cd.id = page_ids.id
+            ORDER BY cd.id;
+
 end;
 //
 DELIMITER ;

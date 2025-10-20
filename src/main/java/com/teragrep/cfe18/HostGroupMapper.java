@@ -60,8 +60,7 @@ public interface HostGroupMapper {
             String host_group_name
     );
 
-    List<HostGroup> getAllHostGroup(Integer version);
-    List<HostGroup> getAllHostGroupSliced(Integer version,Integer pageSize, Integer lastId);
+    List<HostGroup> getAllHostGroup(Integer version,Integer pageSize, Integer lastId);
 
     HostGroup deleteHostGroup(String name);
 }

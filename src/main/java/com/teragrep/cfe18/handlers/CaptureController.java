@@ -59,6 +59,8 @@ import org.mybatis.spring.SqlSessionTemplate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -169,28 +171,15 @@ public class CaptureController {
         return new ResponseEntity<>("Unexpected error", HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
-
-    // GET ALL Captures
+    // GET ALL
     @RequestMapping(path = "/", method = RequestMethod.GET, produces = "application/json")
-    @Operation(summary = "Fetch all captures", description = "Will return empty list if there are no captures to fetch")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Found the relp capture",
-                    content = {@Content(mediaType = "application/json",
-                            schema = @Schema(implementation = CaptureFile.class))}),
-    })
-    public List<CaptureFile> getAllCapture(@RequestParam(required = false) Integer version) {
-        return captureMapper.getAllCapture(version);
-    }
-
-    // GET ALL with pagination Captures
-    @RequestMapping(path = "/sliced", method = RequestMethod.GET, produces = "application/json")
-    @Operation(summary = "Fetch all captures from lastId and amount based on pageSize", description = "Will return empty list if there are no captures to fetch")
+    @Operation(summary = "Fetch all captures from lastId and amount based on pageSize. LastId defaults to 0 returning first 100 rows. PageSize is defaulted in application.properties", description = "Will return empty list if there are no captures to fetch")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Found Captures",
                     content = {@Content(mediaType = "application/json",
                             schema = @Schema(implementation = CaptureFile.class))}),})
-    public List<CaptureFile> getAllCaptureSliced(@RequestParam(required = false) Integer version, @RequestParam Integer pageSize, @RequestParam Integer lastId) {
-        return captureMapper.getAllCaptureSliced(version,pageSize,lastId);
+    public List<CaptureFile> getAllCaptureSliced(@RequestParam(required = false) Integer version, @RequestParam(defaultValue = "${slicing.pageSize}") Integer pageSize, @RequestParam(defaultValue = "0") Integer lastId) {
+        return captureMapper.getAllCapture(version,pageSize,lastId);
     }
 
 

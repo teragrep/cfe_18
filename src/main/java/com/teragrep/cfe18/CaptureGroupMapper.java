@@ -60,8 +60,7 @@ public interface CaptureGroupMapper {
             Integer capture_definition_id
     );
 
-    List<CaptureGroup> getAllCaptureGroup(Integer version);
-    List<CaptureGroup> getAllCaptureGroupSliced(Integer version,Integer pageSize, Integer lastId);
+    List<CaptureGroup> getAllCaptureGroup(Integer version,Integer pageSize, Integer lastId);
 
     CaptureGroup deleteCaptureGroup(String name);
 }

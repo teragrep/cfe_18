@@ -470,7 +470,7 @@ public class GXGControllerTest extends TestSpringBootInformation {
         String expectedJson = new Gson().toJson(expected);
 
         // Asserting get request
-        HttpGet requestGet = new HttpGet("http://localhost:" + port + "/capture/group/sliced?pageSize=1&lastId=0");
+        HttpGet requestGet = new HttpGet("http://localhost:" + port + "/capture/group?pageSize=1&lastId=0");
 
         requestGet.setHeader("Authorization", "Bearer " + token);
 
@@ -532,7 +532,7 @@ public class GXGControllerTest extends TestSpringBootInformation {
         String expectedJson = new Gson().toJson(expected);
 
         // Asserting get request
-        HttpGet requestGet = new HttpGet("http://localhost:" + port + "/host/group/sliced?pageSize=1&lastId=0");
+        HttpGet requestGet = new HttpGet("http://localhost:" + port + "/host/group?pageSize=1&lastId=0");
 
         requestGet.setHeader("Authorization", "Bearer " + token);
 
