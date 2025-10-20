@@ -124,20 +124,9 @@ public class HostGroupController {
             @ApiResponse(responseCode = "200", description = "Host groups fetched",
                     content = {@Content(mediaType = "application/json",
                             schema = @Schema(implementation = HostGroup.class))})})
-    public List<HostGroup> getAllHostGroup(@RequestParam(required = false) Integer version, @RequestParam(defaultValue = "${pagination.pageSize}") Integer pageSize, @RequestParam(defaultValue = "0") Integer lastId) {
+    public List<HostGroup> getAllHostGroupSliced(@RequestParam(required = false) Integer version, @RequestParam(defaultValue = "${slicing.pageSize}") Integer pageSize, @RequestParam(defaultValue = "0") Integer lastId) {
         return hostGroupMapper.getAllHostGroup(version,pageSize,lastId);
     }
-
-    @RequestMapping(path = "/group/sliced", method = RequestMethod.GET, produces = "application/json")
-    @Operation(summary = "Fetch all host groups from lastId and amount based on pageSize", description = "Will return empty list if there are no host groups to fetch")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Host groups fetched",
-                    content = {@Content(mediaType = "application/json",
-                            schema = @Schema(implementation = HostGroup.class))})})
-    public List<HostGroup> getAllHostGroupSliced(@RequestParam(required = false) Integer version, @RequestParam Integer pageSize, @RequestParam Integer lastId) {
-        return hostGroupMapper.getAllHostGroupSliced(version,pageSize,lastId);
-    }
-
 
 
 

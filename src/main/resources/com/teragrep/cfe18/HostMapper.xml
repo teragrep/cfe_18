@@ -67,20 +67,6 @@
         <result property="hub" column="hub_id"/>
     </resultMap>
 
-    <!-- GET ALL Host -->
-    <select id="getAllHostSliced" resultMap="allHostSliced" statementType="CALLABLE">
-        {CALL location.retrieve_all_hosts_pagination(#{param1},#{param2},#{param3})}
-    </select>
-    <resultMap id="allHostSliced" type="com.teragrep.cfe18.handlers.entities.HostFile">
-        <result property="id" column="host_id"/>
-        <result property="fqHost" column="host_fq"/>
-        <result property="md5" column="host_md5"/>
-        <result property="host_type" column="host_type"/>
-        <result property="hostname" column="hostname"/>
-        <result property="host_meta_id" column="host_meta_id"/>
-        <result property="hub_fq" column="hub_fq"/>
-        <result property="hub" column="hub_id"/>
-    </resultMap>
 
 
 

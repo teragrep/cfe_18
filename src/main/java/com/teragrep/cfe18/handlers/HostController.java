@@ -176,18 +176,8 @@ public class HostController {
             @ApiResponse(responseCode = "200", description = "Hosts fetched",
                     content = {@Content(mediaType = "application/json",
                             schema = @Schema(implementation = HostFile.class))})})
-    public List<HostFile> getAllHost(@RequestParam(required = false) Integer version, @RequestParam(defaultValue = "${pagination.pageSize}") Integer pageSize, @RequestParam(defaultValue = "0") Integer lastId) {
+    public List<HostFile> getAllHostSliced(@RequestParam(required = false) Integer version, @RequestParam(defaultValue = "${slicing.pageSize}") Integer pageSize, @RequestParam(defaultValue = "0") Integer lastId) {
         return hostMapper.getAllHost(version,pageSize,lastId);
-    }
-
-    @RequestMapping(path = "/sliced", method = RequestMethod.GET, produces = "application/json")
-    @Operation(summary = "Fetch all hosts from lastId and amount based on pageSize", description = "Will return empty list if there are no hosts to fetch")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Hosts fetched",
-                    content = {@Content(mediaType = "application/json",
-                            schema = @Schema(implementation = HostFile.class))})})
-    public List<HostFile> getAllHostSliced(@RequestParam(required = false) Integer version, @RequestParam Integer pageSize, @RequestParam Integer lastId) {
-        return hostMapper.getAllHostSliced(version,pageSize,lastId);
     }
 
 

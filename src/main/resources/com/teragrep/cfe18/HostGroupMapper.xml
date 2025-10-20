@@ -41,18 +41,6 @@
         <result property="md5" column="host_md5"/>
     </resultMap>
 
-    <!-- GET ALL Host Groups -->
-    <select id="getAllHostGroupSliced" resultMap="allHostGroupSliced" statementType="CALLABLE">
-        {CALL location.retrieve_all_host_groups_pagination(#{param1},#{param2},#{param3})}
-    </select>
-    <resultMap id="allHostGroupSliced" type="com.teragrep.cfe18.handlers.entities.HostGroup">
-        <result property="id" column="host_group_id"/>
-        <result property="host_group_name" column="host_group_name"/>
-        <result property="host_group_type" column="host_group_type"/>
-        <result property="host_id" column="host_id"/>
-        <result property="md5" column="host_md5"/>
-    </resultMap>
-
 
     <!-- Delete -->
     <select id="deleteHostGroup" statementType="CALLABLE">

@@ -41,16 +41,6 @@
         <result property="capture_definition_id" column="capture_id"/>
     </resultMap>
 
-    <!-- GET ALL Sliced -->
-    <select id="getAllCaptureGroupSliced" resultMap="allCaptureGroupSliced" statementType="CALLABLE">
-        {CALL cfe_18.retrieve_all_capture_groups_pagination(#{param1},#{param2},#{param3})}
-    </select>
-    <resultMap id="allCaptureGroupSliced" type="com.teragrep.cfe18.handlers.entities.CaptureGroup">
-        <result property="capture_def_group_name" column="group_name"/>
-        <result property="capture_group_type" column="group_type"/>
-        <result property="tag" column="capture_tag"/>
-        <result property="capture_definition_id" column="capture_id"/>
-    </resultMap>
 
 
 
