@@ -127,7 +127,7 @@ public class CaptureGroupController {
             @ApiResponse(responseCode = "200", description = "Found capture groups",
                     content = {@Content(mediaType = "application/json",
                             schema = @Schema(implementation = CaptureGroup.class))})})
-    public List<CaptureGroup> getAllCaptureGroup(@RequestParam(required = false) Integer version, @RequestParam(defaultValue = "${slicing.pageSize}") Integer pageSize, @RequestParam(defaultValue = "0") Integer lastId) {
+    public List<CaptureGroup> getAllCaptureGroup(@RequestParam(required = false) Integer version, @RequestParam(defaultValue = "${pagination.pageSize}") Integer pageSize, @RequestParam(defaultValue = "0") Integer lastId) {
         return captureGroupMapper.getAllCaptureGroup(version,pageSize,lastId);
     }
 

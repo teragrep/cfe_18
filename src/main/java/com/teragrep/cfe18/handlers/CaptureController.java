@@ -178,7 +178,7 @@ public class CaptureController {
             @ApiResponse(responseCode = "200", description = "Found Captures",
                     content = {@Content(mediaType = "application/json",
                             schema = @Schema(implementation = CaptureFile.class))}),})
-    public List<CaptureFile> getAllCaptureSliced(@RequestParam(required = false) Integer version, @RequestParam(defaultValue = "${slicing.pageSize}") Integer pageSize, @RequestParam(defaultValue = "0") Integer lastId) {
+    public List<CaptureFile> getAllCaptureSliced(@RequestParam(required = false) Integer version, @RequestParam(defaultValue = "${pagination.pageSize}") Integer pageSize, @RequestParam(defaultValue = "0") Integer lastId) {
         return captureMapper.getAllCapture(version,pageSize,lastId);
     }
 
