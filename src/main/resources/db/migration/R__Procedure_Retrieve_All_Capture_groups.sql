@@ -57,7 +57,8 @@ BEGIN
     else
         set @time=tx_id;
     end if;
-    select cdg.capture_def_group_name as group_name,
+    select cdg.id                     as id,
+           cdg.capture_def_group_name as group_name,
            cdg.capture_type           as group_type,
            t.tag                      as capture_tag,
            cd.id                      as capture_id
