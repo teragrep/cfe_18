@@ -47,6 +47,7 @@ package com.teragrep.cfe18.controllerTests;
 
 import com.google.gson.Gson;
 import com.teragrep.cfe18.handlers.entities.*;
+import jakarta.json.*;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
@@ -57,11 +58,13 @@ import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.util.EntityUtils;
+import org.json.JSONArray;
 import org.json.JSONObject;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
+import org.springframework.context.annotation.Description;
 
 import java.util.ArrayList;
 
@@ -396,7 +399,7 @@ public class CaptureControllerTest extends TestSpringBootInformation {
 
     @Test
     @Order(6)
-    public void testgetAllCapturesSlicedOneRecord() throws Exception {
+    public void testgetAllCapturesPaginationOneRecord() throws Exception {
 
         ArrayList<CaptureFile> expected = new ArrayList<>();
 
@@ -436,7 +439,7 @@ public class CaptureControllerTest extends TestSpringBootInformation {
 
     @Test
     @Order(7)
-    public void testgetAllCapturesSlicedSecondRecord() throws Exception {
+    public void testgetAllCapturesPaginationSecondRecord() throws Exception {
 
         ArrayList<CaptureFile> expected = new ArrayList<>();
 
@@ -473,9 +476,89 @@ public class CaptureControllerTest extends TestSpringBootInformation {
         assertEquals(expectedJson, responseStringGet);
     }
 
-    // Delete
     @Test
     @Order(8)
+    @Description("Tests rolling over records using lastId from previous records")
+    public void testgetAllCapturesPaginationRollAll() throws Exception {
+
+        JsonObjectBuilder jsonObject = Json.createObjectBuilder();
+
+        jsonObject.add("id", 1);
+        jsonObject.add("tag","f466e5a4-tagpath1");
+        jsonObject.add("retention_time","P30D");
+        jsonObject.add("category","audit");
+        jsonObject.add("application","app1");
+        jsonObject.add("index","app1_audit");
+        jsonObject.add("source_type","sourcetype1");
+        jsonObject.add("protocol","prot");
+        jsonObject.add("flow","capflow");
+        jsonObject.add("tag_path","tagpath1");
+        jsonObject.add("capture_path","capturepath1");
+        jsonObject.add("processing_type","capname");
+        jsonObject.add("captureType","cfe");
+
+        JsonObject expectedJsonobject = jsonObject.build();
+        JsonArrayBuilder jsonArrayBuilder = Json.createArrayBuilder();
+        jsonArrayBuilder.add(expectedJsonobject);
+        JsonArray expectedJsonArray = jsonArrayBuilder.build();
+        String expected1 = expectedJsonArray.toString();
+
+
+        jsonObject.add("id", 2);
+        jsonObject.add("tag","relpTag");
+        jsonObject.add("retention_time","P30D");
+        jsonObject.add("category","audit");
+        jsonObject.add("application","relp");
+        jsonObject.add("index","audit_relp");
+        jsonObject.add("source_type","relpsource1");
+        jsonObject.add("protocol","prot");
+        jsonObject.add("flow","capflow");
+        jsonObject.add("captureType","relp");
+
+        JsonObject expectedJsonobject2 = jsonObject.build();
+        JsonArrayBuilder jsonArrayBuilder2 = Json.createArrayBuilder();
+        jsonArrayBuilder2.add(expectedJsonobject2);
+        JsonArray expectedJsonArray2 = jsonArrayBuilder2.build();
+        String expected2 = expectedJsonArray2.toString();
+
+        HttpGet requestGet = new HttpGet("http://localhost:" + port + "/capture/?pageSize=1");
+
+        requestGet.setHeader("Authorization", "Bearer " + token);
+
+        HttpResponse responseGet = HttpClientBuilder.create().build().execute(requestGet);
+
+        HttpEntity entityGet = responseGet.getEntity();
+
+        String responseStringGet = EntityUtils.toString(entityGet, "UTF-8");
+
+        JSONArray jsonArray = new JSONArray(responseStringGet);
+
+        JSONObject responseAsJson = new JSONObject(jsonArray.get(0).toString());
+
+        // Getting last id from previous request
+        int lastId = responseAsJson.getInt("id");
+
+        HttpGet requestGetSecond = new HttpGet("http://localhost:" + port + "/capture/?lastId="+lastId+"&pageSize=1");
+
+        requestGetSecond.setHeader("Authorization", "Bearer " + token);
+
+        HttpResponse responseGetSecond = HttpClientBuilder.create().build().execute(requestGetSecond);
+
+        HttpEntity entityGetSecond = responseGetSecond.getEntity();
+
+        String responseStringGetSecond = EntityUtils.toString(entityGetSecond, "UTF-8");
+
+        assertEquals(HttpStatus.SC_OK, responseGet.getStatusLine().getStatusCode());
+        // asserts original captureFile to newly constructed captureFile
+        assertEquals(expected1, responseStringGet);
+        assertEquals(HttpStatus.SC_OK, responseGetSecond.getStatusLine().getStatusCode());
+        assertEquals(expected2, responseStringGetSecond);
+
+    }
+
+    // Delete
+    @Test
+    @Order(9)
     public void testDeleteNonExistentCapture() throws Exception {
         HttpDelete delete = new HttpDelete("http://localhost:" + port + "/capture/124124");
 
@@ -502,7 +585,7 @@ public class CaptureControllerTest extends TestSpringBootInformation {
     }
 
     @Test
-    @Order(9)
+    @Order(10)
     public void testDeleteCapture() throws Exception {
         HttpDelete delete = new HttpDelete("http://localhost:" + port + "/capture/" + 1);
 
