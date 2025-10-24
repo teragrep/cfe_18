@@ -124,7 +124,7 @@ public class HostGroupController {
             @ApiResponse(responseCode = "200", description = "Host groups fetched",
                     content = {@Content(mediaType = "application/json",
                             schema = @Schema(implementation = HostGroup.class))})})
-    public List<HostGroup> getAllHostGroupPagination(@RequestParam(required = false) Integer version, @RequestParam(defaultValue = "${pagination.pageSize}") Integer pageSize, @RequestParam(defaultValue = "0") Integer lastId) {
+    public List<HostGroup> getAllHostGroup(@RequestParam(required = false) Integer version, @RequestParam(defaultValue = "${pagination.pageSize}") Integer pageSize, @RequestParam(defaultValue = "0") Integer lastId) {
         return hostGroupMapper.getAllHostGroup(version,pageSize,lastId);
     }
 
