@@ -68,7 +68,7 @@ public interface HostMapper {
             String md5,
             String FqHost);
 
-    List<HostFile> getAllHost(Integer version);
+    List<HostFile> getAllHost(Integer version,Integer pageSize, Integer lastId);
 
     HostFile deleteHost(int host_id);
 

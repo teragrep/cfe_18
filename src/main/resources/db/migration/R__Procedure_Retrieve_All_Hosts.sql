@@ -45,7 +45,7 @@
  */
 use location;
 DELIMITER //
-CREATE OR REPLACE PROCEDURE retrieve_all_hosts(tx_id int)
+CREATE OR REPLACE PROCEDURE retrieve_all_hosts(tx_id int, page_size int, last_id int)
 BEGIN
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
         BEGIN
@@ -69,7 +69,11 @@ BEGIN
              left join cfe_03.host_meta for system_time as of transaction @time hm on h.id = hm.host_id
              left join cfe_00.host_type_cfe for system_time as of transaction @time htc on h.id = htc.host_id
              left join cfe_00.hubs for system_time as of transaction @time h2 on htc.hub_id = h2.id
-             left join location.host for system_time as of transaction @time h3 on h2.host_id = h3.id;
+             left join location.host for system_time as of transaction @time h3 on h2.host_id = h3.id
+            JOIN (SELECT h2.id FROM location.host for SYSTEM_TIME as of TRANSACTION @time h2 where h2.id>last_id ORDER BY h2.id LIMIT page_size)
+                 AS page_ids ON h.id = page_ids.id
+            ORDER BY h.id;
+
 end;
 //
 DELIMITER ;

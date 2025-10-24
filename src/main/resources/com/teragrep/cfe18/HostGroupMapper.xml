@@ -30,7 +30,7 @@
 
     <!-- GET ALL Host Groups -->
     <select id="getAllHostGroup" resultMap="allHostGroup" statementType="CALLABLE">
-        {CALL location.retrieve_all_host_groups(#{param1})}
+        {CALL location.retrieve_all_host_groups(#{param1},#{param2},#{param3})}
     </select>
     <resultMap id="allHostGroup" type="com.teragrep.cfe18.handlers.entities.HostGroup">
         <result property="id" column="host_group_id"/>

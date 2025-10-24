@@ -64,7 +64,7 @@
 
     <!-- GET ALL captures -->
     <select id="getAllCapture" resultMap="allCapture" statementType="CALLABLE">
-        {CALL cfe_18.retrieve_all_captures(#{param1})}
+        {CALL cfe_18.retrieve_all_captures(#{param1},#{param2},#{param3})}
     </select>
     <resultMap id="allCapture" type="com.teragrep.cfe18.handlers.entities.CaptureFile">
         <result property="id" column="captureID"/>
@@ -82,6 +82,7 @@
         <result property="capture_path" column="capturepath"/>
         <result property="processing_type" column="processing_type"/>
     </resultMap>
+
 
 
     <!-- Delete -->

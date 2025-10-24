@@ -47,6 +47,7 @@ package com.teragrep.cfe18.controllerTests;
 
 import com.google.gson.Gson;
 import com.teragrep.cfe18.handlers.entities.*;
+import jakarta.json.*;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
@@ -57,6 +58,7 @@ import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.util.EntityUtils;
+import org.json.JSONArray;
 import org.json.JSONObject;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -430,6 +432,7 @@ public class GXGControllerTest extends TestSpringBootInformation {
     public void testRetrieveAllCaptureGroups() throws Exception {
         ArrayList<CaptureGroup> expected = new ArrayList<>();
         CaptureGroup captureGroup = new CaptureGroup();
+        captureGroup.setId(1);
         captureGroup.setCapture_def_group_name("groupRelp");
         captureGroup.setCapture_group_type(CaptureGroup.group_type.relp);
         captureGroup.setTag("relpTag");
@@ -455,6 +458,128 @@ public class GXGControllerTest extends TestSpringBootInformation {
 
     }
 
+    @Test
+    @Order(7)
+    public void testRetrieveAllCaptureGroupsPagination() throws Exception {
+        ArrayList<CaptureGroup> expected = new ArrayList<>();
+        CaptureGroup captureGroup = new CaptureGroup();
+        captureGroup.setId(1);
+        captureGroup.setCapture_def_group_name("groupRelp");
+        captureGroup.setCapture_group_type(CaptureGroup.group_type.relp);
+        captureGroup.setTag("relpTag");
+        captureGroup.setCapture_definition_id(1);
+
+        expected.add(captureGroup);
+
+        String expectedJson = new Gson().toJson(expected);
+
+        // Asserting get request
+        HttpGet requestGet = new HttpGet("http://localhost:" + port + "/capture/group?pageSize=1&lastId=0");
+
+        requestGet.setHeader("Authorization", "Bearer " + token);
+
+        HttpResponse responseGet = HttpClientBuilder.create().build().execute(requestGet);
+
+        HttpEntity entityGet = responseGet.getEntity();
+
+        String responseStringGet = EntityUtils.toString(entityGet, "UTF-8");
+
+        assertEquals(HttpStatus.SC_OK, responseGet.getStatusLine().getStatusCode());
+        assertEquals(expectedJson, responseStringGet);
+
+    }
+
+    @Test
+    @Order(7)
+    public void testRetrieveAllCaptureGroupsPaginationRollAll() throws Exception {
+
+        // adding another captureGroup for rolling
+        CaptureGroup captureGroup = new CaptureGroup();
+        captureGroup.setCapture_def_group_name("groupRelp2");
+        captureGroup.setCapture_definition_id(1);
+
+        String cgJson = gson.toJson(captureGroup);
+
+        StringEntity requestEntityCaptureGroup = new StringEntity(
+                String.valueOf(cgJson),
+                ContentType.APPLICATION_JSON);
+
+        HttpPut requestCaptureGroup = new HttpPut("http://localhost:" + port + "/capture/group");
+        requestCaptureGroup.setEntity(requestEntityCaptureGroup);
+        requestCaptureGroup.setHeader("Authorization", "Bearer " + token);
+
+        HttpClientBuilder.create().build().execute(requestCaptureGroup);
+
+
+        captureGroup.setCapture_def_group_name("groupRelp");
+        captureGroup.setCapture_group_type(CaptureGroup.group_type.relp);
+        captureGroup.setTag("relpTag");
+        captureGroup.setCapture_definition_id(1);
+
+        // building expected outcome
+        JsonObjectBuilder jsonObject = Json.createObjectBuilder();
+
+        jsonObject.add("capture_def_group_name","groupRelp");
+        jsonObject.add("capture_definition_id",1);
+        jsonObject.add("capture_group_type","relp");
+        jsonObject.add("id",1);
+        jsonObject.add("tag","relpTag");
+
+        JsonObject expectedJsonobject = jsonObject.build();
+        JsonArrayBuilder jsonArrayBuilder = Json.createArrayBuilder();
+        jsonArrayBuilder.add(expectedJsonobject);
+        JsonArray expectedJsonArray = jsonArrayBuilder.build();
+        String expected1 = expectedJsonArray.toString();
+
+        JsonObjectBuilder jsonObject2 = Json.createObjectBuilder();
+
+        jsonObject2.add("capture_def_group_name","groupRelp2");
+        jsonObject2.add("capture_definition_id",1);
+        jsonObject2.add("capture_group_type","relp");
+        jsonObject2.add("id",2);
+        jsonObject2.add("tag","relpTag");
+
+        JsonObject expectedJsonobject2 = jsonObject2.build();
+        JsonArrayBuilder jsonArrayBuilder2 = Json.createArrayBuilder();
+        jsonArrayBuilder2.add(expectedJsonobject2);
+        JsonArray expectedJsonArray2 = jsonArrayBuilder2.build();
+        String expected2 = expectedJsonArray2.toString();
+
+        // Asserting get request
+        HttpGet requestGet = new HttpGet("http://localhost:" + port + "/capture/group?pageSize=1");
+
+        requestGet.setHeader("Authorization", "Bearer " + token);
+
+        HttpResponse responseGet = HttpClientBuilder.create().build().execute(requestGet);
+
+        HttpEntity entityGet = responseGet.getEntity();
+
+        String responseStringGet = EntityUtils.toString(entityGet, "UTF-8");
+
+
+        JSONArray jsonArray = new JSONArray(responseStringGet);
+
+        JSONObject responseAsJson = new JSONObject(jsonArray.get(0).toString());
+
+        // Getting last id from previous request
+        int lastId = responseAsJson.getInt("id");
+
+        // Rolling to second one
+        HttpGet requestGet2 = new HttpGet("http://localhost:" + port + "/capture/group?lastId="+lastId+"&pageSize=1");
+
+        requestGet2.setHeader("Authorization", "Bearer " + token);
+
+        HttpResponse responseGet2 = HttpClientBuilder.create().build().execute(requestGet2);
+
+        HttpEntity entityGet2 = responseGet2.getEntity();
+
+        String responseStringGet2 = EntityUtils.toString(entityGet2, "UTF-8");
+
+        assertEquals(HttpStatus.SC_OK, responseGet.getStatusLine().getStatusCode());
+        assertEquals(expected1, responseStringGet);
+        assertEquals(HttpStatus.SC_OK, responseGet2.getStatusLine().getStatusCode());
+        assertEquals(expected2, responseStringGet2);
+    }
 
     @Test
     @Order(8)
@@ -484,6 +609,123 @@ public class GXGControllerTest extends TestSpringBootInformation {
 
         assertEquals(expectedJson, responseStringGet);
         assertThat(responseGet.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_OK));
+
+    }
+
+    @Test
+    @Order(8)
+    public void testRetrieveAllHostGroupsPagination() throws Exception {
+        ArrayList<HostGroup> expected = new ArrayList<>();
+        HostGroup hostGroup = new HostGroup();
+        hostGroup.setMd5("relpHostmd5");
+        hostGroup.setHost_id(1);
+        hostGroup.setHost_group_name("hostgroup1");
+        hostGroup.setHost_group_type(HostGroup.group_type.relp);
+        hostGroup.setId(1);
+
+        expected.add(hostGroup);
+
+        String expectedJson = new Gson().toJson(expected);
+
+        // Asserting get request
+        HttpGet requestGet = new HttpGet("http://localhost:" + port + "/host/group?pageSize=1&lastId=0");
+
+        requestGet.setHeader("Authorization", "Bearer " + token);
+
+        HttpResponse responseGet = HttpClientBuilder.create().build().execute(requestGet);
+
+        HttpEntity entityGet = responseGet.getEntity();
+
+        String responseStringGet = EntityUtils.toString(entityGet, "UTF-8");
+
+        assertEquals(expectedJson, responseStringGet);
+        assertThat(responseGet.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_OK));
+
+    }
+
+    @Test
+    @Order(9)
+    public void testRetrieveAllHostGroupsPaginationRollAll() throws Exception {
+        // Add another HostGroup for rolling
+        HostGroup relpHostGroup = new HostGroup();
+        relpHostGroup.setHost_id(1);
+        relpHostGroup.setHost_group_name("hostgroup2");
+
+        String jsonGroup = gson.toJson(relpHostGroup);
+
+        StringEntity requestEntityGroup = new StringEntity(
+                String.valueOf(jsonGroup),
+                ContentType.APPLICATION_JSON);
+
+        HttpPut requestGroup = new HttpPut("http://localhost:" + port + "/host/group");
+        requestGroup.setEntity(requestEntityGroup);
+        requestGroup.setHeader("Authorization", "Bearer " + token);
+
+        HttpClientBuilder.create().build().execute(requestGroup);
+
+
+        //building expected outcomes.
+        JsonObjectBuilder jsonObject = Json.createObjectBuilder();
+
+        jsonObject.add("host_id",1);
+        jsonObject.add("host_group_name","hostgroup1");
+        jsonObject.add("host_group_type", "relp");
+        jsonObject.add("md5","relpHostmd5");
+        jsonObject.add("id",1);
+
+        JsonObject expectedJsonobject = jsonObject.build();
+        JsonArrayBuilder jsonArrayBuilder = Json.createArrayBuilder();
+        jsonArrayBuilder.add(expectedJsonobject);
+        JsonArray expectedJsonArray = jsonArrayBuilder.build();
+        String expected1 = expectedJsonArray.toString();
+
+        JsonObjectBuilder jsonObject2 = Json.createObjectBuilder();
+
+        jsonObject2.add("host_id",1);
+        jsonObject2.add("host_group_name","hostgroup2");
+        jsonObject2.add("host_group_type", "relp");
+        jsonObject2.add("md5","relpHostmd5");
+        jsonObject2.add("id",2);
+
+        JsonObject expectedJsonobject2 = jsonObject2.build();
+        JsonArrayBuilder jsonArrayBuilder2 = Json.createArrayBuilder();
+        jsonArrayBuilder2.add(expectedJsonobject2);
+        JsonArray expectedJsonArray2 = jsonArrayBuilder2.build();
+        String expected2 = expectedJsonArray2.toString();
+
+        // Asserting get request
+        HttpGet requestGet = new HttpGet("http://localhost:" + port + "/host/group?pageSize=1");
+
+        requestGet.setHeader("Authorization", "Bearer " + token);
+
+        HttpResponse responseGet = HttpClientBuilder.create().build().execute(requestGet);
+
+        HttpEntity entityGet = responseGet.getEntity();
+
+        String responseStringGet = EntityUtils.toString(entityGet, "UTF-8");
+
+        JSONArray jsonArray = new JSONArray(responseStringGet);
+
+        JSONObject responseAsJson = new JSONObject(jsonArray.get(0).toString());
+
+        // Getting last id from previous request
+        int lastId = responseAsJson.getInt("id");
+
+        HttpGet requestGet2 = new HttpGet("http://localhost:" + port + "/host/group?lastId="+lastId+"&pageSize=1");
+
+        requestGet2.setHeader("Authorization", "Bearer " + token);
+
+        HttpResponse responseGet2 = HttpClientBuilder.create().build().execute(requestGet2);
+
+        HttpEntity entityGet2 = responseGet2.getEntity();
+
+        String responseStringGet2 = EntityUtils.toString(entityGet2, "UTF-8");
+
+        // asserting both requests with rolling mechanic
+        assertEquals(expected1, responseStringGet);
+        assertThat(responseGet.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_OK));
+        assertEquals(expected2, responseStringGet2);
+        assertThat(responseGet2.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_OK));
 
     }
 
@@ -686,6 +928,7 @@ public class GXGControllerTest extends TestSpringBootInformation {
         assertThat(deleteResponse.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_OK));
         assertEquals(expected, actual);
     }
+
     @Test
     @Order(16)
     public void testNoTwoTagsInCaptureGroup() throws Exception {
@@ -764,7 +1007,6 @@ public class GXGControllerTest extends TestSpringBootInformation {
                 equalTo(HttpStatus.SC_BAD_REQUEST));
         assertEquals(expected, actual);
     }
-
 
 
     @Test

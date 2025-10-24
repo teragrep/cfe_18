@@ -48,6 +48,7 @@ package com.teragrep.cfe18.controllerTests;
 import com.google.gson.Gson;
 import com.teragrep.cfe18.handlers.HostController;
 import com.teragrep.cfe18.handlers.entities.*;
+import jakarta.json.*;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
@@ -58,6 +59,7 @@ import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.util.EntityUtils;
+import org.json.JSONArray;
 import org.json.JSONObject;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -513,7 +515,6 @@ public class HostControllerTest extends TestSpringBootInformation {
     @Order(11)
     public void testGetAllHosts() throws Exception {
 
-
         ArrayList<HostFile> expectedListFile = new ArrayList<>();
 
         HostFile host = new HostFile();
@@ -533,7 +534,6 @@ public class HostControllerTest extends TestSpringBootInformation {
         relpHost.setFqHost("relpHostfq");
         relpHost.setHost_type("relp");
 
-
         HostFile hub1 = new HostFile();
         hub1.setId(2);
         hub1.setFqHost("hubfq");
@@ -542,9 +542,9 @@ public class HostControllerTest extends TestSpringBootInformation {
         hub1.setHub(1);
         hub1.setHub_fq("hubfq");
 
-        expectedListFile.add(host);
-        expectedListFile.add(hub1);
         expectedListFile.add(relpHost);
+        expectedListFile.add(hub1);
+        expectedListFile.add(host);
         String expectedJson = gson.toJson(expectedListFile);
 
         // Asserting get request
@@ -563,10 +563,187 @@ public class HostControllerTest extends TestSpringBootInformation {
 
     }
 
+    @Test
+    @Order(12)
+    public void testGetAllHostsPaginationOneRecord() throws Exception {
+
+        ArrayList<HostFile> expectedListFile = new ArrayList<>();
+
+        HostFile relpHost = new HostFile();
+        relpHost.setId(1);
+        relpHost.setMD5("relpHostmd5");
+        relpHost.setFqHost("relpHostfq");
+        relpHost.setHost_type("relp");
+
+        expectedListFile.add(relpHost);
+        String expectedJson = gson.toJson(expectedListFile);
+
+        // Asserting get request
+        HttpGet requestGet = new HttpGet("http://localhost:" + port + "/host?pageSize=1&lastId=0");
+
+        requestGet.setHeader("Authorization", "Bearer " + token);
+
+        HttpResponse responseGet = HttpClientBuilder.create().build().execute(requestGet);
+
+        HttpEntity entityGet = responseGet.getEntity();
+
+        String responseStringGet = EntityUtils.toString(entityGet, "UTF-8");
+
+        assertEquals(expectedJson, responseStringGet);
+        assertEquals(HttpStatus.SC_OK, responseGet.getStatusLine().getStatusCode());
+
+    }
+
+    @Test
+    @Order(13)
+    public void testGetAllHostsPaginationSecondRecords() throws Exception {
+
+        ArrayList<HostFile> expectedListFile = new ArrayList<>();
+
+        HostFile hub1 = new HostFile();
+        hub1.setId(2);
+        hub1.setFqHost("hubfq");
+        hub1.setMD5("hubmd5");
+        hub1.setHost_type("cfe");
+        hub1.setHub(1);
+        hub1.setHub_fq("hubfq");
+
+        HostFile host = new HostFile();
+        host.setId(3);
+        host.setMD5("randommd5value");
+        host.setFqHost("hostFq");
+        host.setHost_type("cfe");
+        host.setHub(1);
+        host.setHostname("hostname1");
+        host.setHost_meta_id(1);
+        host.setHub_fq("hubfq");
+
+        expectedListFile.add(hub1);
+        expectedListFile.add(host);
+        String expectedJson = gson.toJson(expectedListFile);
+
+        // Asserting get request
+        HttpGet requestGet = new HttpGet("http://localhost:" + port + "/host?pageSize=2&lastId=1");
+
+        requestGet.setHeader("Authorization", "Bearer " + token);
+
+        HttpResponse responseGet = HttpClientBuilder.create().build().execute(requestGet);
+
+        HttpEntity entityGet = responseGet.getEntity();
+
+        String responseStringGet = EntityUtils.toString(entityGet, "UTF-8");
+
+        assertEquals(expectedJson, responseStringGet);
+        assertEquals(HttpStatus.SC_OK, responseGet.getStatusLine().getStatusCode());
+    }
+
+    @Test
+    @Order(14)
+    public void testGetAllHostsPaginationRollAll() throws Exception {
+        JsonObjectBuilder jsonObject1 = Json.createObjectBuilder();
+
+        jsonObject1.add("id", 1);
+        jsonObject1.add("md5", "relpHostmd5");
+        jsonObject1.add("fqHost", "relpHostfq");
+        jsonObject1.add("host_type", "relp");
+        jsonObject1.add("hub", 0);
+        jsonObject1.add("host_meta_id", 0);
+
+        JsonObject expectedJsonobject1 = jsonObject1.build();
+        JsonArrayBuilder jsonArrayBuilder1 = Json.createArrayBuilder();
+        jsonArrayBuilder1.add(expectedJsonobject1);
+        JsonArray expectedJsonArray1 = jsonArrayBuilder1.build();
+        String expected1 = expectedJsonArray1.toString();
+
+
+        jsonObject1.add("id", 2);
+        jsonObject1.add("md5", "hubmd5");
+        jsonObject1.add("fqHost", "hubfq");
+        jsonObject1.add("host_type", "cfe");
+        jsonObject1.add("hub", 1);
+        jsonObject1.add("hub_fq", "hubfq");
+        jsonObject1.add("host_meta_id", 0);
+
+        JsonObject expectedJsonobject2 = jsonObject1.build();
+        JsonArrayBuilder jsonArrayBuilder2 = Json.createArrayBuilder();
+        jsonArrayBuilder2.add(expectedJsonobject2);
+        JsonArray expectedJsonArray2 = jsonArrayBuilder2.build();
+        String expected2 = expectedJsonArray2.toString();
+
+
+        jsonObject1.add("id", 3);
+        jsonObject1.add("md5", "randommd5value");
+        jsonObject1.add("fqHost", "hostFq");
+        jsonObject1.add("host_type", "cfe");
+        jsonObject1.add("hub", 1);
+        jsonObject1.add("hub_fq", "hubfq");
+        jsonObject1.add("hostname", "hostname1");
+        jsonObject1.add("host_meta_id", 1);
+
+        JsonObject expectedJsonobject3 = jsonObject1.build();
+        JsonArrayBuilder jsonArrayBuilder3 = Json.createArrayBuilder();
+        jsonArrayBuilder3.add(expectedJsonobject3);
+        JsonArray expectedJsonArray3 = jsonArrayBuilder3.build();
+        String expected3 = expectedJsonArray3.toString();
+
+
+        // Asserting get request
+        HttpGet requestGet = new HttpGet("http://localhost:" + port + "/host?pageSize=1");
+
+        requestGet.setHeader("Authorization", "Bearer " + token);
+
+        HttpResponse responseGet = HttpClientBuilder.create().build().execute(requestGet);
+
+        HttpEntity entityGet = responseGet.getEntity();
+
+        String responseStringGet = EntityUtils.toString(entityGet, "UTF-8");
+
+        JSONArray jsonArray = new JSONArray(responseStringGet);
+
+        JSONObject responseAsJson = new JSONObject(jsonArray.get(0).toString());
+
+        // Getting last id from previous request
+        int lastId = responseAsJson.getInt("id");
+        // Asserting get request
+        HttpGet requestGet2 = new HttpGet("http://localhost:" + port + "/host?lastId="+lastId+"&pageSize=1");
+
+        requestGet2.setHeader("Authorization", "Bearer " + token);
+
+        HttpResponse responseGet2 = HttpClientBuilder.create().build().execute(requestGet2);
+
+        HttpEntity entityGet2 = responseGet2.getEntity();
+
+        String responseStringGet2 = EntityUtils.toString(entityGet2, "UTF-8");
+
+        JSONArray jsonArray2 = new JSONArray(responseStringGet2);
+
+        JSONObject responseAsJson2 = new JSONObject(jsonArray2.get(0).toString());
+
+        // Getting last id from previous request
+        int lastId2 = responseAsJson2.getInt("id");
+        // Asserting get request
+        HttpGet requestGet3 = new HttpGet("http://localhost:" + port + "/host?lastId="+lastId2+"&pageSize=1");
+
+        requestGet3.setHeader("Authorization", "Bearer " + token);
+
+        HttpResponse responseGet3 = HttpClientBuilder.create().build().execute(requestGet3);
+
+        HttpEntity entityGet3 = responseGet3.getEntity();
+
+        String responseStringGet3 = EntityUtils.toString(entityGet3, "UTF-8");
+
+        assertEquals(HttpStatus.SC_OK, responseGet.getStatusLine().getStatusCode());
+        assertEquals(expected1, responseStringGet);
+        assertEquals(HttpStatus.SC_OK, responseGet2.getStatusLine().getStatusCode());
+        assertEquals(expected2, responseStringGet2);
+        assertEquals(HttpStatus.SC_OK, responseGet3.getStatusLine().getStatusCode());
+        assertEquals(expected3, responseStringGet3);
+    }
+
     // Delete
 
     @Test
-    @Order(12)
+    @Order(15)
     public void testDeleteHost() throws Exception {
         HttpDelete delete = new HttpDelete("http://localhost:" + port + "/host/" + 1);
 
@@ -593,7 +770,7 @@ public class HostControllerTest extends TestSpringBootInformation {
     }
 
     @Test
-    @Order(13)
+    @Order(16)
     public void testDeleteNonExistentHost() throws Exception {
         HttpDelete delete = new HttpDelete("http://localhost:" + port + "/host/" + 99999);
 
@@ -619,7 +796,7 @@ public class HostControllerTest extends TestSpringBootInformation {
     }
 
     @Test
-    @Order(14)
+    @Order(17)
     public void testDeleteNonExistentHostMeta() throws Exception {
         HttpDelete delete = new HttpDelete("http://localhost:" + port + "/host/meta/" + 99999);
 
@@ -644,9 +821,8 @@ public class HostControllerTest extends TestSpringBootInformation {
         assertThat(deleteResponse.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_BAD_REQUEST));
     }
 
-
     @Test
-    @Order(15)
+    @Order(18)
     public void testDeleteNonExistentHostMetaIp() throws Exception {
         HttpDelete delete = new HttpDelete("http://localhost:" + port + "/host/meta/ip/" + 99999);
 
@@ -673,7 +849,7 @@ public class HostControllerTest extends TestSpringBootInformation {
     }
 
     @Test
-    @Order(16)
+    @Order(19)
     public void testDeleteHostMetaIpInUse() throws Exception {
         HttpDelete delete = new HttpDelete("http://localhost:" + port + "/host/meta/ip/" + 1);
 
@@ -698,9 +874,8 @@ public class HostControllerTest extends TestSpringBootInformation {
         assertThat(deleteResponse.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_BAD_REQUEST));
     }
 
-
     @Test
-    @Order(17)
+    @Order(20)
     public void testDeleteNonExistentHostMetaInterface() throws Exception {
         HttpDelete delete = new HttpDelete("http://localhost:" + port + "/host/meta/ip/" + 99999);
 
@@ -727,7 +902,7 @@ public class HostControllerTest extends TestSpringBootInformation {
     }
 
     @Test
-    @Order(18)
+    @Order(21)
     public void testDeleteHostMetaInterfaceInUse() throws Exception {
         HttpDelete delete = new HttpDelete("http://localhost:" + port + "/host/meta/interface/" + 1);
 
@@ -752,9 +927,8 @@ public class HostControllerTest extends TestSpringBootInformation {
         assertThat(deleteResponse.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_BAD_REQUEST));
     }
 
-
     @Test
-    @Order(19)
+    @Order(22)
     public void testDeleteHostMeta() throws Exception {
         HttpDelete delete = new HttpDelete("http://localhost:" + port + "/host/meta/" + 1);
 
@@ -782,7 +956,7 @@ public class HostControllerTest extends TestSpringBootInformation {
     }
 
     @Test
-    @Order(20)
+    @Order(23)
     public void testDeleteHostMetaIp() throws Exception {
         HttpDelete delete = new HttpDelete("http://localhost:" + port + "/host/meta/ip/" + 1);
 
@@ -810,7 +984,7 @@ public class HostControllerTest extends TestSpringBootInformation {
     }
 
     @Test
-    @Order(21)
+    @Order(24)
     public void testDeleteHostMetaInterface() throws Exception {
         HttpDelete delete = new HttpDelete("http://localhost:" + port + "/host/meta/interface/" + 1);
 

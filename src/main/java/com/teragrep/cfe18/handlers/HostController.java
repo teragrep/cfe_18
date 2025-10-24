@@ -66,6 +66,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.sql.DataSource;
+import javax.websocket.server.PathParam;
 import java.sql.SQLException;
 import java.util.List;
 
@@ -168,16 +169,15 @@ public class HostController {
         }
     }
 
-    // GET ALL hosts
+
     @RequestMapping(path = "", method = RequestMethod.GET, produces = "application/json")
-    @Operation(summary = "Fetch all hosts", description = "Will return empty list if there are no hosts to fetch")
+    @Operation(summary = "Fetch all hosts from lastId and amount based on pageSize. LastId defaults to 0 returning first 100 rows. PageSize is defaulted in application.properties", description = "Will return empty list if there are no hosts to fetch")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Hosts fetched",
                     content = {@Content(mediaType = "application/json",
-                            schema = @Schema(implementation = HostFile.class))})
-    })
-    public List<HostFile> getAllHost(@RequestParam(required = false) Integer version) {
-        return hostMapper.getAllHost(version);
+                            schema = @Schema(implementation = HostFile.class))})})
+    public List<HostFile> getAllHost(@RequestParam(required = false) Integer version, @RequestParam(defaultValue = "${pagination.pageSize}") Integer pageSize, @RequestParam(defaultValue = "0") Integer lastId) {
+        return hostMapper.getAllHost(version,pageSize,lastId);
     }
 
 

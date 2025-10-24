@@ -54,7 +54,7 @@
 
     <!-- GET ALL Host -->
     <select id="getAllHost" resultMap="allHost" statementType="CALLABLE">
-        {CALL location.retrieve_all_hosts(#{param1})}
+        {CALL location.retrieve_all_hosts(#{param1},#{param2},#{param3})}
     </select>
     <resultMap id="allHost" type="com.teragrep.cfe18.handlers.entities.HostFile">
         <result property="id" column="host_id"/>
@@ -66,6 +66,7 @@
         <result property="hub_fq" column="hub_fq"/>
         <result property="hub" column="hub_id"/>
     </resultMap>
+
 
 
     <!-- Delete -->

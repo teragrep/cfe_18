@@ -59,6 +59,8 @@ import org.mybatis.spring.SqlSessionTemplate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -67,6 +69,7 @@ import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.*;
 
 import javax.sql.DataSource;
+import javax.websocket.server.PathParam;
 import java.sql.SQLException;
 import java.util.List;
 
@@ -168,17 +171,15 @@ public class CaptureController {
         return new ResponseEntity<>("Unexpected error", HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
-
-    // GET ALL Captures
+    // GET ALL
     @RequestMapping(path = "/", method = RequestMethod.GET, produces = "application/json")
-    @Operation(summary = "Fetch all captures", description = "Will return empty list if there are no captures to fetch")
+    @Operation(summary = "Fetch all captures from lastId and amount based on pageSize. LastId defaults to 0 returning first 100 rows. PageSize is defaulted in application.properties", description = "Will return empty list if there are no captures to fetch")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Found the relp capture",
+            @ApiResponse(responseCode = "200", description = "Found Captures",
                     content = {@Content(mediaType = "application/json",
-                            schema = @Schema(implementation = CaptureFile.class))}),
-    })
-    public List<CaptureFile> getAllCapture(@RequestParam(required = false) Integer version) {
-        return captureMapper.getAllCapture(version);
+                            schema = @Schema(implementation = CaptureFile.class))}),})
+    public List<CaptureFile> getAllCapture(@RequestParam(required = false) Integer version, @RequestParam(defaultValue = "${pagination.pageSize}") Integer pageSize, @RequestParam(defaultValue = "0") Integer lastId) {
+        return captureMapper.getAllCapture(version,pageSize,lastId);
     }
 
 
