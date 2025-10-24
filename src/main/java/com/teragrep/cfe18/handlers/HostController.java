@@ -176,7 +176,7 @@ public class HostController {
             @ApiResponse(responseCode = "200", description = "Hosts fetched",
                     content = {@Content(mediaType = "application/json",
                             schema = @Schema(implementation = HostFile.class))})})
-    public List<HostFile> getAllHostSliced(@RequestParam(required = false) Integer version, @RequestParam(defaultValue = "${pagination.pageSize}") Integer pageSize, @RequestParam(defaultValue = "0") Integer lastId) {
+    public List<HostFile> getAllHostPagination(@RequestParam(required = false) Integer version, @RequestParam(defaultValue = "${pagination.pageSize}") Integer pageSize, @RequestParam(defaultValue = "0") Integer lastId) {
         return hostMapper.getAllHost(version,pageSize,lastId);
     }
 
