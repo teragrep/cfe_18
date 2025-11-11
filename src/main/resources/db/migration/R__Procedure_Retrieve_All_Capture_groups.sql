@@ -57,7 +57,8 @@ BEGIN
     else
         set @time=tx_id;
     end if;
-    select cdg.id                     as id,
+    select cdgxcd.id                  as id,
+           cdg.id                     as capture_group_id,
            cdg.capture_def_group_name as group_name,
            cdg.capture_type           as group_type,
            t.tag                      as capture_tag,
@@ -67,7 +68,7 @@ BEGIN
              inner join capture_definition  for system_time as of transaction @time cd
                         on cdgxcd.capture_def_id = cd.id and cdgxcd.capture_type = cd.capture_type
              inner join tags for system_time as of transaction @time t  on cd.tag_id = t.id
-             JOIN (SELECT cdg2.id FROM cfe_18.capture_def_group_x_capture_def for SYSTEM_TIME as of TRANSACTION @time cdg2 where cdg2.id>last_id ORDER BY cdg2.id LIMIT page_size)
+             JOIN (SELECT cdgxcd2.id FROM cfe_18.capture_def_group_x_capture_def for SYSTEM_TIME as of TRANSACTION @time cdgxcd2 where cdgxcd2.id>last_id ORDER BY cdgxcd2.id LIMIT page_size)
                  AS page_ids ON cdgxcd.id = page_ids.id
             ORDER BY cdgxcd.id;
 end;

@@ -433,6 +433,7 @@ public class GXGControllerTest extends TestSpringBootInformation {
         ArrayList<CaptureGroup> expected = new ArrayList<>();
         CaptureGroup captureGroup = new CaptureGroup();
         captureGroup.setId(1);
+        captureGroup.setCaptureGroupId(1);
         captureGroup.setCapture_def_group_name("groupRelp");
         captureGroup.setCapture_group_type(CaptureGroup.group_type.relp);
         captureGroup.setTag("relpTag");
@@ -464,6 +465,7 @@ public class GXGControllerTest extends TestSpringBootInformation {
         ArrayList<CaptureGroup> expected = new ArrayList<>();
         CaptureGroup captureGroup = new CaptureGroup();
         captureGroup.setId(1);
+        captureGroup.setCaptureGroupId(1);
         captureGroup.setCapture_def_group_name("groupRelp");
         captureGroup.setCapture_group_type(CaptureGroup.group_type.relp);
         captureGroup.setTag("relpTag");
@@ -519,10 +521,11 @@ public class GXGControllerTest extends TestSpringBootInformation {
         // building expected outcome
         JsonObjectBuilder jsonObject = Json.createObjectBuilder();
 
-        jsonObject.add("capture_def_group_name","groupRelp");
-        jsonObject.add("capture_definition_id",1);
-        jsonObject.add("capture_group_type","relp");
         jsonObject.add("id",1);
+        jsonObject.add("captureGroupId",1);
+        jsonObject.add("capture_definition_id",1);
+        jsonObject.add("capture_def_group_name","groupRelp");
+        jsonObject.add("capture_group_type","relp");
         jsonObject.add("tag","relpTag");
 
         JsonObject expectedJsonobject = jsonObject.build();
@@ -533,10 +536,11 @@ public class GXGControllerTest extends TestSpringBootInformation {
 
         JsonObjectBuilder jsonObject2 = Json.createObjectBuilder();
 
-        jsonObject2.add("capture_def_group_name","groupRelp2");
-        jsonObject2.add("capture_definition_id",1);
-        jsonObject2.add("capture_group_type","relp");
         jsonObject2.add("id",2);
+        jsonObject2.add("captureGroupId",2);
+        jsonObject2.add("capture_definition_id",1);
+        jsonObject2.add("capture_def_group_name","groupRelp2");
+        jsonObject2.add("capture_group_type","relp");
         jsonObject2.add("tag","relpTag");
 
         JsonObject expectedJsonobject2 = jsonObject2.build();
@@ -591,6 +595,7 @@ public class GXGControllerTest extends TestSpringBootInformation {
         hostGroup.setHost_group_name("hostgroup1");
         hostGroup.setHost_group_type(HostGroup.group_type.relp);
         hostGroup.setId(1);
+        hostGroup.setHostGroupId(1);
 
         expected.add(hostGroup);
 
@@ -622,6 +627,7 @@ public class GXGControllerTest extends TestSpringBootInformation {
         hostGroup.setHost_group_name("hostgroup1");
         hostGroup.setHost_group_type(HostGroup.group_type.relp);
         hostGroup.setId(1);
+        hostGroup.setHostGroupId(1);
 
         expected.add(hostGroup);
 
@@ -667,11 +673,12 @@ public class GXGControllerTest extends TestSpringBootInformation {
         //building expected outcomes.
         JsonObjectBuilder jsonObject = Json.createObjectBuilder();
 
+        jsonObject.add("id",1);
+        jsonObject.add("hostGroupId",1);
         jsonObject.add("host_id",1);
         jsonObject.add("host_group_name","hostgroup1");
         jsonObject.add("host_group_type", "relp");
         jsonObject.add("md5","relpHostmd5");
-        jsonObject.add("id",1);
 
         JsonObject expectedJsonobject = jsonObject.build();
         JsonArrayBuilder jsonArrayBuilder = Json.createArrayBuilder();
@@ -681,11 +688,12 @@ public class GXGControllerTest extends TestSpringBootInformation {
 
         JsonObjectBuilder jsonObject2 = Json.createObjectBuilder();
 
+        jsonObject2.add("id",2);
+        jsonObject2.add("hostGroupId",2);
         jsonObject2.add("host_id",1);
         jsonObject2.add("host_group_name","hostgroup2");
         jsonObject2.add("host_group_type", "relp");
         jsonObject2.add("md5","relpHostmd5");
-        jsonObject2.add("id",2);
 
         JsonObject expectedJsonobject2 = jsonObject2.build();
         JsonArrayBuilder jsonArrayBuilder2 = Json.createArrayBuilder();

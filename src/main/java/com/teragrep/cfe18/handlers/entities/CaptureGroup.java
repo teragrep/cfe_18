@@ -53,15 +53,25 @@ public class CaptureGroup {
     public enum group_type {
         cfe, relp
     }
-
-    private String capture_def_group_name;
-    private Integer capture_definition_id;
-    @Schema(accessMode = Schema.AccessMode.READ_ONLY)
-    private group_type capture_group_type;
     @Schema(accessMode = Schema.AccessMode.READ_ONLY)
     private int id;
     @Schema(accessMode = Schema.AccessMode.READ_ONLY)
+    private int captureGroupId;
+    private Integer capture_definition_id;
+    private String capture_def_group_name;
+    @Schema(accessMode = Schema.AccessMode.READ_ONLY)
+    private group_type capture_group_type;
+    @Schema(accessMode = Schema.AccessMode.READ_ONLY)
     private String tag;
+
+
+    public int getCaptureGroupId() {
+        return captureGroupId;
+    }
+
+    public void setCaptureGroupId(int captureGroupId) {
+        this.captureGroupId = captureGroupId;
+    }
 
     public String getTag() {
         return tag;

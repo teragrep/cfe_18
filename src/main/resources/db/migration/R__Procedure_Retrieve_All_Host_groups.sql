@@ -57,7 +57,8 @@ BEGIN
         else
              set @time=tx_id;
         end if;
-    select hg.id        as host_group_id,
+    select hgxh.id      as id,
+           hg.id        as host_group_id,
            hg.groupName as host_group_name,
            hg.host_type as host_group_type,
            h.id         as host_id,
@@ -65,7 +66,7 @@ BEGIN
     from location.host_group for system_time as of transaction @time hg
              inner join location.host_group_x_host for system_time as of transaction @time hgxh on hg.id = hgxh.host_group_id
              inner join location.host for system_time as of transaction @time h on hgxh.host_id = h.id
-        JOIN (SELECT hg2.id FROM location.host_group_x_host for SYSTEM_TIME as of TRANSACTION @time hg2 where hg2.id>last_id ORDER BY hg2.id LIMIT page_size)
+        JOIN (SELECT hgxh2.id FROM location.host_group_x_host for SYSTEM_TIME as of TRANSACTION @time hgxh2 where hgxh2.id>last_id ORDER BY hgxh2.id LIMIT page_size)
                  AS page_ids ON hgxh.id = page_ids.id
             ORDER BY hgxh.id;
 end;
