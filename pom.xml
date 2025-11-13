@@ -274,12 +274,6 @@
             </goals>
             <configuration>
               <rules>
-                <bannedDependencies>
-                  <excludes>
-                    <!-- We generally do not want to use junit4, only junit5 -->
-                    <exclude>junit:junit</exclude>
-                  </excludes>
-                </bannedDependencies>
                 <requireMavenVersion>
                   <version>3.2.5</version>
                 </requireMavenVersion>
