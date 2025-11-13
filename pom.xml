@@ -434,6 +434,8 @@
             <exclude>tomcatContainerImage/</exclude>
             <!-- Doxyfile -->
             <exclude>Doxyfile</exclude>
+            <!-- formatter -->
+            <exclude>eclipse-java-formatter.xml</exclude>
           </excludes>
         </configuration>
         <executions>
