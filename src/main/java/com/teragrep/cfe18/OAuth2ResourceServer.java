@@ -59,7 +59,10 @@ import org.springframework.security.web.SecurityFilterChain;
 import java.security.interfaces.RSAPublicKey;
 
 @Configuration
-@PropertySource(ignoreResourceNotFound = true, value = "classpath:application.properties")
+@PropertySource(
+        ignoreResourceNotFound = true,
+        value = "classpath:application.properties"
+)
 @EnableWebSecurity
 @EnableMethodSecurity
 public class OAuth2ResourceServer {
@@ -86,6 +89,5 @@ public class OAuth2ResourceServer {
     JwtDecoder jwtDecoder() {
         return NimbusJwtDecoder.withPublicKey(this.key).build();
     }
-
 
 }

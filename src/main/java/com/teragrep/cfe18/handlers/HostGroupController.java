@@ -83,24 +83,45 @@ public class HostGroupController {
     @Autowired
     HostGroupMapper hostGroupMapper;
 
-
     // Get host group details
-    @RequestMapping(path = "/group/{name}", method = RequestMethod.GET, produces = "application/json")
+    @RequestMapping(
+            path = "/group/{name}",
+            method = RequestMethod.GET,
+            produces = "application/json"
+    )
     @Operation(summary = "Fetch host group by name")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Host group retrieved",
-                    content = {@Content(mediaType = "application/json",
-                            schema = @Schema(implementation = HostGroup.class))}),
-            @ApiResponse(responseCode = "400", description = "Host group does not exist with the given host group name",
-                    content = @Content),
-            @ApiResponse(responseCode = "500", description = "Internal server error, contact admin", content = @Content)
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Host group retrieved",
+                    content = {
+                            @Content(
+                                    mediaType = "application/json",
+                                    schema = @Schema(implementation = HostGroup.class)
+                            )
+                    }
+            ),
+            @ApiResponse(
+                    responseCode = "400",
+                    description = "Host group does not exist with the given host group name",
+                    content = @Content
+            ),
+            @ApiResponse(
+                    responseCode = "500",
+                    description = "Internal server error, contact admin",
+                    content = @Content
+            )
     })
-    public ResponseEntity<?> getResults(@PathVariable("name") String name, @RequestParam(required = false) Integer version) {
+    public ResponseEntity<?> getResults(
+            @PathVariable("name") String name,
+            @RequestParam(required = false) Integer version
+    ) {
         JSONObject jsonErr = new JSONObject();
         try {
-            List<HostGroup> hg = hostGroupMapper.getHostGroupByName(name,version);
+            List<HostGroup> hg = hostGroupMapper.getHostGroupByName(name, version);
             return new ResponseEntity<>(hg, HttpStatus.OK);
-        } catch (Exception ex) {
+        }
+        catch (Exception ex) {
             final Throwable cause = ex.getCause();
             if (cause instanceof SQLException) {
                 LOGGER.error((cause).getMessage());
@@ -114,43 +135,72 @@ public class HostGroupController {
         }
     }
 
-
-    @RequestMapping(path = "/group", method = RequestMethod.GET, produces = "application/json")
-    @Operation(summary = "Fetch all host groups", description = "Will return empty list if there are no host groups to fetch")
+    @RequestMapping(
+            path = "/group",
+            method = RequestMethod.GET,
+            produces = "application/json"
+    )
+    @Operation(
+            summary = "Fetch all host groups",
+            description = "Will return empty list if there are no host groups to fetch"
+    )
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Host groups fetched",
-                    content = {@Content(mediaType = "application/json",
-                            schema = @Schema(implementation = HostGroup.class))})
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Host groups fetched",
+                    content = {
+                            @Content(
+                                    mediaType = "application/json",
+                                    schema = @Schema(implementation = HostGroup.class)
+                            )
+                    }
+            )
     })
     public List<HostGroup> getAllHostGroup(@RequestParam(required = false) Integer version) {
         return hostGroupMapper.getAllHostGroup(version);
     }
 
-
     // Insert host group with host
-    @RequestMapping(path = "/group", method = RequestMethod.PUT, produces = "application/json")
+    @RequestMapping(
+            path = "/group",
+            method = RequestMethod.PUT,
+            produces = "application/json"
+    )
     @Operation(summary = "Insert host group with host")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "201", description = "New host group created AND/OR host linked to host group",
-                    content = {@Content(mediaType = "application/json",
-                            schema = @Schema(implementation = HostGroup.class))}),
-            @ApiResponse(responseCode = "400", description = "Type mismatch between host group and host OR Host does not exist",
-                    content = @Content),
-            @ApiResponse(responseCode = "500", description = "Internal server error, contact admin", content = @Content)
+            @ApiResponse(
+                    responseCode = "201",
+                    description = "New host group created AND/OR host linked to host group",
+                    content = {
+                            @Content(
+                                    mediaType = "application/json",
+                                    schema = @Schema(implementation = HostGroup.class)
+                            )
+                    }
+            ),
+            @ApiResponse(
+                    responseCode = "400",
+                    description = "Type mismatch between host group and host OR Host does not exist",
+                    content = @Content
+            ),
+            @ApiResponse(
+                    responseCode = "500",
+                    description = "Internal server error, contact admin",
+                    content = @Content
+            )
     })
     public ResponseEntity<String> newHostGroup(@RequestBody HostGroup newHostGroup) {
-        LOGGER.info("About to insert <[{}]>",newHostGroup);
+        LOGGER.info("About to insert <[{}]>", newHostGroup);
         try {
-            HostGroup hg = hostGroupMapper.addNewHostGroup(
-                    newHostGroup.getHost_id(),
-                    newHostGroup.getHost_group_name()
-            );
-            LOGGER.debug("Values returned <[{}]>",hg);
+            HostGroup hg = hostGroupMapper
+                    .addNewHostGroup(newHostGroup.getHost_id(), newHostGroup.getHost_group_name());
+            LOGGER.debug("Values returned <[{}]>", hg);
             JSONObject jsonObject = new JSONObject();
             jsonObject.put("host_group_id", hg.getId());
             jsonObject.put("message", "New host group created with name = " + hg.getHost_group_name());
             return new ResponseEntity<>(jsonObject.toString(), HttpStatus.CREATED);
-        } catch (RuntimeException ex) {
+        }
+        catch (RuntimeException ex) {
             JSONObject jsonErr = new JSONObject();
             jsonErr.put("id", newHostGroup.getId());
             final Throwable cause = ex.getCause();
@@ -162,7 +212,8 @@ public class HostGroupController {
                 String state = error + "-" + ((SQLException) cause).getSQLState();
                 if (state.equals("1452-23000")) {
                     jsonErr.put("message", "Type mismatch between host group and host");
-                } else if (state.equals("1644-45000")) {
+                }
+                else if (state.equals("1644-45000")) {
                     jsonErr.put("message", "Host does not exist");
                 }
                 return new ResponseEntity<>(jsonErr.toString(), HttpStatus.BAD_REQUEST);
@@ -172,15 +223,33 @@ public class HostGroupController {
     }
 
     // Delete
-    @RequestMapping(path = "/group/{name}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(
+            path = "/group/{name}",
+            method = RequestMethod.DELETE,
+            produces = MediaType.APPLICATION_JSON_VALUE
+    )
     @Operation(summary = "Delete host group")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Host group deleted",
-                    content = {@Content(mediaType = "application/json",
-                            schema = @Schema(implementation = HostGroup.class))}),
-            @ApiResponse(responseCode = "400", description = "Host group is being used OR Host group does not exist",
-                    content = @Content),
-            @ApiResponse(responseCode = "500", description = "Internal server error, contact admin", content = @Content)
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Host group deleted",
+                    content = {
+                            @Content(
+                                    mediaType = "application/json",
+                                    schema = @Schema(implementation = HostGroup.class)
+                            )
+                    }
+            ),
+            @ApiResponse(
+                    responseCode = "400",
+                    description = "Host group is being used OR Host group does not exist",
+                    content = @Content
+            ),
+            @ApiResponse(
+                    responseCode = "500",
+                    description = "Internal server error, contact admin",
+                    content = @Content
+            )
     })
     public ResponseEntity<String> removeHost(@PathVariable("name") String name) {
         LOGGER.info("Deleting Host Group <[{}]>", name);
@@ -190,14 +259,16 @@ public class HostGroupController {
             JSONObject j = new JSONObject();
             j.put("message", "Host Group " + name + " deleted.");
             return new ResponseEntity<>(j.toString(), HttpStatus.OK);
-        } catch (Exception ex) {
+        }
+        catch (Exception ex) {
             final Throwable cause = ex.getCause();
             if (cause instanceof SQLException) {
                 LOGGER.error((cause).getMessage());
                 String state = ((SQLException) cause).getSQLState();
                 if (state.equals("23000")) {
                     jsonErr.put("message", "Is in use");
-                } else if (state.equals("45000")) {
+                }
+                else if (state.equals("45000")) {
                     jsonErr.put("message", "Record does not exist");
                 }
                 return new ResponseEntity<>(jsonErr.toString(), HttpStatus.BAD_REQUEST);

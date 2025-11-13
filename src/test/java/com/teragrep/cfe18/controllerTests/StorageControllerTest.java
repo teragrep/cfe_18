@@ -80,7 +80,6 @@ public class StorageControllerTest extends TestSpringBootInformation {
     @LocalServerPort
     private int port;
 
-
     @Test
     @Order(1)
     public void testInsertStorage() {
@@ -92,9 +91,7 @@ public class StorageControllerTest extends TestSpringBootInformation {
         String json = gson.toJson(storage);
 
         // forms the json to requestEntity
-        StringEntity requestEntity = new StringEntity(
-                String.valueOf(json),
-                ContentType.APPLICATION_JSON);
+        StringEntity requestEntity = new StringEntity(String.valueOf(json), ContentType.APPLICATION_JSON);
 
         // Creates the request
         HttpPut request = new HttpPut("http://localhost:" + port + "/storage");
@@ -104,7 +101,8 @@ public class StorageControllerTest extends TestSpringBootInformation {
         request.setHeader("Authorization", "Bearer " + token);
 
         // Get the response from endpoint
-        HttpResponse httpResponse = Assertions.assertDoesNotThrow(() -> HttpClientBuilder.create().build().execute(request));
+        HttpResponse httpResponse = Assertions
+                .assertDoesNotThrow(() -> HttpClientBuilder.create().build().execute(request));
 
         // Get the entity from response
         HttpEntity entity = httpResponse.getEntity();
@@ -123,9 +121,7 @@ public class StorageControllerTest extends TestSpringBootInformation {
 
         // Assertions
         assertEquals(expected, actual);
-        assertThat(
-                httpResponse.getStatusLine().getStatusCode(),
-                equalTo(HttpStatus.SC_CREATED));
+        assertThat(httpResponse.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_CREATED));
 
     }
 
@@ -148,7 +144,8 @@ public class StorageControllerTest extends TestSpringBootInformation {
 
         requestGet.setHeader("Authorization", "Bearer " + token);
 
-        HttpResponse responseGet = Assertions.assertDoesNotThrow(() -> HttpClientBuilder.create().build().execute(requestGet));
+        HttpResponse responseGet = Assertions
+                .assertDoesNotThrow(() -> HttpClientBuilder.create().build().execute(requestGet));
 
         HttpEntity entityGet = responseGet.getEntity();
 
@@ -174,7 +171,8 @@ public class StorageControllerTest extends TestSpringBootInformation {
 
         requestGet.setHeader("Authorization", "Bearer " + token);
 
-        HttpResponse responseGet = Assertions.assertDoesNotThrow(() -> HttpClientBuilder.create().build().execute(requestGet));
+        HttpResponse responseGet = Assertions
+                .assertDoesNotThrow(() -> HttpClientBuilder.create().build().execute(requestGet));
 
         HttpEntity entityGet = responseGet.getEntity();
 
@@ -195,9 +193,7 @@ public class StorageControllerTest extends TestSpringBootInformation {
         String json = gson.toJson(flow);
 
         // forms the json to requestEntity
-        StringEntity requestEntity = new StringEntity(
-                String.valueOf(json),
-                ContentType.APPLICATION_JSON);
+        StringEntity requestEntity = new StringEntity(String.valueOf(json), ContentType.APPLICATION_JSON);
 
         // Creates the request
         HttpPut request = new HttpPut("http://localhost:" + port + "/flow");
@@ -209,7 +205,6 @@ public class StorageControllerTest extends TestSpringBootInformation {
         // Get the response from endpoint
         HttpClientBuilder.create().build().execute(request);
 
-
         FlowStorage flowStorage = new FlowStorage();
         flowStorage.setFlow("Testflow");
         flowStorage.setStorage_id(1);
@@ -219,7 +214,8 @@ public class StorageControllerTest extends TestSpringBootInformation {
         // forms the json to requestEntity
         StringEntity requestEntityStorageFlow = new StringEntity(
                 String.valueOf(jsonStorage),
-                ContentType.APPLICATION_JSON);
+                ContentType.APPLICATION_JSON
+        );
 
         // Creates the request
         HttpPut requestEntityStorage = new HttpPut("http://localhost:" + port + "/storage/flow");
@@ -249,9 +245,7 @@ public class StorageControllerTest extends TestSpringBootInformation {
         // Assertions
 
         assertEquals(expected, actual);
-        assertThat(
-                httpResponse.getStatusLine().getStatusCode(),
-                equalTo(HttpStatus.SC_CREATED));
+        assertThat(httpResponse.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_CREATED));
     }
 
     @Test
@@ -332,9 +326,7 @@ public class StorageControllerTest extends TestSpringBootInformation {
         String json1 = gson.toJson(sink);
 
         // forms the json to requestEntity
-        StringEntity requestEntity1 = new StringEntity(
-                String.valueOf(json1),
-                ContentType.APPLICATION_JSON);
+        StringEntity requestEntity1 = new StringEntity(String.valueOf(json1), ContentType.APPLICATION_JSON);
 
         // Creates the request
         HttpPut request1 = new HttpPut("http://localhost:" + port + "/sink");
@@ -345,7 +337,6 @@ public class StorageControllerTest extends TestSpringBootInformation {
 
         // Get the response from endpoint
         HttpClientBuilder.create().build().execute(request1);
-
 
         // add relp type capture with the same flow
         CaptureRelp captureRelp = new CaptureRelp();
@@ -361,9 +352,7 @@ public class StorageControllerTest extends TestSpringBootInformation {
         String jsonFile = gson.toJson(captureRelp);
 
         // forms the json to requestEntity
-        StringEntity requestEntity3 = new StringEntity(
-                String.valueOf(jsonFile),
-                ContentType.APPLICATION_JSON);
+        StringEntity requestEntity3 = new StringEntity(String.valueOf(jsonFile), ContentType.APPLICATION_JSON);
 
         // Creates the request
         HttpPut request3 = new HttpPut("http://localhost:" + port + "/capture/relp");
@@ -375,9 +364,7 @@ public class StorageControllerTest extends TestSpringBootInformation {
         // Get the response from endpoint
         HttpClientBuilder.create().build().execute(request3);
 
-
         // link the cfe_04 storage to capture
-
 
         CaptureStorage captureStorage = new CaptureStorage();
         captureStorage.setCapture_id(1);
@@ -388,7 +375,8 @@ public class StorageControllerTest extends TestSpringBootInformation {
         // forms the json to requestEntity
         StringEntity requestEntityStorageCapture = new StringEntity(
                 String.valueOf(jsonStorage),
-                ContentType.APPLICATION_JSON);
+                ContentType.APPLICATION_JSON
+        );
 
         // Creates the request
         HttpPut requestEntityStorage = new HttpPut("http://localhost:" + port + "/storage/capture");
@@ -418,9 +406,7 @@ public class StorageControllerTest extends TestSpringBootInformation {
         // Assertions
 
         assertEquals(expected, actual);
-        assertThat(
-                httpResponse.getStatusLine().getStatusCode(),
-                equalTo(HttpStatus.SC_CREATED));
+        assertThat(httpResponse.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_CREATED));
 
     }
 
@@ -486,8 +472,8 @@ public class StorageControllerTest extends TestSpringBootInformation {
         // Header
         delete.setHeader("Authorization", "Bearer " + token);
 
-        HttpResponse deleteResponse = Assertions.assertDoesNotThrow(() -> HttpClientBuilder.create().build().execute(delete));
-
+        HttpResponse deleteResponse = Assertions
+                .assertDoesNotThrow(() -> HttpClientBuilder.create().build().execute(delete));
 
         HttpEntity entityDelete = deleteResponse.getEntity();
 
@@ -563,7 +549,6 @@ public class StorageControllerTest extends TestSpringBootInformation {
     @Order(12)
     public void testDeleteFlowStorageInUse() throws Exception {
         HttpDelete delete = new HttpDelete("http://localhost:" + port + "/storage/flow/" + "Testflow/" + 1);
-
 
         // Header
         delete.setHeader("Authorization", "Bearer " + token);
@@ -671,7 +656,8 @@ public class StorageControllerTest extends TestSpringBootInformation {
         // Header
         delete.setHeader("Authorization", "Bearer " + token);
 
-        HttpResponse deleteResponse = Assertions.assertDoesNotThrow(() -> HttpClientBuilder.create().build().execute(delete));
+        HttpResponse deleteResponse = Assertions
+                .assertDoesNotThrow(() -> HttpClientBuilder.create().build().execute(delete));
 
         HttpEntity entityDelete = deleteResponse.getEntity();
 
@@ -689,6 +675,5 @@ public class StorageControllerTest extends TestSpringBootInformation {
         assertEquals(expected, actual);
         assertThat(deleteResponse.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_OK));
     }
-
 
 }

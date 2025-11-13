@@ -65,7 +65,10 @@ public class ProcedureSinkTest extends DBInformation {
 
     @Test
     @ResourceLock(value = "conn")
-    @EnabledIfSystemProperty(named = "ProcedureSink.generateData", matches = "true")
+    @EnabledIfSystemProperty(
+            named = "ProcedureSink.generateData",
+            matches = "true"
+    )
     public void generateData() throws Exception {
 
         initialize(conn);
@@ -76,7 +79,11 @@ public class ProcedureSinkTest extends DBInformation {
         partialDataSet.addTable("flow.L7");
         partialDataSet.addTable("flow.capture_sink");
 
-        FlatXmlDataSet.write(partialDataSet, Files.newOutputStream(Paths.get("src/test/resources/XMLProcedureSink/procedureSinkData.xml")));
+        FlatXmlDataSet
+                .write(
+                        partialDataSet,
+                        Files.newOutputStream(Paths.get("src/test/resources/XMLProcedureSink/procedureSinkData.xml"))
+                );
         cleanup(conn);
     }
 
@@ -94,7 +101,10 @@ public class ProcedureSinkTest extends DBInformation {
         Statement insertTestData = conn.createStatement();
         insertTestData.addBatch("insert into flow.L7(id,app_protocol) values (1,'prot1'),(2,'prot2');");
         insertTestData.addBatch("insert into flow.flows(id,flowname) values (1,'flow1'),(2,'flow2');");
-        insertTestData.addBatch("insert into flow.capture_sink(id,L7_id,flow_id,ip_address,sink_port) values (1,1,2,'ip1','601'),(2,1,1,'ip55','601');");
+        insertTestData
+                .addBatch(
+                        "insert into flow.capture_sink(id,L7_id,flow_id,ip_address,sink_port) values (1,1,2,'ip1','601'),(2,1,1,'ip55','601');"
+                );
         insertTestData.executeBatch();
     }
 }

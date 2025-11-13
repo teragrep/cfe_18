@@ -66,7 +66,10 @@ public class TriggerDataTest extends DBInformation {
 
     @Test
     @ResourceLock(value = "conn")
-    @EnabledIfSystemProperty(named = "TriggerDataTest.generateData", matches = "true")
+    @EnabledIfSystemProperty(
+            named = "TriggerDataTest.generateData",
+            matches = "true"
+    )
     public void generateData() throws Exception {
 
         initialize(conn);
@@ -95,7 +98,13 @@ public class TriggerDataTest extends DBInformation {
         partialDataSet.addTable("location.host_group_x_host");
         partialDataSet.addTable("cfe_18.host_groups_x_capture_def_group");
 
-        FlatXmlDataSet.write(partialDataSet, Files.newOutputStream(Paths.get("src/test/resources/XMLTriggersHostXCapture/triggerTestData.xml")));
+        FlatXmlDataSet
+                .write(
+                        partialDataSet, Files
+                                .newOutputStream(
+                                        Paths.get("src/test/resources/XMLTriggersHostXCapture/triggerTestData.xml")
+                                )
+                );
 
         cleanup(conn);
     }
@@ -129,62 +138,77 @@ public class TriggerDataTest extends DBInformation {
 
         Statement insertTestData = conn.createStatement();
 
-        insertTestData.addBatch
-                ("insert into flow.L7(id, app_protocol) values (1, 'prot1');");
+        insertTestData.addBatch("insert into flow.L7(id, app_protocol) values (1, 'prot1');");
 
-        insertTestData.addBatch
-                ("insert into flow.flows(id, flowname) values (1, 'flow1');");
+        insertTestData.addBatch("insert into flow.flows(id, flowname) values (1, 'flow1');");
 
-        insertTestData.addBatch
-                ("insert into flow.capture_sink(id, L7_id, flow_id, ip_address,sink_port) values (1,1,1,'ip1','601');");
+        insertTestData
+                .addBatch(
+                        "insert into flow.capture_sink(id, L7_id, flow_id, ip_address,sink_port) values (1,1,1,'ip1','601');"
+                );
 
-        insertTestData.addBatch
-                ("insert into cfe_18.inputtype(id, inputtype) values (1, 'regex'),(2, 'newline');");
+        insertTestData.addBatch("insert into cfe_18.inputtype(id, inputtype) values (1, 'regex'),(2, 'newline');");
 
-        insertTestData.addBatch
-                ("insert into cfe_18.regex(id, regex,inputtype) values (1, 'normalRegex','regex');");
+        insertTestData.addBatch("insert into cfe_18.regex(id, regex,inputtype) values (1, 'normalRegex','regex');");
 
-        insertTestData.addBatch
-                ("insert into cfe_18.newline(id, newline,inputtype) values (2, 'placeholder','newline');");
+        insertTestData
+                .addBatch("insert into cfe_18.newline(id, newline,inputtype) values (2, 'placeholder','newline');");
 
-        insertTestData.addBatch
-                ("insert into cfe_18.ruleset(id, rule) values (1, 'ruleset1');");
+        insertTestData.addBatch("insert into cfe_18.ruleset(id, rule) values (1, 'ruleset1');");
 
-        insertTestData.addBatch
-                ("insert into cfe_18.templates(id, template) values (1, 'template1');");
+        insertTestData.addBatch("insert into cfe_18.templates(id, template) values (1, 'template1');");
 
-        insertTestData.addBatch
-                ("insert into cfe_18.processing_type(id, inputtype_id,ruleset_id,template_id,type_name,capture_type) values (1,1,1,1,'usesregex','cfe'),(2,2,1,1,'usesNewline','cfe');");
+        insertTestData
+                .addBatch(
+                        "insert into cfe_18.processing_type(id, inputtype_id,ruleset_id,template_id,type_name,capture_type) values (1,1,1,1,'usesregex','cfe'),(2,2,1,1,'usesNewline','cfe');"
+                );
 
-        insertTestData.addBatch
-                ("insert into cfe_18.capture_type(id, capture_type) values (1, 'cfe'),(2, 'cfe');");
+        insertTestData.addBatch("insert into cfe_18.capture_type(id, capture_type) values (1, 'cfe'),(2, 'cfe');");
 
-        insertTestData.addBatch
-                ("insert into cfe_18.capture_meta_file(id, capturePath, tagPath, processing_type_id,capture_type) values (1, 'capPathRegex','tagPathRegex',1,'cfe'),(2, 'capPathNewline','tagPathNewline',2,'cfe');");
+        insertTestData
+                .addBatch(
+                        "insert into cfe_18.capture_meta_file(id, capturePath, tagPath, processing_type_id,capture_type) values (1, 'capPathRegex','tagPathRegex',1,'cfe'),(2, 'capPathNewline','tagPathNewline',2,'cfe');"
+                );
 
-        insertTestData.addBatch
-                ("insert into cfe_18.tags(id,tag) values (1, 'tag1'), (2, 'tag2'), (3, 'tag3'), (4, 'tag4'), (5, 'tag5'), (6, 'tag6'), (7, 'tag7'), (8, 'tag8'), (9, 'tag9'), (10, 'tag10'), (11, 'tag11'), (12, 'tag12');");
+        insertTestData
+                .addBatch(
+                        "insert into cfe_18.tags(id,tag) values (1, 'tag1'), (2, 'tag2'), (3, 'tag3'), (4, 'tag4'), (5, 'tag5'), (6, 'tag6'), (7, 'tag7'), (8, 'tag8'), (9, 'tag9'), (10, 'tag10'), (11, 'tag11'), (12, 'tag12');"
+                );
 
-        insertTestData.addBatch
-                ("insert into cfe_18.capture_definition(id, tag_id,capture_type,capture_type_id,L7_id,flow_id) values (1, 1,'cfe',1,1,1), (2, 2,'cfe',1,1,1), (3, 3,'cfe',1,1,1), (4, 4,'cfe',1,1,1), (5, 5,'cfe',1,1,1), (6, 10,'cfe',1,1,1), (7, 7,'cfe',1,1,1), (8, 8,'cfe',1,1,1), (9, 9,'cfe',1,1,1), (10, 9,'cfe',1,1,1), (11, 7,'cfe',1,1,1), (12, 10,'cfe',1,1,1);");
+        insertTestData
+                .addBatch(
+                        "insert into cfe_18.capture_definition(id, tag_id,capture_type,capture_type_id,L7_id,flow_id) values (1, 1,'cfe',1,1,1), (2, 2,'cfe',1,1,1), (3, 3,'cfe',1,1,1), (4, 4,'cfe',1,1,1), (5, 5,'cfe',1,1,1), (6, 10,'cfe',1,1,1), (7, 7,'cfe',1,1,1), (8, 8,'cfe',1,1,1), (9, 9,'cfe',1,1,1), (10, 9,'cfe',1,1,1), (11, 7,'cfe',1,1,1), (12, 10,'cfe',1,1,1);"
+                );
 
-        insertTestData.addBatch
-                ("insert into location.host(id,MD5,host_type) values (1,'12365','cfe'), (2,'12322','cfe'), (3,'1323','cfe'), (4,'4123','cfe'), (5,'5123','cfe'), (6,'6123','cfe'), (7,'7123','cfe'), (16,'712','cfe'), (9,'723','cfe'), (8,'71233','cfe'), (10,'712362','cfe'), (12,'712653','cfe'), (17,'71211233','cfe'), (11,'712213123','cfe'), (21,'7142213123','cfe'), (22,'7125213123','cfe'), (23,'7122613123','cfe'), (24,'7122173123','cfe'), (15,'75757122173123','cfe');");
+        insertTestData
+                .addBatch(
+                        "insert into location.host(id,MD5,host_type) values (1,'12365','cfe'), (2,'12322','cfe'), (3,'1323','cfe'), (4,'4123','cfe'), (5,'5123','cfe'), (6,'6123','cfe'), (7,'7123','cfe'), (16,'712','cfe'), (9,'723','cfe'), (8,'71233','cfe'), (10,'712362','cfe'), (12,'712653','cfe'), (17,'71211233','cfe'), (11,'712213123','cfe'), (21,'7142213123','cfe'), (22,'7125213123','cfe'), (23,'7122613123','cfe'), (24,'7122173123','cfe'), (15,'75757122173123','cfe');"
+                );
 
-        insertTestData.addBatch
-                ("insert into location.host_group (id, groupName) values (1, 'host_group_1'), (2, 'host_group_2'), (3, 'host_group_3'), (4, 'host_group_4'), (5, 'host_group_5'), (6, 'host_group_6');");
+        insertTestData
+                .addBatch(
+                        "insert into location.host_group (id, groupName) values (1, 'host_group_1'), (2, 'host_group_2'), (3, 'host_group_3'), (4, 'host_group_4'), (5, 'host_group_5'), (6, 'host_group_6');"
+                );
 
-        insertTestData.addBatch
-                ("insert into location.host_group_x_host(id,host_group_id, host_id,host_type) values (1,1, 1,'cfe'), (2,1, 2,'cfe'), (3,1, 3,'cfe'), (4,1, 4,'cfe'), (5,2, 5,'cfe'), (6,2, 6,'cfe'), (7,2, 7,'cfe'), (8,2, 16,'cfe'), (9,3, 9,'cfe'), (10,3, 8,'cfe'), (11,3, 10,'cfe'), (12,3, 12,'cfe'), (13,4, 17,'cfe'), (14,4, 11,'cfe'), (15,5, 21,'cfe'), (16,5, 22,'cfe'), (17,6, 23,'cfe'), (18,6, 24,'cfe');");
+        insertTestData
+                .addBatch(
+                        "insert into location.host_group_x_host(id,host_group_id, host_id,host_type) values (1,1, 1,'cfe'), (2,1, 2,'cfe'), (3,1, 3,'cfe'), (4,1, 4,'cfe'), (5,2, 5,'cfe'), (6,2, 6,'cfe'), (7,2, 7,'cfe'), (8,2, 16,'cfe'), (9,3, 9,'cfe'), (10,3, 8,'cfe'), (11,3, 10,'cfe'), (12,3, 12,'cfe'), (13,4, 17,'cfe'), (14,4, 11,'cfe'), (15,5, 21,'cfe'), (16,5, 22,'cfe'), (17,6, 23,'cfe'), (18,6, 24,'cfe');"
+                );
 
-        insertTestData.addBatch
-                ("insert into cfe_18.capture_def_group(id, capture_def_group_name) values (1, 'capturegroup1'), (2, 'capturegroup2'), (3, 'capturegroup3'), (4, 'capturegroup4'), (5, 'capturegroup5'), (6, 'capturegroup6');");
+        insertTestData
+                .addBatch(
+                        "insert into cfe_18.capture_def_group(id, capture_def_group_name) values (1, 'capturegroup1'), (2, 'capturegroup2'), (3, 'capturegroup3'), (4, 'capturegroup4'), (5, 'capturegroup5'), (6, 'capturegroup6');"
+                );
 
-        insertTestData.addBatch
-                ("insert into cfe_18.capture_def_group_x_capture_def(id,capture_def_id,capture_def_group_id,tag_id,capture_type) values (1, 1, 1, 1,'cfe'), (2, 2, 1, 2,'cfe'), (3, 3, 1, 3,'cfe'), (4, 4, 1, 4,'cfe'), (5, 5, 2, 5,'cfe'), (6, 6, 2, 10,'cfe'), (7, 7, 2, 7,'cfe'), (8, 2, 2, 2,'cfe'), (9, 10, 3, 9,'cfe'), (10, 8, 4, 8,'cfe'), (11, 12, 5, 10,'cfe'), (12, 8, 6, 8,'cfe');");
+        insertTestData
+                .addBatch(
+                        "insert into cfe_18.capture_def_group_x_capture_def(id,capture_def_id,capture_def_group_id,tag_id,capture_type) values (1, 1, 1, 1,'cfe'), (2, 2, 1, 2,'cfe'), (3, 3, 1, 3,'cfe'), (4, 4, 1, 4,'cfe'), (5, 5, 2, 5,'cfe'), (6, 6, 2, 10,'cfe'), (7, 7, 2, 7,'cfe'), (8, 2, 2, 2,'cfe'), (9, 10, 3, 9,'cfe'), (10, 8, 4, 8,'cfe'), (11, 12, 5, 10,'cfe'), (12, 8, 6, 8,'cfe');"
+                );
 
-        insertTestData.addBatch
-                ("insert into cfe_18.host_groups_x_capture_def_group(id,host_group_id,capture_group_id) values (1, 1, 1), (2, 2, 2), (3, 3, 3), (6, 4, 4), (7, 5, 5);");
+        insertTestData
+                .addBatch(
+                        "insert into cfe_18.host_groups_x_capture_def_group(id,host_group_id,capture_group_id) values (1, 1, 1), (2, 2, 2), (3, 3, 3), (6, 4, 4), (7, 5, 5);"
+                );
 
         insertTestData.executeBatch();
     }

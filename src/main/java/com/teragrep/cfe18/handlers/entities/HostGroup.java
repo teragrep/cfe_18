@@ -50,6 +50,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class HostGroup {
+
     public enum group_type {
         cfe, relp
     }
@@ -105,12 +106,7 @@ public class HostGroup {
 
     @Override
     public String toString() {
-        return "HostGroup{" +
-                "host_id=" + host_id +
-                ", host_group_name='" + host_group_name + '\'' +
-                ", host_group_type=" + host_group_type +
-                ", md5='" + md5 + '\'' +
-                ", id=" + id +
-                '}';
+        return "HostGroup{" + "host_id=" + host_id + ", host_group_name='" + host_group_name + '\''
+                + ", host_group_type=" + host_group_type + ", md5='" + md5 + '\'' + ", id=" + id + '}';
     }
 }

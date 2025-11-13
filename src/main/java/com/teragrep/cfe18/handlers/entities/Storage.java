@@ -86,11 +86,6 @@ public class Storage {
 
     @Override
     public String toString() {
-        return "Storage{" +
-                "id=" + id +
-                ", storageName='" + storageName + '\'' +
-                ", storageType=" + storageType +
-                '}';
+        return "Storage{" + "id=" + id + ", storageName='" + storageName + '\'' + ", storageType=" + storageType + '}';
     }
 }
-

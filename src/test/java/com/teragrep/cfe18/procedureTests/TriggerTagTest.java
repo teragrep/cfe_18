@@ -63,10 +63,10 @@ public class TriggerTagTest extends DBUnitbase {
         super(name);
     }
 
-
     @Override
     protected IDataSet getDataSet() throws Exception {
-        return new FlatXmlDataSetBuilder().build(Files.newInputStream(Paths.get("src/test/resources/XMLTriggersHostXCapture/triggerTestData.xml")));
+        return new FlatXmlDataSetBuilder()
+                .build(Files.newInputStream(Paths.get("src/test/resources/XMLTriggersHostXCapture/triggerTestData.xml")));
     }
 
     /*
@@ -88,19 +88,24 @@ public class TriggerTagTest extends DBUnitbase {
     Test for checking that the trigger allows values which do not conflict.
      */
     public void testTagTriggerAccept() throws Exception {
-        IDataSet expectedDataSet = new FlatXmlDataSetBuilder().build(new File("src/test/resources/XMLTriggersHostXCapture/triggerTagExpectedData1.xml"));
+        IDataSet expectedDataSet = new FlatXmlDataSetBuilder()
+                .build(new File("src/test/resources/XMLTriggersHostXCapture/triggerTagExpectedData1.xml"));
         ITable expectedTable = expectedDataSet.getTable("cfe_18.capture_def_group_x_capture_def");
 
         // Execute the tested code that modify the database here
         // execute statement here
         Statement stmnt = conn.createStatement();
-        stmnt.addBatch("insert into cfe_18.capture_def_group(id,capture_def_group_name,capture_type) values(20,'capture_group20','cfe')");
+        stmnt
+                .addBatch(
+                        "insert into cfe_18.capture_def_group(id,capture_def_group_name,capture_type) values(20,'capture_group20','cfe')"
+                );
         stmnt.executeBatch();
         stmnt.addBatch("insert into cfe_18.capture_def_group_x_capture_def values(20,5,5,5,'cfe')");
         stmnt.executeBatch();
 
         // Fetch database data after executing your code
-        ITable actualTable = databaseConnection.createQueryTable("result", "select * from cfe_18.capture_def_group_x_capture_def");
+        ITable actualTable = databaseConnection
+                .createQueryTable("result", "select * from cfe_18.capture_def_group_x_capture_def");
 
         // Load expected data from an XML dataset
         // Assert actual database table match expected table

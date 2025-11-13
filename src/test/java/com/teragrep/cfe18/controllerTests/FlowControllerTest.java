@@ -81,7 +81,6 @@ public class FlowControllerTest extends TestSpringBootInformation {
     @LocalServerPort
     private int port;
 
-
     @Test
     @Order(1)
     public void testInsertFlow() throws Exception {
@@ -92,9 +91,7 @@ public class FlowControllerTest extends TestSpringBootInformation {
         String json = gson.toJson(flow);
 
         // forms the json to requestEntity
-        StringEntity requestEntity = new StringEntity(
-                String.valueOf(json),
-                ContentType.APPLICATION_JSON);
+        StringEntity requestEntity = new StringEntity(String.valueOf(json), ContentType.APPLICATION_JSON);
 
         // Creates the request
         HttpPut request = new HttpPut("http://localhost:" + port + "/flow");
@@ -123,11 +120,8 @@ public class FlowControllerTest extends TestSpringBootInformation {
 
         // Assertions
         assertEquals(expected, actual);
-        assertThat(
-                httpResponse.getStatusLine().getStatusCode(),
-                equalTo(HttpStatus.SC_CREATED));
+        assertThat(httpResponse.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_CREATED));
     }
-
 
     // Flow only has get ALL endpoint. Get one flow is useless.
     @Test
@@ -142,9 +136,7 @@ public class FlowControllerTest extends TestSpringBootInformation {
         String json = gson.toJson(flow);
 
         // forms the json to requestEntity
-        StringEntity requestEntity = new StringEntity(
-                String.valueOf(json),
-                ContentType.APPLICATION_JSON);
+        StringEntity requestEntity = new StringEntity(String.valueOf(json), ContentType.APPLICATION_JSON);
 
         // Creates the request
         HttpPut request = new HttpPut("http://localhost:" + port + "/flow");
@@ -154,7 +146,6 @@ public class FlowControllerTest extends TestSpringBootInformation {
         request.setHeader("Authorization", "Bearer " + token);
 
         HttpClientBuilder.create().build().execute(request);
-
 
         Flow flow1 = new Flow();
         flow1.setName("Testflow");
@@ -226,9 +217,7 @@ public class FlowControllerTest extends TestSpringBootInformation {
         String json = gson.toJson(sink);
 
         // forms the json to requestEntity
-        StringEntity requestEntity = new StringEntity(
-                String.valueOf(json),
-                ContentType.APPLICATION_JSON);
+        StringEntity requestEntity = new StringEntity(String.valueOf(json), ContentType.APPLICATION_JSON);
 
         // Creates the request
         HttpPut request = new HttpPut("http://localhost:" + port + "/sink");

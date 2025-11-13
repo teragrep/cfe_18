@@ -59,22 +59,36 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class ProcedureProcessingTypeTest extends DBUnitbase {
+
     public ProcedureProcessingTypeTest(String name) {
         super(name);
     }
 
     @Override
     protected IDataSet getDataSet() throws Exception {
-        return new FlatXmlDataSetBuilder().build(Files.newInputStream(Paths.get("src/test/resources/XMLProcedureProcessingType/procedureProcessingTypeTestData.xml")));
+        return new FlatXmlDataSetBuilder()
+                .build(
+                        Files
+                                .newInputStream(
+                                        Paths
+                                                .get(
+                                                        "src/test/resources/XMLProcedureProcessingType/procedureProcessingTypeTestData.xml"
+                                                )
+                                )
+                );
     }
-
 
     /*
     This test checks that procedure is in place and accepts insertion with new and correct values.
      */
     public void testProcessingTypeAcceptInsert() throws Exception {
         // Gets the expected dataset
-        IDataSet expectedDataSet = new FlatXmlDataSetBuilder().build(new File("src/test/resources/XMLProcedureProcessingType/procedureProcessingTypeExpectedTestData1.xml"));
+        IDataSet expectedDataSet = new FlatXmlDataSetBuilder()
+                .build(
+                        new File(
+                                "src/test/resources/XMLProcedureProcessingType/procedureProcessingTypeExpectedTestData1.xml"
+                        )
+                );
         ITable expectedTable = expectedDataSet.getTable("cfe_18.file_processing_type");
 
         CallableStatement stmnt = conn.prepareCall("{CALL cfe_18.insert_file_processing_type(?,?,?,?,?)}");
@@ -88,10 +102,11 @@ public class ProcedureProcessingTypeTest extends DBUnitbase {
 
         ITable actualTable = databaseConnection.createQueryTable("result", "select * from cfe_18.file_processing_type");
 
-        Assertion.assertEqualsIgnoreCols(expectedTable, actualTable, new String[]{"ruleset_id", "template_id"});
+        Assertion.assertEqualsIgnoreCols(expectedTable, actualTable, new String[] {
+                "ruleset_id", "template_id"
+        });
 
     }
-
 
     /*
     4 of the tests need to be written for when there is a null value included. file_processing_type does not allow null values.

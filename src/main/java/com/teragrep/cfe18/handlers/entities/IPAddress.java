@@ -71,9 +71,6 @@ public class IPAddress {
 
     @Override
     public String toString() {
-        return "Ip_Address{" +
-                "ip_address='" + ipAddress + '\'' +
-                ", host_meta_id=" + host_meta_id +
-                '}';
+        return "Ip_Address{" + "ip_address='" + ipAddress + '\'' + ", host_meta_id=" + host_meta_id + '}';
     }
 }

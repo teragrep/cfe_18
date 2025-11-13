@@ -53,11 +53,9 @@ import java.util.List;
 @Mapper
 public interface HostRelpMapper {
 
-    HostRelp create(
-            String md5,
-            String FqHost);
+    HostRelp create(String md5, String FqHost);
 
-    HostRelp get(int id,Integer version);
+    HostRelp get(int id, Integer version);
 
     List<HostRelp> getAll(Integer version);
 

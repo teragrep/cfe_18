@@ -58,7 +58,6 @@ import java.sql.CallableStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-
 /*
 Tests for host group x capture group procedure
 Uses dataset procedureGxGTestData.xml which is copied version of triggerTestData.xml
@@ -71,14 +70,16 @@ public class ProcedureGxGTest extends DBUnitbase {
 
     @Override
     protected IDataSet getDataSet() throws Exception {
-        return new FlatXmlDataSetBuilder().build(Files.newInputStream(Paths.get("src/test/resources/XMLProcedureGxG/procedureGxGTestData.xml")));
+        return new FlatXmlDataSetBuilder()
+                .build(Files.newInputStream(Paths.get("src/test/resources/XMLProcedureGxG/procedureGxGTestData.xml")));
     }
 
     /*
     Testataan että linkitys onnistuu capture groupin ja host groupin välillä
      */
     public void testProcedureAddLinkageSuccess() throws Exception {
-        IDataSet expectedDataSet = new FlatXmlDataSetBuilder().build(new File("src/test/resources/XMLProcedureGxG/procedureGxGTestDataExpected1.xml"));
+        IDataSet expectedDataSet = new FlatXmlDataSetBuilder()
+                .build(new File("src/test/resources/XMLProcedureGxG/procedureGxGTestDataExpected1.xml"));
         ITable expectedTable1 = expectedDataSet.getTable("cfe_18.host_groups_x_capture_def_group");
 
         CallableStatement stmnt = conn.prepareCall("{call cfe_18.add_g_x_g(?,?)}");
@@ -86,9 +87,12 @@ public class ProcedureGxGTest extends DBUnitbase {
         stmnt.setInt(2, 6); //Capture group id
         stmnt.execute();
 
-        ITable actualTable1 = databaseConnection.createQueryTable("result", "select * from cfe_18.host_groups_x_capture_def_group");
+        ITable actualTable1 = databaseConnection
+                .createQueryTable("result", "select * from cfe_18.host_groups_x_capture_def_group");
 
-        Assertion.assertEqualsIgnoreCols(expectedTable1, actualTable1, new String[]{"id"});
+        Assertion.assertEqualsIgnoreCols(expectedTable1, actualTable1, new String[] {
+                "id"
+        });
 
     }
 
@@ -120,7 +124,7 @@ public class ProcedureGxGTest extends DBUnitbase {
 
     /*
     Testataan että tieto voidaan kerätä oikeassa muodossa käyttäen capture_group nimeä
- */
+    */
 
     public void testProcedureGxGRetrieveByCapture() throws Exception {
         CallableStatement stmnt = conn.prepareCall("{CALL cfe_18.retrieve_g_x_g_details(?,?)}");
@@ -135,10 +139,9 @@ public class ProcedureGxGTest extends DBUnitbase {
         Assertions.assertEquals("cfe", rs.getString("capture_type"));
     }
 
-
     /*
     Testataan että tieto voidaan kerätä oikeassa muodossa käyttäen host_group nimeä
-
+    
      */
     public void testProcedureGxGRetrieveByHost() throws Exception {
         CallableStatement stmnt = conn.prepareCall("{CALL cfe_18.retrieve_g_x_g_details(?,?)}");
@@ -150,7 +153,7 @@ public class ProcedureGxGTest extends DBUnitbase {
         Assertions.assertEquals("host_group_1", rs.getString("host_name"));
         Assertions.assertEquals(1, rs.getInt("g_x_g_id"));
         Assertions.assertEquals("cfe", rs.getString("host_type"));
-        Assertions.assertEquals("cfe",  rs.getString("capture_type"));
+        Assertions.assertEquals("cfe", rs.getString("capture_type"));
     }
 
     /*

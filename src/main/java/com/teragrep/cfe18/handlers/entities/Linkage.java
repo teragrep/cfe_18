@@ -127,14 +127,9 @@ public class Linkage {
 
     @Override
     public String toString() {
-        return "Linkage{" +
-                "id=" + id +
-                ", capture_group_name='" + capture_group_name + '\'' +
-                ", host_group_name='" + host_group_name + '\'' +
-                ", host_group_type=" + host_group_type +
-                ", capture_group_type=" + capture_group_type +
-                ", host_group_id=" + host_group_id +
-                ", capture_group_id=" + capture_group_id +
-                '}';
+        return "Linkage{" + "id=" + id + ", capture_group_name='" + capture_group_name + '\'' + ", host_group_name='"
+                + host_group_name + '\'' + ", host_group_type=" + host_group_type + ", capture_group_type="
+                + capture_group_type + ", host_group_id=" + host_group_id + ", capture_group_id=" + capture_group_id
+                + '}';
     }
 }

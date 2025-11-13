@@ -50,9 +50,9 @@ import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
 
-
 @Mapper
 public interface FlowMapper {
+
     Flow create(String name);
 
     List<Flow> getAll(Integer version);

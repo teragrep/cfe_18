@@ -58,7 +58,6 @@ import java.sql.CallableStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-
 /*
 Tests for capture meta file procedure. Meant for testing the integrity of adding new capture which is file type.
 Uses dataset procedureCaptureTestData.xml
@@ -71,7 +70,13 @@ public class ProcedureCaptureMetaFileTest extends DBUnitbase {
 
     @Override
     protected IDataSet getDataSet() throws Exception {
-        return new FlatXmlDataSetBuilder().build(Files.newInputStream(Paths.get("src/test/resources/XMLProcedureCapture/procedureCaptureTestData.xml")));
+        return new FlatXmlDataSetBuilder()
+                .build(
+                        Files
+                                .newInputStream(
+                                        Paths.get("src/test/resources/XMLProcedureCapture/procedureCaptureTestData.xml")
+                                )
+                );
     }
 
     /*
@@ -79,7 +84,8 @@ public class ProcedureCaptureMetaFileTest extends DBUnitbase {
     In this example Tag and Tag_path are tested aswell that they are the same when inserting.
      */
     public void testProcedureAddCaptureSuccess() throws Exception {
-        IDataSet expectedDataSet = new FlatXmlDataSetBuilder().build(new File("src/test/resources/XMLProcedureCapture/procedureCaptureExpectedTestData1.xml"));
+        IDataSet expectedDataSet = new FlatXmlDataSetBuilder()
+                .build(new File("src/test/resources/XMLProcedureCapture/procedureCaptureExpectedTestData1.xml"));
         ITable expectedTable = expectedDataSet.getTable("cfe_18.capture_definition");
 
         CallableStatement stmnt = conn.prepareCall("{call cfe_18.insert_file_capture(?,?,?,?,?,?,?,?,?,?,?)}");
@@ -98,7 +104,9 @@ public class ProcedureCaptureMetaFileTest extends DBUnitbase {
 
         ITable actualTable = databaseConnection.createQueryTable("result", "select * from cfe_18.capture_definition");
 
-        Assertion.assertEqualsIgnoreCols(expectedTable, actualTable, new String[]{"capture_type_id", "id", "tag_id"});
+        Assertion.assertEqualsIgnoreCols(expectedTable, actualTable, new String[] {
+                "capture_type_id", "id", "tag_id"
+        });
 
     }
 
@@ -130,7 +138,8 @@ public class ProcedureCaptureMetaFileTest extends DBUnitbase {
      Test for checking capture insertion without tag. Tag path is suppose to create the new tag.
     */
     public void testProcedureCaptureTagCreate() throws Exception {
-        IDataSet expectedDataSet = new FlatXmlDataSetBuilder().build(new File("src/test/resources/XMLProcedureCapture/procedureCaptureExpectedTestData2.xml"));
+        IDataSet expectedDataSet = new FlatXmlDataSetBuilder()
+                .build(new File("src/test/resources/XMLProcedureCapture/procedureCaptureExpectedTestData2.xml"));
         ITable expectedTable = expectedDataSet.getTable("cfe_18.tags");
 
         CallableStatement stmnt = conn.prepareCall("{call cfe_18.insert_file_capture(?,?,?,?,?,?,?,?,?,?,?)}");
@@ -149,16 +158,18 @@ public class ProcedureCaptureMetaFileTest extends DBUnitbase {
         stmnt.execute();
         ITable actualTable = databaseConnection.createQueryTable("result", "select * from cfe_18.tags");
 
-        Assertion.assertEqualsIgnoreCols(expectedTable, actualTable, new String[]{"id"});
+        Assertion.assertEqualsIgnoreCols(expectedTable, actualTable, new String[] {
+                "id"
+        });
     }
-
 
     /*
     Test for capture insertion where only tag is included and tag_path is null.
     This test should accept the creation of new capture even tho there is no tag_path.
-*/
+    */
     public void testProcedureCaptureTagPathNull() throws Exception {
-        IDataSet expectedDataSet = new FlatXmlDataSetBuilder().build(new File("src/test/resources/XMLProcedureCapture/procedureCaptureExpectedTestData3.xml"));
+        IDataSet expectedDataSet = new FlatXmlDataSetBuilder()
+                .build(new File("src/test/resources/XMLProcedureCapture/procedureCaptureExpectedTestData3.xml"));
         ITable expectedTable = expectedDataSet.getTable("cfe_18.capture_definition");
         ITable expectedTable1 = expectedDataSet.getTable("cfe_18.tags");
         ITable expectedTable2 = expectedDataSet.getTable("cfe_18.capture_meta_file");
@@ -182,15 +193,20 @@ public class ProcedureCaptureMetaFileTest extends DBUnitbase {
         ITable actualTable1 = databaseConnection.createQueryTable("result", "select * from cfe_18.tags");
         ITable actualTable2 = databaseConnection.createQueryTable("result", "select * from cfe_18.capture_meta_file");
 
-        Assertion.assertEqualsIgnoreCols(expectedTable, actualTable, new String[]{"capture_type_id", "id", "tag_id"});
-        Assertion.assertEqualsIgnoreCols(expectedTable1, actualTable1, new String[]{"id"});
-        Assertion.assertEqualsIgnoreCols(expectedTable2, actualTable2, new String[]{"id"});
+        Assertion.assertEqualsIgnoreCols(expectedTable, actualTable, new String[] {
+                "capture_type_id", "id", "tag_id"
+        });
+        Assertion.assertEqualsIgnoreCols(expectedTable1, actualTable1, new String[] {
+                "id"
+        });
+        Assertion.assertEqualsIgnoreCols(expectedTable2, actualTable2, new String[] {
+                "id"
+        });
     }
-
 
     /*
     Test for checking if the capture being inserted does not include processing_type
-*/
+    */
 
     public void testProcedureCaptureMissingProcessingType() throws Exception {
         SQLException state = Assertions.assertThrows(SQLException.class, () -> {
@@ -237,10 +253,11 @@ public class ProcedureCaptureMetaFileTest extends DBUnitbase {
     /*
     This test is for checking that no additional records are inserted if the values exist already.
     ID Columns are not relevant. ID can change but the amount of records stay the same thus there is no duplicates.
-
- */
+    
+    */
     public void testProcedureCaptureDuplicateAvoid() throws Exception {
-        IDataSet expectedDataSet = new FlatXmlDataSetBuilder().build(new File("src/test/resources/XMLProcedureCapture/procedureCaptureExpectedTestData4.xml"));
+        IDataSet expectedDataSet = new FlatXmlDataSetBuilder()
+                .build(new File("src/test/resources/XMLProcedureCapture/procedureCaptureExpectedTestData4.xml"));
         ITable expectedTable = expectedDataSet.getTable("cfe_18.tags");
         ITable expectedTable1 = expectedDataSet.getTable("cfe_18.retentionTime");
         ITable expectedTable2 = expectedDataSet.getTable("cfe_18.category");
@@ -275,18 +292,39 @@ public class ProcedureCaptureMetaFileTest extends DBUnitbase {
         ITable actualTable6 = databaseConnection.createQueryTable("result", "select * from flow.L7");
         ITable actualTable7 = databaseConnection.createQueryTable("result", "select * from flow.flows");
         ITable actualTable8 = databaseConnection.createQueryTable("result", "select * from cfe_18.capture_meta_file");
-        ITable actualTable9 = databaseConnection.createQueryTable("result", "select * from cfe_18.file_processing_type");
+        ITable actualTable9 = databaseConnection
+                .createQueryTable("result", "select * from cfe_18.file_processing_type");
 
-        Assertion.assertEqualsIgnoreCols(expectedTable, actualTable, new String[]{"id"});
-        Assertion.assertEqualsIgnoreCols(expectedTable1, actualTable1, new String[]{"id"});
-        Assertion.assertEqualsIgnoreCols(expectedTable2, actualTable2, new String[]{"id"});
-        Assertion.assertEqualsIgnoreCols(expectedTable3, actualTable3, new String[]{"id"});
-        Assertion.assertEqualsIgnoreCols(expectedTable4, actualTable4, new String[]{"id"});
-        Assertion.assertEqualsIgnoreCols(expectedTable5, actualTable5, new String[]{"id"});
-        Assertion.assertEqualsIgnoreCols(expectedTable6, actualTable6, new String[]{"id"});
-        Assertion.assertEqualsIgnoreCols(expectedTable7, actualTable7, new String[]{"id"});
-        Assertion.assertEqualsIgnoreCols(expectedTable8, actualTable8, new String[]{"id"});
-        Assertion.assertEqualsIgnoreCols(expectedTable9, actualTable9, new String[]{"id"});
+        Assertion.assertEqualsIgnoreCols(expectedTable, actualTable, new String[] {
+                "id"
+        });
+        Assertion.assertEqualsIgnoreCols(expectedTable1, actualTable1, new String[] {
+                "id"
+        });
+        Assertion.assertEqualsIgnoreCols(expectedTable2, actualTable2, new String[] {
+                "id"
+        });
+        Assertion.assertEqualsIgnoreCols(expectedTable3, actualTable3, new String[] {
+                "id"
+        });
+        Assertion.assertEqualsIgnoreCols(expectedTable4, actualTable4, new String[] {
+                "id"
+        });
+        Assertion.assertEqualsIgnoreCols(expectedTable5, actualTable5, new String[] {
+                "id"
+        });
+        Assertion.assertEqualsIgnoreCols(expectedTable6, actualTable6, new String[] {
+                "id"
+        });
+        Assertion.assertEqualsIgnoreCols(expectedTable7, actualTable7, new String[] {
+                "id"
+        });
+        Assertion.assertEqualsIgnoreCols(expectedTable8, actualTable8, new String[] {
+                "id"
+        });
+        Assertion.assertEqualsIgnoreCols(expectedTable9, actualTable9, new String[] {
+                "id"
+        });
     }
 
     /*
@@ -333,7 +371,6 @@ public class ProcedureCaptureMetaFileTest extends DBUnitbase {
         });
         Assertions.assertEquals("45000", state.getSQLState());
     }
-
 
     /*
     This test is for checking that capture can not be inserted if flow_id is faulty or missing

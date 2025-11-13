@@ -45,9 +45,7 @@
  */
 package com.teragrep.cfe18;
 
-import com.teragrep.cfe18.handlers.entities.CaptureDefinition;
 import com.teragrep.cfe18.handlers.entities.CaptureFile;
-import com.teragrep.cfe18.handlers.entities.CaptureRelp;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
@@ -55,19 +53,21 @@ import java.util.List;
 @Mapper
 public interface CaptureFileMapper {
 
-    CaptureFile create(String tag,
-                        String retention,
-                        String category,
-                        String application,
-                        String index,
-                        String sourcetype,
-                        String protocol,
-                        String flow,
-                        String tagPath,
-                        String capturePath,
-                        int fileProcessingTypeId);
+    CaptureFile create(
+            String tag,
+            String retention,
+            String category,
+            String application,
+            String index,
+            String sourcetype,
+            String protocol,
+            String flow,
+            String tagPath,
+            String capturePath,
+            int fileProcessingTypeId
+    );
 
-    CaptureFile get(int captureId,Integer version);
+    CaptureFile get(int captureId, Integer version);
 
     List<CaptureFile> getAll(Integer version);
 

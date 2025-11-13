@@ -63,7 +63,10 @@ import java.sql.Statement;
 public class ProcedureHostMetaDataFileTest extends DBInformation {
 
     @Test
-    @EnabledIfSystemProperty(named = "ProcedureHostMetaDataTest.generateData", matches = "true")
+    @EnabledIfSystemProperty(
+            named = "ProcedureHostMetaDataTest.generateData",
+            matches = "true"
+    )
     public void generateData() throws Exception {
 
         initialize(conn);
@@ -84,7 +87,17 @@ public class ProcedureHostMetaDataFileTest extends DBInformation {
         partialDataSet.addTable("cfe_03.ip_addresses");
         partialDataSet.addTable("cfe_03.host_meta_x_ip");
         partialDataSet.addTable("cfe_03.host_meta_x_interface");
-        FlatXmlDataSet.write(partialDataSet, Files.newOutputStream(Paths.get("src/test/resources/XMLProcedureHostMeta/procedureHostMetaTestData.xml")));
+        FlatXmlDataSet
+                .write(
+                        partialDataSet,
+                        Files
+                                .newOutputStream(
+                                        Paths
+                                                .get(
+                                                        "src/test/resources/XMLProcedureHostMeta/procedureHostMetaTestData.xml"
+                                                )
+                                )
+                );
     }
 
     private void cleanup(Connection conn) throws SQLException {
@@ -110,19 +123,28 @@ public class ProcedureHostMetaDataFileTest extends DBInformation {
     private void initialize(Connection conn) throws SQLException {
 
         Statement insertTestData = conn.createStatement();
-        insertTestData.addBatch("insert into location.host(id,MD5,fqhost,host_type) values (1,'12365','1','cfe'), (2,'12322','2','cfe'), (3,'1323','3','cfe'), (4,'4123','4','cfe'), (5,'5123','6','cfe'), (6,'6123','7','cfe');");
+        insertTestData
+                .addBatch(
+                        "insert into location.host(id,MD5,fqhost,host_type) values (1,'12365','1','cfe'), (2,'12322','2','cfe'), (3,'1323','3','cfe'), (4,'4123','4','cfe'), (5,'5123','6','cfe'), (6,'6123','7','cfe');"
+                );
         insertTestData.addBatch("insert into cfe_00.hubs(id,host_id, ip, host_type) values (1,1,'ip?' ,'cfe');");
         insertTestData.addBatch("insert into cfe_00.host_type_cfe(host_id, host_type, hub_id) values (1,'cfe',1);");
         insertTestData.addBatch("insert into cfe_03.os_type(id,os) values(1,'Linux1'),(2,'Linux2')");
         insertTestData.addBatch("insert into cfe_03.flavor_type(id,flavor) values(1,'flavor1'),(2,'flavor2')");
         insertTestData.addBatch("insert into cfe_03.arch_type(id,arch) values(1,'arch1'),(2,'arch2')");
-        insertTestData.addBatch("insert into cfe_03.release_version(id,rel_ver) values(1,'release_version1'),(2,'release_version2')");
-        insertTestData.addBatch("insert into cfe_03.host_meta(id,release_ver_id,flavor_id,arch_id,os_id) values(1,1,1,1,1)");
+        insertTestData
+                .addBatch(
+                        "insert into cfe_03.release_version(id,rel_ver) values(1,'release_version1'),(2,'release_version2')"
+                );
+        insertTestData
+                .addBatch("insert into cfe_03.host_meta(id,release_ver_id,flavor_id,arch_id,os_id) values(1,1,1,1,1)");
         insertTestData.addBatch("insert into cfe_03.cmbd(hostname,host_id,host_meta_id) values('host1',1,1)");
         insertTestData.addBatch("insert into cfe_03.interfaces(id,interface) values(1,'ens192'),(2,'ens256')");
         insertTestData.addBatch("insert into cfe_03.ip_addresses(id,ip_address) values(1,'ip1'),(2,'ip2'),(3,'ip3')");
-        insertTestData.addBatch("insert into cfe_03.host_meta_x_ip(id,host_meta_id,ip_id) values(1,1,1),(2,1,2),(3,1,3)");
-        insertTestData.addBatch("insert into cfe_03.host_meta_x_interface(id,host_meta_id,interface_id) values(1,1,1),(2,1,2)");
+        insertTestData
+                .addBatch("insert into cfe_03.host_meta_x_ip(id,host_meta_id,ip_id) values(1,1,1),(2,1,2),(3,1,3)");
+        insertTestData
+                .addBatch("insert into cfe_03.host_meta_x_interface(id,host_meta_id,interface_id) values(1,1,1),(2,1,2)");
         insertTestData.executeBatch();
     }
 }

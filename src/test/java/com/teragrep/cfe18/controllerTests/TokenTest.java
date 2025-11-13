@@ -56,7 +56,6 @@ import org.apache.http.util.EntityUtils;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.boot.test.context.SpringBootTest;
 
-
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.web.server.LocalServerPort;
 
@@ -71,7 +70,6 @@ public class TokenTest extends TestSpringBootInformation {
 
     @LocalServerPort
     private int port;
-
 
     // Testing if token works
     @Test
@@ -89,9 +87,7 @@ public class TokenTest extends TestSpringBootInformation {
         String responseString = EntityUtils.toString(entity, "UTF-8");
 
         // Then
-        assertThat(
-                httpResponse.getStatusLine().getStatusCode(),
-                equalTo(HttpStatus.SC_OK));
+        assertThat(httpResponse.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_OK));
         assertThat(responseString, equalTo("Hello, subject!"));
     }
 
@@ -108,11 +104,8 @@ public class TokenTest extends TestSpringBootInformation {
         HttpResponse httpResponse2 = HttpClientBuilder.create().build().execute(request2);
 
         // Then
-        assertThat(
-                httpResponse2.getStatusLine().getStatusCode(),
-                equalTo(HttpStatus.SC_UNAUTHORIZED));
+        assertThat(httpResponse2.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_UNAUTHORIZED));
     }
-
 
     // Tests that giving no token returns 500
     @Test
@@ -126,9 +119,7 @@ public class TokenTest extends TestSpringBootInformation {
         HttpResponse httpResponse2 = HttpClientBuilder.create().build().execute(request2);
 
         // Then
-        assertThat(
-                httpResponse2.getStatusLine().getStatusCode(),
-                equalTo(HttpStatus.SC_UNAUTHORIZED));
+        assertThat(httpResponse2.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_UNAUTHORIZED));
     }
 
 }

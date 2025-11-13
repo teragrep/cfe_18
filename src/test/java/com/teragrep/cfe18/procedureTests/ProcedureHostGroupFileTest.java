@@ -73,14 +73,24 @@ public class ProcedureHostGroupFileTest extends DBUnitbase {
 
     @Override
     protected IDataSet getDataSet() throws Exception {
-        return new FlatXmlDataSetBuilder().build(Files.newInputStream(Paths.get("src/test/resources/XMLProcedureHostGroup/procedureHostGroupTestData.xml")));
+        return new FlatXmlDataSetBuilder()
+                .build(
+                        Files
+                                .newInputStream(
+                                        Paths
+                                                .get(
+                                                        "src/test/resources/XMLProcedureHostGroup/procedureHostGroupTestData.xml"
+                                                )
+                                )
+                );
     }
 
     /*
     This test is for checking that host_group add procedure works when adding a new host_group with host
      */
     public void testProcedureAddHostGroupSuccess() throws Exception {
-        IDataSet expectedDataSet = new FlatXmlDataSetBuilder().build(new File("src/test/resources/XMLProcedureHostGroup/procedureHostGroupTestDataExpected1.xml"));
+        IDataSet expectedDataSet = new FlatXmlDataSetBuilder()
+                .build(new File("src/test/resources/XMLProcedureHostGroup/procedureHostGroupTestDataExpected1.xml"));
         ITable expectedTable2 = expectedDataSet.getTable("location.host");
         ITable expectedTable3 = expectedDataSet.getTable("location.host_group");
 
@@ -101,7 +111,8 @@ public class ProcedureHostGroupFileTest extends DBUnitbase {
     This test is for checking that new host group is created when one does not exist during insertion.
      */
     public void testProcedureAddHostWithNewGroup() throws Exception {
-        IDataSet expectedDataSet = new FlatXmlDataSetBuilder().build(new File("src/test/resources/XMLProcedureHostGroup/procedureHostGroupTestDataExpected2.xml"));
+        IDataSet expectedDataSet = new FlatXmlDataSetBuilder()
+                .build(new File("src/test/resources/XMLProcedureHostGroup/procedureHostGroupTestDataExpected2.xml"));
         ITable expectedTable1 = expectedDataSet.getTable("location.host_group_x_host");
         ITable expectedTable2 = expectedDataSet.getTable("location.host");
         ITable expectedTable3 = expectedDataSet.getTable("location.host_group");
@@ -115,7 +126,9 @@ public class ProcedureHostGroupFileTest extends DBUnitbase {
         ITable actualTable2 = databaseConnection.createQueryTable("result", "select * from location.host");
         ITable actualTable3 = databaseConnection.createQueryTable("result", "select * from location.host_group");
 
-        Assertion.assertEqualsIgnoreCols(expectedTable1, actualTable1, new String[]{"id"});
+        Assertion.assertEqualsIgnoreCols(expectedTable1, actualTable1, new String[] {
+                "id"
+        });
         Assertion.assertEquals(expectedTable2, actualTable2);
         Assertion.assertEquals(expectedTable3, actualTable3);
 

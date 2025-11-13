@@ -45,7 +45,6 @@
  */
 package com.teragrep.cfe18.controllerTests;
 
-
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.test.context.TestPropertySource;
@@ -55,13 +54,11 @@ import org.springframework.test.context.TestPropertySource;
 @ExtendWith(MigrateDatabaseExtension.class)
 class TestSpringBootInformation {
 
-
     protected static String DBUNIT_DRIVER_CLASS = System.getProperty("tests.dbunit.driver.class");
     protected static String DBUNIT_CONNECTION_URL = System.getProperty("tests.dbunit.connection.url");
     protected static String DBUNIT_USERNAME = System.getProperty("tests.dbunit.username");
     protected static String DBUNIT_PASSWORD = System.getProperty("tests.dbunit.password");
 
     protected String token = "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJzdWJqZWN0IiwiaWF0IjoxNTE2MjM5MDIyfQ.eB2c9xtg5wcCZxZ-o-sH4Mx1JGkqAZwH4_WS0UcDbj_nen0NPBj6CqOEPhr_LZDagb4mM6HoAPJywWWG8b_Ylnn5r2gWDzib2mb0kxIuAjnvVBrpzusw4ItTVvP_srv2DrwcisKYiKqU5X_3ka7MSVvKtswdLY3RXeCJ_S2W9go";
-
 
 }

@@ -91,9 +91,7 @@ public class GXGControllerTest extends TestSpringBootInformation {
         String json2 = gson.toJson(flow);
 
         // forms the json to requestEntity
-        StringEntity requestEntity2 = new StringEntity(
-                String.valueOf(json2),
-                ContentType.APPLICATION_JSON);
+        StringEntity requestEntity2 = new StringEntity(String.valueOf(json2), ContentType.APPLICATION_JSON);
 
         // Creates the request
         HttpPut request2 = new HttpPut("http://localhost:" + port + "/flow");
@@ -103,7 +101,6 @@ public class GXGControllerTest extends TestSpringBootInformation {
         request2.setHeader("Authorization", "Bearer " + token);
 
         HttpClientBuilder.create().build().execute(request2);
-
 
         // insert sink
 
@@ -116,9 +113,7 @@ public class GXGControllerTest extends TestSpringBootInformation {
         String json = gson.toJson(sink);
 
         // forms the json to requestEntity
-        StringEntity requestEntity = new StringEntity(
-                String.valueOf(json),
-                ContentType.APPLICATION_JSON);
+        StringEntity requestEntity = new StringEntity(String.valueOf(json), ContentType.APPLICATION_JSON);
 
         // Creates the request
         HttpPut request = new HttpPut("http://localhost:" + port + "/sink");
@@ -145,9 +140,7 @@ public class GXGControllerTest extends TestSpringBootInformation {
         String relpJson = gson.toJson(captureRelp);
 
         // forms the json to requestEntity
-        StringEntity requestEntityCapture = new StringEntity(
-                String.valueOf(relpJson),
-                ContentType.APPLICATION_JSON);
+        StringEntity requestEntityCapture = new StringEntity(String.valueOf(relpJson), ContentType.APPLICATION_JSON);
 
         // Creates the request
         HttpPut requestCapture = new HttpPut("http://localhost:" + port + "/capture/relp");
@@ -167,9 +160,7 @@ public class GXGControllerTest extends TestSpringBootInformation {
         String cgJson = gson.toJson(captureGroup);
 
         // forms the json to requestEntity
-        StringEntity requestEntityCaptureGroup = new StringEntity(
-                String.valueOf(cgJson),
-                ContentType.APPLICATION_JSON);
+        StringEntity requestEntityCaptureGroup = new StringEntity(String.valueOf(cgJson), ContentType.APPLICATION_JSON);
 
         // Creates the request
         HttpPut requestCaptureGroup = new HttpPut("http://localhost:" + port + "/capture/group");
@@ -199,14 +190,10 @@ public class GXGControllerTest extends TestSpringBootInformation {
         String actual = responseAsJson.get("message").toString();
 
         // Assertions
-        assertThat(
-                httpResponse.getStatusLine().getStatusCode(),
-                equalTo(HttpStatus.SC_CREATED));
+        assertThat(httpResponse.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_CREATED));
         assertEquals(expected, actual);
 
-
     }
-
 
     @Test
     @Order(2)
@@ -219,9 +206,7 @@ public class GXGControllerTest extends TestSpringBootInformation {
         String json = gson.toJson(relpHost);
 
         // forms the json to requestEntity
-        StringEntity requestEntity = new StringEntity(
-                String.valueOf(json),
-                ContentType.APPLICATION_JSON);
+        StringEntity requestEntity = new StringEntity(String.valueOf(json), ContentType.APPLICATION_JSON);
 
         // Creates the request
         HttpPut request = new HttpPut("http://localhost:" + port + "/host/relp");
@@ -233,7 +218,6 @@ public class GXGControllerTest extends TestSpringBootInformation {
         // Get the response from endpoint
         HttpClientBuilder.create().build().execute(request);
 
-
         // Host Group
         HostGroup relpHostGroup = new HostGroup();
         relpHostGroup.setHost_id(1);
@@ -242,9 +226,7 @@ public class GXGControllerTest extends TestSpringBootInformation {
         String jsonGroup = gson.toJson(relpHostGroup);
 
         // forms the json to requestEntity
-        StringEntity requestEntityGroup = new StringEntity(
-                String.valueOf(jsonGroup),
-                ContentType.APPLICATION_JSON);
+        StringEntity requestEntityGroup = new StringEntity(String.valueOf(jsonGroup), ContentType.APPLICATION_JSON);
 
         // Creates the request
         HttpPut requestGroup = new HttpPut("http://localhost:" + port + "/host/group");
@@ -262,7 +244,6 @@ public class GXGControllerTest extends TestSpringBootInformation {
         // Entity response string
         String responseString = EntityUtils.toString(entity);
 
-
         // Parsin respponse as JSONObject
         JSONObject responseAsJson = new JSONObject(responseString);
 
@@ -274,9 +255,7 @@ public class GXGControllerTest extends TestSpringBootInformation {
 
         // Assertions
         assertEquals(expected, actual);
-        assertThat(
-                httpResponse.getStatusLine().getStatusCode(),
-                equalTo(HttpStatus.SC_CREATED));
+        assertThat(httpResponse.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_CREATED));
 
     }
 
@@ -291,9 +270,7 @@ public class GXGControllerTest extends TestSpringBootInformation {
         String jsonGroup = gson.toJson(linkage);
 
         // forms the json to requestEntity
-        StringEntity requestEntityGroup = new StringEntity(
-                String.valueOf(jsonGroup),
-                ContentType.APPLICATION_JSON);
+        StringEntity requestEntityGroup = new StringEntity(String.valueOf(jsonGroup), ContentType.APPLICATION_JSON);
 
         // Creates the request
         HttpPut requestGroup = new HttpPut("http://localhost:" + port + "/capture/groups/linkage");
@@ -311,7 +288,6 @@ public class GXGControllerTest extends TestSpringBootInformation {
         // Entity response string
         String responseString = EntityUtils.toString(entity);
 
-
         // Parsin respponse as JSONObject
         JSONObject responseAsJson = new JSONObject(responseString);
 
@@ -323,10 +299,7 @@ public class GXGControllerTest extends TestSpringBootInformation {
 
         // Assertions
         assertEquals(expected, actual);
-        assertThat(
-                httpResponse.getStatusLine().getStatusCode(),
-                equalTo(HttpStatus.SC_CREATED));
-
+        assertThat(httpResponse.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_CREATED));
 
     }
 
@@ -424,7 +397,6 @@ public class GXGControllerTest extends TestSpringBootInformation {
 
     }
 
-
     @Test
     @Order(7)
     public void testRetrieveAllCaptureGroups() throws Exception {
@@ -454,7 +426,6 @@ public class GXGControllerTest extends TestSpringBootInformation {
         assertEquals(expectedJson, responseStringGet);
 
     }
-
 
     @Test
     @Order(8)
@@ -550,7 +521,6 @@ public class GXGControllerTest extends TestSpringBootInformation {
         assertThat(deleteResponse.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_BAD_REQUEST));
     }
 
-
     @Test
     @Order(11)
     public void testDeleteNonExistentCaptureGroup() throws Exception {
@@ -576,7 +546,6 @@ public class GXGControllerTest extends TestSpringBootInformation {
         assertThat(deleteResponse.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_BAD_REQUEST));
         assertEquals(expected, actual);
     }
-
 
     @Test
     @Order(12)
@@ -632,7 +601,6 @@ public class GXGControllerTest extends TestSpringBootInformation {
         assertEquals(expected, actual);
     }
 
-
     @Test
     @Order(14)
     public void testDeleteNonExistentLinkage() throws Exception {
@@ -686,6 +654,7 @@ public class GXGControllerTest extends TestSpringBootInformation {
         assertThat(deleteResponse.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_OK));
         assertEquals(expected, actual);
     }
+
     @Test
     @Order(16)
     public void testNoTwoTagsInCaptureGroup() throws Exception {
@@ -703,9 +672,7 @@ public class GXGControllerTest extends TestSpringBootInformation {
         String relpJson = gson.toJson(captureRelp);
 
         // forms the json to requestEntity
-        StringEntity requestEntityCapture = new StringEntity(
-                String.valueOf(relpJson),
-                ContentType.APPLICATION_JSON);
+        StringEntity requestEntityCapture = new StringEntity(String.valueOf(relpJson), ContentType.APPLICATION_JSON);
 
         // Creates the request
         HttpPut requestCapture = new HttpPut("http://localhost:" + port + "/capture/relp");
@@ -727,9 +694,7 @@ public class GXGControllerTest extends TestSpringBootInformation {
         String cgJson = gson.toJson(captureGroup);
 
         // forms the json to requestEntity
-        StringEntity requestEntityCaptureGroup = new StringEntity(
-                String.valueOf(cgJson),
-                ContentType.APPLICATION_JSON);
+        StringEntity requestEntityCaptureGroup = new StringEntity(String.valueOf(cgJson), ContentType.APPLICATION_JSON);
 
         // Creates the request
         HttpPut requestCaptureGroup = new HttpPut("http://localhost:" + port + "/capture/group");
@@ -759,13 +724,9 @@ public class GXGControllerTest extends TestSpringBootInformation {
         String actual = responseAsJson.get("message").toString();
 
         // Assertions
-        assertThat(
-                httpResponse.getStatusLine().getStatusCode(),
-                equalTo(HttpStatus.SC_BAD_REQUEST));
+        assertThat(httpResponse.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_BAD_REQUEST));
         assertEquals(expected, actual);
     }
-
-
 
     @Test
     @Order(17)

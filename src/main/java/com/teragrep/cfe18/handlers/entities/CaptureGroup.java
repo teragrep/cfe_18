@@ -50,6 +50,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class CaptureGroup {
+
     public enum group_type {
         cfe, relp
     }
@@ -105,12 +106,8 @@ public class CaptureGroup {
 
     @Override
     public String toString() {
-        return "CaptureGroup{" +
-                "capture_def_group_name='" + capture_def_group_name + '\'' +
-                ", capture_definition_id=" + capture_definition_id +
-                ", capture_group_type=" + capture_group_type +
-                ", id=" + id +
-                ", tag='" + tag + '\'' +
-                '}';
+        return "CaptureGroup{" + "capture_def_group_name='" + capture_def_group_name + '\'' + ", capture_definition_id="
+                + capture_definition_id + ", capture_group_type=" + capture_group_type + ", id=" + id + ", tag='" + tag
+                + '\'' + '}';
     }
 }

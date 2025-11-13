@@ -1,4 +1,3 @@
-
 /*
  * Integration main data management for Teragrep
  * Copyright (C) 2021  Suomen Kanuuna Oy
@@ -57,12 +56,12 @@ import org.springframework.context.annotation.Configuration;
 
 import javax.sql.DataSource;
 
-
 /**
  * Class for configuring Flyway migrations.
  */
 @Configuration
 public class FlywayConfiguration {
+
     private static final Logger LOGGER = LoggerFactory.getLogger(FlywayConfiguration.class);
 
     /**

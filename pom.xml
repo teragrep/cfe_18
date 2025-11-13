@@ -1,28 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <packaging>war</packaging>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.teragrep</groupId>
   <artifactId>cfe_18</artifactId>
   <version>${revision}${sha1}${changelist}</version>
+  <packaging>war</packaging>
   <name>cfe_18</name>
   <description>Integration main data management for Teragrep</description>
   <properties>
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <java.version>1.8</java.version>
-    <revision>0.0.1</revision>
     <changelist>-SNAPSHOT</changelist>
-    <sha1/>
+    <java.version>1.8</java.version>
     <junit.jupiter.version>5.7.1</junit.jupiter.version>
-    <spring.boot.version>2.7.9</spring.boot.version>
     <org.mockito.version>3.6.0</org.mockito.version>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <revision>0.0.1</revision>
+    <sha1></sha1>
+    <spring.boot.version>2.7.9</spring.boot.version>
+    <tests.dbunit.connection.url>jdbc:mariadb://127.0.0.1:3306</tests.dbunit.connection.url>
     <!-- Used by maven-surefire-plugin and then passed to tests via systemPropertyVariables -->
     <tests.dbunit.driver.class>org.mariadb.jdbc.Driver</tests.dbunit.driver.class>
-    <tests.dbunit.connection.url>jdbc:mariadb://127.0.0.1:3306</tests.dbunit.connection.url>
-    <tests.dbunit.username>testuser</tests.dbunit.username>
     <tests.dbunit.password>testpass</tests.dbunit.password>
+    <tests.dbunit.username>testuser</tests.dbunit.username>
   </properties>
   <dependencyManagement>
     <dependencies>
@@ -360,6 +359,9 @@
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-maven-plugin</artifactId>
         <version>2.7.9</version>
+        <configuration>
+          <mainClass>com.teragrep.cfe18.Main</mainClass>
+        </configuration>
         <executions>
           <execution>
             <goals>
@@ -367,9 +369,6 @@
             </goals>
           </execution>
         </executions>
-        <configuration>
-          <mainClass>com.teragrep.cfe18.Main</mainClass>
-        </configuration>
       </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
@@ -391,14 +390,6 @@
         <artifactId>apache-rat-plugin</artifactId>
         <version>0.15</version>
         <inherited>false</inherited>
-        <executions>
-          <execution>
-            <phase>test</phase>
-            <goals>
-              <goal>check</goal>
-            </goals>
-          </execution>
-        </executions>
         <configuration>
           <addDefaultLicenseMatchers>false</addDefaultLicenseMatchers>
           <licenses>
@@ -445,6 +436,14 @@
             <exclude>Doxyfile</exclude>
           </excludes>
         </configuration>
+        <executions>
+          <execution>
+            <goals>
+              <goal>check</goal>
+            </goals>
+            <phase>test</phase>
+          </execution>
+        </executions>
       </plugin>
     </plugins>
   </build>
