@@ -53,25 +53,25 @@ import java.util.List;
 @Mapper
 public interface Cfe04TransformMapper {
 
-     List<Cfe04Transform> getAllCfe04Transforms(Integer version);
+    List<Cfe04Transform> getAllCfe04Transforms(Integer version);
 
-     Cfe04Transform addNewCfe04Transform(
-                                               Integer cfe04Id,
-                                               String name,
-                                               Boolean writeMeta,
-                                               Boolean writeDefault,
-                                               String defaultValue,
-                                               String destinationKey,
-                                               String regex,
-                                               String format);
+    Cfe04Transform addNewCfe04Transform(
+            Integer cfe04Id,
+            String name,
+            Boolean writeMeta,
+            Boolean writeDefault,
+            String defaultValue,
+            String destinationKey,
+            String regex,
+            String format
+    );
 
-     /**
-      *
-      * @param id cfe04 id
-      * @param version Which point in time records want to be fetched at. NULL fetches latest
-      * @return Returns all transforms linked to Cfe04
-      */
-     List<Cfe04Transform> getAllTransformsForCfe04Id(Integer id, Integer version);
+    /**
+     * @param id      cfe04 id
+     * @param version Which point in time records want to be fetched at. NULL fetches latest
+     * @return Returns all transforms linked to Cfe04
+     */
+    List<Cfe04Transform> getAllTransformsForCfe04Id(Integer id, Integer version);
 
-     Cfe04Transform deleteCfe04TransformById(Integer id);
+    Cfe04Transform deleteCfe04TransformById(Integer id);
 }

@@ -50,6 +50,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class CaptureFile {
+
     public enum CaptureType {
         cfe, relp
     }
@@ -176,20 +177,10 @@ public class CaptureFile {
 
     @Override
     public String toString() {
-        return "CaptureFile{" +
-                "id=" + id +
-                ", application='" + application + '\'' +
-                ", category='" + category + '\'' +
-                ", sourceType='" + sourceType + '\'' +
-                ", index='" + index + '\'' +
-                ", retentionTime='" + retentionTime + '\'' +
-                ", tag='" + tag + '\'' +
-                ", flow='" + flow + '\'' +
-                ", protocol='" + protocol + '\'' +
-                ", tagPath='" + tagPath + '\'' +
-                ", capturePath='" + capturePath + '\'' +
-                ", fileProcessingTypeId=" + fileProcessingTypeId +
-                ", type=" + type +
-                '}';
+        return "CaptureFile{" + "id=" + id + ", application='" + application + '\'' + ", category='" + category + '\''
+                + ", sourceType='" + sourceType + '\'' + ", index='" + index + '\'' + ", retentionTime='"
+                + retentionTime + '\'' + ", tag='" + tag + '\'' + ", flow='" + flow + '\'' + ", protocol='" + protocol
+                + '\'' + ", tagPath='" + tagPath + '\'' + ", capturePath='" + capturePath + '\''
+                + ", fileProcessingTypeId=" + fileProcessingTypeId + ", type=" + type + '}';
     }
 }

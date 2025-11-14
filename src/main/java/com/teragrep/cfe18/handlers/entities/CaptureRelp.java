@@ -50,6 +50,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class CaptureRelp {
+
     public enum CaptureType {
         cfe, relp
     }
@@ -149,17 +150,9 @@ public class CaptureRelp {
 
     @Override
     public String toString() {
-        return "CaptureRelp{" +
-                "id=" + id +
-                ", tag='" + tag + '\'' +
-                ", application='" + application + '\'' +
-                ", index='" + index + '\'' +
-                ", retentionTime='" + retentionTime + '\'' +
-                ", sourceType='" + sourceType + '\'' +
-                ", category='" + category + '\'' +
-                ", flow='" + flow + '\'' +
-                ", protocol='" + protocol + '\'' +
-                ", type=" + type +
-                '}';
+        return "CaptureRelp{" + "id=" + id + ", tag='" + tag + '\'' + ", application='" + application + '\''
+                + ", index='" + index + '\'' + ", retentionTime='" + retentionTime + '\'' + ", sourceType='"
+                + sourceType + '\'' + ", category='" + category + '\'' + ", flow='" + flow + '\'' + ", protocol='"
+                + protocol + '\'' + ", type=" + type + '}';
     }
 }

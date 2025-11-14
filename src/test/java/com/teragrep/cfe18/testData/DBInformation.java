@@ -57,12 +57,20 @@ import java.sql.SQLException;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class DBInformation {
+
     protected Connection conn = null;
 
     @BeforeAll
     public void ensureSchema() throws SQLException {
-        conn = DriverManager.getConnection(this.DBUNIT_CONNECTION_URL + "?" + "user=" + this.DBUNIT_USERNAME + "&password=" + this.DBUNIT_PASSWORD);
-        Flyway flyway = Flyway.configure().dataSource(DBUNIT_CONNECTION_URL + "/cfe_18", DBUNIT_USERNAME, DBUNIT_PASSWORD).load();
+        conn = DriverManager
+                .getConnection(
+                        this.DBUNIT_CONNECTION_URL + "?" + "user=" + this.DBUNIT_USERNAME + "&password="
+                                + this.DBUNIT_PASSWORD
+                );
+        Flyway flyway = Flyway
+                .configure()
+                .dataSource(DBUNIT_CONNECTION_URL + "/cfe_18", DBUNIT_USERNAME, DBUNIT_PASSWORD)
+                .load();
         flyway.migrate();
     }
 

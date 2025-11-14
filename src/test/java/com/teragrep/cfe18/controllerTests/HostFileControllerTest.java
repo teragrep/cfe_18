@@ -94,9 +94,7 @@ public class HostFileControllerTest extends TestSpringBootInformation {
         String json1 = gson.toJson(hub1);
 
         // forms the json to requestEntity
-        StringEntity requestEntity1 = new StringEntity(
-                String.valueOf(json1),
-                ContentType.APPLICATION_JSON);
+        StringEntity requestEntity1 = new StringEntity(String.valueOf(json1), ContentType.APPLICATION_JSON);
 
         // Creates the request
         HttpPut request1 = new HttpPut("http://localhost:" + port + "/host/hub");
@@ -106,7 +104,8 @@ public class HostFileControllerTest extends TestSpringBootInformation {
         request1.setHeader("Authorization", "Bearer " + token);
 
         // Get the response from endpoint
-        HttpResponse httpResponse = Assertions.assertDoesNotThrow(() -> HttpClientBuilder.create().build().execute(request1));
+        HttpResponse httpResponse = Assertions
+                .assertDoesNotThrow(() -> HttpClientBuilder.create().build().execute(request1));
 
         // Get the entity from response
         HttpEntity entity = httpResponse.getEntity();
@@ -125,9 +124,7 @@ public class HostFileControllerTest extends TestSpringBootInformation {
 
         // Assertions
         assertEquals(expected, actual);
-        assertThat(
-                httpResponse.getStatusLine().getStatusCode(),
-                equalTo(HttpStatus.SC_CREATED));
+        assertThat(httpResponse.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_CREATED));
     }
 
     @Test
@@ -141,9 +138,7 @@ public class HostFileControllerTest extends TestSpringBootInformation {
         String json = gson.toJson(host);
 
         // forms the json to requestEntity
-        StringEntity requestEntity = new StringEntity(
-                String.valueOf(json),
-                ContentType.APPLICATION_JSON);
+        StringEntity requestEntity = new StringEntity(String.valueOf(json), ContentType.APPLICATION_JSON);
 
         // Creates the request
         HttpPut request = new HttpPut("http://localhost:" + port + "/host/file");
@@ -153,7 +148,8 @@ public class HostFileControllerTest extends TestSpringBootInformation {
         request.setHeader("Authorization", "Bearer " + token);
 
         // Get the response from endpoint
-        HttpResponse httpResponse = Assertions.assertDoesNotThrow(() -> HttpClientBuilder.create().build().execute(request));
+        HttpResponse httpResponse = Assertions
+                .assertDoesNotThrow(() -> HttpClientBuilder.create().build().execute(request));
 
         // Get the entity from response
         HttpEntity entity = httpResponse.getEntity();
@@ -172,9 +168,7 @@ public class HostFileControllerTest extends TestSpringBootInformation {
 
         // Assertions
         assertEquals(expected, actual);
-        assertThat(
-                httpResponse.getStatusLine().getStatusCode(),
-                equalTo(HttpStatus.SC_CREATED));
+        assertThat(httpResponse.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_CREATED));
 
     }
 
@@ -196,7 +190,8 @@ public class HostFileControllerTest extends TestSpringBootInformation {
 
         requestGet.setHeader("Authorization", "Bearer " + token);
 
-        HttpResponse responseGet = Assertions.assertDoesNotThrow(() -> HttpClientBuilder.create().build().execute(requestGet));
+        HttpResponse responseGet = Assertions
+                .assertDoesNotThrow(() -> HttpClientBuilder.create().build().execute(requestGet));
 
         HttpEntity entityGet = responseGet.getEntity();
 
@@ -234,7 +229,8 @@ public class HostFileControllerTest extends TestSpringBootInformation {
 
         requestGet.setHeader("Authorization", "Bearer " + token);
 
-        HttpResponse responseGet = Assertions.assertDoesNotThrow(() -> HttpClientBuilder.create().build().execute(requestGet));
+        HttpResponse responseGet = Assertions
+                .assertDoesNotThrow(() -> HttpClientBuilder.create().build().execute(requestGet));
 
         HttpEntity entityGet = responseGet.getEntity();
 
@@ -253,7 +249,8 @@ public class HostFileControllerTest extends TestSpringBootInformation {
         // Header
         delete.setHeader("Authorization", "Bearer " + token);
 
-        HttpResponse deleteResponse = Assertions.assertDoesNotThrow(() -> HttpClientBuilder.create().build().execute(delete));
+        HttpResponse deleteResponse = Assertions
+                .assertDoesNotThrow(() -> HttpClientBuilder.create().build().execute(delete));
 
         HttpEntity entityDelete = deleteResponse.getEntity();
 
@@ -279,7 +276,8 @@ public class HostFileControllerTest extends TestSpringBootInformation {
         // Header
         delete.setHeader("Authorization", "Bearer " + token);
 
-        HttpResponse deleteResponse = Assertions.assertDoesNotThrow(() -> HttpClientBuilder.create().build().execute(delete));
+        HttpResponse deleteResponse = Assertions
+                .assertDoesNotThrow(() -> HttpClientBuilder.create().build().execute(delete));
 
         HttpEntity entityDelete = deleteResponse.getEntity();
 

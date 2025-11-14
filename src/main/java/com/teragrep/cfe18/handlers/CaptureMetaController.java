@@ -69,8 +69,8 @@ import java.sql.SQLException;
 import java.util.List;
 
 @RestController
-@RequestMapping(path="/capture/meta")
-@SecurityRequirement(name="api")
+@RequestMapping(path = "/capture/meta")
+@SecurityRequirement(name = "api")
 public class CaptureMetaController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(CaptureMetaController.class);
@@ -84,21 +84,38 @@ public class CaptureMetaController {
     @Autowired
     CaptureMetaMapper captureMetaMapper;
 
-
-    @RequestMapping(path="/{capture_id}",method= RequestMethod.GET, produces="application/json")
+    @RequestMapping(
+            path = "/{capture_id}",
+            method = RequestMethod.GET,
+            produces = "application/json"
+    )
     @Operation(summary = "Fetch capture meta by capture id")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Found the capture meta",
-                    content = {@Content(mediaType = "application/json",
-                            schema = @Schema(implementation = CaptureMeta.class))}),
-            @ApiResponse(responseCode = "400", description = "Capture meta does not exist",
-                    content = @Content)
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Found the capture meta",
+                    content = {
+                            @Content(
+                                    mediaType = "application/json",
+                                    schema = @Schema(implementation = CaptureMeta.class)
+                            )
+                    }
+            ),
+            @ApiResponse(
+                    responseCode = "400",
+                    description = "Capture meta does not exist",
+                    content = @Content
+            )
     })
-    public ResponseEntity<?> getCaptureMeta(@PathVariable("capture_id") int capture_id, @RequestParam(required = false) Integer version) {
+    public ResponseEntity<?> getCaptureMeta(
+            @PathVariable("capture_id") int capture_id,
+            @RequestParam(required = false) Integer version
+    ) {
         try {
-            List<CaptureMeta> am = captureMetaMapper.getCaptureMeta(capture_id,version);
+            List<CaptureMeta> am = captureMetaMapper.getCaptureMeta(capture_id, version);
             return new ResponseEntity<>(am, HttpStatus.OK);
-        } catch(Exception ex){
+        }
+        catch (Exception ex) {
             JSONObject jsonErr = new JSONObject();
             jsonErr.put("id", capture_id);
             final Throwable cause = ex.getCause();
@@ -114,32 +131,51 @@ public class CaptureMetaController {
         }
     }
 
-    @RequestMapping(path="/",method=RequestMethod.PUT,produces="application/json")
+    @RequestMapping(
+            path = "/",
+            method = RequestMethod.PUT,
+            produces = "application/json"
+    )
     @Operation(summary = "Insert new capture meta for capture")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "201", description = "Capture meta created for capture",
-                    content = {@Content(mediaType = "application/json",
-                            schema = @Schema(implementation = CaptureMeta.class))}),
-            @ApiResponse(responseCode = "400", description = "Capture does not exist for inserting metadata",
-                    content = @Content),
-            @ApiResponse(responseCode = "500", description = "Internal server error, contact admin", content = @Content)
+            @ApiResponse(
+                    responseCode = "201",
+                    description = "Capture meta created for capture",
+                    content = {
+                            @Content(
+                                    mediaType = "application/json",
+                                    schema = @Schema(implementation = CaptureMeta.class)
+                            )
+                    }
+            ),
+            @ApiResponse(
+                    responseCode = "400",
+                    description = "Capture does not exist for inserting metadata",
+                    content = @Content
+            ),
+            @ApiResponse(
+                    responseCode = "500",
+                    description = "Internal server error, contact admin",
+                    content = @Content
+            )
     })
-    public ResponseEntity<String> newCaptureMeta(@RequestBody CaptureMeta newCaptureMeta){
+    public ResponseEntity<String> newCaptureMeta(@RequestBody CaptureMeta newCaptureMeta) {
         LOGGER.info("About to insert <[{}]>", newCaptureMeta);
         JSONObject jsonErr = new JSONObject();
         jsonErr.put("id", newCaptureMeta.getCapture_id());
         try {
-            CaptureMeta cm = captureMetaMapper.addNewCaptureMeta(
-                    newCaptureMeta.getCapture_id(),
-                    newCaptureMeta.getCapture_meta_key(),
-                    newCaptureMeta.getCapture_meta_value()
-            );
-            LOGGER.debug("Values returned <[{}]>",cm);
+            CaptureMeta cm = captureMetaMapper
+                    .addNewCaptureMeta(
+                            newCaptureMeta.getCapture_id(), newCaptureMeta.getCapture_meta_key(),
+                            newCaptureMeta.getCapture_meta_value()
+                    );
+            LOGGER.debug("Values returned <[{}]>", cm);
             JSONObject jsonObject = new JSONObject();
             jsonObject.put("id", cm.getCapture_id());
             jsonObject.put("message", "New capture meta created for = " + cm.getCapture_id());
             return new ResponseEntity<>(jsonObject.toString(), HttpStatus.CREATED);
-        } catch (Exception ex) {
+        }
+        catch (Exception ex) {
             final Throwable cause = ex.getCause();
             if (cause instanceof SQLException) {
                 LOGGER.error((cause).getMessage());
@@ -153,37 +189,70 @@ public class CaptureMetaController {
         }
     }
 
-    @RequestMapping(path = "", method = RequestMethod.GET, produces = "application/json")
-    @Operation(summary = "Fetch all capture metas", description = "Will return empty list if there are no capture metas to fetch")
+    @RequestMapping(
+            path = "",
+            method = RequestMethod.GET,
+            produces = "application/json"
+    )
+    @Operation(
+            summary = "Fetch all capture metas",
+            description = "Will return empty list if there are no capture metas to fetch"
+    )
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Capture metas fetched",
-                    content = {@Content(mediaType = "application/json",
-                            schema = @Schema(implementation = CaptureMeta.class))})
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Capture metas fetched",
+                    content = {
+                            @Content(
+                                    mediaType = "application/json",
+                                    schema = @Schema(implementation = CaptureMeta.class)
+                            )
+                    }
+            )
     })
-    public List<CaptureMeta> getAllCaptureMetas(@RequestParam(required = false) Integer version){
+    public List<CaptureMeta> getAllCaptureMetas(@RequestParam(required = false) Integer version) {
         return captureMetaMapper.getAllCaptureMetas(version);
     }
 
     // Delete
-    @RequestMapping(path = "/{capture_id}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(
+            path = "/{capture_id}",
+            method = RequestMethod.DELETE,
+            produces = MediaType.APPLICATION_JSON_VALUE
+    )
     @Operation(summary = "Delete capture meta")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Capture meta deleted",
-                    content = {@Content(mediaType = "application/json",
-                            schema = @Schema(implementation = CaptureMeta.class))}),
-            @ApiResponse(responseCode = "400", description = "Capture meta does not exist",
-                    content = @Content),
-            @ApiResponse(responseCode = "500", description = "Internal server error, contact admin", content = @Content)
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Capture meta deleted",
+                    content = {
+                            @Content(
+                                    mediaType = "application/json",
+                                    schema = @Schema(implementation = CaptureMeta.class)
+                            )
+                    }
+            ),
+            @ApiResponse(
+                    responseCode = "400",
+                    description = "Capture meta does not exist",
+                    content = @Content
+            ),
+            @ApiResponse(
+                    responseCode = "500",
+                    description = "Internal server error, contact admin",
+                    content = @Content
+            )
     })
     public ResponseEntity<String> removeCaptureMeta(@PathVariable("capture_id") int capture_id) {
-        LOGGER.info("Deleting Capture meta <[{}]>",capture_id);
+        LOGGER.info("Deleting Capture meta <[{}]>", capture_id);
         try {
             captureMetaMapper.deleteCaptureMeta(capture_id);
             JSONObject j = new JSONObject();
             j.put("id", capture_id);
             j.put("message", "capture meta " + capture_id + " deleted.");
             return new ResponseEntity<>(j.toString(), HttpStatus.OK);
-        } catch (Exception ex) {
+        }
+        catch (Exception ex) {
             JSONObject jsonErr = new JSONObject();
             jsonErr.put("id", capture_id);
             final Throwable cause = ex.getCause();
@@ -200,22 +269,40 @@ public class CaptureMetaController {
 
     }
 
-
     // Key value fetch
-    @RequestMapping(path="/{key}/{value}",method= RequestMethod.GET, produces="application/json")
+    @RequestMapping(
+            path = "/{key}/{value}",
+            method = RequestMethod.GET,
+            produces = "application/json"
+    )
     @Operation(summary = "Fetch capture definitions by key and value")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Found the capture definitions",
-                    content = {@Content(mediaType = "application/json",
-                            schema = @Schema(implementation = CaptureMeta.class))}),
-            @ApiResponse(responseCode = "400", description = "Capture meta key or value does not exist",
-                    content = @Content)
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Found the capture definitions",
+                    content = {
+                            @Content(
+                                    mediaType = "application/json",
+                                    schema = @Schema(implementation = CaptureMeta.class)
+                            )
+                    }
+            ),
+            @ApiResponse(
+                    responseCode = "400",
+                    description = "Capture meta key or value does not exist",
+                    content = @Content
+            )
     })
-    public ResponseEntity<?> getCaptureMetaKeyValue(@PathVariable("key") String key, @PathVariable("value") String value,@RequestParam(required = false) Integer version) {
+    public ResponseEntity<?> getCaptureMetaKeyValue(
+            @PathVariable("key") String key,
+            @PathVariable("value") String value,
+            @RequestParam(required = false) Integer version
+    ) {
         try {
-            List<CaptureDefinition> am = captureMetaMapper.getCaptureMetaByKeyValue(key,value,version);
+            List<CaptureDefinition> am = captureMetaMapper.getCaptureMetaByKeyValue(key, value, version);
             return new ResponseEntity<>(am, HttpStatus.OK);
-        } catch(Exception ex){
+        }
+        catch (Exception ex) {
             JSONObject jsonErr = new JSONObject();
             LOGGER.error(ex.getMessage());
             final Throwable cause = ex.getCause();

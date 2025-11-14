@@ -50,6 +50,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class CaptureStorage {
+
     private int storage_id;
     private int capture_id;
     @Schema(accessMode = Schema.AccessMode.READ_ONLY)
@@ -81,10 +82,7 @@ public class CaptureStorage {
 
     @Override
     public String toString() {
-        return "CaptureStorage{" +
-                "storage_id=" + storage_id +
-                ", capture_id=" + capture_id +
-                ", storage_name='" + storage_name + '\'' +
-                '}';
+        return "CaptureStorage{" + "storage_id=" + storage_id + ", capture_id=" + capture_id + ", storage_name='"
+                + storage_name + '\'' + '}';
     }
 }

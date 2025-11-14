@@ -72,9 +72,6 @@ public class InterfaceType {
 
     @Override
     public String toString() {
-        return "Interface_Type{" +
-                "interface_type='" + interfaceType + '\'' +
-                ", host_meta_id=" + host_meta_id +
-                '}';
+        return "Interface_Type{" + "interface_type='" + interfaceType + '\'' + ", host_meta_id=" + host_meta_id + '}';
     }
 }

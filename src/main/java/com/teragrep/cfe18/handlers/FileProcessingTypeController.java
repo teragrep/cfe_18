@@ -48,7 +48,6 @@ package com.teragrep.cfe18.handlers;
 import com.teragrep.cfe18.FileProcessingTypeMapper;
 import com.teragrep.cfe18.handlers.entities.FileProcessing;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
-import org.apache.commons.lang3.EnumUtils;
 import org.json.JSONObject;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -72,6 +71,7 @@ import java.util.List;
 @RequestMapping(path = "file/capture")
 @SecurityRequirement(name = "api")
 public class FileProcessingTypeController {
+
     private static final Logger LOGGER = LoggerFactory.getLogger(FileProcessingTypeController.class);
 
     @Autowired
@@ -83,22 +83,40 @@ public class FileProcessingTypeController {
     @Autowired
     FileProcessingTypeMapper fileProcessingTypeMapper;
 
-
-    @RequestMapping(path = "/meta/{id}", method = RequestMethod.GET, produces = "application/json")
+    @RequestMapping(
+            path = "/meta/{id}",
+            method = RequestMethod.GET,
+            produces = "application/json"
+    )
     @Operation(summary = "Fetch file processing type by id")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "File processing type retrieved",
-                    content = {@Content(mediaType = "application/json",
-                            schema = @Schema(implementation = FileProcessing.class))}),
-            @ApiResponse(responseCode = "400", description = "File processing type does not exist with the given id",
-                    content = @Content),
-            @ApiResponse(responseCode = "500", description = "Internal server error, contact admin", content = @Content)
-                })
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "File processing type retrieved",
+                    content = {
+                            @Content(
+                                    mediaType = "application/json",
+                                    schema = @Schema(implementation = FileProcessing.class)
+                            )
+                    }
+            ),
+            @ApiResponse(
+                    responseCode = "400",
+                    description = "File processing type does not exist with the given id",
+                    content = @Content
+            ),
+            @ApiResponse(
+                    responseCode = "500",
+                    description = "Internal server error, contact admin",
+                    content = @Content
+            )
+    })
     public ResponseEntity<?> get(@PathVariable("id") int id, @RequestParam(required = false) Integer version) {
         try {
-            FileProcessing fc = fileProcessingTypeMapper.get(id,version);
+            FileProcessing fc = fileProcessingTypeMapper.get(id, version);
             return new ResponseEntity<>(fc, HttpStatus.OK);
-        } catch (Exception ex) {
+        }
+        catch (Exception ex) {
             JSONObject jsonErr = new JSONObject();
             final Throwable cause = ex.getCause();
             if (cause instanceof SQLException) {
@@ -115,46 +133,77 @@ public class FileProcessingTypeController {
         }
     }
 
-
     // Get ALL endpoint
-    @RequestMapping(path = "/meta/", method = RequestMethod.GET, produces = "application/json")
-    @Operation(summary = "Fetch all file processing types", description = "Will return empty list if there are no file processing types to fetch")
+    @RequestMapping(
+            path = "/meta/",
+            method = RequestMethod.GET,
+            produces = "application/json"
+    )
+    @Operation(
+            summary = "Fetch all file processing types",
+            description = "Will return empty list if there are no file processing types to fetch"
+    )
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "File processing types fetched",
-                    content = {@Content(mediaType = "application/json",
-                            schema = @Schema(implementation = FileProcessing.class))})
-                })
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "File processing types fetched",
+                    content = {
+                            @Content(
+                                    mediaType = "application/json",
+                                    schema = @Schema(implementation = FileProcessing.class)
+                            )
+                    }
+            )
+    })
     public List<FileProcessing> getAll(@RequestParam(required = false) Integer version) {
         return fileProcessingTypeMapper.getAll(version);
     }
 
-
-    @RequestMapping(path = "/meta/rule", method = RequestMethod.PUT, produces = "application/json")
+    @RequestMapping(
+            path = "/meta/rule",
+            method = RequestMethod.PUT,
+            produces = "application/json"
+    )
     @Operation(summary = "Insert file processing type for file based capture")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "201", description = "New file processing type created",
-                    content = {@Content(mediaType = "application/json",
-                            schema = @Schema(implementation = FileProcessing.class))}),
-            @ApiResponse(responseCode = "400", description = "Inputvalue must be regex or newline",
-                    content = @Content),
-            @ApiResponse(responseCode = "500", description = "Internal server error, contact admin", content = @Content)
+            @ApiResponse(
+                    responseCode = "201",
+                    description = "New file processing type created",
+                    content = {
+                            @Content(
+                                    mediaType = "application/json",
+                                    schema = @Schema(implementation = FileProcessing.class)
+                            )
+                    }
+            ),
+            @ApiResponse(
+                    responseCode = "400",
+                    description = "Inputvalue must be regex or newline",
+                    content = @Content
+            ),
+            @ApiResponse(
+                    responseCode = "500",
+                    description = "Internal server error, contact admin",
+                    content = @Content
+            )
     })
     public ResponseEntity<String> create(@RequestBody FileProcessing newFileProcessing) {
         LOGGER.info("About to insert <[{}]>", newFileProcessing);
         try {
-            FileProcessing n = fileProcessingTypeMapper.create(
-                    newFileProcessing.getTemplate(),
-                    newFileProcessing.getRuleset(),
-                    newFileProcessing.getName(),
-                    newFileProcessing.getInputtype().toString(),
-                    newFileProcessing.getInputvalue());
-            LOGGER.debug("Values returned <[{}]>",n);
+            FileProcessing n = fileProcessingTypeMapper
+                    .create(
+                            newFileProcessing.getTemplate(), newFileProcessing.getRuleset(),
+                            newFileProcessing.getName(), newFileProcessing.getInputtype().toString(),
+                            newFileProcessing.getInputvalue()
+                    );
+            LOGGER.debug("Values returned <[{}]>", n);
             JSONObject jsonObject = new JSONObject();
             jsonObject.put("id", n.getId());
             jsonObject.put("message", "New file processing type created");
 
             return new ResponseEntity<>(jsonObject.toString(), HttpStatus.CREATED);
-        } catch (RuntimeException ex) {
+        }
+        catch (RuntimeException ex) {
             LOGGER.error(ex.getMessage());
             return new ResponseEntity<>("Unexpected error", HttpStatus.INTERNAL_SERVER_ERROR);
 
@@ -162,18 +211,36 @@ public class FileProcessingTypeController {
     }
 
     // Delete
-    @RequestMapping(path = "meta/{id}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(
+            path = "meta/{id}",
+            method = RequestMethod.DELETE,
+            produces = MediaType.APPLICATION_JSON_VALUE
+    )
     @Operation(summary = "Delete file processing type")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "File processing type deleted",
-                    content = {@Content(mediaType = "application/json",
-                            schema = @Schema(implementation = FileProcessing.class))}),
-            @ApiResponse(responseCode = "400", description = "File processing type is being used OR file processing type does not exist",
-                    content = @Content),
-            @ApiResponse(responseCode = "500", description = "Internal server error, contact admin", content = @Content)
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "File processing type deleted",
+                    content = {
+                            @Content(
+                                    mediaType = "application/json",
+                                    schema = @Schema(implementation = FileProcessing.class)
+                            )
+                    }
+            ),
+            @ApiResponse(
+                    responseCode = "400",
+                    description = "File processing type is being used OR file processing type does not exist",
+                    content = @Content
+            ),
+            @ApiResponse(
+                    responseCode = "500",
+                    description = "Internal server error, contact admin",
+                    content = @Content
+            )
     })
     public ResponseEntity<String> delete(@PathVariable("id") int id) {
-        LOGGER.info("Deleting file processing type  <[{}]>",id);
+        LOGGER.info("Deleting file processing type  <[{}]>", id);
         JSONObject jsonErr = new JSONObject();
         try {
             fileProcessingTypeMapper.delete(id);
@@ -181,7 +248,8 @@ public class FileProcessingTypeController {
             j.put("id", id);
             j.put("message", "File processing type deleted.");
             return new ResponseEntity<>(j.toString(), HttpStatus.OK);
-        } catch (Exception ex) {
+        }
+        catch (Exception ex) {
             final Throwable cause = ex.getCause();
             if (cause instanceof SQLException) {
                 LOGGER.error((cause).getMessage());
@@ -189,7 +257,8 @@ public class FileProcessingTypeController {
                 if (state.equals("23000")) {
                     jsonErr.put("id", id);
                     jsonErr.put("message", "Is in use");
-                } else if (state.equals("45000")) {
+                }
+                else if (state.equals("45000")) {
                     jsonErr.put("id", id);
                     jsonErr.put("message", "Record does not exist");
                 }
@@ -199,4 +268,3 @@ public class FileProcessingTypeController {
         }
     }
 }
-

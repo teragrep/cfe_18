@@ -69,5 +69,4 @@ public class MyBatisConfig {
         return factoryBean.getObject();
     }
 
-
 }

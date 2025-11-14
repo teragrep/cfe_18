@@ -71,6 +71,7 @@ import java.util.List;
 @RequestMapping(path = "sink")
 @SecurityRequirement(name = "api")
 public class SinkController {
+
     private static final Logger LOGGER = LoggerFactory.getLogger(SinkController.class);
 
     @Autowired
@@ -82,31 +83,51 @@ public class SinkController {
     @Autowired
     SinkMapper sinkMapper;
 
-    @RequestMapping(path = "", method = RequestMethod.PUT, produces = "application/json")
+    @RequestMapping(
+            path = "",
+            method = RequestMethod.PUT,
+            produces = "application/json"
+    )
     @Operation(summary = "Create new capture sink")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "201", description = "New capture sink created",
-                    content = {@Content(mediaType = "application/json",
-                            schema = @Schema(implementation = Sink.class))}),
-            @ApiResponse(responseCode = "409", description = "Flow and protocol combination already exists",
-                    content = @Content),
-            @ApiResponse(responseCode = "409", description = "Port length exceeded",
-                    content = @Content),
-            @ApiResponse(responseCode = "400", description = "Internal server error, contact admin", content = @Content)})
+            @ApiResponse(
+                    responseCode = "201",
+                    description = "New capture sink created",
+                    content = {
+                            @Content(
+                                    mediaType = "application/json",
+                                    schema = @Schema(implementation = Sink.class)
+                            )
+                    }
+            ),
+            @ApiResponse(
+                    responseCode = "409",
+                    description = "Flow and protocol combination already exists",
+                    content = @Content
+            ),
+            @ApiResponse(
+                    responseCode = "409",
+                    description = "Port length exceeded",
+                    content = @Content
+            ),
+            @ApiResponse(
+                    responseCode = "400",
+                    description = "Internal server error, contact admin",
+                    content = @Content
+            )
+    })
     public ResponseEntity<String> create(@RequestBody Sink newSink) {
-        LOGGER.info("About to insert <[{}]>",newSink);
+        LOGGER.info("About to insert <[{}]>", newSink);
         try {
-            Sink n = sinkMapper.create(
-                    newSink.getProtocol(),
-                    newSink.getIpAddress(),
-                    newSink.getPort(),
-                    newSink.getFlowId());
-            LOGGER.debug("Values returned <[{}]>",n );
+            Sink n = sinkMapper
+                    .create(newSink.getProtocol(), newSink.getIpAddress(), newSink.getPort(), newSink.getFlowId());
+            LOGGER.debug("Values returned <[{}]>", n);
             JSONObject jsonObject = new JSONObject();
             jsonObject.put("id", n.getId());
             jsonObject.put("message", "New sink created");
             return new ResponseEntity<>(jsonObject.toString(), HttpStatus.CREATED);
-        } catch (RuntimeException ex) {
+        }
+        catch (RuntimeException ex) {
             LOGGER.error(ex.getMessage());
             JSONObject jsonErr = new JSONObject();
             jsonErr.put("id", newSink.getId());
@@ -119,8 +140,9 @@ public class SinkController {
                 if (state.equals("23000")) {
                     jsonErr.put("message", "Flow and protocol combination already exists");
                     return new ResponseEntity<>(jsonErr.toString(), HttpStatus.CONFLICT);
-                // 22001 = Constraint exception, Foreign key constract fails for too long data column
-                } else if (state.equals("22001")) {
+                    // 22001 = Constraint exception, Foreign key constract fails for too long data column
+                }
+                else if (state.equals("22001")) {
                     jsonErr.put("message", "Port length exceeded");
                     return new ResponseEntity<>(jsonErr.toString(), HttpStatus.CONFLICT);
                 }
@@ -129,20 +151,40 @@ public class SinkController {
         }
     }
 
-    @RequestMapping(path = "/{id}", method = RequestMethod.GET, produces = "application/json")
+    @RequestMapping(
+            path = "/{id}",
+            method = RequestMethod.GET,
+            produces = "application/json"
+    )
     @Operation(summary = "Fetch sink")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Capture sink retrieved",
-                    content = {@Content(mediaType = "application/json",
-                            schema = @Schema(implementation = Sink.class))}),
-            @ApiResponse(responseCode = "404", description = "Sink does not exist",
-                    content = @Content),
-            @ApiResponse(responseCode = "400", description = "Internal server error, contact admin", content = @Content)})
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Capture sink retrieved",
+                    content = {
+                            @Content(
+                                    mediaType = "application/json",
+                                    schema = @Schema(implementation = Sink.class)
+                            )
+                    }
+            ),
+            @ApiResponse(
+                    responseCode = "404",
+                    description = "Sink does not exist",
+                    content = @Content
+            ),
+            @ApiResponse(
+                    responseCode = "400",
+                    description = "Internal server error, contact admin",
+                    content = @Content
+            )
+    })
     public ResponseEntity<?> get(@PathVariable("id") int id, @RequestParam(required = false) Integer version) {
         try {
-            Sink s = sinkMapper.get(id,version);
+            Sink s = sinkMapper.get(id, version);
             return new ResponseEntity<>(s, HttpStatus.OK);
-        } catch (RuntimeException ex) {
+        }
+        catch (RuntimeException ex) {
             LOGGER.error(ex.getMessage());
             JSONObject jsonErr = new JSONObject();
             jsonErr.put("id", id);
@@ -161,36 +203,74 @@ public class SinkController {
         }
     }
 
-    @RequestMapping(path = "", method = RequestMethod.GET, produces = "application/json")
-    @Operation(summary = "Fetch all capture sinks", description = "Will return empty list if there are no capture sinks to fetch")
+    @RequestMapping(
+            path = "",
+            method = RequestMethod.GET,
+            produces = "application/json"
+    )
+    @Operation(
+            summary = "Fetch all capture sinks",
+            description = "Will return empty list if there are no capture sinks to fetch"
+    )
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Successfully retrieved",
-                    content = {@Content(mediaType = "application/json",
-                            schema = @Schema(implementation = Sink.class))})})
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Successfully retrieved",
+                    content = {
+                            @Content(
+                                    mediaType = "application/json",
+                                    schema = @Schema(implementation = Sink.class)
+                            )
+                    }
+            )
+    })
     public List<Sink> getAll(@RequestParam(required = false) Integer version) {
         return sinkMapper.getAll(version);
     }
 
-    @RequestMapping(path = "/{id}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(
+            path = "/{id}",
+            method = RequestMethod.DELETE,
+            produces = MediaType.APPLICATION_JSON_VALUE
+    )
     @Operation(summary = "Delete capture sink")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Capture sink deleted",
-                    content = {@Content(mediaType = "application/json",
-                            schema = @Schema(implementation = Sink.class))}),
-            @ApiResponse(responseCode = "404", description = "Capture sink does not exist",
-                    content = @Content),
-            @ApiResponse(responseCode = "409", description = "Capture sink is being used",
-                    content = @Content),
-            @ApiResponse(responseCode = "400", description = "Internal server error, contact admin", content = @Content)})
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Capture sink deleted",
+                    content = {
+                            @Content(
+                                    mediaType = "application/json",
+                                    schema = @Schema(implementation = Sink.class)
+                            )
+                    }
+            ),
+            @ApiResponse(
+                    responseCode = "404",
+                    description = "Capture sink does not exist",
+                    content = @Content
+            ),
+            @ApiResponse(
+                    responseCode = "409",
+                    description = "Capture sink is being used",
+                    content = @Content
+            ),
+            @ApiResponse(
+                    responseCode = "400",
+                    description = "Internal server error, contact admin",
+                    content = @Content
+            )
+    })
     public ResponseEntity<String> delete(@PathVariable("id") int id) {
-        LOGGER.info("Deleting sink <[{}]>",id);
+        LOGGER.info("Deleting sink <[{}]>", id);
         try {
             sinkMapper.delete(id);
             JSONObject j = new JSONObject();
             j.put("id", id);
             j.put("message", "Sink deleted");
             return new ResponseEntity<>(j.toString(), HttpStatus.OK);
-        } catch (RuntimeException ex) {
+        }
+        catch (RuntimeException ex) {
             LOGGER.error(ex.getMessage());
             JSONObject jsonErr = new JSONObject();
             jsonErr.put("id", id);
@@ -203,8 +283,9 @@ public class SinkController {
                 if (state.equals("23000")) {
                     jsonErr.put("message", "Is in use");
                     return new ResponseEntity<>(jsonErr.toString(), HttpStatus.CONFLICT);
-                // 45000 = Custom error, row does not exist
-                } else if (state.equals("45000")) {
+                    // 45000 = Custom error, row does not exist
+                }
+                else if (state.equals("45000")) {
                     jsonErr.put("message", "Record does not exist");
                     return new ResponseEntity<>(jsonErr.toString(), HttpStatus.NOT_FOUND);
                 }
@@ -213,5 +294,3 @@ public class SinkController {
         }
     }
 }
-
-

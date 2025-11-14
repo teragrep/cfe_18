@@ -46,7 +46,6 @@
 package com.teragrep.cfe18.handlers;
 
 import com.teragrep.cfe18.HostRelpMapper;
-import com.teragrep.cfe18.handlers.entities.HostFile;
 import com.teragrep.cfe18.handlers.entities.HostRelp;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -84,30 +83,50 @@ public class HostRelpController {
     @Autowired
     HostRelpMapper hostRelpMapper;
 
-
-    @RequestMapping(path = "", method = RequestMethod.PUT, produces = "application/json")
+    @RequestMapping(
+            path = "",
+            method = RequestMethod.PUT,
+            produces = "application/json"
+    )
     @Operation(summary = "Create relp based host")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "201", description = "New relp based host created",
-                    content = {@Content(mediaType = "application/json",
-                            schema = @Schema(implementation = HostRelp.class))}),
-            @ApiResponse(responseCode = "400", description = "ID,MD5 or fqhost already exists",
-                    content = @Content),
-            @ApiResponse(responseCode = "400", description = "Host exists with different type",
-                    content = @Content),
-            @ApiResponse(responseCode = "500", description = "Internal server error, contact admin", content = @Content)})
+            @ApiResponse(
+                    responseCode = "201",
+                    description = "New relp based host created",
+                    content = {
+                            @Content(
+                                    mediaType = "application/json",
+                                    schema = @Schema(implementation = HostRelp.class)
+                            )
+                    }
+            ),
+            @ApiResponse(
+                    responseCode = "400",
+                    description = "ID,MD5 or fqhost already exists",
+                    content = @Content
+            ),
+            @ApiResponse(
+                    responseCode = "400",
+                    description = "Host exists with different type",
+                    content = @Content
+            ),
+            @ApiResponse(
+                    responseCode = "500",
+                    description = "Internal server error, contact admin",
+                    content = @Content
+            )
+    })
     public ResponseEntity<String> create(@RequestBody HostRelp newHostRelp) {
         LOGGER.info("About to insert <[{}]>", newHostRelp);
         try {
-            HostRelp hr = hostRelpMapper.create(
-                    newHostRelp.getMd5(),
-                    newHostRelp.getFqHost());
+            HostRelp hr = hostRelpMapper.create(newHostRelp.getMd5(), newHostRelp.getFqHost());
             LOGGER.debug("Values returned <[{}]>", hr);
             JSONObject jsonObject = new JSONObject();
             jsonObject.put("id", hr.getId());
             jsonObject.put("message", "New host created with relp type");
             return new ResponseEntity<>(jsonObject.toString(), HttpStatus.CREATED);
-        } catch (RuntimeException ex) {
+        }
+        catch (RuntimeException ex) {
             JSONObject jsonErr = new JSONObject();
             jsonErr.put("id", newHostRelp.getId());
             jsonErr.put("message", ex.getCause().getMessage());
@@ -121,7 +140,8 @@ public class HostRelpController {
                 if (state.equals("1062-23000")) {
                     jsonErr.put("message", "ID,MD5 or fqhost already exists");
                     return new ResponseEntity<>(jsonErr.toString(), HttpStatus.BAD_REQUEST);
-                }else if (state.equals("45000")) {
+                }
+                else if (state.equals("45000")) {
                     jsonErr.put("message", "Host exists with different type");
                     return new ResponseEntity<>(jsonErr.toString(), HttpStatus.BAD_REQUEST);
                 }
@@ -130,20 +150,40 @@ public class HostRelpController {
         }
     }
 
-    @RequestMapping(path = "/{id}", method = RequestMethod.GET, produces = "application/json")
+    @RequestMapping(
+            path = "/{id}",
+            method = RequestMethod.GET,
+            produces = "application/json"
+    )
     @Operation(summary = "Fetch relp based host by ID")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Relp based host retrieved",
-                    content = {@Content(mediaType = "application/json",
-                            schema = @Schema(implementation = HostRelp.class))}),
-            @ApiResponse(responseCode = "400", description = "Host does not exist",
-                    content = @Content),
-            @ApiResponse(responseCode = "500", description = "Internal server error, contact admin", content = @Content)})
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Relp based host retrieved",
+                    content = {
+                            @Content(
+                                    mediaType = "application/json",
+                                    schema = @Schema(implementation = HostRelp.class)
+                            )
+                    }
+            ),
+            @ApiResponse(
+                    responseCode = "400",
+                    description = "Host does not exist",
+                    content = @Content
+            ),
+            @ApiResponse(
+                    responseCode = "500",
+                    description = "Internal server error, contact admin",
+                    content = @Content
+            )
+    })
     public ResponseEntity<?> get(@PathVariable("id") int id, @RequestParam(required = false) Integer version) {
         try {
-            HostRelp hr = hostRelpMapper.get(id,version);
+            HostRelp hr = hostRelpMapper.get(id, version);
             return new ResponseEntity<>(hr, HttpStatus.OK);
-        } catch (Exception ex) {
+        }
+        catch (Exception ex) {
             JSONObject jsonErr = new JSONObject();
             jsonErr.put("id", id);
             jsonErr.put("message", ex.getCause().getMessage());
@@ -160,35 +200,69 @@ public class HostRelpController {
         }
     }
 
-    @RequestMapping(path = "", method = RequestMethod.GET, produces = "application/json")
-    @Operation(summary = "Fetch all relp hosts", description = "Will return empty list if there are no hosts to fetch")
+    @RequestMapping(
+            path = "",
+            method = RequestMethod.GET,
+            produces = "application/json"
+    )
+    @Operation(
+            summary = "Fetch all relp hosts",
+            description = "Will return empty list if there are no hosts to fetch"
+    )
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Successfully retrieved",
-                    content = {@Content(mediaType = "application/json",
-                            schema = @Schema(implementation = HostRelp.class))})})
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Successfully retrieved",
+                    content = {
+                            @Content(
+                                    mediaType = "application/json",
+                                    schema = @Schema(implementation = HostRelp.class)
+                            )
+                    }
+            )
+    })
     public List<HostRelp> getAll(@RequestParam(required = false) Integer version) {
         return hostRelpMapper.getAll(version);
     }
 
-    @RequestMapping(path = "/{id}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(
+            path = "/{id}",
+            method = RequestMethod.DELETE,
+            produces = MediaType.APPLICATION_JSON_VALUE
+    )
     @Operation(summary = "Delete relp host")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Host deleted",
-                    content = {@Content(mediaType = "application/json",
-                            schema = @Schema(implementation = HostRelp.class))}),
-            @ApiResponse(responseCode = "400", description = "Host is being used OR Host does not exist",
-                    content = @Content),
-            @ApiResponse(responseCode = "500", description = "Internal server error, contact admin", content = @Content)
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Host deleted",
+                    content = {
+                            @Content(
+                                    mediaType = "application/json",
+                                    schema = @Schema(implementation = HostRelp.class)
+                            )
+                    }
+            ),
+            @ApiResponse(
+                    responseCode = "400",
+                    description = "Host is being used OR Host does not exist",
+                    content = @Content
+            ),
+            @ApiResponse(
+                    responseCode = "500",
+                    description = "Internal server error, contact admin",
+                    content = @Content
+            )
     })
     public ResponseEntity<String> delete(@PathVariable("id") int id) {
-        LOGGER.info("Deleting Host  <[{}]>",id);
+        LOGGER.info("Deleting Host  <[{}]>", id);
         try {
             hostRelpMapper.delete(id);
             JSONObject j = new JSONObject();
             j.put("id", id);
             j.put("message", "Host deleted");
             return new ResponseEntity<>(j.toString(), HttpStatus.OK);
-        } catch (RuntimeException ex) {
+        }
+        catch (RuntimeException ex) {
             JSONObject jsonErr = new JSONObject();
             jsonErr.put("id", id);
             jsonErr.put("message", ex.getCause().getMessage());
@@ -199,7 +273,8 @@ public class HostRelpController {
                 if (state.equals("23000")) {
                     jsonErr.put("message", "Is in use");
                     return new ResponseEntity<>(jsonErr.toString(), HttpStatus.BAD_REQUEST);
-                } else if (state.equals("45000")) {
+                }
+                else if (state.equals("45000")) {
                     jsonErr.put("message", "Record does not exist");
                     return new ResponseEntity<>(jsonErr.toString(), HttpStatus.NOT_FOUND);
                 }
@@ -208,5 +283,3 @@ public class HostRelpController {
         }
     }
 }
-
-

@@ -138,16 +138,9 @@ public class HostMeta {
 
     @Override
     public String toString() {
-        return "HostMeta{" +
-                "id=" + id +
-                ", arch='" + arch + '\'' +
-                ", flavor='" + flavor + '\'' +
-                ", hostname='" + hostname + '\'' +
-                ", host_id=" + host_id +
-                ", os='" + os + '\'' +
-                ", release_version='" + release_version + '\'' +
-                ", interface_type='" + interface_type + '\'' +
-                ", ip_address='" + ip_address + '\'' +
-                '}';
+        return "HostMeta{" + "id=" + id + ", arch='" + arch + '\'' + ", flavor='" + flavor + '\'' + ", hostname='"
+                + hostname + '\'' + ", host_id=" + host_id + ", os='" + os + '\'' + ", release_version='"
+                + release_version + '\'' + ", interface_type='" + interface_type + '\'' + ", ip_address='" + ip_address
+                + '\'' + '}';
     }
 }

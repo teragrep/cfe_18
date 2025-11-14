@@ -74,9 +74,6 @@ public class Flow {
 
     @Override
     public String toString() {
-        return "Flow{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                '}';
+        return "Flow{" + "id=" + id + ", name='" + name + '\'' + '}';
     }
 }

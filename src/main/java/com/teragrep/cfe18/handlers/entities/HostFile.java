@@ -100,12 +100,7 @@ public class HostFile {
 
     @Override
     public String toString() {
-        return "HostFile{" +
-                "id=" + id +
-                ", md5='" + md5 + '\'' +
-                ", fqHost='" + fqHost + '\'' +
-                ", hubId=" + hubId +
-                ", hubFq='" + hubFq + '\'' +
-                '}';
+        return "HostFile{" + "id=" + id + ", md5='" + md5 + '\'' + ", fqHost='" + fqHost + '\'' + ", hubId=" + hubId
+                + ", hubFq='" + hubFq + '\'' + '}';
     }
 }

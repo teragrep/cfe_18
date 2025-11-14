@@ -65,7 +65,10 @@ public class ProcedureProcessingTypeDataTest extends DBInformation {
 
     @Test
     @ResourceLock(value = "conn")
-    @EnabledIfSystemProperty(named = "ProcedureProcessingTypeDataTest.generateData", matches = "true")
+    @EnabledIfSystemProperty(
+            named = "ProcedureProcessingTypeDataTest.generateData",
+            matches = "true"
+    )
     public void generateData() throws Exception {
 
         initialize(conn);
@@ -78,7 +81,17 @@ public class ProcedureProcessingTypeDataTest extends DBInformation {
         partialDataSet.addTable("cfe_18.ruleset");
         partialDataSet.addTable("cfe_18.templates");
         partialDataSet.addTable("cfe_18.processing_type");
-        FlatXmlDataSet.write(partialDataSet, Files.newOutputStream(Paths.get("src/test/resources/XMLProcedureProcessingType/procedureProcessingTypeTestData.xml")));
+        FlatXmlDataSet
+                .write(
+                        partialDataSet,
+                        Files
+                                .newOutputStream(
+                                        Paths
+                                                .get(
+                                                        "src/test/resources/XMLProcedureProcessingType/procedureProcessingTypeTestData.xml"
+                                                )
+                                )
+                );
         cleanup(conn);
     }
 
@@ -99,10 +112,14 @@ public class ProcedureProcessingTypeDataTest extends DBInformation {
         Statement insertTestData = conn.createStatement();
         insertTestData.addBatch("insert into cfe_18.inputtype(id,inputtype) values (1,'regex'),(2,'newline');");
         insertTestData.addBatch("insert into cfe_18.regex(id,regex,inputtype) values (1,'YourNormalRegex','regex');");
-        insertTestData.addBatch("insert into cfe_18.newline(id,newline,inputtype) values (2,'NewlineForNewbies','newline');");
+        insertTestData
+                .addBatch("insert into cfe_18.newline(id,newline,inputtype) values (2,'NewlineForNewbies','newline');");
         insertTestData.addBatch("insert into cfe_18.ruleset(id,rule) values (1,'RulesAreMadeToBeBroken');");
         insertTestData.addBatch("insert into cfe_18.templates(id,template) values (1,'TemplateForBaking');");
-        insertTestData.addBatch("insert into cfe_18.processing_type(id,inputtype_id,ruleset_id,template_id,type_name,capture_type) values (1,1,1,1,'name1','cfe'),(2,2,1,1,'name2','cfe');");
+        insertTestData
+                .addBatch(
+                        "insert into cfe_18.processing_type(id,inputtype_id,ruleset_id,template_id,type_name,capture_type) values (1,1,1,1,'name1','cfe'),(2,2,1,1,'name2','cfe');"
+                );
         insertTestData.executeBatch();
     }
 }

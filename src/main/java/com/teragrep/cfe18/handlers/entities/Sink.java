@@ -101,12 +101,7 @@ public class Sink {
 
     @Override
     public String toString() {
-        return "Sink{" +
-                "id=" + id +
-                ", ipAddress='" + ipAddress + '\'' +
-                ", port='" + port + '\'' +
-                ", protocol='" + protocol + '\'' +
-                ", flowId=" + flowId +
-                '}';
+        return "Sink{" + "id=" + id + ", ipAddress='" + ipAddress + '\'' + ", port='" + port + '\'' + ", protocol='"
+                + protocol + '\'' + ", flowId=" + flowId + '}';
     }
 }

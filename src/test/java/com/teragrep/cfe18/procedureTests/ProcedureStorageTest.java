@@ -45,15 +45,12 @@
  */
 package com.teragrep.cfe18.procedureTests;
 
-import com.teragrep.cfe18.handlers.HostMetaController;
 import org.dbunit.Assertion;
 import org.dbunit.dataset.IDataSet;
 import org.dbunit.dataset.ITable;
 import org.dbunit.dataset.xml.FlatXmlDataSetBuilder;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.TestInstance;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.nio.file.Files;
@@ -63,13 +60,15 @@ import java.sql.SQLException;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class ProcedureStorageTest extends DBUnitbase {
+
     public ProcedureStorageTest(String name) {
         super(name);
     }
 
     @Override
     protected IDataSet getDataSet() throws Exception {
-        return new FlatXmlDataSetBuilder().build(Files.newInputStream(Paths.get("src/test/resources/XMLProcedureStorage/procedureStorageData.xml")));
+        return new FlatXmlDataSetBuilder()
+                .build(Files.newInputStream(Paths.get("src/test/resources/XMLProcedureStorage/procedureStorageData.xml")));
     }
 
     /*
@@ -88,15 +87,15 @@ public class ProcedureStorageTest extends DBUnitbase {
         Assertions.assertEquals("45000", state.getSQLState());
     }
 
-
     /*
     -Check that storage can be inserted via flow
     -Takes flow,storage_type and target_name
     -Returns ID, not important information tho
-  */
+    */
 
     public void testStorageFlowAccept() throws Exception {
-        IDataSet expectedDataSet = new FlatXmlDataSetBuilder().build(new File("src/test/resources/XMLProcedureStorage/procedureStorageExpectedTestData1.xml"));
+        IDataSet expectedDataSet = new FlatXmlDataSetBuilder()
+                .build(new File("src/test/resources/XMLProcedureStorage/procedureStorageExpectedTestData1.xml"));
 
         ITable expectedTable = expectedDataSet.getTable("flow.flow_targets");
 
@@ -116,7 +115,8 @@ public class ProcedureStorageTest extends DBUnitbase {
     -Takes capture_id and storage_id
     */
     public void testStorageCaptureLinkage() throws Exception {
-        IDataSet expectedDataSet = new FlatXmlDataSetBuilder().build(new File("src/test/resources/XMLProcedureStorage/procedureStorageExpectedTestData2.xml"));
+        IDataSet expectedDataSet = new FlatXmlDataSetBuilder()
+                .build(new File("src/test/resources/XMLProcedureStorage/procedureStorageExpectedTestData2.xml"));
 
         ITable expectedTable = expectedDataSet.getTable("cfe_18.capture_def_x_flow_targets");
 
@@ -125,7 +125,8 @@ public class ProcedureStorageTest extends DBUnitbase {
         stmnt.setInt(2, 2);
         stmnt.execute();
 
-        ITable actualTable = databaseConnection.createQueryTable("result", "select * from cfe_18.capture_def_x_flow_targets");
+        ITable actualTable = databaseConnection
+                .createQueryTable("result", "select * from cfe_18.capture_def_x_flow_targets");
 
         Assertion.assertEquals(expectedTable, actualTable);
     }
@@ -150,7 +151,7 @@ public class ProcedureStorageTest extends DBUnitbase {
     -Check that capture can not be linked to indifferent flow storage
     -Takes capture_id and storage_id
     -Throws 23000 when indifferent
-  */
+    */
     public void testStorageDifferentFlowLinkage() throws Exception {
         SQLException state = Assertions.assertThrows(SQLException.class, () -> {
             CallableStatement stmnt = conn.prepareCall("{CALL flow.add_storage_for_capture(?,?)}");

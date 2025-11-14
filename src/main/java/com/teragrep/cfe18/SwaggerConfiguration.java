@@ -45,7 +45,6 @@
  */
 package com.teragrep.cfe18;
 
-
 import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Info;
@@ -56,39 +55,23 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.filter.ForwardedHeaderFilter;
 
-
 @Configuration
 public class SwaggerConfiguration {
-
 
     @Bean
     public OpenAPI customOpenAPI(
             @Value("${application-description}") String appDesciption,
             @Value("${application-version}") String appVersion
     ) {
-        return new OpenAPI().addSecurityItem(new SecurityRequirement().
-                        addList("Bearer Authentication")).components(new Components().addSecuritySchemes(
-                                "api",
-                                new SecurityScheme()
-                                        .scheme("bearer")
-                                        .type(SecurityScheme.Type.HTTP)
-                                        .bearerFormat("jwt")
-                                        .name("api")
-                        )
-                )
-                .info(new Info()
-                        .title("cfe_18 API")
-                        .version(appVersion)
-                        .description(appDesciption)
-                );
+        return new OpenAPI()
+                .addSecurityItem(new SecurityRequirement().addList("Bearer Authentication"))
+                .components(new Components().addSecuritySchemes("api", new SecurityScheme().scheme("bearer").type(SecurityScheme.Type.HTTP).bearerFormat("jwt").name("api"))).info(new Info().title("cfe_18 API").version(appVersion).description(appDesciption));
     }
-
 
     // for Swagger
     @Bean
     ForwardedHeaderFilter forwardedHeaderFilter() {
         return new ForwardedHeaderFilter();
     }
-
 
 }

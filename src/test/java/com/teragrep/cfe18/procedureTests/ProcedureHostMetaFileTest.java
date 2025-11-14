@@ -61,7 +61,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-
 public class ProcedureHostMetaFileTest extends DBUnitbase {
 
     public ProcedureHostMetaFileTest(String name) {
@@ -70,14 +69,24 @@ public class ProcedureHostMetaFileTest extends DBUnitbase {
 
     @Override
     protected IDataSet getDataSet() throws Exception {
-        return new FlatXmlDataSetBuilder().build(Files.newInputStream(Paths.get("src/test/resources/XMLProcedureHostMeta/procedureHostMetaTestData.xml")));
+        return new FlatXmlDataSetBuilder()
+                .build(
+                        Files
+                                .newInputStream(
+                                        Paths
+                                                .get(
+                                                        "src/test/resources/XMLProcedureHostMeta/procedureHostMetaTestData.xml"
+                                                )
+                                )
+                );
     }
 
     /*
     Testi millä katsotaan IP n lisäys host_metaan mukaan.
      */
     public void testProcedureAddIpToHostMeta() throws Exception {
-        IDataSet expectedDataSet = new FlatXmlDataSetBuilder().build(new File("src/test/resources/XMLProcedureHostMeta/procedureHostMetaTestDataExpected1.xml"));
+        IDataSet expectedDataSet = new FlatXmlDataSetBuilder()
+                .build(new File("src/test/resources/XMLProcedureHostMeta/procedureHostMetaTestDataExpected1.xml"));
         ITable expectedTable1 = expectedDataSet.getTable("cfe_03.ip_addresses");
         ITable expectedTable2 = expectedDataSet.getTable("cfe_03.host_meta_x_ip");
 
@@ -92,7 +101,6 @@ public class ProcedureHostMetaFileTest extends DBUnitbase {
         Assertion.assertEquals(expectedTable1, actualTable1);
         Assertion.assertEquals(expectedTable2, actualTable2);
     }
-
 
     /*
     Testi millä katsotaan onko host_meta_id validi jos IP tä lisätään
@@ -109,7 +117,7 @@ public class ProcedureHostMetaFileTest extends DBUnitbase {
     }
 
     /*
-   Testi millä katsotaan onko host_meta_id validi jos Interfacea lisätään
+    Testi millä katsotaan onko host_meta_id validi jos Interfacea lisätään
     palauttaa 42000 error
     */
     public void testHostMetaValidityOnInterface() throws Exception {
@@ -126,7 +134,8 @@ public class ProcedureHostMetaFileTest extends DBUnitbase {
     Testi millä katsotaan interfacen lisäys host metan mukaan.
     */
     public void testProcedureAddInterfaceToHostMeta() throws Exception {
-        IDataSet expectedDataSet = new FlatXmlDataSetBuilder().build(new File("src/test/resources/XMLProcedureHostMeta/procedureHostMetaTestDataExpected2.xml"));
+        IDataSet expectedDataSet = new FlatXmlDataSetBuilder()
+                .build(new File("src/test/resources/XMLProcedureHostMeta/procedureHostMetaTestDataExpected2.xml"));
         ITable expectedTable1 = expectedDataSet.getTable("cfe_03.interfaces");
         ITable expectedTable2 = expectedDataSet.getTable("cfe_03.host_meta_x_interface");
 
@@ -136,18 +145,19 @@ public class ProcedureHostMetaFileTest extends DBUnitbase {
         stmnt.execute();
 
         ITable actualTable1 = databaseConnection.createQueryTable("result", "select * from cfe_03.interfaces");
-        ITable actualTable2 = databaseConnection.createQueryTable("result", "select * from cfe_03.host_meta_x_interface");
+        ITable actualTable2 = databaseConnection
+                .createQueryTable("result", "select * from cfe_03.host_meta_x_interface");
 
         Assertion.assertEquals(expectedTable1, actualTable1);
         Assertion.assertEquals(expectedTable2, actualTable2);
     }
 
-
     /*
     Testi millä katsotaan onnistuuko host_metan lisääminen hostiin.
- */
+    */
     public void testHostMetaWithHost() throws Exception {
-        IDataSet expectedDataSet = new FlatXmlDataSetBuilder().build(new File("src/test/resources/XMLProcedureHostMeta/procedureHostMetaTestDataExpected3.xml"));
+        IDataSet expectedDataSet = new FlatXmlDataSetBuilder()
+                .build(new File("src/test/resources/XMLProcedureHostMeta/procedureHostMetaTestDataExpected3.xml"));
         ITable expectedTable2 = expectedDataSet.getTable("cfe_03.host_meta");
         // käytetään aiempia arvoja mitä on jo testidatassa. Halutaan vain nähdä syntyykö uusi host meta hostille jolla ei ole host metaa vielä.
         CallableStatement stmnt = conn.prepareCall("{CALL cfe_03.add_host_meta_data(?,?,?,?,?,?)}");
@@ -164,7 +174,6 @@ public class ProcedureHostMetaFileTest extends DBUnitbase {
         Assertion.assertEquals(expectedTable2, actualTable2);
 
     }
-
 
     /*
     Testi millä katsotaan onko hostia olemassa mihin host_metaa lisätään.
@@ -206,12 +215,13 @@ public class ProcedureHostMetaFileTest extends DBUnitbase {
             Assertions.assertEquals("host1", rs.getString("hostname"));
         }
         Assertions.assertEquals(Arrays.asList("ip1", "ip1", "ip2", "ip2", "ip3", "ip3"), IpList);
-        Assertions.assertEquals(Arrays.asList("ens192", "ens256", "ens192", "ens256", "ens192", "ens256"), InterfaceList);
+        Assertions
+                .assertEquals(Arrays.asList("ens192", "ens256", "ens192", "ens256", "ens192", "ens256"), InterfaceList);
     }
 
     /*
     Testi millä tarkastetaan cfe hostin palautus missä host_meta_id tulee mukana. Testidatan vuoksi hostin testi täälä.
-*/
+    */
     public void testProcedureRetrieveCfeHost() throws Exception {
         CallableStatement stmnt = conn.prepareCall("{CALL cfe_00.retrieve_host_details(?,?)}");
         stmnt.setInt(1, 2);
@@ -228,4 +238,3 @@ public class ProcedureHostMetaFileTest extends DBUnitbase {
         Assertions.assertEquals("1", rs.getString("hub_fq")); // hub_fq
     }
 }
-

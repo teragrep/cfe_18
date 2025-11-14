@@ -50,6 +50,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class FlowStorage {
+
     @Schema(accessMode = Schema.AccessMode.READ_ONLY)
     private int id;
     @Schema(accessMode = Schema.AccessMode.READ_ONLY)
@@ -103,12 +104,7 @@ public class FlowStorage {
 
     @Override
     public String toString() {
-        return "FlowStorage{" +
-                "id=" + id +
-                ", storage_type='" + storage_type + '\'' +
-                ", flow='" + flow + '\'' +
-                ", storage_name='" + storage_name + '\'' +
-                ", storage_id=" + storage_id +
-                '}';
+        return "FlowStorage{" + "id=" + id + ", storage_type='" + storage_type + '\'' + ", flow='" + flow + '\''
+                + ", storage_name='" + storage_name + '\'' + ", storage_id=" + storage_id + '}';
     }
 }

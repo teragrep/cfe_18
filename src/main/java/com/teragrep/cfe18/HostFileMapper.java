@@ -53,9 +53,7 @@ import java.util.List;
 @Mapper
 public interface HostFileMapper {
 
-    HostFile create(String md5,
-                    String FqHost,
-                    String hubFq);
+    HostFile create(String md5, String FqHost, String hubFq);
 
     HostFile get(int id, Integer version);
 

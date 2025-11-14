@@ -47,7 +47,6 @@ package com.teragrep.cfe18.handlers;
 
 import com.teragrep.cfe18.HostFileMapper;
 import com.teragrep.cfe18.handlers.entities.HostFile;
-import com.teragrep.cfe18.handlers.entities.HostRelp;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -84,31 +83,50 @@ public class HostFileController {
     @Autowired
     HostFileMapper hostFileMapper;
 
-    @RequestMapping(path = "", method = RequestMethod.PUT, produces = "application/json")
+    @RequestMapping(
+            path = "",
+            method = RequestMethod.PUT,
+            produces = "application/json"
+    )
     @Operation(summary = "Create file based host")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "201", description = "New file based host created",
-                    content = {@Content(mediaType = "application/json",
-                            schema = @Schema(implementation = HostFile.class))}),
-            @ApiResponse(responseCode = "400", description = "ID,MD5 or fqhost already exists",
-                    content = @Content),
-            @ApiResponse(responseCode = "400", description = "Host exists for a different type or hub does not exist",
-                    content = @Content),
-            @ApiResponse(responseCode = "500", description = "Internal server error, contact admin", content = @Content)
+            @ApiResponse(
+                    responseCode = "201",
+                    description = "New file based host created",
+                    content = {
+                            @Content(
+                                    mediaType = "application/json",
+                                    schema = @Schema(implementation = HostFile.class)
+                            )
+                    }
+            ),
+            @ApiResponse(
+                    responseCode = "400",
+                    description = "ID,MD5 or fqhost already exists",
+                    content = @Content
+            ),
+            @ApiResponse(
+                    responseCode = "400",
+                    description = "Host exists for a different type or hub does not exist",
+                    content = @Content
+            ),
+            @ApiResponse(
+                    responseCode = "500",
+                    description = "Internal server error, contact admin",
+                    content = @Content
+            )
     })
     public ResponseEntity<String> create(@RequestBody HostFile newHostfile) {
         LOGGER.info("About to insert <[{}]>", newHostfile);
         try {
-            HostFile hf = hostFileMapper.create(
-                    newHostfile.getMd5(),
-                    newHostfile.getFqHost(),
-                    newHostfile.getHubFq());
+            HostFile hf = hostFileMapper.create(newHostfile.getMd5(), newHostfile.getFqHost(), newHostfile.getHubFq());
             LOGGER.debug("Values returned <[{}]>", hf);
             JSONObject jsonObject = new JSONObject();
             jsonObject.put("id", hf.getId());
             jsonObject.put("message", "New host created");
             return new ResponseEntity<>(jsonObject.toString(), HttpStatus.CREATED);
-        } catch (RuntimeException ex) {
+        }
+        catch (RuntimeException ex) {
             JSONObject jsonErr = new JSONObject();
             jsonErr.put("id", newHostfile.getId());
             jsonErr.put("message", ex.getCause().getMessage());
@@ -118,7 +136,8 @@ public class HostFileController {
                 if (state.equals("23000")) {
                     jsonErr.put("message", "ID,MD5 or fqhost already exists");
                     return new ResponseEntity<>(jsonErr.toString(), HttpStatus.BAD_REQUEST);
-                } else if (state.equals("45000")) {
+                }
+                else if (state.equals("45000")) {
                     jsonErr.put("message", "Host exists for a different type or hub does not exist");
                     return new ResponseEntity<>(jsonErr.toString(), HttpStatus.BAD_REQUEST);
                 }
@@ -127,20 +146,40 @@ public class HostFileController {
         }
     }
 
-    @RequestMapping(path = "/{id}", method = RequestMethod.GET, produces = "application/json")
+    @RequestMapping(
+            path = "/{id}",
+            method = RequestMethod.GET,
+            produces = "application/json"
+    )
     @Operation(summary = "Fetch file based host by ID")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "File based host retrieved",
-                    content = {@Content(mediaType = "application/json",
-                            schema = @Schema(implementation = HostFile.class))}),
-            @ApiResponse(responseCode = "400", description = "ID given does not match any host_id OR ID given directs to a hub based host OR ID given points to different type of host",
-                    content = @Content),
-            @ApiResponse(responseCode = "500", description = "Internal server error, contact admin", content = @Content)})
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "File based host retrieved",
+                    content = {
+                            @Content(
+                                    mediaType = "application/json",
+                                    schema = @Schema(implementation = HostFile.class)
+                            )
+                    }
+            ),
+            @ApiResponse(
+                    responseCode = "400",
+                    description = "ID given does not match any host_id OR ID given directs to a hub based host OR ID given points to different type of host",
+                    content = @Content
+            ),
+            @ApiResponse(
+                    responseCode = "500",
+                    description = "Internal server error, contact admin",
+                    content = @Content
+            )
+    })
     public ResponseEntity<?> get(@PathVariable("id") int id, @RequestParam(required = false) Integer version) {
         try {
-            HostFile hf = hostFileMapper.get(id,version);
+            HostFile hf = hostFileMapper.get(id, version);
             return new ResponseEntity<>(hf, HttpStatus.OK);
-        } catch (RuntimeException ex) {
+        }
+        catch (RuntimeException ex) {
             LOGGER.error(ex.getMessage());
             JSONObject jsonErr = new JSONObject();
             jsonErr.put("id", id);
@@ -158,34 +197,69 @@ public class HostFileController {
         }
     }
 
-    @RequestMapping(path = "", method = RequestMethod.GET, produces = "application/json")
-    @Operation(summary = "Fetch all file hosts", description = "Will return empty list if there are no hosts to fetch")
+    @RequestMapping(
+            path = "",
+            method = RequestMethod.GET,
+            produces = "application/json"
+    )
+    @Operation(
+            summary = "Fetch all file hosts",
+            description = "Will return empty list if there are no hosts to fetch"
+    )
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Successfully retrieved",
-                    content = {@Content(mediaType = "application/json",
-                            schema = @Schema(implementation = HostFile.class))})})
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Successfully retrieved",
+                    content = {
+                            @Content(
+                                    mediaType = "application/json",
+                                    schema = @Schema(implementation = HostFile.class)
+                            )
+                    }
+            )
+    })
     public List<HostFile> getAll(@RequestParam(required = false) Integer version) {
         return hostFileMapper.getAll(version);
     }
 
-    @RequestMapping(path = "/{id}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(
+            path = "/{id}",
+            method = RequestMethod.DELETE,
+            produces = MediaType.APPLICATION_JSON_VALUE
+    )
     @Operation(summary = "Delete file host")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Host deleted",
-                    content = {@Content(mediaType = "application/json",
-                            schema = @Schema(implementation = HostFile.class))}),
-            @ApiResponse(responseCode = "400", description = "Host is being used OR Host does not exist",
-                    content = @Content),
-            @ApiResponse(responseCode = "500", description = "Internal server error, contact admin", content = @Content)})
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Host deleted",
+                    content = {
+                            @Content(
+                                    mediaType = "application/json",
+                                    schema = @Schema(implementation = HostFile.class)
+                            )
+                    }
+            ),
+            @ApiResponse(
+                    responseCode = "400",
+                    description = "Host is being used OR Host does not exist",
+                    content = @Content
+            ),
+            @ApiResponse(
+                    responseCode = "500",
+                    description = "Internal server error, contact admin",
+                    content = @Content
+            )
+    })
     public ResponseEntity<String> delete(@PathVariable("id") int id) {
-        LOGGER.info("Deleting Host  <[{}]>",id);
+        LOGGER.info("Deleting Host  <[{}]>", id);
         try {
             hostFileMapper.delete(id);
             JSONObject j = new JSONObject();
             j.put("id", id);
             j.put("message", "Host deleted");
             return new ResponseEntity<>(j.toString(), HttpStatus.OK);
-        } catch (RuntimeException ex) {
+        }
+        catch (RuntimeException ex) {
             JSONObject jsonErr = new JSONObject();
             jsonErr.put("id", id);
             jsonErr.put("messgae", ex.getCause().getMessage());
@@ -196,7 +270,8 @@ public class HostFileController {
                 if (state.equals("23000")) {
                     jsonErr.put("message", "Is in use");
                     return new ResponseEntity<>(jsonErr.toString(), HttpStatus.BAD_REQUEST);
-                } else if (state.equals("45000")) {
+                }
+                else if (state.equals("45000")) {
                     jsonErr.put("message", "Record does not exist");
                     return new ResponseEntity<>(jsonErr.toString(), HttpStatus.NOT_FOUND);
                 }
@@ -207,5 +282,3 @@ public class HostFileController {
     }
 
 }
-
-

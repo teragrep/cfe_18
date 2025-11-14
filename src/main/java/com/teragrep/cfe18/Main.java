@@ -45,7 +45,6 @@
  */
 package com.teragrep.cfe18;
 
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -56,9 +55,9 @@ import org.springframework.boot.web.servlet.support.SpringBootServletInitializer
 
 import java.security.interfaces.RSAPublicKey;
 
-
 @SpringBootApplication
 public class Main extends SpringBootServletInitializer {
+
     private static final Logger LOGGER = LoggerFactory.getLogger(Main.class);
     @Value("${spring.security.oauth2.resourceserver.jwt.public-key-location}")
     RSAPublicKey key;
@@ -75,6 +74,5 @@ public class Main extends SpringBootServletInitializer {
         }
         SpringApplication.run(Main.class, args);
     }
-
 
 }

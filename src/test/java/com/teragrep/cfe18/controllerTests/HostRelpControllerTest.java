@@ -91,9 +91,7 @@ public class HostRelpControllerTest extends TestSpringBootInformation {
         String json = gson.toJson(relpHost);
 
         // forms the json to requestEntity
-        StringEntity requestEntity = new StringEntity(
-                String.valueOf(json),
-                ContentType.APPLICATION_JSON);
+        StringEntity requestEntity = new StringEntity(String.valueOf(json), ContentType.APPLICATION_JSON);
 
         // Creates the request
         HttpPut request = new HttpPut("http://localhost:" + port + "/host/relp");
@@ -103,7 +101,8 @@ public class HostRelpControllerTest extends TestSpringBootInformation {
         request.setHeader("Authorization", "Bearer " + token);
 
         // Get the response from endpoint
-        HttpResponse httpResponse = Assertions.assertDoesNotThrow(() -> HttpClientBuilder.create().build().execute(request));
+        HttpResponse httpResponse = Assertions
+                .assertDoesNotThrow(() -> HttpClientBuilder.create().build().execute(request));
 
         // Get the entity from response
         HttpEntity entity = httpResponse.getEntity();
@@ -122,9 +121,7 @@ public class HostRelpControllerTest extends TestSpringBootInformation {
 
         // Assertions
         assertEquals(expected, actual);
-        assertThat(
-                httpResponse.getStatusLine().getStatusCode(),
-                equalTo(HttpStatus.SC_CREATED));
+        assertThat(httpResponse.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_CREATED));
     }
 
     @Test
@@ -142,7 +139,8 @@ public class HostRelpControllerTest extends TestSpringBootInformation {
 
         requestGet.setHeader("Authorization", "Bearer " + token);
 
-        HttpResponse responseGet = Assertions.assertDoesNotThrow(() -> HttpClientBuilder.create().build().execute(requestGet));
+        HttpResponse responseGet = Assertions
+                .assertDoesNotThrow(() -> HttpClientBuilder.create().build().execute(requestGet));
 
         HttpEntity entityGet = responseGet.getEntity();
 
@@ -171,7 +169,8 @@ public class HostRelpControllerTest extends TestSpringBootInformation {
 
         requestGet.setHeader("Authorization", "Bearer " + token);
 
-        HttpResponse responseGet = Assertions.assertDoesNotThrow(() -> HttpClientBuilder.create().build().execute(requestGet));
+        HttpResponse responseGet = Assertions
+                .assertDoesNotThrow(() -> HttpClientBuilder.create().build().execute(requestGet));
 
         HttpEntity entityGet = responseGet.getEntity();
 
@@ -190,7 +189,8 @@ public class HostRelpControllerTest extends TestSpringBootInformation {
         // Header
         delete.setHeader("Authorization", "Bearer " + token);
 
-        HttpResponse deleteResponse = Assertions.assertDoesNotThrow(() -> HttpClientBuilder.create().build().execute(delete));
+        HttpResponse deleteResponse = Assertions
+                .assertDoesNotThrow(() -> HttpClientBuilder.create().build().execute(delete));
 
         HttpEntity entityDelete = deleteResponse.getEntity();
 
@@ -217,7 +217,8 @@ public class HostRelpControllerTest extends TestSpringBootInformation {
         // Header
         delete.setHeader("Authorization", "Bearer " + token);
 
-        HttpResponse deleteResponse = Assertions.assertDoesNotThrow(() -> HttpClientBuilder.create().build().execute(delete));
+        HttpResponse deleteResponse = Assertions
+                .assertDoesNotThrow(() -> HttpClientBuilder.create().build().execute(delete));
 
         HttpEntity entityDelete = deleteResponse.getEntity();
 
@@ -234,6 +235,5 @@ public class HostRelpControllerTest extends TestSpringBootInformation {
         assertEquals(expected, actual);
         assertThat(deleteResponse.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_NOT_FOUND));
     }
-
 
 }

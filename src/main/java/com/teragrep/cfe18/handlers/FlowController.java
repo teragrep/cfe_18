@@ -71,6 +71,7 @@ import java.util.List;
 @RequestMapping(path = "/flow")
 @SecurityRequirement(name = "api")
 public class FlowController {
+
     private static final Logger LOGGER = LoggerFactory.getLogger(FlowController.class);
 
     @Autowired
@@ -82,15 +83,33 @@ public class FlowController {
     @Autowired
     FlowMapper flowMapper;
 
-    @RequestMapping(path = "", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(
+            path = "",
+            method = RequestMethod.PUT,
+            produces = MediaType.APPLICATION_JSON_VALUE
+    )
     @Operation(summary = "Create flow")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "201", description = "New flow created",
-                    content = {@Content(mediaType = "application/json",
-                            schema = @Schema(implementation = Flow.class))}),
-            @ApiResponse(responseCode = "400", description = "Internal SQL Exception",
-                    content = @Content),
-            @ApiResponse(responseCode = "500", description = "Internal server error, contact admin", content = @Content)
+            @ApiResponse(
+                    responseCode = "201",
+                    description = "New flow created",
+                    content = {
+                            @Content(
+                                    mediaType = "application/json",
+                                    schema = @Schema(implementation = Flow.class)
+                            )
+                    }
+            ),
+            @ApiResponse(
+                    responseCode = "400",
+                    description = "Internal SQL Exception",
+                    content = @Content
+            ),
+            @ApiResponse(
+                    responseCode = "500",
+                    description = "Internal server error, contact admin",
+                    content = @Content
+            )
     })
     public ResponseEntity<String> create(@RequestBody Flow newFlow) {
         LOGGER.info("About to insert <[{}]>", newFlow);
@@ -101,7 +120,8 @@ public class FlowController {
             jsonObject.put("id", f.getId());
             jsonObject.put("message", "New flow created");
             return new ResponseEntity<>(jsonObject.toString(), HttpStatus.CREATED);
-        } catch (RuntimeException ex) {
+        }
+        catch (RuntimeException ex) {
             LOGGER.error(ex.getMessage());
             JSONObject jsonErr = new JSONObject();
             jsonErr.put("id", newFlow.getId());
@@ -110,28 +130,64 @@ public class FlowController {
         }
     }
 
-    @RequestMapping(path = "", method = RequestMethod.GET, produces = "application/json")
-    @Operation(summary = "Fetch all flows", description = "Will return empty list if there are no flows to fetch")
+    @RequestMapping(
+            path = "",
+            method = RequestMethod.GET,
+            produces = "application/json"
+    )
+    @Operation(
+            summary = "Fetch all flows",
+            description = "Will return empty list if there are no flows to fetch"
+    )
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Successfully retrieved",
-                    content = {@Content(mediaType = "application/json",
-                            schema = @Schema(implementation = Flow.class))})})
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Successfully retrieved",
+                    content = {
+                            @Content(
+                                    mediaType = "application/json",
+                                    schema = @Schema(implementation = Flow.class)
+                            )
+                    }
+            )
+    })
     public List<Flow> getAll(@RequestParam(required = false) Integer version) {
         return flowMapper.getAll(version);
     }
 
-
-    @RequestMapping(path = "/{id}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(
+            path = "/{id}",
+            method = RequestMethod.DELETE,
+            produces = MediaType.APPLICATION_JSON_VALUE
+    )
     @Operation(summary = "Delete flow")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Flow deleted",
-                    content = {@Content(mediaType = "application/json",
-                            schema = @Schema(implementation = Flow.class))}),
-            @ApiResponse(responseCode = "400", description = "Flow is being used",
-                    content = @Content),
-            @ApiResponse(responseCode = "404", description = "Flow does not exist",
-                    content = @Content),
-            @ApiResponse(responseCode = "500", description = "Internal server error, contact admin", content = @Content)})
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Flow deleted",
+                    content = {
+                            @Content(
+                                    mediaType = "application/json",
+                                    schema = @Schema(implementation = Flow.class)
+                            )
+                    }
+            ),
+            @ApiResponse(
+                    responseCode = "400",
+                    description = "Flow is being used",
+                    content = @Content
+            ),
+            @ApiResponse(
+                    responseCode = "404",
+                    description = "Flow does not exist",
+                    content = @Content
+            ),
+            @ApiResponse(
+                    responseCode = "500",
+                    description = "Internal server error, contact admin",
+                    content = @Content
+            )
+    })
     public ResponseEntity<String> delete(@PathVariable("id") int id) {
         LOGGER.info("Deleting flow  <[{}]>", id);
         try {
@@ -140,7 +196,8 @@ public class FlowController {
             j.put("id", id);
             j.put("message", "Flow deleted");
             return new ResponseEntity<>(j.toString(), HttpStatus.OK);
-        } catch (RuntimeException ex) {
+        }
+        catch (RuntimeException ex) {
             LOGGER.error(ex.getMessage());
             JSONObject jsonErr = new JSONObject();
             jsonErr.put("id", id);
@@ -151,7 +208,8 @@ public class FlowController {
                 if (state.equals("23000")) {
                     jsonErr.put("message", "Is in use");
                     return new ResponseEntity<>(jsonErr.toString(), HttpStatus.BAD_REQUEST);
-                } else if (state.equals("45000")) {
+                }
+                else if (state.equals("45000")) {
                     jsonErr.put("message", "Record does not exist");
                     return new ResponseEntity<>(jsonErr.toString(), HttpStatus.NOT_FOUND);
                 }
@@ -160,7 +218,3 @@ public class FlowController {
         }
     }
 }
-
-
-
-

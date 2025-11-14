@@ -65,7 +65,10 @@ public class ProcedureHostDataTestFile extends DBInformation {
 
     @Test
     @ResourceLock(value = "conn")
-    @EnabledIfSystemProperty(named = "ProcedureHostDataTest.generateData", matches = "true")
+    @EnabledIfSystemProperty(
+            named = "ProcedureHostDataTest.generateData",
+            matches = "true"
+    )
     public void generateData() throws Exception {
 
         initialize(conn);
@@ -75,7 +78,13 @@ public class ProcedureHostDataTestFile extends DBInformation {
         partialDataSet.addTable("location.host");
         partialDataSet.addTable("cfe_00.hubs");
         partialDataSet.addTable("cfe_00.host_type_cfe");
-        FlatXmlDataSet.write(partialDataSet, Files.newOutputStream(Paths.get("src/test/resources/XMLProcedureHost/procedureHostTestData.xml")));
+        FlatXmlDataSet
+                .write(
+                        partialDataSet, Files
+                                .newOutputStream(
+                                        Paths.get("src/test/resources/XMLProcedureHost/procedureHostTestData.xml")
+                                )
+                );
         cleanup(conn);
     }
 
@@ -92,7 +101,10 @@ public class ProcedureHostDataTestFile extends DBInformation {
 
         Statement insertTestData = conn.createStatement();
 
-        insertTestData.addBatch("insert into location.host(id,MD5,fqhost,host_type) values (1,'12365','1','cfe'), (2,'12322','2','manual'), (3,'1323','3','manual'), (4,'4123','4','manual'), (5,'5123','6','manual'), (6,'6123','7','manual'), (7,'7123','8','manual'), (16,'712','9','manual'), (9,'723','10','manual'), (8,'71233','11','manual'), (10,'712362','12','manual'), (12,'712653','13','manual'), (17,'71211233','14','manual'), (11,'712213123','15','manual'), (21,'7142213123','16','manual'), (22,'7125213123','17','manual'), (23,'7122613123','18','manual'), (24,'7122173123','19','manual'), (15,'75757122173123','20','manual');");
+        insertTestData
+                .addBatch(
+                        "insert into location.host(id,MD5,fqhost,host_type) values (1,'12365','1','cfe'), (2,'12322','2','manual'), (3,'1323','3','manual'), (4,'4123','4','manual'), (5,'5123','6','manual'), (6,'6123','7','manual'), (7,'7123','8','manual'), (16,'712','9','manual'), (9,'723','10','manual'), (8,'71233','11','manual'), (10,'712362','12','manual'), (12,'712653','13','manual'), (17,'71211233','14','manual'), (11,'712213123','15','manual'), (21,'7142213123','16','manual'), (22,'7125213123','17','manual'), (23,'7122613123','18','manual'), (24,'7122173123','19','manual'), (15,'75757122173123','20','manual');"
+                );
         insertTestData.addBatch("insert into cfe_00.hubs(id,host_id, ip, host_type) values (1,1,'ip?' ,'cfe');");
         insertTestData.addBatch("insert into cfe_00.host_type_cfe(host_id, host_type, hub_id) values (1,'cfe',1);");
 

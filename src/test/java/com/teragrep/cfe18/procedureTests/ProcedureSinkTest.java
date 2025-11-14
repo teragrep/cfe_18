@@ -65,14 +65,16 @@ public class ProcedureSinkTest extends DBUnitbase {
 
     @Override
     protected IDataSet getDataSet() throws Exception {
-        return new FlatXmlDataSetBuilder().build(Files.newInputStream(Paths.get("src/test/resources/XMLProcedureSink/procedureSinkData.xml")));
+        return new FlatXmlDataSetBuilder()
+                .build(Files.newInputStream(Paths.get("src/test/resources/XMLProcedureSink/procedureSinkData.xml")));
     }
 
     /*
     This test checks that completely new sink can be added with new protocol and flow.
      */
     public void testSinkAccept() throws Exception {
-        IDataSet expectedDataSet = new FlatXmlDataSetBuilder().build(new File("src/test/resources/XMLProcedureSink/procedureSinkExpectedData1.xml"));
+        IDataSet expectedDataSet = new FlatXmlDataSetBuilder()
+                .build(new File("src/test/resources/XMLProcedureSink/procedureSinkExpectedData1.xml"));
         ITable expectedTable = expectedDataSet.getTable("flow.capture_sink");
         ITable expectedTable1 = expectedDataSet.getTable("flow.L7");
         ITable expectedTable2 = expectedDataSet.getTable("flow.flows");
@@ -93,7 +95,6 @@ public class ProcedureSinkTest extends DBUnitbase {
         Assertion.assertEquals(expectedTable2, actualTable2);
 
     }
-
 
     /*
     This test is for gathering sink values by id.

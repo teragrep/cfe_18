@@ -60,8 +60,8 @@ import java.nio.file.Paths;
 import java.sql.Connection;
 import java.sql.DriverManager;
 
-
 public abstract class DBUnitbase extends DBTestCase {
+
     // Defined from pom.xml properties -> maven-surefire-plugin -> systemPropertyVariables
     protected String DBUNIT_DRIVER_CLASS = System.getProperty("tests.dbunit.driver.class");
     protected String DBUNIT_CONNECTION_URL = System.getProperty("tests.dbunit.connection.url");
@@ -78,7 +78,6 @@ public abstract class DBUnitbase extends DBTestCase {
         System.setProperty(PropertiesBasedJdbcDatabaseTester.DBUNIT_PASSWORD, DBUNIT_PASSWORD);
     }
 
-
     protected void setUpDatabaseConfig(DatabaseConfig config) {
         config.setProperty(DatabaseConfig.PROPERTY_METADATA_HANDLER, new MySqlMetadataHandler());
         config.setProperty(DatabaseConfig.FEATURE_CASE_SENSITIVE_TABLE_NAMES, true);
@@ -94,7 +93,11 @@ public abstract class DBUnitbase extends DBTestCase {
     @Override
     protected DatabaseOperation getSetUpOperation() {
         Assertions.assertAll(() -> {
-            conn = DriverManager.getConnection(this.DBUNIT_CONNECTION_URL + "?" + "user=" + this.DBUNIT_USERNAME + "&password=" + this.DBUNIT_PASSWORD);
+            conn = DriverManager
+                    .getConnection(
+                            this.DBUNIT_CONNECTION_URL + "?" + "user=" + this.DBUNIT_USERNAME + "&password="
+                                    + this.DBUNIT_PASSWORD
+                    );
             databaseConnection = (DatabaseConnection) getConnection();
         });
         return DatabaseOperation.CLEAN_INSERT;

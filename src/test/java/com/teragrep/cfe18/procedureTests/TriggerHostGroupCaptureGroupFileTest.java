@@ -57,7 +57,6 @@ import java.nio.file.Paths;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-
 public class TriggerHostGroupCaptureGroupFileTest extends DBUnitbase {
 
     public TriggerHostGroupCaptureGroupFileTest(String name) {
@@ -67,7 +66,8 @@ public class TriggerHostGroupCaptureGroupFileTest extends DBUnitbase {
 
     @Override
     protected IDataSet getDataSet() throws Exception {
-        return new FlatXmlDataSetBuilder().build(Files.newInputStream(Paths.get("src/test/resources/XMLTriggersHostXCapture/triggerTestData.xml")));
+        return new FlatXmlDataSetBuilder()
+                .build(Files.newInputStream(Paths.get("src/test/resources/XMLTriggersHostXCapture/triggerTestData.xml")));
     }
 
     /*
@@ -81,16 +81,15 @@ public class TriggerHostGroupCaptureGroupFileTest extends DBUnitbase {
         });
         Assertions.assertEquals("17005", state.getSQLState());
 
-
     }
-
 
     /*
     This test checks acceptance of new junction between host and log groups.
      */
     public void testHostTriggerAccept() throws Exception {
         // Load the modified data for comparison
-        IDataSet expectedDataSet = new FlatXmlDataSetBuilder().build(new File("src/test/resources/XMLTriggersHostXCapture/triggerGXGExpectedTestData1.xml"));
+        IDataSet expectedDataSet = new FlatXmlDataSetBuilder()
+                .build(new File("src/test/resources/XMLTriggersHostXCapture/triggerGXGExpectedTestData1.xml"));
         ITable expectedTable = expectedDataSet.getTable("cfe_18.host_groups_x_capture_def_group");
 
         // Execute the tested code that modify the database here
@@ -100,7 +99,8 @@ public class TriggerHostGroupCaptureGroupFileTest extends DBUnitbase {
         stmnt.executeBatch();
 
         // Fetch database data after executing your code
-        ITable actualTable = databaseConnection.createQueryTable("result", "select * from cfe_18.host_groups_x_capture_def_group");
+        ITable actualTable = databaseConnection
+                .createQueryTable("result", "select * from cfe_18.host_groups_x_capture_def_group");
 
         // Assert actual database table match expected table
         Assertion.assertEquals(expectedTable, actualTable);

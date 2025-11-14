@@ -48,6 +48,7 @@ package com.teragrep.cfe18.handlers.entities;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 public class FileProcessing {
+
     public enum InputType {
         regex, newline
     }
@@ -110,13 +111,7 @@ public class FileProcessing {
 
     @Override
     public String toString() {
-        return "FileProcessing{" +
-                "inputtype=" + inputtype +
-                ", inputvalue='" + inputvalue + '\'' +
-                ", ruleset='" + ruleset + '\'' +
-                ", name='" + name + '\'' +
-                ", template='" + template + '\'' +
-                ", id=" + id +
-                '}';
+        return "FileProcessing{" + "inputtype=" + inputtype + ", inputvalue='" + inputvalue + '\'' + ", ruleset='"
+                + ruleset + '\'' + ", name='" + name + '\'' + ", template='" + template + '\'' + ", id=" + id + '}';
     }
 }

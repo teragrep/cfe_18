@@ -94,9 +94,7 @@ public final class CaptureFileControllerTest extends TestSpringBootInformation {
         String json = gson.toJson(file);
 
         // forms the json to requestEntity
-        StringEntity requestEntity = new StringEntity(
-                String.valueOf(json),
-                ContentType.APPLICATION_JSON);
+        StringEntity requestEntity = new StringEntity(String.valueOf(json), ContentType.APPLICATION_JSON);
 
         // Creates the request
         HttpPut request = new HttpPut("http://localhost:" + port + "/file/capture/meta/rule");
@@ -126,9 +124,7 @@ public final class CaptureFileControllerTest extends TestSpringBootInformation {
         String json2 = gson.toJson(flow);
 
         // forms the json to requestEntity
-        StringEntity requestEntity2 = new StringEntity(
-                String.valueOf(json2),
-                ContentType.APPLICATION_JSON);
+        StringEntity requestEntity2 = new StringEntity(String.valueOf(json2), ContentType.APPLICATION_JSON);
 
         // Creates the request
         HttpPut request2 = new HttpPut("http://localhost:" + port + "/flow");
@@ -160,9 +156,7 @@ public final class CaptureFileControllerTest extends TestSpringBootInformation {
         String json1 = gson.toJson(sink);
 
         // forms the json to requestEntity
-        StringEntity requestEntity1 = new StringEntity(
-                String.valueOf(json1),
-                ContentType.APPLICATION_JSON);
+        StringEntity requestEntity1 = new StringEntity(String.valueOf(json1), ContentType.APPLICATION_JSON);
 
         // Creates the request
         HttpPut request1 = new HttpPut("http://localhost:" + port + "/sink");
@@ -202,23 +196,16 @@ public final class CaptureFileControllerTest extends TestSpringBootInformation {
 
         // Assertions
         assertEquals(expected1, actual1);
-        assertThat(
-                httpResponseFileId.getStatusLine().getStatusCode(),
-                equalTo(HttpStatus.SC_CREATED));
+        assertThat(httpResponseFileId.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_CREATED));
         assertEquals(expected2, actual2);
-        assertThat(
-                httpResponse2.getStatusLine().getStatusCode(),
-                equalTo(HttpStatus.SC_CREATED));
+        assertThat(httpResponse2.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_CREATED));
         assertEquals(expected3, actual3);
-        assertThat(
-                httpResponse3.getStatusLine().getStatusCode(),
-                equalTo(HttpStatus.SC_CREATED));
+        assertThat(httpResponse3.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_CREATED));
     }
 
     @Test
     @Order(1)
     public void testInsertFileCapture() throws Exception {
-
 
         // add Capture File
 
@@ -238,9 +225,7 @@ public final class CaptureFileControllerTest extends TestSpringBootInformation {
         String jsonFile = gson.toJson(captureFile);
 
         // forms the json to requestEntity
-        StringEntity requestEntity3 = new StringEntity(
-                String.valueOf(jsonFile),
-                ContentType.APPLICATION_JSON);
+        StringEntity requestEntity3 = new StringEntity(String.valueOf(jsonFile), ContentType.APPLICATION_JSON);
 
         // Creates the request
         HttpPut request3 = new HttpPut("http://localhost:" + port + "/capture/file");
@@ -269,9 +254,7 @@ public final class CaptureFileControllerTest extends TestSpringBootInformation {
 
         // Assertions
         assertEquals(expected, actual);
-        assertThat(
-                httpResponse.getStatusLine().getStatusCode(),
-                equalTo(HttpStatus.SC_CREATED));
+        assertThat(httpResponse.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_CREATED));
     }
 
     @Test
@@ -304,7 +287,6 @@ public final class CaptureFileControllerTest extends TestSpringBootInformation {
         HttpEntity entityGet = responseGet.getEntity();
 
         String responseStringGet = EntityUtils.toString(entityGet, "UTF-8");
-
 
         assertEquals(json, responseStringGet);
         assertThat(responseGet.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_OK));

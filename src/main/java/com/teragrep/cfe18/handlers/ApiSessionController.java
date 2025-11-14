@@ -56,8 +56,8 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.sql.DataSource;
 
 @RestController
-@RequestMapping(path="/version")
-@SecurityRequirement(name="api")
+@RequestMapping(path = "/version")
+@SecurityRequirement(name = "api")
 public class ApiSessionController {
 
     @Autowired
@@ -69,8 +69,11 @@ public class ApiSessionController {
     @Autowired
     ApiSessionMapper apiSessionMapper;
 
-    @RequestMapping(path = "", method = RequestMethod.GET)
-    public int version(){
+    @RequestMapping(
+            path = "",
+            method = RequestMethod.GET
+    )
+    public int version() {
         return apiSessionMapper.getSession();
     }
 

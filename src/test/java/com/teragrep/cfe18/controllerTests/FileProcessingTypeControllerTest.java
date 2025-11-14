@@ -67,7 +67,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
 
-
 import java.util.ArrayList;
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -84,13 +83,11 @@ public class FileProcessingTypeControllerTest extends TestSpringBootInformation 
     @LocalServerPort
     private int port;
 
-
     // Testing if processing type can be added via endpoint
 
     @Test
     @Order(1)
     public void testFileProcessingType() throws Exception {
-
 
         FileProcessing file = new FileProcessing();
         file.setInputtype(FileProcessing.InputType.regex);
@@ -99,14 +96,10 @@ public class FileProcessingTypeControllerTest extends TestSpringBootInformation 
         file.setName("name1");
         file.setTemplate("regex.moustache");
 
-
         String json = gson.toJson(file);
 
-
         // forms the json to requestEntity
-        StringEntity requestEntity = new StringEntity(
-                String.valueOf(json),
-                ContentType.APPLICATION_JSON);
+        StringEntity requestEntity = new StringEntity(String.valueOf(json), ContentType.APPLICATION_JSON);
 
         // Creates the request
         HttpPut request = new HttpPut("http://localhost:" + port + "/file/capture/meta/rule");
@@ -135,9 +128,7 @@ public class FileProcessingTypeControllerTest extends TestSpringBootInformation 
 
         // Assertions
         assertEquals(expected, actual);
-        assertThat(
-                httpResponse.getStatusLine().getStatusCode(),
-                equalTo(HttpStatus.SC_CREATED));
+        assertThat(httpResponse.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_CREATED));
 
     }
 
@@ -153,14 +144,10 @@ public class FileProcessingTypeControllerTest extends TestSpringBootInformation 
         file2.setName("name1");
         file2.setTemplate("regex.moustache");
 
-
         String json2 = gson.toJson(file2);
 
-
         // forms the json to requestEntity
-        StringEntity requestEntity = new StringEntity(
-                String.valueOf(json2),
-                ContentType.APPLICATION_JSON);
+        StringEntity requestEntity = new StringEntity(String.valueOf(json2), ContentType.APPLICATION_JSON);
 
         // Creates the request
         HttpPut request = new HttpPut("http://localhost:" + port + "/file/capture/meta/rule");
@@ -182,7 +169,7 @@ public class FileProcessingTypeControllerTest extends TestSpringBootInformation 
         String json = gson.toJson(file);
 
         // Asserting get request
-        HttpGet requestGet = new HttpGet("http://localhost:" + port + "/file/capture/meta/"+1);
+        HttpGet requestGet = new HttpGet("http://localhost:" + port + "/file/capture/meta/" + 1);
 
         requestGet.setHeader("Authorization", "Bearer " + token);
 
@@ -195,7 +182,6 @@ public class FileProcessingTypeControllerTest extends TestSpringBootInformation 
         assertEquals(json, responseStringGet);
         assertThat(responseGet.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_OK));
     }
-
 
     @Test
     @Order(3)
@@ -215,11 +201,8 @@ public class FileProcessingTypeControllerTest extends TestSpringBootInformation 
         file1.setTemplate("test");
         String json1 = real.toJson(file1);
 
-
         // forms the json to requestEntity
-        StringEntity requestEntity = new StringEntity(
-                String.valueOf(json1),
-                ContentType.APPLICATION_JSON);
+        StringEntity requestEntity = new StringEntity(String.valueOf(json1), ContentType.APPLICATION_JSON);
 
         // Creates the request
         HttpPut request = new HttpPut("http://localhost:" + port + "/file/capture/meta/rule");
@@ -230,7 +213,6 @@ public class FileProcessingTypeControllerTest extends TestSpringBootInformation 
 
         // Get the response from endpoint
         HttpClientBuilder.create().build().execute(request);
-
 
         FileProcessing file2 = new FileProcessing();
         file2.setId(1);
@@ -267,7 +249,7 @@ public class FileProcessingTypeControllerTest extends TestSpringBootInformation 
     @Order(4)
     public void testDeleteProcessingType() throws Exception {
 
-        HttpDelete delete = new HttpDelete("http://localhost:" + port + "/file/capture/meta/"+2);
+        HttpDelete delete = new HttpDelete("http://localhost:" + port + "/file/capture/meta/" + 2);
 
         // Header
         delete.setHeader("Authorization", "Bearer " + token);
@@ -296,7 +278,7 @@ public class FileProcessingTypeControllerTest extends TestSpringBootInformation 
     @Order(5)
     public void testDeleteNonExistentProcessingType() throws Exception {
 
-        HttpDelete delete = new HttpDelete("http://localhost:" + port + "/file/capture/meta/"+2222);
+        HttpDelete delete = new HttpDelete("http://localhost:" + port + "/file/capture/meta/" + 2222);
 
         // Header
         delete.setHeader("Authorization", "Bearer " + token);
@@ -331,9 +313,7 @@ public class FileProcessingTypeControllerTest extends TestSpringBootInformation 
         String json2 = gson.toJson(flow);
 
         // forms the json to requestEntity
-        StringEntity requestEntity2 = new StringEntity(
-                String.valueOf(json2),
-                ContentType.APPLICATION_JSON);
+        StringEntity requestEntity2 = new StringEntity(String.valueOf(json2), ContentType.APPLICATION_JSON);
 
         // Creates the request
         HttpPut request2 = new HttpPut("http://localhost:" + port + "/flow");
@@ -355,9 +335,7 @@ public class FileProcessingTypeControllerTest extends TestSpringBootInformation 
         String json1 = gson.toJson(sink);
 
         // forms the json to requestEntity
-        StringEntity requestEntity1 = new StringEntity(
-                String.valueOf(json1),
-                ContentType.APPLICATION_JSON);
+        StringEntity requestEntity1 = new StringEntity(String.valueOf(json1), ContentType.APPLICATION_JSON);
 
         // Creates the request
         HttpPut request1 = new HttpPut("http://localhost:" + port + "/sink");
@@ -386,9 +364,7 @@ public class FileProcessingTypeControllerTest extends TestSpringBootInformation 
         String jsonFile = gson.toJson(captureFile);
 
         // forms the json to requestEntity
-        StringEntity requestEntity3 = new StringEntity(
-                String.valueOf(jsonFile),
-                ContentType.APPLICATION_JSON);
+        StringEntity requestEntity3 = new StringEntity(String.valueOf(jsonFile), ContentType.APPLICATION_JSON);
 
         // Creates the request
         HttpPut request3 = new HttpPut("http://localhost:" + port + "/capture/file");
@@ -400,7 +376,7 @@ public class FileProcessingTypeControllerTest extends TestSpringBootInformation 
         // Get the response from endpoint
         HttpClientBuilder.create().build().execute(request3);
 
-        HttpDelete delete = new HttpDelete("http://localhost:" + port + "/file/capture/meta/"+1);
+        HttpDelete delete = new HttpDelete("http://localhost:" + port + "/file/capture/meta/" + 1);
 
         // Header
         delete.setHeader("Authorization", "Bearer " + token);

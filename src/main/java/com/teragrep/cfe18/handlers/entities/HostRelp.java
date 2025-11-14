@@ -50,6 +50,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class HostRelp {
+
     @Schema(accessMode = Schema.AccessMode.READ_ONLY)
     private int id;
     private String md5;
@@ -81,10 +82,6 @@ public class HostRelp {
 
     @Override
     public String toString() {
-        return "HostRelp{" +
-                "id=" + id +
-                ", md5='" + md5 + '\'' +
-                ", fqHost='" + fqHost + '\'' +
-                '}';
+        return "HostRelp{" + "id=" + id + ", md5='" + md5 + '\'' + ", fqHost='" + fqHost + '\'' + '}';
     }
 }

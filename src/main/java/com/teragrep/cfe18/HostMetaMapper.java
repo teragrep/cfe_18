@@ -55,25 +55,17 @@ import java.util.List;
 @Mapper
 public interface HostMetaMapper {
 
-    List<HostMeta> getHostMetaById(int host_meta_id,Integer version);
+    List<HostMeta> getHostMetaById(int host_meta_id, Integer version);
 
-    HostMeta addHostMeta(String arch,
-                         String flavor,
-                         String hostname,
-                         int host_id,
-                         String os,
-                         String release_version);
+    HostMeta addHostMeta(String arch, String flavor, String hostname, int host_id, String os, String release_version);
 
-    InterfaceType addInterface_type(String interface_type,
-                                    int host_meta_id);
+    InterfaceType addInterface_type(String interface_type, int host_meta_id);
 
-    IPAddress addIpAddress(int host_meta_id,
-                           String ip_address);
+    IPAddress addIpAddress(int host_meta_id, String ip_address);
 
     List<HostMeta> getAllHostMeta(Integer version);
 
     List<IPAddress> getAllHostMetaIp(Integer version);
-
 
     List<InterfaceType> getAllHostMetaInterface(Integer version);
 

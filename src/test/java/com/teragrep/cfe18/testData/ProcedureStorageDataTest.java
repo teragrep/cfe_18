@@ -65,7 +65,10 @@ public class ProcedureStorageDataTest extends DBInformation {
 
     @Test
     @ResourceLock(value = "conn")
-    @EnabledIfSystemProperty(named = "ProcedureStorage.generateData", matches = "true")
+    @EnabledIfSystemProperty(
+            named = "ProcedureStorage.generateData",
+            matches = "true"
+    )
     public void generateData() throws Exception {
         initialize(conn);
         IDatabaseConnection connection = new DatabaseConnection(conn);
@@ -107,7 +110,14 @@ public class ProcedureStorageDataTest extends DBInformation {
         partialDataSet.addTable("cfe_18.capture_definition"); // Vain RELP. Ei vaadi tarkistusta eri capture tyypistä
         partialDataSet.addTable("cfe_18.capture_def_x_flow_targets");
 
-        FlatXmlDataSet.write(partialDataSet, Files.newOutputStream(Paths.get("src/test/resources/XMLProcedureStorage/procedureStorageData.xml")));
+        FlatXmlDataSet
+                .write(
+                        partialDataSet,
+                        Files
+                                .newOutputStream(
+                                        Paths.get("src/test/resources/XMLProcedureStorage/procedureStorageData.xml")
+                                )
+                );
         cleanup(conn);
     }
 
@@ -168,65 +178,87 @@ public class ProcedureStorageDataTest extends DBInformation {
         insertTestData.addBatch("insert into flow.cfe_12(id,cfe_type) values(4,'cfe_12')");
         insertTestData.addBatch("insert into flow.cfe_19(id,cfe_type) values(5,'cfe_19')");
         insertTestData.addBatch("insert into flow.cfe_23(id,cfe_type) values(6,'cfe_23')");
-        insertTestData.addBatch("insert into flow.flow_targets(id,target_name,flow_id,storage_id,storage_type) values(1,'cfe_04',1,1,'cfe_04')");
-        insertTestData.addBatch("insert into flow.flow_targets(id,target_name,flow_id,storage_id,storage_type) values(2,'cfe_10',1,2,'cfe_10')");
-        insertTestData.addBatch("insert into flow.flow_targets(id,target_name,flow_id,storage_id,storage_type) values(3,'cfe_11',1,3,'cfe_11')");
-        insertTestData.addBatch("insert into flow.flow_targets(id,target_name,flow_id,storage_id,storage_type) values(4,'cfe_12',1,4,'cfe_12')");
-        insertTestData.addBatch("insert into flow.flow_targets(id,target_name,flow_id,storage_id,storage_type) values(5,'cfe_19',1,5,'cfe_19')");
-        insertTestData.addBatch("insert into flow.flow_targets(id,target_name,flow_id,storage_id,storage_type) values(6,'cfe_23',1,6,'cfe_23')");
-        insertTestData.addBatch("insert into flow.flow_targets(id,target_name,flow_id,storage_id,storage_type) values(7,'cfe_01',2,1,'cfe_04')");
+        insertTestData
+                .addBatch(
+                        "insert into flow.flow_targets(id,target_name,flow_id,storage_id,storage_type) values(1,'cfe_04',1,1,'cfe_04')"
+                );
+        insertTestData
+                .addBatch(
+                        "insert into flow.flow_targets(id,target_name,flow_id,storage_id,storage_type) values(2,'cfe_10',1,2,'cfe_10')"
+                );
+        insertTestData
+                .addBatch(
+                        "insert into flow.flow_targets(id,target_name,flow_id,storage_id,storage_type) values(3,'cfe_11',1,3,'cfe_11')"
+                );
+        insertTestData
+                .addBatch(
+                        "insert into flow.flow_targets(id,target_name,flow_id,storage_id,storage_type) values(4,'cfe_12',1,4,'cfe_12')"
+                );
+        insertTestData
+                .addBatch(
+                        "insert into flow.flow_targets(id,target_name,flow_id,storage_id,storage_type) values(5,'cfe_19',1,5,'cfe_19')"
+                );
+        insertTestData
+                .addBatch(
+                        "insert into flow.flow_targets(id,target_name,flow_id,storage_id,storage_type) values(6,'cfe_23',1,6,'cfe_23')"
+                );
+        insertTestData
+                .addBatch(
+                        "insert into flow.flow_targets(id,target_name,flow_id,storage_id,storage_type) values(7,'cfe_01',2,1,'cfe_04')"
+                );
         insertTestData.addBatch("insert into flow.L7(id,app_protocol) values(1,'plain')");
-        insertTestData.addBatch("insert into flow.capture_sink(L7_id, flow_id,ip_address,sink_port)values(1,1,'ip1','652')");
+        insertTestData
+                .addBatch("insert into flow.capture_sink(L7_id, flow_id,ip_address,sink_port)values(1,1,'ip1','652')");
 
         // cap def
 
-        insertTestData.addBatch
-                ("insert into cfe_18.inputtype(id, inputtype) values (1, 'regex'),(2, 'newline');");
+        insertTestData.addBatch("insert into cfe_18.inputtype(id, inputtype) values (1, 'regex'),(2, 'newline');");
 
-        insertTestData.addBatch
-                ("insert into cfe_18.regex(id, regex,inputtype) values (1, 'normalRegex','regex');");
+        insertTestData.addBatch("insert into cfe_18.regex(id, regex,inputtype) values (1, 'normalRegex','regex');");
 
-        insertTestData.addBatch
-                ("insert into cfe_18.newline(id, newline,inputtype) values (2, 'placeholder','newline');");
+        insertTestData
+                .addBatch("insert into cfe_18.newline(id, newline,inputtype) values (2, 'placeholder','newline');");
 
-        insertTestData.addBatch
-                ("insert into cfe_18.ruleset(id, rule) values (1, 'ruleset1');");
+        insertTestData.addBatch("insert into cfe_18.ruleset(id, rule) values (1, 'ruleset1');");
 
-        insertTestData.addBatch
-                ("insert into cfe_18.templates(id, template) values (1, 'template1');");
+        insertTestData.addBatch("insert into cfe_18.templates(id, template) values (1, 'template1');");
 
-        insertTestData.addBatch
-                ("insert into cfe_18.processing_type(id, inputtype_id,ruleset_id,template_id,type_name) values (1,1,1,1,'usesregex'),(2,2,1,1,'usesNewline');");
+        insertTestData
+                .addBatch(
+                        "insert into cfe_18.processing_type(id, inputtype_id,ruleset_id,template_id,type_name) values (1,1,1,1,'usesregex'),(2,2,1,1,'usesNewline');"
+                );
 
-        insertTestData.addBatch
-                ("insert into cfe_18.capture_type(id, capture_type) values (1, 'cfe'),(2, 'cfe');");
+        insertTestData.addBatch("insert into cfe_18.capture_type(id, capture_type) values (1, 'cfe'),(2, 'cfe');");
 
-        insertTestData.addBatch
-                ("insert into cfe_18.capture_meta_file(id, capturePath, tagPath, processing_type_id,capture_type) values (1, 'capPathRegex','tagPathRegex',1,'cfe'),(2, 'capPathNewline','tagPathNewline',2,'cfe');");
+        insertTestData
+                .addBatch(
+                        "insert into cfe_18.capture_meta_file(id, capturePath, tagPath, processing_type_id,capture_type) values (1, 'capPathRegex','tagPathRegex',1,'cfe'),(2, 'capPathNewline','tagPathNewline',2,'cfe');"
+                );
 
-        insertTestData.addBatch
-                ("insert into cfe_18.tags(id,tag) values (1, 'tag1'), (2, 'tag2'), (3, 'tag3'), (4, 'tag4'), (5, 'tag5'), (6, 'tag6'), (7, 'tag7'), (8, 'tag8'), (9, 'tag9'), (10, 'tag10'), (11, 'tag11'), (12, 'tag12');");
+        insertTestData
+                .addBatch(
+                        "insert into cfe_18.tags(id,tag) values (1, 'tag1'), (2, 'tag2'), (3, 'tag3'), (4, 'tag4'), (5, 'tag5'), (6, 'tag6'), (7, 'tag7'), (8, 'tag8'), (9, 'tag9'), (10, 'tag10'), (11, 'tag11'), (12, 'tag12');"
+                );
 
-        insertTestData.addBatch
-                ("insert into cfe_18.application(id,app) values (1, 'app');");
+        insertTestData.addBatch("insert into cfe_18.application(id,app) values (1, 'app');");
 
-        insertTestData.addBatch
-                ("insert into cfe_18.retentionTime(id,retention) values (1, 'P30D');");
+        insertTestData.addBatch("insert into cfe_18.retentionTime(id,retention) values (1, 'P30D');");
 
-        insertTestData.addBatch
-                ("insert into cfe_18.captureIndex(id,captureIndex) values (1, 'index');");
+        insertTestData.addBatch("insert into cfe_18.captureIndex(id,captureIndex) values (1, 'index');");
 
-        insertTestData.addBatch
-                ("insert into cfe_18.captureSourcetype(id,captureSourcetype) values (1, 'sourcetype');");
+        insertTestData.addBatch("insert into cfe_18.captureSourcetype(id,captureSourcetype) values (1, 'sourcetype');");
 
-        insertTestData.addBatch
-                ("insert into cfe_18.category(id,category) values (1, 'audit');");
+        insertTestData.addBatch("insert into cfe_18.category(id,category) values (1, 'audit');");
 
-        insertTestData.addBatch
-                ("insert into cfe_18.capture_definition(id, tag_id,application_id,captureIndex_id,retentionTime_id,captureSourcetype_id,category_id,capture_type,capture_type_id,L7_id,flow_id) values (1, 1,1,1,1,1,1,'cfe',1,1,1), (2, 2,1,1,1,1,1,'cfe',1,1,1), (3, 3,1,1,1,1,1,'cfe',1,1,1), (4, 4,1,1,1,1,1,'cfe',1,1,1), (5, 5,1,1,1,1,1,'cfe',1,1,1), (6, 10,1,1,1,1,1,'cfe',1,1,1), (7, 7,1,1,1,1,1,'cfe',1,1,1), (8, 8,1,1,1,1,1,'cfe',1,1,1), (9, 9,1,1,1,1,1,'cfe',1,1,1), (10, 9,1,1,1,1,1,'cfe',1,1,1), (11, 7,1,1,1,1,1,'cfe',1,1,1), (12, 10,1,1,1,1,1,'cfe',1,1,1);");
+        insertTestData
+                .addBatch(
+                        "insert into cfe_18.capture_definition(id, tag_id,application_id,captureIndex_id,retentionTime_id,captureSourcetype_id,category_id,capture_type,capture_type_id,L7_id,flow_id) values (1, 1,1,1,1,1,1,'cfe',1,1,1), (2, 2,1,1,1,1,1,'cfe',1,1,1), (3, 3,1,1,1,1,1,'cfe',1,1,1), (4, 4,1,1,1,1,1,'cfe',1,1,1), (5, 5,1,1,1,1,1,'cfe',1,1,1), (6, 10,1,1,1,1,1,'cfe',1,1,1), (7, 7,1,1,1,1,1,'cfe',1,1,1), (8, 8,1,1,1,1,1,'cfe',1,1,1), (9, 9,1,1,1,1,1,'cfe',1,1,1), (10, 9,1,1,1,1,1,'cfe',1,1,1), (11, 7,1,1,1,1,1,'cfe',1,1,1), (12, 10,1,1,1,1,1,'cfe',1,1,1);"
+                );
 
-
-        insertTestData.addBatch("insert into cfe_18.capture_def_x_flow_targets(id,capture_def_id,flow_id,flow_target_id) values(1,1,1,1)");
+        insertTestData
+                .addBatch(
+                        "insert into cfe_18.capture_def_x_flow_targets(id,capture_def_id,flow_id,flow_target_id) values(1,1,1,1)"
+                );
         insertTestData.executeBatch();
 
     }
