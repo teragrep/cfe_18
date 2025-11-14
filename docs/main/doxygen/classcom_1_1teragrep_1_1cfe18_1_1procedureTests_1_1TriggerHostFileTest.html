@@ -129,7 +129,7 @@ Additional Inherited Members</h2></td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock">
-<p class="definition">Definition at line <a class="el" href="TriggerHostFileTest_8java_source.html#l00061">61</a> of file <a class="el" href="TriggerHostFileTest_8java_source.html">TriggerHostFileTest.java</a>.</p>
+<p class="definition">Definition at line <a class="el" href="TriggerHostFileTest_8java_source.html#l00060">60</a> of file <a class="el" href="TriggerHostFileTest_8java_source.html">TriggerHostFileTest.java</a>.</p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="a16cd69dd0fe8d0d1b629bbb6252b06b3" name="a16cd69dd0fe8d0d1b629bbb6252b06b3"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a16cd69dd0fe8d0d1b629bbb6252b06b3">&#9670;&#160;</a></span>TriggerHostFileTest()</h2>
@@ -147,11 +147,11 @@ Additional Inherited Members</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="TriggerHostFileTest_8java_source.html#l00063">63</a> of file <a class="el" href="TriggerHostFileTest_8java_source.html">TriggerHostFileTest.java</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   63</span>                                            {</div>
-<div class="line"><span class="lineno">   64</span>        super(name);</div>
-<div class="line"><span class="lineno">   65</span> </div>
-<div class="line"><span class="lineno">   66</span>    }</div>
+<p class="definition">Definition at line <a class="el" href="TriggerHostFileTest_8java_source.html#l00062">62</a> of file <a class="el" href="TriggerHostFileTest_8java_source.html">TriggerHostFileTest.java</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   62</span>                                            {</div>
+<div class="line"><span class="lineno">   63</span>        super(name);</div>
+<div class="line"><span class="lineno">   64</span> </div>
+<div class="line"><span class="lineno">   65</span>    }</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -181,9 +181,10 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Reimplemented from <a class="el" href="classcom_1_1teragrep_1_1cfe18_1_1procedureTests_1_1DBUnitbase.html#a9a344256855635842c3336317a4bd573">com.teragrep.cfe18.procedureTests.DBUnitbase</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="TriggerHostFileTest_8java_source.html#l00069">69</a> of file <a class="el" href="TriggerHostFileTest_8java_source.html">TriggerHostFileTest.java</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   69</span>                                                     {</div>
-<div class="line"><span class="lineno">   70</span>        <span class="keywordflow">return</span> <span class="keyword">new</span> FlatXmlDataSetBuilder().build(Files.newInputStream(Paths.get(<span class="stringliteral">&quot;src/test/resources/XMLTriggersHostXCapture/triggerTestData.xml&quot;</span>)));</div>
+<p class="definition">Definition at line <a class="el" href="TriggerHostFileTest_8java_source.html#l00068">68</a> of file <a class="el" href="TriggerHostFileTest_8java_source.html">TriggerHostFileTest.java</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   68</span>                                                     {</div>
+<div class="line"><span class="lineno">   69</span>        <span class="keywordflow">return</span> <span class="keyword">new</span> FlatXmlDataSetBuilder()</div>
+<div class="line"><span class="lineno">   70</span>                .build(Files.newInputStream(Paths.get(<span class="stringliteral">&quot;src/test/resources/XMLTriggersHostXCapture/triggerTestData.xml&quot;</span>)));</div>
 <div class="line"><span class="lineno">   71</span>    }</div>
 </div><!-- fragment -->
 </div>
@@ -203,9 +204,10 @@ Additional Inherited Members</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="TriggerHostFileTest_8java_source.html#l00088">88</a> of file <a class="el" href="TriggerHostFileTest_8java_source.html">TriggerHostFileTest.java</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   88</span>                                                         {</div>
-<div class="line"><span class="lineno">   89</span>        IDataSet expectedDataSet = <span class="keyword">new</span> FlatXmlDataSetBuilder().build(<span class="keyword">new</span> File(<span class="stringliteral">&quot;src/test/resources/XMLTriggersHostXCapture/triggerHostExpectedData1.xml&quot;</span>));</div>
+<p class="definition">Definition at line <a class="el" href="TriggerHostFileTest_8java_source.html#l00087">87</a> of file <a class="el" href="TriggerHostFileTest_8java_source.html">TriggerHostFileTest.java</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   87</span>                                                         {</div>
+<div class="line"><span class="lineno">   88</span>        IDataSet expectedDataSet = <span class="keyword">new</span> FlatXmlDataSetBuilder()</div>
+<div class="line"><span class="lineno">   89</span>                .build(<span class="keyword">new</span> File(<span class="stringliteral">&quot;src/test/resources/XMLTriggersHostXCapture/triggerHostExpectedData1.xml&quot;</span>));</div>
 <div class="line"><span class="lineno">   90</span>        ITable expectedTable = expectedDataSet.getTable(<span class="stringliteral">&quot;location.host_group_x_host&quot;</span>);</div>
 <div class="line"><span class="lineno">   91</span> </div>
 <div class="line"><span class="lineno">   92</span>        <span class="comment">// Execute the tested code that modify the database here</span></div>
@@ -214,14 +216,13 @@ Additional Inherited Members</h2></td></tr>
 <div class="line"><span class="lineno">   95</span>        stmnt.addBatch(<span class="stringliteral">&quot;insert into location.host_group_x_host values(19,6,2,&#39;cfe&#39;)&quot;</span>);</div>
 <div class="line"><span class="lineno">   96</span>        stmnt.executeBatch();</div>
 <div class="line"><span class="lineno">   97</span> </div>
-<div class="line"><span class="lineno">   98</span> </div>
-<div class="line"><span class="lineno">   99</span>        <span class="comment">// Fetch database data after executing your code</span></div>
-<div class="line"><span class="lineno">  100</span>        ITable actualTable = databaseConnection.createQueryTable(<span class="stringliteral">&quot;result&quot;</span>, <span class="stringliteral">&quot;select * from location.host_group_x_host&quot;</span>);</div>
-<div class="line"><span class="lineno">  101</span> </div>
-<div class="line"><span class="lineno">  102</span>        <span class="comment">// Load expected data from an XML dataset</span></div>
-<div class="line"><span class="lineno">  103</span>        <span class="comment">// Assert actual database table match expected table</span></div>
-<div class="line"><span class="lineno">  104</span>        Assertion.assertEquals(expectedTable, actualTable);</div>
-<div class="line"><span class="lineno">  105</span>    }</div>
+<div class="line"><span class="lineno">   98</span>        <span class="comment">// Fetch database data after executing your code</span></div>
+<div class="line"><span class="lineno">   99</span>        ITable actualTable = databaseConnection.createQueryTable(<span class="stringliteral">&quot;result&quot;</span>, <span class="stringliteral">&quot;select * from location.host_group_x_host&quot;</span>);</div>
+<div class="line"><span class="lineno">  100</span> </div>
+<div class="line"><span class="lineno">  101</span>        <span class="comment">// Load expected data from an XML dataset</span></div>
+<div class="line"><span class="lineno">  102</span>        <span class="comment">// Assert actual database table match expected table</span></div>
+<div class="line"><span class="lineno">  103</span>        Assertion.assertEquals(expectedTable, actualTable);</div>
+<div class="line"><span class="lineno">  104</span>    }</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -250,8 +251,7 @@ Additional Inherited Members</h2></td></tr>
 <div class="line"><span class="lineno">   82</span>        });</div>
 <div class="line"><span class="lineno">   83</span>        Assertions.assertEquals(<span class="stringliteral">&quot;17002&quot;</span>, state.getSQLState());</div>
 <div class="line"><span class="lineno">   84</span> </div>
-<div class="line"><span class="lineno">   85</span> </div>
-<div class="line"><span class="lineno">   86</span>    }</div>
+<div class="line"><span class="lineno">   85</span>    }</div>
 </div><!-- fragment -->
 </div>
 </div>

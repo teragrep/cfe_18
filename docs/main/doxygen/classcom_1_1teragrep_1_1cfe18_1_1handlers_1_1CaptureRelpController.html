@@ -104,7 +104,7 @@ Static Private Attributes</h2></td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock">
-<p class="definition">Definition at line <a class="el" href="CaptureRelpController_8java_source.html#l00077">77</a> of file <a class="el" href="CaptureRelpController_8java_source.html">CaptureRelpController.java</a>.</p>
+<p class="definition">Definition at line <a class="el" href="CaptureRelpController_8java_source.html#l00075">75</a> of file <a class="el" href="CaptureRelpController_8java_source.html">CaptureRelpController.java</a>.</p>
 </div><h2 class="groupheader">Member Function Documentation</h2>
 <a id="a5559873169eb8e2f0f59e41fd630640a" name="a5559873169eb8e2f0f59e41fd630640a"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a5559873169eb8e2f0f59e41fd630640a">&#9670;&#160;</a></span>create()</h2>
@@ -122,33 +122,31 @@ Static Private Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="CaptureRelpController_8java_source.html#l00098">98</a> of file <a class="el" href="CaptureRelpController_8java_source.html">CaptureRelpController.java</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   98</span>                                                                              {</div>
-<div class="line"><span class="lineno">   99</span>        <a class="code hl_variable" href="classcom_1_1teragrep_1_1cfe18_1_1handlers_1_1CaptureRelpController.html#ada0cf2fbb34ae30220ad76ed97352bbf">LOGGER</a>.info(<span class="stringliteral">&quot;About to insert &lt;[{}]&gt;&quot;</span>,newCapture);</div>
-<div class="line"><span class="lineno">  100</span>        <span class="keywordflow">try</span> {</div>
-<div class="line"><span class="lineno">  101</span>            CaptureRelp c = captureRelpMapper.<a class="code hl_function" href="interfacecom_1_1teragrep_1_1cfe18_1_1CaptureRelpMapper.html#abb10347b59e093671694427a78d7006b">create</a>(</div>
-<div class="line"><span class="lineno">  102</span>                    newCapture.getTag(),</div>
-<div class="line"><span class="lineno">  103</span>                    newCapture.getRetentionTime(),</div>
-<div class="line"><span class="lineno">  104</span>                    newCapture.getCategory(),</div>
-<div class="line"><span class="lineno">  105</span>                    newCapture.getApplication(),</div>
-<div class="line"><span class="lineno">  106</span>                    newCapture.getIndex(),</div>
-<div class="line"><span class="lineno">  107</span>                    newCapture.getSourceType(),</div>
-<div class="line"><span class="lineno">  108</span>                    newCapture.getProtocol(),</div>
-<div class="line"><span class="lineno">  109</span>                    newCapture.getFlow());</div>
-<div class="line"><span class="lineno">  110</span>            <a class="code hl_variable" href="classcom_1_1teragrep_1_1cfe18_1_1handlers_1_1CaptureRelpController.html#ada0cf2fbb34ae30220ad76ed97352bbf">LOGGER</a>.debug(<span class="stringliteral">&quot;Values returned &lt;[{}]&gt;&quot;</span>,c);</div>
-<div class="line"><span class="lineno">  111</span>            JSONObject jsonObjectRelp = <span class="keyword">new</span> JSONObject();</div>
-<div class="line"><span class="lineno">  112</span>            jsonObjectRelp.put(<span class="stringliteral">&quot;id&quot;</span>, c.getId());</div>
-<div class="line"><span class="lineno">  113</span>            jsonObjectRelp.put(<span class="stringliteral">&quot;message&quot;</span>, <span class="stringliteral">&quot;New capture created&quot;</span>);</div>
-<div class="line"><span class="lineno">  114</span>            <span class="keywordflow">return</span> <span class="keyword">new</span> ResponseEntity&lt;&gt;(jsonObjectRelp.toString(), HttpStatus.CREATED);</div>
-<div class="line"><span class="lineno">  115</span>        } <span class="keywordflow">catch</span> (RuntimeException ex) {</div>
-<div class="line"><span class="lineno">  116</span>            <a class="code hl_variable" href="classcom_1_1teragrep_1_1cfe18_1_1handlers_1_1CaptureRelpController.html#ada0cf2fbb34ae30220ad76ed97352bbf">LOGGER</a>.error(ex.getMessage());</div>
-<div class="line"><span class="lineno">  117</span>            JSONObject jsonErr = <span class="keyword">new</span> JSONObject();</div>
-<div class="line"><span class="lineno">  118</span>            jsonErr.put(<span class="stringliteral">&quot;id&quot;</span>, newCapture.getId());</div>
-<div class="line"><span class="lineno">  119</span>            jsonErr.put(<span class="stringliteral">&quot;message&quot;</span>, ex.getCause().toString());</div>
-<div class="line"><span class="lineno">  120</span>            <span class="keywordflow">return</span> <span class="keyword">new</span> ResponseEntity&lt;&gt;(jsonErr.toString(), HttpStatus.BAD_REQUEST);</div>
-<div class="line"><span class="lineno">  121</span>        }</div>
-<div class="line"><span class="lineno">  122</span>    }</div>
-<div class="ttc" id="aclasscom_1_1teragrep_1_1cfe18_1_1handlers_1_1CaptureRelpController_html_ada0cf2fbb34ae30220ad76ed97352bbf"><div class="ttname"><a href="classcom_1_1teragrep_1_1cfe18_1_1handlers_1_1CaptureRelpController.html#ada0cf2fbb34ae30220ad76ed97352bbf">com.teragrep.cfe18.handlers.CaptureRelpController.LOGGER</a></div><div class="ttdeci">static final Logger LOGGER</div><div class="ttdef"><b>Definition</b> <a href="CaptureRelpController_8java_source.html#l00078">CaptureRelpController.java:78</a></div></div>
+<p class="definition">Definition at line <a class="el" href="CaptureRelpController_8java_source.html#l00111">111</a> of file <a class="el" href="CaptureRelpController_8java_source.html">CaptureRelpController.java</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  111</span>                                                                              {</div>
+<div class="line"><span class="lineno">  112</span>        <a class="code hl_variable" href="classcom_1_1teragrep_1_1cfe18_1_1handlers_1_1CaptureRelpController.html#ada0cf2fbb34ae30220ad76ed97352bbf">LOGGER</a>.info(<span class="stringliteral">&quot;About to insert &lt;[{}]&gt;&quot;</span>, newCapture);</div>
+<div class="line"><span class="lineno">  113</span>        <span class="keywordflow">try</span> {</div>
+<div class="line"><span class="lineno">  114</span>            CaptureRelp c = captureRelpMapper</div>
+<div class="line"><span class="lineno">  115</span>                    .<a class="code hl_function" href="interfacecom_1_1teragrep_1_1cfe18_1_1CaptureRelpMapper.html#abb10347b59e093671694427a78d7006b">create</a>(</div>
+<div class="line"><span class="lineno">  116</span>                            newCapture.getTag(), newCapture.getRetentionTime(), newCapture.getCategory(),</div>
+<div class="line"><span class="lineno">  117</span>                            newCapture.getApplication(), newCapture.getIndex(), newCapture.getSourceType(),</div>
+<div class="line"><span class="lineno">  118</span>                            newCapture.getProtocol(), newCapture.getFlow()</div>
+<div class="line"><span class="lineno">  119</span>                    );</div>
+<div class="line"><span class="lineno">  120</span>            <a class="code hl_variable" href="classcom_1_1teragrep_1_1cfe18_1_1handlers_1_1CaptureRelpController.html#ada0cf2fbb34ae30220ad76ed97352bbf">LOGGER</a>.debug(<span class="stringliteral">&quot;Values returned &lt;[{}]&gt;&quot;</span>, c);</div>
+<div class="line"><span class="lineno">  121</span>            JSONObject jsonObjectRelp = <span class="keyword">new</span> JSONObject();</div>
+<div class="line"><span class="lineno">  122</span>            jsonObjectRelp.put(<span class="stringliteral">&quot;id&quot;</span>, c.getId());</div>
+<div class="line"><span class="lineno">  123</span>            jsonObjectRelp.put(<span class="stringliteral">&quot;message&quot;</span>, <span class="stringliteral">&quot;New capture created&quot;</span>);</div>
+<div class="line"><span class="lineno">  124</span>            <span class="keywordflow">return</span> <span class="keyword">new</span> ResponseEntity&lt;&gt;(jsonObjectRelp.toString(), HttpStatus.CREATED);</div>
+<div class="line"><span class="lineno">  125</span>        }</div>
+<div class="line"><span class="lineno">  126</span>        <span class="keywordflow">catch</span> (RuntimeException ex) {</div>
+<div class="line"><span class="lineno">  127</span>            <a class="code hl_variable" href="classcom_1_1teragrep_1_1cfe18_1_1handlers_1_1CaptureRelpController.html#ada0cf2fbb34ae30220ad76ed97352bbf">LOGGER</a>.error(ex.getMessage());</div>
+<div class="line"><span class="lineno">  128</span>            JSONObject jsonErr = <span class="keyword">new</span> JSONObject();</div>
+<div class="line"><span class="lineno">  129</span>            jsonErr.put(<span class="stringliteral">&quot;id&quot;</span>, newCapture.getId());</div>
+<div class="line"><span class="lineno">  130</span>            jsonErr.put(<span class="stringliteral">&quot;message&quot;</span>, ex.getCause().toString());</div>
+<div class="line"><span class="lineno">  131</span>            <span class="keywordflow">return</span> <span class="keyword">new</span> ResponseEntity&lt;&gt;(jsonErr.toString(), HttpStatus.BAD_REQUEST);</div>
+<div class="line"><span class="lineno">  132</span>        }</div>
+<div class="line"><span class="lineno">  133</span>    }</div>
+<div class="ttc" id="aclasscom_1_1teragrep_1_1cfe18_1_1handlers_1_1CaptureRelpController_html_ada0cf2fbb34ae30220ad76ed97352bbf"><div class="ttname"><a href="classcom_1_1teragrep_1_1cfe18_1_1handlers_1_1CaptureRelpController.html#ada0cf2fbb34ae30220ad76ed97352bbf">com.teragrep.cfe18.handlers.CaptureRelpController.LOGGER</a></div><div class="ttdeci">static final Logger LOGGER</div><div class="ttdef"><b>Definition</b> <a href="CaptureRelpController_8java_source.html#l00077">CaptureRelpController.java:77</a></div></div>
 <div class="ttc" id="ainterfacecom_1_1teragrep_1_1cfe18_1_1CaptureRelpMapper_html_abb10347b59e093671694427a78d7006b"><div class="ttname"><a href="interfacecom_1_1teragrep_1_1cfe18_1_1CaptureRelpMapper.html#abb10347b59e093671694427a78d7006b">com.teragrep.cfe18.CaptureRelpMapper.create</a></div><div class="ttdeci">CaptureRelp create(String tag, String retention, String category, String application, String index, String sourcetype, String protocol, String flow)</div></div>
 </div><!-- fragment -->
 </div>
@@ -169,35 +167,37 @@ Static Private Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="CaptureRelpController_8java_source.html#l00177">177</a> of file <a class="el" href="CaptureRelpController_8java_source.html">CaptureRelpController.java</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  177</span>                                                                     {</div>
-<div class="line"><span class="lineno">  178</span>        <a class="code hl_variable" href="classcom_1_1teragrep_1_1cfe18_1_1handlers_1_1CaptureRelpController.html#ada0cf2fbb34ae30220ad76ed97352bbf">LOGGER</a>.info(<span class="stringliteral">&quot;Deleting capture with id &lt;[{}]&gt;&quot;</span>, <span class="keywordtype">id</span>);</div>
-<div class="line"><span class="lineno">  179</span>        <span class="keywordflow">try</span> {</div>
-<div class="line"><span class="lineno">  180</span>            captureRelpMapper.<a class="code hl_function" href="interfacecom_1_1teragrep_1_1cfe18_1_1CaptureRelpMapper.html#aa67bc02278a8c39da65edd56bac061d9">delete</a>(<span class="keywordtype">id</span>);</div>
-<div class="line"><span class="lineno">  181</span>            JSONObject j = <span class="keyword">new</span> JSONObject();</div>
-<div class="line"><span class="lineno">  182</span>            j.put(<span class="stringliteral">&quot;id&quot;</span>, <span class="keywordtype">id</span>);</div>
-<div class="line"><span class="lineno">  183</span>            j.put(<span class="stringliteral">&quot;message&quot;</span>, <span class="stringliteral">&quot;Capture deleted&quot;</span>);</div>
-<div class="line"><span class="lineno">  184</span>            <span class="keywordflow">return</span> <span class="keyword">new</span> ResponseEntity&lt;&gt;(j.toString(), HttpStatus.OK);</div>
-<div class="line"><span class="lineno">  185</span>        } <span class="keywordflow">catch</span> (RuntimeException ex) {</div>
-<div class="line"><span class="lineno">  186</span>            <a class="code hl_variable" href="classcom_1_1teragrep_1_1cfe18_1_1handlers_1_1CaptureRelpController.html#ada0cf2fbb34ae30220ad76ed97352bbf">LOGGER</a>.error(ex.getMessage());</div>
-<div class="line"><span class="lineno">  187</span>            JSONObject jsonErr = <span class="keyword">new</span> JSONObject();</div>
-<div class="line"><span class="lineno">  188</span>            jsonErr.put(<span class="stringliteral">&quot;id&quot;</span>, <span class="keywordtype">id</span>);</div>
-<div class="line"><span class="lineno">  189</span>            jsonErr.put(<span class="stringliteral">&quot;message&quot;</span>, ex.getCause().getMessage());</div>
-<div class="line"><span class="lineno">  190</span>            <span class="keyword">final</span> Throwable cause = ex.getCause();</div>
-<div class="line"><span class="lineno">  191</span>            <span class="keywordflow">if</span> (cause instanceof SQLException) {</div>
-<div class="line"><span class="lineno">  192</span>                <a class="code hl_variable" href="classcom_1_1teragrep_1_1cfe18_1_1handlers_1_1CaptureRelpController.html#ada0cf2fbb34ae30220ad76ed97352bbf">LOGGER</a>.error((cause).getMessage());</div>
-<div class="line"><span class="lineno">  193</span>                String state = ((SQLException) cause).getSQLState();</div>
-<div class="line"><span class="lineno">  194</span>                <span class="keywordflow">if</span> (state.equals(<span class="stringliteral">&quot;23000&quot;</span>)) {</div>
-<div class="line"><span class="lineno">  195</span>                    jsonErr.put(<span class="stringliteral">&quot;message&quot;</span>, <span class="stringliteral">&quot;Is in use&quot;</span>);</div>
-<div class="line"><span class="lineno">  196</span>                    <span class="keywordflow">return</span> <span class="keyword">new</span> ResponseEntity&lt;&gt;(jsonErr.toString(), HttpStatus.BAD_REQUEST);</div>
-<div class="line"><span class="lineno">  197</span>                } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (state.equals(<span class="stringliteral">&quot;45000&quot;</span>)) {</div>
-<div class="line"><span class="lineno">  198</span>                    jsonErr.put(<span class="stringliteral">&quot;message&quot;</span>, <span class="stringliteral">&quot;Record does not exist&quot;</span>);</div>
-<div class="line"><span class="lineno">  199</span>                    <span class="keywordflow">return</span> <span class="keyword">new</span> ResponseEntity&lt;&gt;(jsonErr.toString(), HttpStatus.NOT_FOUND);</div>
-<div class="line"><span class="lineno">  200</span>                }</div>
-<div class="line"><span class="lineno">  201</span>            }</div>
-<div class="line"><span class="lineno">  202</span>            <span class="keywordflow">return</span> <span class="keyword">new</span> ResponseEntity&lt;&gt;(jsonErr.toString(), HttpStatus.BAD_REQUEST);</div>
-<div class="line"><span class="lineno">  203</span>        }</div>
-<div class="line"><span class="lineno">  204</span>    }</div>
+<p class="definition">Definition at line <a class="el" href="CaptureRelpController_8java_source.html#l00239">239</a> of file <a class="el" href="CaptureRelpController_8java_source.html">CaptureRelpController.java</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  239</span>                                                                     {</div>
+<div class="line"><span class="lineno">  240</span>        <a class="code hl_variable" href="classcom_1_1teragrep_1_1cfe18_1_1handlers_1_1CaptureRelpController.html#ada0cf2fbb34ae30220ad76ed97352bbf">LOGGER</a>.info(<span class="stringliteral">&quot;Deleting capture with id &lt;[{}]&gt;&quot;</span>, <span class="keywordtype">id</span>);</div>
+<div class="line"><span class="lineno">  241</span>        <span class="keywordflow">try</span> {</div>
+<div class="line"><span class="lineno">  242</span>            captureRelpMapper.<a class="code hl_function" href="interfacecom_1_1teragrep_1_1cfe18_1_1CaptureRelpMapper.html#aa67bc02278a8c39da65edd56bac061d9">delete</a>(<span class="keywordtype">id</span>);</div>
+<div class="line"><span class="lineno">  243</span>            JSONObject j = <span class="keyword">new</span> JSONObject();</div>
+<div class="line"><span class="lineno">  244</span>            j.put(<span class="stringliteral">&quot;id&quot;</span>, <span class="keywordtype">id</span>);</div>
+<div class="line"><span class="lineno">  245</span>            j.put(<span class="stringliteral">&quot;message&quot;</span>, <span class="stringliteral">&quot;Capture deleted&quot;</span>);</div>
+<div class="line"><span class="lineno">  246</span>            <span class="keywordflow">return</span> <span class="keyword">new</span> ResponseEntity&lt;&gt;(j.toString(), HttpStatus.OK);</div>
+<div class="line"><span class="lineno">  247</span>        }</div>
+<div class="line"><span class="lineno">  248</span>        <span class="keywordflow">catch</span> (RuntimeException ex) {</div>
+<div class="line"><span class="lineno">  249</span>            <a class="code hl_variable" href="classcom_1_1teragrep_1_1cfe18_1_1handlers_1_1CaptureRelpController.html#ada0cf2fbb34ae30220ad76ed97352bbf">LOGGER</a>.error(ex.getMessage());</div>
+<div class="line"><span class="lineno">  250</span>            JSONObject jsonErr = <span class="keyword">new</span> JSONObject();</div>
+<div class="line"><span class="lineno">  251</span>            jsonErr.put(<span class="stringliteral">&quot;id&quot;</span>, <span class="keywordtype">id</span>);</div>
+<div class="line"><span class="lineno">  252</span>            jsonErr.put(<span class="stringliteral">&quot;message&quot;</span>, ex.getCause().getMessage());</div>
+<div class="line"><span class="lineno">  253</span>            <span class="keyword">final</span> Throwable cause = ex.getCause();</div>
+<div class="line"><span class="lineno">  254</span>            <span class="keywordflow">if</span> (cause instanceof SQLException) {</div>
+<div class="line"><span class="lineno">  255</span>                <a class="code hl_variable" href="classcom_1_1teragrep_1_1cfe18_1_1handlers_1_1CaptureRelpController.html#ada0cf2fbb34ae30220ad76ed97352bbf">LOGGER</a>.error((cause).getMessage());</div>
+<div class="line"><span class="lineno">  256</span>                String state = ((SQLException) cause).getSQLState();</div>
+<div class="line"><span class="lineno">  257</span>                <span class="keywordflow">if</span> (state.equals(<span class="stringliteral">&quot;23000&quot;</span>)) {</div>
+<div class="line"><span class="lineno">  258</span>                    jsonErr.put(<span class="stringliteral">&quot;message&quot;</span>, <span class="stringliteral">&quot;Is in use&quot;</span>);</div>
+<div class="line"><span class="lineno">  259</span>                    <span class="keywordflow">return</span> <span class="keyword">new</span> ResponseEntity&lt;&gt;(jsonErr.toString(), HttpStatus.BAD_REQUEST);</div>
+<div class="line"><span class="lineno">  260</span>                }</div>
+<div class="line"><span class="lineno">  261</span>                <span class="keywordflow">else</span> <span class="keywordflow">if</span> (state.equals(<span class="stringliteral">&quot;45000&quot;</span>)) {</div>
+<div class="line"><span class="lineno">  262</span>                    jsonErr.put(<span class="stringliteral">&quot;message&quot;</span>, <span class="stringliteral">&quot;Record does not exist&quot;</span>);</div>
+<div class="line"><span class="lineno">  263</span>                    <span class="keywordflow">return</span> <span class="keyword">new</span> ResponseEntity&lt;&gt;(jsonErr.toString(), HttpStatus.NOT_FOUND);</div>
+<div class="line"><span class="lineno">  264</span>                }</div>
+<div class="line"><span class="lineno">  265</span>            }</div>
+<div class="line"><span class="lineno">  266</span>            <span class="keywordflow">return</span> <span class="keyword">new</span> ResponseEntity&lt;&gt;(jsonErr.toString(), HttpStatus.BAD_REQUEST);</div>
+<div class="line"><span class="lineno">  267</span>        }</div>
+<div class="line"><span class="lineno">  268</span>    }</div>
 <div class="ttc" id="ainterfacecom_1_1teragrep_1_1cfe18_1_1CaptureRelpMapper_html_aa67bc02278a8c39da65edd56bac061d9"><div class="ttname"><a href="interfacecom_1_1teragrep_1_1cfe18_1_1CaptureRelpMapper.html#aa67bc02278a8c39da65edd56bac061d9">com.teragrep.cfe18.CaptureRelpMapper.delete</a></div><div class="ttdeci">void delete(int captureId)</div></div>
 </div><!-- fragment -->
 </div>
@@ -228,28 +228,29 @@ Static Private Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="CaptureRelpController_8java_source.html#l00134">134</a> of file <a class="el" href="CaptureRelpController_8java_source.html">CaptureRelpController.java</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  134</span>                                                                                                              {</div>
-<div class="line"><span class="lineno">  135</span>        <span class="keywordflow">try</span> {</div>
-<div class="line"><span class="lineno">  136</span>            CaptureRelp c = captureRelpMapper.<a class="code hl_function" href="interfacecom_1_1teragrep_1_1cfe18_1_1CaptureRelpMapper.html#adef53bf5f890c5ce2fbc0f9796e3d9a0">get</a>(<span class="keywordtype">id</span>,version);</div>
-<div class="line"><span class="lineno">  137</span>            <span class="keywordflow">return</span> <span class="keyword">new</span> ResponseEntity&lt;&gt;(c, HttpStatus.OK);</div>
-<div class="line"><span class="lineno">  138</span>        } <span class="keywordflow">catch</span> (RuntimeException ex) {</div>
-<div class="line"><span class="lineno">  139</span>            <a class="code hl_variable" href="classcom_1_1teragrep_1_1cfe18_1_1handlers_1_1CaptureRelpController.html#ada0cf2fbb34ae30220ad76ed97352bbf">LOGGER</a>.error(ex.getMessage());</div>
-<div class="line"><span class="lineno">  140</span>            JSONObject jsonErr = <span class="keyword">new</span> JSONObject();</div>
-<div class="line"><span class="lineno">  141</span>            jsonErr.put(<span class="stringliteral">&quot;id&quot;</span>, <span class="keywordtype">id</span>);</div>
-<div class="line"><span class="lineno">  142</span>            jsonErr.put(<span class="stringliteral">&quot;message&quot;</span>, ex.getCause().toString());</div>
-<div class="line"><span class="lineno">  143</span>            <span class="keyword">final</span> Throwable cause = ex.getCause();</div>
-<div class="line"><span class="lineno">  144</span>            <span class="keywordflow">if</span> (cause instanceof SQLException) {</div>
-<div class="line"><span class="lineno">  145</span>                <a class="code hl_variable" href="classcom_1_1teragrep_1_1cfe18_1_1handlers_1_1CaptureRelpController.html#ada0cf2fbb34ae30220ad76ed97352bbf">LOGGER</a>.error((cause).getMessage());</div>
-<div class="line"><span class="lineno">  146</span>                String state = ((SQLException) cause).getSQLState();</div>
-<div class="line"><span class="lineno">  147</span>                <span class="keywordflow">if</span> (state.equals(<span class="stringliteral">&quot;45000&quot;</span>)) {</div>
-<div class="line"><span class="lineno">  148</span>                    jsonErr.put(<span class="stringliteral">&quot;message&quot;</span>, <span class="stringliteral">&quot;Record does not exist&quot;</span>);</div>
-<div class="line"><span class="lineno">  149</span>                    <span class="keywordflow">return</span> <span class="keyword">new</span> ResponseEntity&lt;&gt;(jsonErr.toString(), HttpStatus.NOT_FOUND);</div>
-<div class="line"><span class="lineno">  150</span>                }</div>
-<div class="line"><span class="lineno">  151</span>            }</div>
-<div class="line"><span class="lineno">  152</span>            <span class="keywordflow">return</span> <span class="keyword">new</span> ResponseEntity&lt;&gt;(jsonErr.toString(), HttpStatus.BAD_REQUEST);</div>
-<div class="line"><span class="lineno">  153</span>        }</div>
-<div class="line"><span class="lineno">  154</span>    }</div>
+<p class="definition">Definition at line <a class="el" href="CaptureRelpController_8java_source.html#l00163">163</a> of file <a class="el" href="CaptureRelpController_8java_source.html">CaptureRelpController.java</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  163</span>                                                                                                              {</div>
+<div class="line"><span class="lineno">  164</span>        <span class="keywordflow">try</span> {</div>
+<div class="line"><span class="lineno">  165</span>            CaptureRelp c = captureRelpMapper.<a class="code hl_function" href="interfacecom_1_1teragrep_1_1cfe18_1_1CaptureRelpMapper.html#adef53bf5f890c5ce2fbc0f9796e3d9a0">get</a>(<span class="keywordtype">id</span>, version);</div>
+<div class="line"><span class="lineno">  166</span>            <span class="keywordflow">return</span> <span class="keyword">new</span> ResponseEntity&lt;&gt;(c, HttpStatus.OK);</div>
+<div class="line"><span class="lineno">  167</span>        }</div>
+<div class="line"><span class="lineno">  168</span>        <span class="keywordflow">catch</span> (RuntimeException ex) {</div>
+<div class="line"><span class="lineno">  169</span>            <a class="code hl_variable" href="classcom_1_1teragrep_1_1cfe18_1_1handlers_1_1CaptureRelpController.html#ada0cf2fbb34ae30220ad76ed97352bbf">LOGGER</a>.error(ex.getMessage());</div>
+<div class="line"><span class="lineno">  170</span>            JSONObject jsonErr = <span class="keyword">new</span> JSONObject();</div>
+<div class="line"><span class="lineno">  171</span>            jsonErr.put(<span class="stringliteral">&quot;id&quot;</span>, <span class="keywordtype">id</span>);</div>
+<div class="line"><span class="lineno">  172</span>            jsonErr.put(<span class="stringliteral">&quot;message&quot;</span>, ex.getCause().toString());</div>
+<div class="line"><span class="lineno">  173</span>            <span class="keyword">final</span> Throwable cause = ex.getCause();</div>
+<div class="line"><span class="lineno">  174</span>            <span class="keywordflow">if</span> (cause instanceof SQLException) {</div>
+<div class="line"><span class="lineno">  175</span>                <a class="code hl_variable" href="classcom_1_1teragrep_1_1cfe18_1_1handlers_1_1CaptureRelpController.html#ada0cf2fbb34ae30220ad76ed97352bbf">LOGGER</a>.error((cause).getMessage());</div>
+<div class="line"><span class="lineno">  176</span>                String state = ((SQLException) cause).getSQLState();</div>
+<div class="line"><span class="lineno">  177</span>                <span class="keywordflow">if</span> (state.equals(<span class="stringliteral">&quot;45000&quot;</span>)) {</div>
+<div class="line"><span class="lineno">  178</span>                    jsonErr.put(<span class="stringliteral">&quot;message&quot;</span>, <span class="stringliteral">&quot;Record does not exist&quot;</span>);</div>
+<div class="line"><span class="lineno">  179</span>                    <span class="keywordflow">return</span> <span class="keyword">new</span> ResponseEntity&lt;&gt;(jsonErr.toString(), HttpStatus.NOT_FOUND);</div>
+<div class="line"><span class="lineno">  180</span>                }</div>
+<div class="line"><span class="lineno">  181</span>            }</div>
+<div class="line"><span class="lineno">  182</span>            <span class="keywordflow">return</span> <span class="keyword">new</span> ResponseEntity&lt;&gt;(jsonErr.toString(), HttpStatus.BAD_REQUEST);</div>
+<div class="line"><span class="lineno">  183</span>        }</div>
+<div class="line"><span class="lineno">  184</span>    }</div>
 <div class="ttc" id="ainterfacecom_1_1teragrep_1_1cfe18_1_1CaptureRelpMapper_html_adef53bf5f890c5ce2fbc0f9796e3d9a0"><div class="ttname"><a href="interfacecom_1_1teragrep_1_1cfe18_1_1CaptureRelpMapper.html#adef53bf5f890c5ce2fbc0f9796e3d9a0">com.teragrep.cfe18.CaptureRelpMapper.get</a></div><div class="ttdeci">CaptureRelp get(int captureId, Integer version)</div></div>
 </div><!-- fragment -->
 </div>
@@ -270,10 +271,10 @@ Static Private Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="CaptureRelpController_8java_source.html#l00164">164</a> of file <a class="el" href="CaptureRelpController_8java_source.html">CaptureRelpController.java</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  164</span>                                                                                     {</div>
-<div class="line"><span class="lineno">  165</span>        <span class="keywordflow">return</span> captureRelpMapper.<a class="code hl_function" href="interfacecom_1_1teragrep_1_1cfe18_1_1CaptureRelpMapper.html#a7abde93009f5302b9e761d93274839d3">getAll</a>(version);</div>
-<div class="line"><span class="lineno">  166</span>    }</div>
+<p class="definition">Definition at line <a class="el" href="CaptureRelpController_8java_source.html#l00207">207</a> of file <a class="el" href="CaptureRelpController_8java_source.html">CaptureRelpController.java</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  207</span>                                                                                     {</div>
+<div class="line"><span class="lineno">  208</span>        <span class="keywordflow">return</span> captureRelpMapper.<a class="code hl_function" href="interfacecom_1_1teragrep_1_1cfe18_1_1CaptureRelpMapper.html#a7abde93009f5302b9e761d93274839d3">getAll</a>(version);</div>
+<div class="line"><span class="lineno">  209</span>    }</div>
 <div class="ttc" id="ainterfacecom_1_1teragrep_1_1cfe18_1_1CaptureRelpMapper_html_a7abde93009f5302b9e761d93274839d3"><div class="ttname"><a href="interfacecom_1_1teragrep_1_1cfe18_1_1CaptureRelpMapper.html#a7abde93009f5302b9e761d93274839d3">com.teragrep.cfe18.CaptureRelpMapper.getAll</a></div><div class="ttdeci">List&lt; CaptureRelp &gt; getAll(Integer version)</div></div>
 </div><!-- fragment -->
 </div>
@@ -299,7 +300,7 @@ Static Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="CaptureRelpController_8java_source.html#l00078">78</a> of file <a class="el" href="CaptureRelpController_8java_source.html">CaptureRelpController.java</a>.</p>
+<p class="definition">Definition at line <a class="el" href="CaptureRelpController_8java_source.html#l00077">77</a> of file <a class="el" href="CaptureRelpController_8java_source.html">CaptureRelpController.java</a>.</p>
 
 </div>
 </div>

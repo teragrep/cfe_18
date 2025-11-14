@@ -97,7 +97,7 @@ Public Member Functions</h2></td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock">
-<p class="definition">Definition at line <a class="el" href="MigrateDatabaseExtension_8java_source.html#l00054">54</a> of file <a class="el" href="MigrateDatabaseExtension_8java_source.html">MigrateDatabaseExtension.java</a>.</p>
+<p class="definition">Definition at line <a class="el" href="MigrateDatabaseExtension_8java_source.html#l00053">53</a> of file <a class="el" href="MigrateDatabaseExtension_8java_source.html">MigrateDatabaseExtension.java</a>.</p>
 </div><h2 class="groupheader">Member Function Documentation</h2>
 <a id="a2a8a5238bcb65b5c408fd9463a06ace8" name="a2a8a5238bcb65b5c408fd9463a06ace8"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a2a8a5238bcb65b5c408fd9463a06ace8">&#9670;&#160;</a></span>afterAll()</h2>
@@ -115,14 +115,13 @@ Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="MigrateDatabaseExtension_8java_source.html#l00057">57</a> of file <a class="el" href="MigrateDatabaseExtension_8java_source.html">MigrateDatabaseExtension.java</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   57</span>                                                                             {</div>
-<div class="line"><span class="lineno">   58</span>        <span class="comment">// Call main spring context Flyway to apply migrations</span></div>
-<div class="line"><span class="lineno">   59</span>        Flyway flyway = SpringExtension.getApplicationContext(extensionContext)</div>
-<div class="line"><span class="lineno">   60</span>                .getBean(Flyway.class);</div>
-<div class="line"><span class="lineno">   61</span>        flyway.clean();</div>
-<div class="line"><span class="lineno">   62</span>        flyway.migrate();</div>
-<div class="line"><span class="lineno">   63</span>    }</div>
+<p class="definition">Definition at line <a class="el" href="MigrateDatabaseExtension_8java_source.html#l00056">56</a> of file <a class="el" href="MigrateDatabaseExtension_8java_source.html">MigrateDatabaseExtension.java</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   56</span>                                                                             {</div>
+<div class="line"><span class="lineno">   57</span>        <span class="comment">// Call main spring context Flyway to apply migrations</span></div>
+<div class="line"><span class="lineno">   58</span>        Flyway flyway = SpringExtension.getApplicationContext(extensionContext).getBean(Flyway.class);</div>
+<div class="line"><span class="lineno">   59</span>        flyway.clean();</div>
+<div class="line"><span class="lineno">   60</span>        flyway.migrate();</div>
+<div class="line"><span class="lineno">   61</span>    }</div>
 </div><!-- fragment -->
 </div>
 </div>

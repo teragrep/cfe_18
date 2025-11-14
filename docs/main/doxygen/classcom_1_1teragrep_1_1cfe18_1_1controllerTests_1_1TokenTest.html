@@ -107,7 +107,7 @@ Private Attributes</h2></td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock">
-<p class="definition">Definition at line <a class="el" href="TokenTest_8java_source.html#l00070">70</a> of file <a class="el" href="TokenTest_8java_source.html">TokenTest.java</a>.</p>
+<p class="definition">Definition at line <a class="el" href="TokenTest_8java_source.html#l00069">69</a> of file <a class="el" href="TokenTest_8java_source.html">TokenTest.java</a>.</p>
 </div><h2 class="groupheader">Member Function Documentation</h2>
 <a id="ad11794bb9077cbd3c7da95dcee2bf0b2" name="ad11794bb9077cbd3c7da95dcee2bf0b2"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ad11794bb9077cbd3c7da95dcee2bf0b2">&#9670;&#160;</a></span>testInvalidToken()</h2>
@@ -124,23 +124,21 @@ Private Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="TokenTest_8java_source.html#l00100">100</a> of file <a class="el" href="TokenTest_8java_source.html">TokenTest.java</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  100</span>                                                      {</div>
+<p class="definition">Definition at line <a class="el" href="TokenTest_8java_source.html#l00096">96</a> of file <a class="el" href="TokenTest_8java_source.html">TokenTest.java</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   96</span>                                                      {</div>
+<div class="line"><span class="lineno">   97</span> </div>
+<div class="line"><span class="lineno">   98</span>        <span class="comment">// Given</span></div>
+<div class="line"><span class="lineno">   99</span>        HttpUriRequest request2 = <span class="keyword">new</span> HttpGet(<span class="stringliteral">&quot;http://localhost:&quot;</span> + <a class="code hl_variable" href="classcom_1_1teragrep_1_1cfe18_1_1controllerTests_1_1TokenTest.html#a9eee558ead18d8ce48af5fe51e5d3723">port</a> + <span class="stringliteral">&quot;/capture/file/jwt&quot;</span>);</div>
+<div class="line"><span class="lineno">  100</span>        request2.setHeader(<span class="stringliteral">&quot;Authorization&quot;</span>, <span class="stringliteral">&quot;Bearer noToken&quot;</span>);</div>
 <div class="line"><span class="lineno">  101</span> </div>
-<div class="line"><span class="lineno">  102</span>        <span class="comment">// Given</span></div>
-<div class="line"><span class="lineno">  103</span>        HttpUriRequest request2 = <span class="keyword">new</span> HttpGet(<span class="stringliteral">&quot;http://localhost:&quot;</span> + <a class="code hl_variable" href="classcom_1_1teragrep_1_1cfe18_1_1controllerTests_1_1TokenTest.html#a9eee558ead18d8ce48af5fe51e5d3723">port</a> + <span class="stringliteral">&quot;/capture/file/jwt&quot;</span>);</div>
-<div class="line"><span class="lineno">  104</span>        request2.setHeader(<span class="stringliteral">&quot;Authorization&quot;</span>, <span class="stringliteral">&quot;Bearer noToken&quot;</span>);</div>
+<div class="line"><span class="lineno">  102</span>        <span class="comment">// When</span></div>
+<div class="line"><span class="lineno">  103</span> </div>
+<div class="line"><span class="lineno">  104</span>        HttpResponse httpResponse2 = HttpClientBuilder.create().build().execute(request2);</div>
 <div class="line"><span class="lineno">  105</span> </div>
-<div class="line"><span class="lineno">  106</span>        <span class="comment">// When</span></div>
-<div class="line"><span class="lineno">  107</span> </div>
-<div class="line"><span class="lineno">  108</span>        HttpResponse httpResponse2 = HttpClientBuilder.create().build().execute(request2);</div>
-<div class="line"><span class="lineno">  109</span> </div>
-<div class="line"><span class="lineno">  110</span>        <span class="comment">// Then</span></div>
-<div class="line"><span class="lineno">  111</span>        assertThat(</div>
-<div class="line"><span class="lineno">  112</span>                httpResponse2.getStatusLine().getStatusCode(),</div>
-<div class="line"><span class="lineno">  113</span>                equalTo(HttpStatus.SC_UNAUTHORIZED));</div>
-<div class="line"><span class="lineno">  114</span>    }</div>
-<div class="ttc" id="aclasscom_1_1teragrep_1_1cfe18_1_1controllerTests_1_1TokenTest_html_a9eee558ead18d8ce48af5fe51e5d3723"><div class="ttname"><a href="classcom_1_1teragrep_1_1cfe18_1_1controllerTests_1_1TokenTest.html#a9eee558ead18d8ce48af5fe51e5d3723">com.teragrep.cfe18.controllerTests.TokenTest.port</a></div><div class="ttdeci">int port</div><div class="ttdef"><b>Definition</b> <a href="TokenTest_8java_source.html#l00073">TokenTest.java:73</a></div></div>
+<div class="line"><span class="lineno">  106</span>        <span class="comment">// Then</span></div>
+<div class="line"><span class="lineno">  107</span>        assertThat(httpResponse2.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_UNAUTHORIZED));</div>
+<div class="line"><span class="lineno">  108</span>    }</div>
+<div class="ttc" id="aclasscom_1_1teragrep_1_1cfe18_1_1controllerTests_1_1TokenTest_html_a9eee558ead18d8ce48af5fe51e5d3723"><div class="ttname"><a href="classcom_1_1teragrep_1_1cfe18_1_1controllerTests_1_1TokenTest.html#a9eee558ead18d8ce48af5fe51e5d3723">com.teragrep.cfe18.controllerTests.TokenTest.port</a></div><div class="ttdeci">int port</div><div class="ttdef"><b>Definition</b> <a href="TokenTest_8java_source.html#l00072">TokenTest.java:72</a></div></div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -159,21 +157,19 @@ Private Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="TokenTest_8java_source.html#l00119">119</a> of file <a class="el" href="TokenTest_8java_source.html">TokenTest.java</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  119</span>                                                 {</div>
+<p class="definition">Definition at line <a class="el" href="TokenTest_8java_source.html#l00112">112</a> of file <a class="el" href="TokenTest_8java_source.html">TokenTest.java</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  112</span>                                                 {</div>
+<div class="line"><span class="lineno">  113</span> </div>
+<div class="line"><span class="lineno">  114</span>        <span class="comment">// Given</span></div>
+<div class="line"><span class="lineno">  115</span>        HttpUriRequest request2 = <span class="keyword">new</span> HttpGet(<span class="stringliteral">&quot;http://localhost:&quot;</span> + <a class="code hl_variable" href="classcom_1_1teragrep_1_1cfe18_1_1controllerTests_1_1TokenTest.html#a9eee558ead18d8ce48af5fe51e5d3723">port</a> + <span class="stringliteral">&quot;/capture/file/jwt&quot;</span>);</div>
+<div class="line"><span class="lineno">  116</span> </div>
+<div class="line"><span class="lineno">  117</span>        <span class="comment">// When</span></div>
+<div class="line"><span class="lineno">  118</span> </div>
+<div class="line"><span class="lineno">  119</span>        HttpResponse httpResponse2 = HttpClientBuilder.create().build().execute(request2);</div>
 <div class="line"><span class="lineno">  120</span> </div>
-<div class="line"><span class="lineno">  121</span>        <span class="comment">// Given</span></div>
-<div class="line"><span class="lineno">  122</span>        HttpUriRequest request2 = <span class="keyword">new</span> HttpGet(<span class="stringliteral">&quot;http://localhost:&quot;</span> + <a class="code hl_variable" href="classcom_1_1teragrep_1_1cfe18_1_1controllerTests_1_1TokenTest.html#a9eee558ead18d8ce48af5fe51e5d3723">port</a> + <span class="stringliteral">&quot;/capture/file/jwt&quot;</span>);</div>
-<div class="line"><span class="lineno">  123</span> </div>
-<div class="line"><span class="lineno">  124</span>        <span class="comment">// When</span></div>
-<div class="line"><span class="lineno">  125</span> </div>
-<div class="line"><span class="lineno">  126</span>        HttpResponse httpResponse2 = HttpClientBuilder.create().build().execute(request2);</div>
-<div class="line"><span class="lineno">  127</span> </div>
-<div class="line"><span class="lineno">  128</span>        <span class="comment">// Then</span></div>
-<div class="line"><span class="lineno">  129</span>        assertThat(</div>
-<div class="line"><span class="lineno">  130</span>                httpResponse2.getStatusLine().getStatusCode(),</div>
-<div class="line"><span class="lineno">  131</span>                equalTo(HttpStatus.SC_UNAUTHORIZED));</div>
-<div class="line"><span class="lineno">  132</span>    }</div>
+<div class="line"><span class="lineno">  121</span>        <span class="comment">// Then</span></div>
+<div class="line"><span class="lineno">  122</span>        assertThat(httpResponse2.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_UNAUTHORIZED));</div>
+<div class="line"><span class="lineno">  123</span>    }</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -192,26 +188,24 @@ Private Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="TokenTest_8java_source.html#l00078">78</a> of file <a class="el" href="TokenTest_8java_source.html">TokenTest.java</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   78</span>                                               {</div>
-<div class="line"><span class="lineno">   79</span> </div>
-<div class="line"><span class="lineno">   80</span>        <span class="comment">// Given</span></div>
-<div class="line"><span class="lineno">   81</span>        HttpUriRequest request = <span class="keyword">new</span> HttpGet(<span class="stringliteral">&quot;http://localhost:&quot;</span> + <a class="code hl_variable" href="classcom_1_1teragrep_1_1cfe18_1_1controllerTests_1_1TokenTest.html#a9eee558ead18d8ce48af5fe51e5d3723">port</a> + <span class="stringliteral">&quot;/capture/file/jwt&quot;</span>);</div>
-<div class="line"><span class="lineno">   82</span>        request.setHeader(<span class="stringliteral">&quot;Authorization&quot;</span>, <span class="stringliteral">&quot;Bearer &quot;</span> + token);</div>
-<div class="line"><span class="lineno">   83</span>        <span class="comment">// When</span></div>
+<p class="definition">Definition at line <a class="el" href="TokenTest_8java_source.html#l00076">76</a> of file <a class="el" href="TokenTest_8java_source.html">TokenTest.java</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   76</span>                                               {</div>
+<div class="line"><span class="lineno">   77</span> </div>
+<div class="line"><span class="lineno">   78</span>        <span class="comment">// Given</span></div>
+<div class="line"><span class="lineno">   79</span>        HttpUriRequest request = <span class="keyword">new</span> HttpGet(<span class="stringliteral">&quot;http://localhost:&quot;</span> + <a class="code hl_variable" href="classcom_1_1teragrep_1_1cfe18_1_1controllerTests_1_1TokenTest.html#a9eee558ead18d8ce48af5fe51e5d3723">port</a> + <span class="stringliteral">&quot;/capture/file/jwt&quot;</span>);</div>
+<div class="line"><span class="lineno">   80</span>        request.setHeader(<span class="stringliteral">&quot;Authorization&quot;</span>, <span class="stringliteral">&quot;Bearer &quot;</span> + token);</div>
+<div class="line"><span class="lineno">   81</span>        <span class="comment">// When</span></div>
+<div class="line"><span class="lineno">   82</span> </div>
+<div class="line"><span class="lineno">   83</span>        HttpResponse httpResponse = HttpClientBuilder.create().build().execute(request);</div>
 <div class="line"><span class="lineno">   84</span> </div>
-<div class="line"><span class="lineno">   85</span>        HttpResponse httpResponse = HttpClientBuilder.create().build().execute(request);</div>
+<div class="line"><span class="lineno">   85</span>        HttpEntity entity = httpResponse.getEntity();</div>
 <div class="line"><span class="lineno">   86</span> </div>
-<div class="line"><span class="lineno">   87</span>        HttpEntity entity = httpResponse.getEntity();</div>
+<div class="line"><span class="lineno">   87</span>        String responseString = EntityUtils.toString(entity, <span class="stringliteral">&quot;UTF-8&quot;</span>);</div>
 <div class="line"><span class="lineno">   88</span> </div>
-<div class="line"><span class="lineno">   89</span>        String responseString = EntityUtils.toString(entity, <span class="stringliteral">&quot;UTF-8&quot;</span>);</div>
-<div class="line"><span class="lineno">   90</span> </div>
-<div class="line"><span class="lineno">   91</span>        <span class="comment">// Then</span></div>
-<div class="line"><span class="lineno">   92</span>        assertThat(</div>
-<div class="line"><span class="lineno">   93</span>                httpResponse.getStatusLine().getStatusCode(),</div>
-<div class="line"><span class="lineno">   94</span>                equalTo(HttpStatus.SC_OK));</div>
-<div class="line"><span class="lineno">   95</span>        assertThat(responseString, equalTo(<span class="stringliteral">&quot;Hello, subject!&quot;</span>));</div>
-<div class="line"><span class="lineno">   96</span>    }</div>
+<div class="line"><span class="lineno">   89</span>        <span class="comment">// Then</span></div>
+<div class="line"><span class="lineno">   90</span>        assertThat(httpResponse.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_OK));</div>
+<div class="line"><span class="lineno">   91</span>        assertThat(responseString, equalTo(<span class="stringliteral">&quot;Hello, subject!&quot;</span>));</div>
+<div class="line"><span class="lineno">   92</span>    }</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -236,7 +230,7 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="TokenTest_8java_source.html#l00073">73</a> of file <a class="el" href="TokenTest_8java_source.html">TokenTest.java</a>.</p>
+<p class="definition">Definition at line <a class="el" href="TokenTest_8java_source.html#l00072">72</a> of file <a class="el" href="TokenTest_8java_source.html">TokenTest.java</a>.</p>
 
 </div>
 </div>

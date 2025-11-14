@@ -133,7 +133,7 @@ Additional Inherited Members</h2></td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock">
-<p class="definition">Definition at line <a class="el" href="ProcedureCaptureGroupTest_8java_source.html#l00069">69</a> of file <a class="el" href="ProcedureCaptureGroupTest_8java_source.html">ProcedureCaptureGroupTest.java</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ProcedureCaptureGroupTest_8java_source.html#l00068">68</a> of file <a class="el" href="ProcedureCaptureGroupTest_8java_source.html">ProcedureCaptureGroupTest.java</a>.</p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="a7f626d17a1fa1d0c7bd665a325aefe47" name="a7f626d17a1fa1d0c7bd665a325aefe47"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a7f626d17a1fa1d0c7bd665a325aefe47">&#9670;&#160;</a></span>ProcedureCaptureGroupTest()</h2>
@@ -151,10 +151,10 @@ Additional Inherited Members</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ProcedureCaptureGroupTest_8java_source.html#l00071">71</a> of file <a class="el" href="ProcedureCaptureGroupTest_8java_source.html">ProcedureCaptureGroupTest.java</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   71</span>                                                  {</div>
-<div class="line"><span class="lineno">   72</span>        super(name);</div>
-<div class="line"><span class="lineno">   73</span>    }</div>
+<p class="definition">Definition at line <a class="el" href="ProcedureCaptureGroupTest_8java_source.html#l00070">70</a> of file <a class="el" href="ProcedureCaptureGroupTest_8java_source.html">ProcedureCaptureGroupTest.java</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   70</span>                                                  {</div>
+<div class="line"><span class="lineno">   71</span>        super(name);</div>
+<div class="line"><span class="lineno">   72</span>    }</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -184,10 +184,19 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Reimplemented from <a class="el" href="classcom_1_1teragrep_1_1cfe18_1_1procedureTests_1_1DBUnitbase.html#a9a344256855635842c3336317a4bd573">com.teragrep.cfe18.procedureTests.DBUnitbase</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="ProcedureCaptureGroupTest_8java_source.html#l00076">76</a> of file <a class="el" href="ProcedureCaptureGroupTest_8java_source.html">ProcedureCaptureGroupTest.java</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   76</span>                                                     {</div>
-<div class="line"><span class="lineno">   77</span>        <span class="keywordflow">return</span> <span class="keyword">new</span> FlatXmlDataSetBuilder().build(Files.newInputStream(Paths.get(<span class="stringliteral">&quot;src/test/resources/XMLProcedureCaptureGroup/procedureCaptureGroupTestData.xml&quot;</span>)));</div>
-<div class="line"><span class="lineno">   78</span>    }</div>
+<p class="definition">Definition at line <a class="el" href="ProcedureCaptureGroupTest_8java_source.html#l00075">75</a> of file <a class="el" href="ProcedureCaptureGroupTest_8java_source.html">ProcedureCaptureGroupTest.java</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   75</span>                                                     {</div>
+<div class="line"><span class="lineno">   76</span>        <span class="keywordflow">return</span> <span class="keyword">new</span> FlatXmlDataSetBuilder()</div>
+<div class="line"><span class="lineno">   77</span>                .build(</div>
+<div class="line"><span class="lineno">   78</span>                        Files</div>
+<div class="line"><span class="lineno">   79</span>                                .newInputStream(</div>
+<div class="line"><span class="lineno">   80</span>                                        Paths</div>
+<div class="line"><span class="lineno">   81</span>                                                .<span class="keyword">get</span>(</div>
+<div class="line"><span class="lineno">   82</span>                                                        <span class="stringliteral">&quot;src/test/resources/XMLProcedureCaptureGroup/procedureCaptureGroupTestData.xml&quot;</span></div>
+<div class="line"><span class="lineno">   83</span>                                                )</div>
+<div class="line"><span class="lineno">   84</span>                                )</div>
+<div class="line"><span class="lineno">   85</span>                );</div>
+<div class="line"><span class="lineno">   86</span>    }</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -206,16 +215,16 @@ Additional Inherited Members</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ProcedureCaptureGroupTest_8java_source.html#l00151">151</a> of file <a class="el" href="ProcedureCaptureGroupTest_8java_source.html">ProcedureCaptureGroupTest.java</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  151</span>                                                             {</div>
-<div class="line"><span class="lineno">  152</span>        SQLException state = Assertions.assertThrows(SQLException.class, () -&gt; {</div>
-<div class="line"><span class="lineno">  153</span>            CallableStatement stmnt = conn.prepareCall(<span class="stringliteral">&quot;{CALL cfe_18.retrieve_capture_group_details(?,?)}&quot;</span>);</div>
-<div class="line"><span class="lineno">  154</span>            stmnt.setString(1, <span class="stringliteral">&quot;groupThatDontExist&quot;</span>);</div>
-<div class="line"><span class="lineno">  155</span>            stmnt.setString(2, null);</div>
-<div class="line"><span class="lineno">  156</span>            stmnt.execute();</div>
-<div class="line"><span class="lineno">  157</span>        });</div>
-<div class="line"><span class="lineno">  158</span>        Assertions.assertEquals(<span class="stringliteral">&quot;45000&quot;</span>, state.getSQLState());</div>
-<div class="line"><span class="lineno">  159</span>    }</div>
+<p class="definition">Definition at line <a class="el" href="ProcedureCaptureGroupTest_8java_source.html#l00178">178</a> of file <a class="el" href="ProcedureCaptureGroupTest_8java_source.html">ProcedureCaptureGroupTest.java</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  178</span>                                                             {</div>
+<div class="line"><span class="lineno">  179</span>        SQLException state = Assertions.assertThrows(SQLException.class, () -&gt; {</div>
+<div class="line"><span class="lineno">  180</span>            CallableStatement stmnt = conn.prepareCall(<span class="stringliteral">&quot;{CALL cfe_18.retrieve_capture_group_details(?,?)}&quot;</span>);</div>
+<div class="line"><span class="lineno">  181</span>            stmnt.setString(1, <span class="stringliteral">&quot;groupThatDontExist&quot;</span>);</div>
+<div class="line"><span class="lineno">  182</span>            stmnt.setString(2, null);</div>
+<div class="line"><span class="lineno">  183</span>            stmnt.execute();</div>
+<div class="line"><span class="lineno">  184</span>        });</div>
+<div class="line"><span class="lineno">  185</span>        Assertions.assertEquals(<span class="stringliteral">&quot;45000&quot;</span>, state.getSQLState());</div>
+<div class="line"><span class="lineno">  186</span>    }</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -234,23 +243,33 @@ Additional Inherited Members</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ProcedureCaptureGroupTest_8java_source.html#l00108">108</a> of file <a class="el" href="ProcedureCaptureGroupTest_8java_source.html">ProcedureCaptureGroupTest.java</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  108</span>                                                               {</div>
-<div class="line"><span class="lineno">  109</span>        IDataSet expectedDataSet = <span class="keyword">new</span> FlatXmlDataSetBuilder().build(<span class="keyword">new</span> File(<span class="stringliteral">&quot;src/test/resources/XMLProcedureCaptureGroup/procedureCaptureGroupTestDataExpectedData2.xml&quot;</span>));</div>
-<div class="line"><span class="lineno">  110</span>        ITable expectedTable1 = expectedDataSet.getTable(<span class="stringliteral">&quot;cfe_18.capture_def_group_x_capture_def&quot;</span>);</div>
-<div class="line"><span class="lineno">  111</span>        ITable expectedTable2 = expectedDataSet.getTable(<span class="stringliteral">&quot;cfe_18.capture_def_group&quot;</span>);</div>
-<div class="line"><span class="lineno">  112</span> </div>
-<div class="line"><span class="lineno">  113</span>        CallableStatement stmnt = conn.prepareCall(<span class="stringliteral">&quot;{call cfe_18.add_capture_group_with_capture(?,?)}&quot;</span>);</div>
-<div class="line"><span class="lineno">  114</span>        stmnt.setString(1, <span class="stringliteral">&quot;group1&quot;</span>);</div>
-<div class="line"><span class="lineno">  115</span>        stmnt.setInt(2, 2);</div>
-<div class="line"><span class="lineno">  116</span>        stmnt.execute();</div>
-<div class="line"><span class="lineno">  117</span> </div>
-<div class="line"><span class="lineno">  118</span>        ITable actualTable1 = databaseConnection.createQueryTable(<span class="stringliteral">&quot;result&quot;</span>, <span class="stringliteral">&quot;select * from cfe_18.capture_def_group_x_capture_def&quot;</span>);</div>
-<div class="line"><span class="lineno">  119</span>        ITable actualTable2 = databaseConnection.createQueryTable(<span class="stringliteral">&quot;result&quot;</span>, <span class="stringliteral">&quot;select * from cfe_18.capture_def_group&quot;</span>);</div>
-<div class="line"><span class="lineno">  120</span> </div>
-<div class="line"><span class="lineno">  121</span>        Assertion.assertEqualsIgnoreCols(expectedTable2, actualTable2, <span class="keyword">new</span> String[]{<span class="stringliteral">&quot;id&quot;</span>});</div>
-<div class="line"><span class="lineno">  122</span>        Assertion.assertEqualsIgnoreCols(expectedTable1, actualTable1, <span class="keyword">new</span> String[]{<span class="stringliteral">&quot;id&quot;</span>, <span class="stringliteral">&quot;capture_def_group_id&quot;</span>});</div>
-<div class="line"><span class="lineno">  123</span>    }</div>
+<p class="definition">Definition at line <a class="el" href="ProcedureCaptureGroupTest_8java_source.html#l00126">126</a> of file <a class="el" href="ProcedureCaptureGroupTest_8java_source.html">ProcedureCaptureGroupTest.java</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  126</span>                                                               {</div>
+<div class="line"><span class="lineno">  127</span>        IDataSet expectedDataSet = <span class="keyword">new</span> FlatXmlDataSetBuilder()</div>
+<div class="line"><span class="lineno">  128</span>                .build(</div>
+<div class="line"><span class="lineno">  129</span>                        <span class="keyword">new</span> File(</div>
+<div class="line"><span class="lineno">  130</span>                                <span class="stringliteral">&quot;src/test/resources/XMLProcedureCaptureGroup/procedureCaptureGroupTestDataExpectedData2.xml&quot;</span></div>
+<div class="line"><span class="lineno">  131</span>                        )</div>
+<div class="line"><span class="lineno">  132</span>                );</div>
+<div class="line"><span class="lineno">  133</span>        ITable expectedTable1 = expectedDataSet.getTable(<span class="stringliteral">&quot;cfe_18.capture_def_group_x_capture_def&quot;</span>);</div>
+<div class="line"><span class="lineno">  134</span>        ITable expectedTable2 = expectedDataSet.getTable(<span class="stringliteral">&quot;cfe_18.capture_def_group&quot;</span>);</div>
+<div class="line"><span class="lineno">  135</span> </div>
+<div class="line"><span class="lineno">  136</span>        CallableStatement stmnt = conn.prepareCall(<span class="stringliteral">&quot;{call cfe_18.add_capture_group_with_capture(?,?)}&quot;</span>);</div>
+<div class="line"><span class="lineno">  137</span>        stmnt.setString(1, <span class="stringliteral">&quot;group1&quot;</span>);</div>
+<div class="line"><span class="lineno">  138</span>        stmnt.setInt(2, 2);</div>
+<div class="line"><span class="lineno">  139</span>        stmnt.execute();</div>
+<div class="line"><span class="lineno">  140</span> </div>
+<div class="line"><span class="lineno">  141</span>        ITable actualTable1 = databaseConnection</div>
+<div class="line"><span class="lineno">  142</span>                .createQueryTable(<span class="stringliteral">&quot;result&quot;</span>, <span class="stringliteral">&quot;select * from cfe_18.capture_def_group_x_capture_def&quot;</span>);</div>
+<div class="line"><span class="lineno">  143</span>        ITable actualTable2 = databaseConnection.createQueryTable(<span class="stringliteral">&quot;result&quot;</span>, <span class="stringliteral">&quot;select * from cfe_18.capture_def_group&quot;</span>);</div>
+<div class="line"><span class="lineno">  144</span> </div>
+<div class="line"><span class="lineno">  145</span>        Assertion.assertEqualsIgnoreCols(expectedTable2, actualTable2, <span class="keyword">new</span> String[] {</div>
+<div class="line"><span class="lineno">  146</span>                <span class="stringliteral">&quot;id&quot;</span></div>
+<div class="line"><span class="lineno">  147</span>        });</div>
+<div class="line"><span class="lineno">  148</span>        Assertion.assertEqualsIgnoreCols(expectedTable1, actualTable1, <span class="keyword">new</span> String[] {</div>
+<div class="line"><span class="lineno">  149</span>                <span class="stringliteral">&quot;id&quot;</span>, <span class="stringliteral">&quot;capture_def_group_id&quot;</span></div>
+<div class="line"><span class="lineno">  150</span>        });</div>
+<div class="line"><span class="lineno">  151</span>    }</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -269,24 +288,34 @@ Additional Inherited Members</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ProcedureCaptureGroupTest_8java_source.html#l00087">87</a> of file <a class="el" href="ProcedureCaptureGroupTest_8java_source.html">ProcedureCaptureGroupTest.java</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   87</span>                                                                       {</div>
-<div class="line"><span class="lineno">   88</span>        IDataSet expectedDataSet = <span class="keyword">new</span> FlatXmlDataSetBuilder().build(<span class="keyword">new</span> File(<span class="stringliteral">&quot;src/test/resources/XMLProcedureCaptureGroup/procedureCaptureGroupTestDataExpectedData1.xml&quot;</span>));</div>
-<div class="line"><span class="lineno">   89</span>        ITable expectedTable1 = expectedDataSet.getTable(<span class="stringliteral">&quot;cfe_18.capture_def_group_x_capture_def&quot;</span>);</div>
-<div class="line"><span class="lineno">   90</span>        ITable expectedTable2 = expectedDataSet.getTable(<span class="stringliteral">&quot;cfe_18.capture_def_group&quot;</span>);</div>
-<div class="line"><span class="lineno">   91</span> </div>
-<div class="line"><span class="lineno">   92</span>        CallableStatement stmnt = conn.prepareCall(<span class="stringliteral">&quot;{call cfe_18.add_capture_group_with_capture(?,?)}&quot;</span>);</div>
-<div class="line"><span class="lineno">   93</span>        stmnt.setString(1, <span class="stringliteral">&quot;group1&quot;</span>);</div>
-<div class="line"><span class="lineno">   94</span>        stmnt.setInt(2, 1);</div>
-<div class="line"><span class="lineno">   95</span>        stmnt.execute();</div>
-<div class="line"><span class="lineno">   96</span> </div>
-<div class="line"><span class="lineno">   97</span>        ITable actualTable1 = databaseConnection.createQueryTable(<span class="stringliteral">&quot;result&quot;</span>, <span class="stringliteral">&quot;select * from cfe_18.capture_def_group_x_capture_def&quot;</span>);</div>
-<div class="line"><span class="lineno">   98</span>        ITable actualTable2 = databaseConnection.createQueryTable(<span class="stringliteral">&quot;result&quot;</span>, <span class="stringliteral">&quot;select * from cfe_18.capture_def_group&quot;</span>);</div>
-<div class="line"><span class="lineno">   99</span> </div>
-<div class="line"><span class="lineno">  100</span>        Assertion.assertEqualsIgnoreCols(expectedTable2, actualTable2, <span class="keyword">new</span> String[]{<span class="stringliteral">&quot;id&quot;</span>});</div>
-<div class="line"><span class="lineno">  101</span>        Assertion.assertEqualsIgnoreCols(expectedTable1, actualTable1, <span class="keyword">new</span> String[]{<span class="stringliteral">&quot;id&quot;</span>, <span class="stringliteral">&quot;capture_def_group_id&quot;</span>});</div>
-<div class="line"><span class="lineno">  102</span> </div>
-<div class="line"><span class="lineno">  103</span>    }</div>
+<p class="definition">Definition at line <a class="el" href="ProcedureCaptureGroupTest_8java_source.html#l00095">95</a> of file <a class="el" href="ProcedureCaptureGroupTest_8java_source.html">ProcedureCaptureGroupTest.java</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   95</span>                                                                       {</div>
+<div class="line"><span class="lineno">   96</span>        IDataSet expectedDataSet = <span class="keyword">new</span> FlatXmlDataSetBuilder()</div>
+<div class="line"><span class="lineno">   97</span>                .build(</div>
+<div class="line"><span class="lineno">   98</span>                        <span class="keyword">new</span> File(</div>
+<div class="line"><span class="lineno">   99</span>                                <span class="stringliteral">&quot;src/test/resources/XMLProcedureCaptureGroup/procedureCaptureGroupTestDataExpectedData1.xml&quot;</span></div>
+<div class="line"><span class="lineno">  100</span>                        )</div>
+<div class="line"><span class="lineno">  101</span>                );</div>
+<div class="line"><span class="lineno">  102</span>        ITable expectedTable1 = expectedDataSet.getTable(<span class="stringliteral">&quot;cfe_18.capture_def_group_x_capture_def&quot;</span>);</div>
+<div class="line"><span class="lineno">  103</span>        ITable expectedTable2 = expectedDataSet.getTable(<span class="stringliteral">&quot;cfe_18.capture_def_group&quot;</span>);</div>
+<div class="line"><span class="lineno">  104</span> </div>
+<div class="line"><span class="lineno">  105</span>        CallableStatement stmnt = conn.prepareCall(<span class="stringliteral">&quot;{call cfe_18.add_capture_group_with_capture(?,?)}&quot;</span>);</div>
+<div class="line"><span class="lineno">  106</span>        stmnt.setString(1, <span class="stringliteral">&quot;group1&quot;</span>);</div>
+<div class="line"><span class="lineno">  107</span>        stmnt.setInt(2, 1);</div>
+<div class="line"><span class="lineno">  108</span>        stmnt.execute();</div>
+<div class="line"><span class="lineno">  109</span> </div>
+<div class="line"><span class="lineno">  110</span>        ITable actualTable1 = databaseConnection</div>
+<div class="line"><span class="lineno">  111</span>                .createQueryTable(<span class="stringliteral">&quot;result&quot;</span>, <span class="stringliteral">&quot;select * from cfe_18.capture_def_group_x_capture_def&quot;</span>);</div>
+<div class="line"><span class="lineno">  112</span>        ITable actualTable2 = databaseConnection.createQueryTable(<span class="stringliteral">&quot;result&quot;</span>, <span class="stringliteral">&quot;select * from cfe_18.capture_def_group&quot;</span>);</div>
+<div class="line"><span class="lineno">  113</span> </div>
+<div class="line"><span class="lineno">  114</span>        Assertion.assertEqualsIgnoreCols(expectedTable2, actualTable2, <span class="keyword">new</span> String[] {</div>
+<div class="line"><span class="lineno">  115</span>                <span class="stringliteral">&quot;id&quot;</span></div>
+<div class="line"><span class="lineno">  116</span>        });</div>
+<div class="line"><span class="lineno">  117</span>        Assertion.assertEqualsIgnoreCols(expectedTable1, actualTable1, <span class="keyword">new</span> String[] {</div>
+<div class="line"><span class="lineno">  118</span>                <span class="stringliteral">&quot;id&quot;</span>, <span class="stringliteral">&quot;capture_def_group_id&quot;</span></div>
+<div class="line"><span class="lineno">  119</span>        });</div>
+<div class="line"><span class="lineno">  120</span> </div>
+<div class="line"><span class="lineno">  121</span>    }</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -305,25 +334,25 @@ Additional Inherited Members</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ProcedureCaptureGroupTest_8java_source.html#l00129">129</a> of file <a class="el" href="ProcedureCaptureGroupTest_8java_source.html">ProcedureCaptureGroupTest.java</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  129</span>                                                            {</div>
-<div class="line"><span class="lineno">  130</span>        List&lt;Integer&gt; actualList = <span class="keyword">new</span> ArrayList&lt;&gt;();</div>
-<div class="line"><span class="lineno">  131</span>        CallableStatement stmnt = conn.prepareCall(<span class="stringliteral">&quot;{CALL cfe_18.retrieve_capture_group_details(?,?)}&quot;</span>);</div>
-<div class="line"><span class="lineno">  132</span>        stmnt.setString(1, <span class="stringliteral">&quot;capturegroup1&quot;</span>);</div>
-<div class="line"><span class="lineno">  133</span>        stmnt.setString(2, <span class="keyword">null</span>);</div>
-<div class="line"><span class="lineno">  134</span>        ResultSet rs = stmnt.executeQuery();</div>
-<div class="line"><span class="lineno">  135</span>        <span class="keywordflow">while</span> (rs.next()) {</div>
-<div class="line"><span class="lineno">  136</span>            actualList.add(rs.getInt(<span class="stringliteral">&quot;capture_definition_id&quot;</span>));</div>
-<div class="line"><span class="lineno">  137</span>            String group_name = rs.getString(<span class="stringliteral">&quot;group_name&quot;</span>);</div>
-<div class="line"><span class="lineno">  138</span>            String capture_type = rs.getString(<span class="stringliteral">&quot;capture_type&quot;</span>);</div>
-<div class="line"><span class="lineno">  139</span>            <span class="keywordtype">int</span> capture_group_id = rs.getInt(<span class="stringliteral">&quot;capture_group_id&quot;</span>);</div>
-<div class="line"><span class="lineno">  140</span>            Assertions.assertEquals(<span class="stringliteral">&quot;capturegroup1&quot;</span>, group_name);</div>
-<div class="line"><span class="lineno">  141</span>            Assertions.assertEquals(<span class="stringliteral">&quot;cfe&quot;</span>, capture_type);</div>
-<div class="line"><span class="lineno">  142</span>            Assertions.assertEquals(1, capture_group_id);</div>
-<div class="line"><span class="lineno">  143</span>        }</div>
-<div class="line"><span class="lineno">  144</span>        Assertions.assertEquals(Arrays.asList(1, 2, 3, 4), actualList);</div>
-<div class="line"><span class="lineno">  145</span> </div>
-<div class="line"><span class="lineno">  146</span>    }</div>
+<p class="definition">Definition at line <a class="el" href="ProcedureCaptureGroupTest_8java_source.html#l00156">156</a> of file <a class="el" href="ProcedureCaptureGroupTest_8java_source.html">ProcedureCaptureGroupTest.java</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  156</span>                                                            {</div>
+<div class="line"><span class="lineno">  157</span>        List&lt;Integer&gt; actualList = <span class="keyword">new</span> ArrayList&lt;&gt;();</div>
+<div class="line"><span class="lineno">  158</span>        CallableStatement stmnt = conn.prepareCall(<span class="stringliteral">&quot;{CALL cfe_18.retrieve_capture_group_details(?,?)}&quot;</span>);</div>
+<div class="line"><span class="lineno">  159</span>        stmnt.setString(1, <span class="stringliteral">&quot;capturegroup1&quot;</span>);</div>
+<div class="line"><span class="lineno">  160</span>        stmnt.setString(2, <span class="keyword">null</span>);</div>
+<div class="line"><span class="lineno">  161</span>        ResultSet rs = stmnt.executeQuery();</div>
+<div class="line"><span class="lineno">  162</span>        <span class="keywordflow">while</span> (rs.next()) {</div>
+<div class="line"><span class="lineno">  163</span>            actualList.add(rs.getInt(<span class="stringliteral">&quot;capture_definition_id&quot;</span>));</div>
+<div class="line"><span class="lineno">  164</span>            String group_name = rs.getString(<span class="stringliteral">&quot;group_name&quot;</span>);</div>
+<div class="line"><span class="lineno">  165</span>            String capture_type = rs.getString(<span class="stringliteral">&quot;capture_type&quot;</span>);</div>
+<div class="line"><span class="lineno">  166</span>            <span class="keywordtype">int</span> capture_group_id = rs.getInt(<span class="stringliteral">&quot;capture_group_id&quot;</span>);</div>
+<div class="line"><span class="lineno">  167</span>            Assertions.assertEquals(<span class="stringliteral">&quot;capturegroup1&quot;</span>, group_name);</div>
+<div class="line"><span class="lineno">  168</span>            Assertions.assertEquals(<span class="stringliteral">&quot;cfe&quot;</span>, capture_type);</div>
+<div class="line"><span class="lineno">  169</span>            Assertions.assertEquals(1, capture_group_id);</div>
+<div class="line"><span class="lineno">  170</span>        }</div>
+<div class="line"><span class="lineno">  171</span>        Assertions.assertEquals(Arrays.asList(1, 2, 3, 4), actualList);</div>
+<div class="line"><span class="lineno">  172</span> </div>
+<div class="line"><span class="lineno">  173</span>    }</div>
 </div><!-- fragment -->
 </div>
 </div>

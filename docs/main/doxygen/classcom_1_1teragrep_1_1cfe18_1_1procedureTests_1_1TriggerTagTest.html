@@ -180,9 +180,10 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Reimplemented from <a class="el" href="classcom_1_1teragrep_1_1cfe18_1_1procedureTests_1_1DBUnitbase.html#a9a344256855635842c3336317a4bd573">com.teragrep.cfe18.procedureTests.DBUnitbase</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="TriggerTagTest_8java_source.html#l00068">68</a> of file <a class="el" href="TriggerTagTest_8java_source.html">TriggerTagTest.java</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   68</span>                                                     {</div>
-<div class="line"><span class="lineno">   69</span>        <span class="keywordflow">return</span> <span class="keyword">new</span> FlatXmlDataSetBuilder().build(Files.newInputStream(Paths.get(<span class="stringliteral">&quot;src/test/resources/XMLTriggersHostXCapture/triggerTestData.xml&quot;</span>)));</div>
+<p class="definition">Definition at line <a class="el" href="TriggerTagTest_8java_source.html#l00067">67</a> of file <a class="el" href="TriggerTagTest_8java_source.html">TriggerTagTest.java</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   67</span>                                                     {</div>
+<div class="line"><span class="lineno">   68</span>        <span class="keywordflow">return</span> <span class="keyword">new</span> FlatXmlDataSetBuilder()</div>
+<div class="line"><span class="lineno">   69</span>                .build(Files.newInputStream(Paths.get(<span class="stringliteral">&quot;src/test/resources/XMLTriggersHostXCapture/triggerTestData.xml&quot;</span>)));</div>
 <div class="line"><span class="lineno">   70</span>    }</div>
 </div><!-- fragment -->
 </div>
@@ -204,24 +205,29 @@ Additional Inherited Members</h2></td></tr>
 
 <p class="definition">Definition at line <a class="el" href="TriggerTagTest_8java_source.html#l00090">90</a> of file <a class="el" href="TriggerTagTest_8java_source.html">TriggerTagTest.java</a>.</p>
 <div class="fragment"><div class="line"><span class="lineno">   90</span>                                                        {</div>
-<div class="line"><span class="lineno">   91</span>        IDataSet expectedDataSet = <span class="keyword">new</span> FlatXmlDataSetBuilder().build(<span class="keyword">new</span> File(<span class="stringliteral">&quot;src/test/resources/XMLTriggersHostXCapture/triggerTagExpectedData1.xml&quot;</span>));</div>
-<div class="line"><span class="lineno">   92</span>        ITable expectedTable = expectedDataSet.getTable(<span class="stringliteral">&quot;cfe_18.capture_def_group_x_capture_def&quot;</span>);</div>
-<div class="line"><span class="lineno">   93</span> </div>
-<div class="line"><span class="lineno">   94</span>        <span class="comment">// Execute the tested code that modify the database here</span></div>
-<div class="line"><span class="lineno">   95</span>        <span class="comment">// execute statement here</span></div>
-<div class="line"><span class="lineno">   96</span>        Statement stmnt = conn.createStatement();</div>
-<div class="line"><span class="lineno">   97</span>        stmnt.addBatch(<span class="stringliteral">&quot;insert into cfe_18.capture_def_group(id,capture_def_group_name,capture_type) values(20,&#39;capture_group20&#39;,&#39;cfe&#39;)&quot;</span>);</div>
-<div class="line"><span class="lineno">   98</span>        stmnt.executeBatch();</div>
-<div class="line"><span class="lineno">   99</span>        stmnt.addBatch(<span class="stringliteral">&quot;insert into cfe_18.capture_def_group_x_capture_def values(20,5,5,5,&#39;cfe&#39;)&quot;</span>);</div>
-<div class="line"><span class="lineno">  100</span>        stmnt.executeBatch();</div>
-<div class="line"><span class="lineno">  101</span> </div>
-<div class="line"><span class="lineno">  102</span>        <span class="comment">// Fetch database data after executing your code</span></div>
-<div class="line"><span class="lineno">  103</span>        ITable actualTable = databaseConnection.createQueryTable(<span class="stringliteral">&quot;result&quot;</span>, <span class="stringliteral">&quot;select * from cfe_18.capture_def_group_x_capture_def&quot;</span>);</div>
-<div class="line"><span class="lineno">  104</span> </div>
-<div class="line"><span class="lineno">  105</span>        <span class="comment">// Load expected data from an XML dataset</span></div>
-<div class="line"><span class="lineno">  106</span>        <span class="comment">// Assert actual database table match expected table</span></div>
-<div class="line"><span class="lineno">  107</span>        Assertion.assertEquals(expectedTable, actualTable);</div>
-<div class="line"><span class="lineno">  108</span>    }</div>
+<div class="line"><span class="lineno">   91</span>        IDataSet expectedDataSet = <span class="keyword">new</span> FlatXmlDataSetBuilder()</div>
+<div class="line"><span class="lineno">   92</span>                .build(<span class="keyword">new</span> File(<span class="stringliteral">&quot;src/test/resources/XMLTriggersHostXCapture/triggerTagExpectedData1.xml&quot;</span>));</div>
+<div class="line"><span class="lineno">   93</span>        ITable expectedTable = expectedDataSet.getTable(<span class="stringliteral">&quot;cfe_18.capture_def_group_x_capture_def&quot;</span>);</div>
+<div class="line"><span class="lineno">   94</span> </div>
+<div class="line"><span class="lineno">   95</span>        <span class="comment">// Execute the tested code that modify the database here</span></div>
+<div class="line"><span class="lineno">   96</span>        <span class="comment">// execute statement here</span></div>
+<div class="line"><span class="lineno">   97</span>        Statement stmnt = conn.createStatement();</div>
+<div class="line"><span class="lineno">   98</span>        stmnt</div>
+<div class="line"><span class="lineno">   99</span>                .addBatch(</div>
+<div class="line"><span class="lineno">  100</span>                        <span class="stringliteral">&quot;insert into cfe_18.capture_def_group(id,capture_def_group_name,capture_type) values(20,&#39;capture_group20&#39;,&#39;cfe&#39;)&quot;</span></div>
+<div class="line"><span class="lineno">  101</span>                );</div>
+<div class="line"><span class="lineno">  102</span>        stmnt.executeBatch();</div>
+<div class="line"><span class="lineno">  103</span>        stmnt.addBatch(<span class="stringliteral">&quot;insert into cfe_18.capture_def_group_x_capture_def values(20,5,5,5,&#39;cfe&#39;)&quot;</span>);</div>
+<div class="line"><span class="lineno">  104</span>        stmnt.executeBatch();</div>
+<div class="line"><span class="lineno">  105</span> </div>
+<div class="line"><span class="lineno">  106</span>        <span class="comment">// Fetch database data after executing your code</span></div>
+<div class="line"><span class="lineno">  107</span>        ITable actualTable = databaseConnection</div>
+<div class="line"><span class="lineno">  108</span>                .createQueryTable(<span class="stringliteral">&quot;result&quot;</span>, <span class="stringliteral">&quot;select * from cfe_18.capture_def_group_x_capture_def&quot;</span>);</div>
+<div class="line"><span class="lineno">  109</span> </div>
+<div class="line"><span class="lineno">  110</span>        <span class="comment">// Load expected data from an XML dataset</span></div>
+<div class="line"><span class="lineno">  111</span>        <span class="comment">// Assert actual database table match expected table</span></div>
+<div class="line"><span class="lineno">  112</span>        Assertion.assertEquals(expectedTable, actualTable);</div>
+<div class="line"><span class="lineno">  113</span>    }</div>
 </div><!-- fragment -->
 </div>
 </div>

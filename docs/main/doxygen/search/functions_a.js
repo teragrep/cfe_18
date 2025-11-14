@@ -2,7 +2,7 @@ var searchData=
 [
   ['removecapturegroup_0',['removeCaptureGroup',['../classcom_1_1teragrep_1_1cfe18_1_1handlers_1_1CaptureGroupController.html#a1add4a83f6f0c6eb9fb39594179d919b',1,'com::teragrep::cfe18::handlers::CaptureGroupController']]],
   ['removecapturemeta_1',['removeCaptureMeta',['../classcom_1_1teragrep_1_1cfe18_1_1handlers_1_1CaptureMetaController.html#afddff341135651c477e1b1155385e6ab',1,'com::teragrep::cfe18::handlers::CaptureMetaController']]],
-  ['removecapturestorage_2',['removeCaptureStorage',['../classcom_1_1teragrep_1_1cfe18_1_1handlers_1_1StorageController.html#a28f234a5a848c766f6d852d0b3557495',1,'com::teragrep::cfe18::handlers::StorageController']]],
+  ['removecapturestorage_2',['removeCaptureStorage',['../classcom_1_1teragrep_1_1cfe18_1_1handlers_1_1StorageController.html#a16c5cc858c7f76e8745a46484635e4a9',1,'com::teragrep::cfe18::handlers::StorageController']]],
   ['removeflowstorage_3',['removeFlowStorage',['../classcom_1_1teragrep_1_1cfe18_1_1handlers_1_1StorageController.html#a08a54211dea97ca9979ee51302f597ce',1,'com::teragrep::cfe18::handlers::StorageController']]],
   ['removehost_4',['removeHost',['../classcom_1_1teragrep_1_1cfe18_1_1handlers_1_1HostGroupController.html#a6c781998a5ad4fcc7afe4fbe40006999',1,'com::teragrep::cfe18::handlers::HostGroupController']]],
   ['removehostmeta_5',['removeHostMeta',['../classcom_1_1teragrep_1_1cfe18_1_1handlers_1_1HostMetaController.html#ae4fba730ea8bd1b7bac9d9884788b835',1,'com::teragrep::cfe18::handlers::HostMetaController']]],

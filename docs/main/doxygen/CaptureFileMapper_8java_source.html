@@ -128,37 +128,37 @@ $(document).ready(function() { init_codefold(0); });
 <div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span><span class="comment"> */</span></div>
 <div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span><span class="keyword">package </span>com.teragrep.cfe18;</div>
 <div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span> </div>
-<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span><span class="keyword">import</span> com.teragrep.cfe18.handlers.entities.CaptureDefinition;</div>
-<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span><span class="keyword">import</span> com.teragrep.cfe18.handlers.entities.CaptureFile;</div>
-<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span><span class="keyword">import</span> com.teragrep.cfe18.handlers.entities.CaptureRelp;</div>
-<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span><span class="keyword">import</span> org.apache.ibatis.annotations.Mapper;</div>
+<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span><span class="keyword">import</span> com.teragrep.cfe18.handlers.entities.CaptureFile;</div>
+<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span><span class="keyword">import</span> org.apache.ibatis.annotations.Mapper;</div>
+<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span> </div>
+<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span><span class="keyword">import</span> java.util.List;</div>
 <div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span> </div>
-<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span><span class="keyword">import</span> java.util.List;</div>
-<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span> </div>
-<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>@Mapper</div>
-<div class="foldopen" id="foldopen00056" data-start="{" data-end="};">
-<div class="line"><a id="l00056" name="l00056"></a><span class="lineno"><a class="line" href="interfacecom_1_1teragrep_1_1cfe18_1_1CaptureFileMapper.html">   56</a></span><span class="keyword">public</span> <span class="keyword">interface </span><a class="code hl_interface" href="interfacecom_1_1teragrep_1_1cfe18_1_1CaptureFileMapper.html">CaptureFileMapper</a> {</div>
-<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span> </div>
-<div class="line"><a id="l00058" name="l00058"></a><span class="lineno"><a class="line" href="interfacecom_1_1teragrep_1_1cfe18_1_1CaptureFileMapper.html#afda749f31f75f8c743aea74e8eaa3c79">   58</a></span>    CaptureFile <a class="code hl_function" href="interfacecom_1_1teragrep_1_1cfe18_1_1CaptureFileMapper.html#afda749f31f75f8c743aea74e8eaa3c79">create</a>(String tag,</div>
-<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>                        String retention,</div>
-<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>                        String category,</div>
-<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>                        String application,</div>
-<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>                        String index,</div>
-<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span>                        String sourcetype,</div>
-<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span>                        String protocol,</div>
-<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span>                        String flow,</div>
-<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span>                        String tagPath,</div>
-<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span>                        String capturePath,</div>
-<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span>                        <span class="keywordtype">int</span> fileProcessingTypeId);</div>
+<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>@Mapper</div>
+<div class="foldopen" id="foldopen00054" data-start="{" data-end="};">
+<div class="line"><a id="l00054" name="l00054"></a><span class="lineno"><a class="line" href="interfacecom_1_1teragrep_1_1cfe18_1_1CaptureFileMapper.html">   54</a></span><span class="keyword">public</span> <span class="keyword">interface </span><a class="code hl_interface" href="interfacecom_1_1teragrep_1_1cfe18_1_1CaptureFileMapper.html">CaptureFileMapper</a> {</div>
+<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span> </div>
+<div class="line"><a id="l00056" name="l00056"></a><span class="lineno"><a class="line" href="interfacecom_1_1teragrep_1_1cfe18_1_1CaptureFileMapper.html#afda749f31f75f8c743aea74e8eaa3c79">   56</a></span>    CaptureFile <a class="code hl_function" href="interfacecom_1_1teragrep_1_1cfe18_1_1CaptureFileMapper.html#afda749f31f75f8c743aea74e8eaa3c79">create</a>(</div>
+<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>            String tag,</div>
+<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>            String retention,</div>
+<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>            String category,</div>
+<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>            String application,</div>
+<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>            String index,</div>
+<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>            String sourcetype,</div>
+<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span>            String protocol,</div>
+<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span>            String flow,</div>
+<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span>            String tagPath,</div>
+<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span>            String capturePath,</div>
+<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span>            <span class="keywordtype">int</span> fileProcessingTypeId</div>
+<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span>    );</div>
 <div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span> </div>
-<div class="line"><a id="l00070" name="l00070"></a><span class="lineno"><a class="line" href="interfacecom_1_1teragrep_1_1cfe18_1_1CaptureFileMapper.html#af442adaaa472cf6a6463f32e9838bef3">   70</a></span>    CaptureFile <span class="keyword">get</span>(<span class="keywordtype">int</span> captureId,Integer version);</div>
+<div class="line"><a id="l00070" name="l00070"></a><span class="lineno"><a class="line" href="interfacecom_1_1teragrep_1_1cfe18_1_1CaptureFileMapper.html#af442adaaa472cf6a6463f32e9838bef3">   70</a></span>    CaptureFile <span class="keyword">get</span>(<span class="keywordtype">int</span> captureId, Integer version);</div>
 <div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span> </div>
 <div class="line"><a id="l00072" name="l00072"></a><span class="lineno"><a class="line" href="interfacecom_1_1teragrep_1_1cfe18_1_1CaptureFileMapper.html#a242c8044cd72aab583e933bf4b0743ae">   72</a></span>    List&lt;CaptureFile&gt; <a class="code hl_function" href="interfacecom_1_1teragrep_1_1cfe18_1_1CaptureFileMapper.html#a242c8044cd72aab583e933bf4b0743ae">getAll</a>(Integer version);</div>
 <div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span> </div>
 <div class="line"><a id="l00074" name="l00074"></a><span class="lineno"><a class="line" href="interfacecom_1_1teragrep_1_1cfe18_1_1CaptureFileMapper.html#a11b6fd31a4c6947e35eca2ef6a7c6f71">   74</a></span>    <span class="keywordtype">void</span> <a class="code hl_function" href="interfacecom_1_1teragrep_1_1cfe18_1_1CaptureFileMapper.html#a11b6fd31a4c6947e35eca2ef6a7c6f71">delete</a>(<span class="keywordtype">int</span> captureId);</div>
 <div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span>}</div>
 </div>
-<div class="ttc" id="ainterfacecom_1_1teragrep_1_1cfe18_1_1CaptureFileMapper_html"><div class="ttname"><a href="interfacecom_1_1teragrep_1_1cfe18_1_1CaptureFileMapper.html">com.teragrep.cfe18.CaptureFileMapper</a></div><div class="ttdef"><b>Definition</b> <a href="CaptureFileMapper_8java_source.html#l00056">CaptureFileMapper.java:56</a></div></div>
+<div class="ttc" id="ainterfacecom_1_1teragrep_1_1cfe18_1_1CaptureFileMapper_html"><div class="ttname"><a href="interfacecom_1_1teragrep_1_1cfe18_1_1CaptureFileMapper.html">com.teragrep.cfe18.CaptureFileMapper</a></div><div class="ttdef"><b>Definition</b> <a href="CaptureFileMapper_8java_source.html#l00054">CaptureFileMapper.java:54</a></div></div>
 <div class="ttc" id="ainterfacecom_1_1teragrep_1_1cfe18_1_1CaptureFileMapper_html_a11b6fd31a4c6947e35eca2ef6a7c6f71"><div class="ttname"><a href="interfacecom_1_1teragrep_1_1cfe18_1_1CaptureFileMapper.html#a11b6fd31a4c6947e35eca2ef6a7c6f71">com.teragrep.cfe18.CaptureFileMapper.delete</a></div><div class="ttdeci">void delete(int captureId)</div></div>
 <div class="ttc" id="ainterfacecom_1_1teragrep_1_1cfe18_1_1CaptureFileMapper_html_a242c8044cd72aab583e933bf4b0743ae"><div class="ttname"><a href="interfacecom_1_1teragrep_1_1cfe18_1_1CaptureFileMapper.html#a242c8044cd72aab583e933bf4b0743ae">com.teragrep.cfe18.CaptureFileMapper.getAll</a></div><div class="ttdeci">List&lt; CaptureFile &gt; getAll(Integer version)</div></div>
 <div class="ttc" id="ainterfacecom_1_1teragrep_1_1cfe18_1_1CaptureFileMapper_html_afda749f31f75f8c743aea74e8eaa3c79"><div class="ttname"><a href="interfacecom_1_1teragrep_1_1cfe18_1_1CaptureFileMapper.html#afda749f31f75f8c743aea74e8eaa3c79">com.teragrep.cfe18.CaptureFileMapper.create</a></div><div class="ttdeci">CaptureFile create(String tag, String retention, String category, String application, String index, String sourcetype, String protocol, String flow, String tagPath, String capturePath, int fileProcessingTypeId)</div></div>

@@ -155,10 +155,10 @@ Additional Inherited Members</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ProcedureProcessingTypeTest_8java_source.html#l00062">62</a> of file <a class="el" href="ProcedureProcessingTypeTest_8java_source.html">ProcedureProcessingTypeTest.java</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   62</span>                                                    {</div>
-<div class="line"><span class="lineno">   63</span>        super(name);</div>
-<div class="line"><span class="lineno">   64</span>    }</div>
+<p class="definition">Definition at line <a class="el" href="ProcedureProcessingTypeTest_8java_source.html#l00063">63</a> of file <a class="el" href="ProcedureProcessingTypeTest_8java_source.html">ProcedureProcessingTypeTest.java</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   63</span>                                                    {</div>
+<div class="line"><span class="lineno">   64</span>        super(name);</div>
+<div class="line"><span class="lineno">   65</span>    }</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -188,10 +188,19 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Reimplemented from <a class="el" href="classcom_1_1teragrep_1_1cfe18_1_1procedureTests_1_1DBUnitbase.html#a9a344256855635842c3336317a4bd573">com.teragrep.cfe18.procedureTests.DBUnitbase</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="ProcedureProcessingTypeTest_8java_source.html#l00067">67</a> of file <a class="el" href="ProcedureProcessingTypeTest_8java_source.html">ProcedureProcessingTypeTest.java</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   67</span>                                                     {</div>
-<div class="line"><span class="lineno">   68</span>        <span class="keywordflow">return</span> <span class="keyword">new</span> FlatXmlDataSetBuilder().build(Files.newInputStream(Paths.get(<span class="stringliteral">&quot;src/test/resources/XMLProcedureProcessingType/procedureProcessingTypeTestData.xml&quot;</span>)));</div>
-<div class="line"><span class="lineno">   69</span>    }</div>
+<p class="definition">Definition at line <a class="el" href="ProcedureProcessingTypeTest_8java_source.html#l00068">68</a> of file <a class="el" href="ProcedureProcessingTypeTest_8java_source.html">ProcedureProcessingTypeTest.java</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   68</span>                                                     {</div>
+<div class="line"><span class="lineno">   69</span>        <span class="keywordflow">return</span> <span class="keyword">new</span> FlatXmlDataSetBuilder()</div>
+<div class="line"><span class="lineno">   70</span>                .build(</div>
+<div class="line"><span class="lineno">   71</span>                        Files</div>
+<div class="line"><span class="lineno">   72</span>                                .newInputStream(</div>
+<div class="line"><span class="lineno">   73</span>                                        Paths</div>
+<div class="line"><span class="lineno">   74</span>                                                .<span class="keyword">get</span>(</div>
+<div class="line"><span class="lineno">   75</span>                                                        <span class="stringliteral">&quot;src/test/resources/XMLProcedureProcessingType/procedureProcessingTypeTestData.xml&quot;</span></div>
+<div class="line"><span class="lineno">   76</span>                                                )</div>
+<div class="line"><span class="lineno">   77</span>                                )</div>
+<div class="line"><span class="lineno">   78</span>                );</div>
+<div class="line"><span class="lineno">   79</span>    }</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -210,26 +219,33 @@ Additional Inherited Members</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ProcedureProcessingTypeTest_8java_source.html#l00075">75</a> of file <a class="el" href="ProcedureProcessingTypeTest_8java_source.html">ProcedureProcessingTypeTest.java</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   75</span>                                                                  {</div>
-<div class="line"><span class="lineno">   76</span>        <span class="comment">// Gets the expected dataset</span></div>
-<div class="line"><span class="lineno">   77</span>        IDataSet expectedDataSet = <span class="keyword">new</span> FlatXmlDataSetBuilder().build(<span class="keyword">new</span> File(<span class="stringliteral">&quot;src/test/resources/XMLProcedureProcessingType/procedureProcessingTypeExpectedTestData1.xml&quot;</span>));</div>
-<div class="line"><span class="lineno">   78</span>        ITable expectedTable = expectedDataSet.getTable(<span class="stringliteral">&quot;cfe_18.file_processing_type&quot;</span>);</div>
-<div class="line"><span class="lineno">   79</span> </div>
-<div class="line"><span class="lineno">   80</span>        CallableStatement stmnt = conn.prepareCall(<span class="stringliteral">&quot;{CALL cfe_18.insert_file_processing_type(?,?,?,?,?)}&quot;</span>);</div>
-<div class="line"><span class="lineno">   81</span> </div>
-<div class="line"><span class="lineno">   82</span>        stmnt.setString(1, <span class="stringliteral">&quot;TestTemplate1&quot;</span>);</div>
-<div class="line"><span class="lineno">   83</span>        stmnt.setString(2, <span class="stringliteral">&quot;TestRule1&quot;</span>);</div>
-<div class="line"><span class="lineno">   84</span>        stmnt.setString(3, <span class="stringliteral">&quot;TestName1&quot;</span>);</div>
-<div class="line"><span class="lineno">   85</span>        stmnt.setString(4, <span class="stringliteral">&quot;regex&quot;</span>);</div>
-<div class="line"><span class="lineno">   86</span>        stmnt.setString(5, <span class="stringliteral">&quot;TestRegex2&quot;</span>);</div>
-<div class="line"><span class="lineno">   87</span>        stmnt.execute();</div>
-<div class="line"><span class="lineno">   88</span> </div>
-<div class="line"><span class="lineno">   89</span>        ITable actualTable = databaseConnection.createQueryTable(<span class="stringliteral">&quot;result&quot;</span>, <span class="stringliteral">&quot;select * from cfe_18.file_processing_type&quot;</span>);</div>
-<div class="line"><span class="lineno">   90</span> </div>
-<div class="line"><span class="lineno">   91</span>        Assertion.assertEqualsIgnoreCols(expectedTable, actualTable, <span class="keyword">new</span> String[]{<span class="stringliteral">&quot;ruleset_id&quot;</span>, <span class="stringliteral">&quot;template_id&quot;</span>});</div>
-<div class="line"><span class="lineno">   92</span> </div>
-<div class="line"><span class="lineno">   93</span>    }</div>
+<p class="definition">Definition at line <a class="el" href="ProcedureProcessingTypeTest_8java_source.html#l00084">84</a> of file <a class="el" href="ProcedureProcessingTypeTest_8java_source.html">ProcedureProcessingTypeTest.java</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   84</span>                                                                  {</div>
+<div class="line"><span class="lineno">   85</span>        <span class="comment">// Gets the expected dataset</span></div>
+<div class="line"><span class="lineno">   86</span>        IDataSet expectedDataSet = <span class="keyword">new</span> FlatXmlDataSetBuilder()</div>
+<div class="line"><span class="lineno">   87</span>                .build(</div>
+<div class="line"><span class="lineno">   88</span>                        <span class="keyword">new</span> File(</div>
+<div class="line"><span class="lineno">   89</span>                                <span class="stringliteral">&quot;src/test/resources/XMLProcedureProcessingType/procedureProcessingTypeExpectedTestData1.xml&quot;</span></div>
+<div class="line"><span class="lineno">   90</span>                        )</div>
+<div class="line"><span class="lineno">   91</span>                );</div>
+<div class="line"><span class="lineno">   92</span>        ITable expectedTable = expectedDataSet.getTable(<span class="stringliteral">&quot;cfe_18.file_processing_type&quot;</span>);</div>
+<div class="line"><span class="lineno">   93</span> </div>
+<div class="line"><span class="lineno">   94</span>        CallableStatement stmnt = conn.prepareCall(<span class="stringliteral">&quot;{CALL cfe_18.insert_file_processing_type(?,?,?,?,?)}&quot;</span>);</div>
+<div class="line"><span class="lineno">   95</span> </div>
+<div class="line"><span class="lineno">   96</span>        stmnt.setString(1, <span class="stringliteral">&quot;TestTemplate1&quot;</span>);</div>
+<div class="line"><span class="lineno">   97</span>        stmnt.setString(2, <span class="stringliteral">&quot;TestRule1&quot;</span>);</div>
+<div class="line"><span class="lineno">   98</span>        stmnt.setString(3, <span class="stringliteral">&quot;TestName1&quot;</span>);</div>
+<div class="line"><span class="lineno">   99</span>        stmnt.setString(4, <span class="stringliteral">&quot;regex&quot;</span>);</div>
+<div class="line"><span class="lineno">  100</span>        stmnt.setString(5, <span class="stringliteral">&quot;TestRegex2&quot;</span>);</div>
+<div class="line"><span class="lineno">  101</span>        stmnt.execute();</div>
+<div class="line"><span class="lineno">  102</span> </div>
+<div class="line"><span class="lineno">  103</span>        ITable actualTable = databaseConnection.createQueryTable(<span class="stringliteral">&quot;result&quot;</span>, <span class="stringliteral">&quot;select * from cfe_18.file_processing_type&quot;</span>);</div>
+<div class="line"><span class="lineno">  104</span> </div>
+<div class="line"><span class="lineno">  105</span>        Assertion.assertEqualsIgnoreCols(expectedTable, actualTable, <span class="keyword">new</span> String[] {</div>
+<div class="line"><span class="lineno">  106</span>                <span class="stringliteral">&quot;ruleset_id&quot;</span>, <span class="stringliteral">&quot;template_id&quot;</span></div>
+<div class="line"><span class="lineno">  107</span>        });</div>
+<div class="line"><span class="lineno">  108</span> </div>
+<div class="line"><span class="lineno">  109</span>    }</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -248,19 +264,19 @@ Additional Inherited Members</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ProcedureProcessingTypeTest_8java_source.html#l00113">113</a> of file <a class="el" href="ProcedureProcessingTypeTest_8java_source.html">ProcedureProcessingTypeTest.java</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  113</span>                                                                 {</div>
-<div class="line"><span class="lineno">  114</span>        SQLException state = Assertions.assertThrows(SQLException.class, () -&gt; {</div>
-<div class="line"><span class="lineno">  115</span>            CallableStatement stmnt = conn.prepareCall(<span class="stringliteral">&quot;{CALL cfe_18.insert_file_processing_type(?,?,?,?,?)}&quot;</span>);</div>
-<div class="line"><span class="lineno">  116</span>            stmnt.setString(1, <span class="stringliteral">&quot;template1&quot;</span>);</div>
-<div class="line"><span class="lineno">  117</span>            stmnt.setString(2, <span class="stringliteral">&quot;rul2&quot;</span>);</div>
-<div class="line"><span class="lineno">  118</span>            stmnt.setString(3, <span class="stringliteral">&quot;nom1&quot;</span>);</div>
-<div class="line"><span class="lineno">  119</span>            stmnt.setString(4, <span class="stringliteral">&quot;newline&quot;</span>);</div>
-<div class="line"><span class="lineno">  120</span>            stmnt.setString(5, null);</div>
-<div class="line"><span class="lineno">  121</span>            stmnt.execute();</div>
-<div class="line"><span class="lineno">  122</span>        });</div>
-<div class="line"><span class="lineno">  123</span>        Assertions.assertEquals(<span class="stringliteral">&quot;23000&quot;</span>, state.getSQLState());</div>
-<div class="line"><span class="lineno">  124</span>    }</div>
+<p class="definition">Definition at line <a class="el" href="ProcedureProcessingTypeTest_8java_source.html#l00128">128</a> of file <a class="el" href="ProcedureProcessingTypeTest_8java_source.html">ProcedureProcessingTypeTest.java</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  128</span>                                                                 {</div>
+<div class="line"><span class="lineno">  129</span>        SQLException state = Assertions.assertThrows(SQLException.class, () -&gt; {</div>
+<div class="line"><span class="lineno">  130</span>            CallableStatement stmnt = conn.prepareCall(<span class="stringliteral">&quot;{CALL cfe_18.insert_file_processing_type(?,?,?,?,?)}&quot;</span>);</div>
+<div class="line"><span class="lineno">  131</span>            stmnt.setString(1, <span class="stringliteral">&quot;template1&quot;</span>);</div>
+<div class="line"><span class="lineno">  132</span>            stmnt.setString(2, <span class="stringliteral">&quot;rul2&quot;</span>);</div>
+<div class="line"><span class="lineno">  133</span>            stmnt.setString(3, <span class="stringliteral">&quot;nom1&quot;</span>);</div>
+<div class="line"><span class="lineno">  134</span>            stmnt.setString(4, <span class="stringliteral">&quot;newline&quot;</span>);</div>
+<div class="line"><span class="lineno">  135</span>            stmnt.setString(5, null);</div>
+<div class="line"><span class="lineno">  136</span>            stmnt.execute();</div>
+<div class="line"><span class="lineno">  137</span>        });</div>
+<div class="line"><span class="lineno">  138</span>        Assertions.assertEquals(<span class="stringliteral">&quot;23000&quot;</span>, state.getSQLState());</div>
+<div class="line"><span class="lineno">  139</span>    }</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -279,19 +295,19 @@ Additional Inherited Members</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ProcedureProcessingTypeTest_8java_source.html#l00100">100</a> of file <a class="el" href="ProcedureProcessingTypeTest_8java_source.html">ProcedureProcessingTypeTest.java</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  100</span>                                                               {</div>
-<div class="line"><span class="lineno">  101</span>        SQLException state = Assertions.assertThrows(SQLException.class, () -&gt; {</div>
-<div class="line"><span class="lineno">  102</span>            CallableStatement stmnt = conn.prepareCall(<span class="stringliteral">&quot;{CALL cfe_18.insert_file_processing_type(?,?,?,?,?)}&quot;</span>);</div>
-<div class="line"><span class="lineno">  103</span>            stmnt.setString(1, <span class="stringliteral">&quot;template1&quot;</span>);</div>
-<div class="line"><span class="lineno">  104</span>            stmnt.setString(2, <span class="stringliteral">&quot;rul2&quot;</span>);</div>
-<div class="line"><span class="lineno">  105</span>            stmnt.setString(3, <span class="stringliteral">&quot;nom1&quot;</span>);</div>
-<div class="line"><span class="lineno">  106</span>            stmnt.setString(4, <span class="stringliteral">&quot;regex&quot;</span>);</div>
-<div class="line"><span class="lineno">  107</span>            stmnt.setString(5, null);</div>
-<div class="line"><span class="lineno">  108</span>            stmnt.execute();</div>
-<div class="line"><span class="lineno">  109</span>        });</div>
-<div class="line"><span class="lineno">  110</span>        Assertions.assertEquals(<span class="stringliteral">&quot;23000&quot;</span>, state.getSQLState());</div>
-<div class="line"><span class="lineno">  111</span>    }</div>
+<p class="definition">Definition at line <a class="el" href="ProcedureProcessingTypeTest_8java_source.html#l00115">115</a> of file <a class="el" href="ProcedureProcessingTypeTest_8java_source.html">ProcedureProcessingTypeTest.java</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  115</span>                                                               {</div>
+<div class="line"><span class="lineno">  116</span>        SQLException state = Assertions.assertThrows(SQLException.class, () -&gt; {</div>
+<div class="line"><span class="lineno">  117</span>            CallableStatement stmnt = conn.prepareCall(<span class="stringliteral">&quot;{CALL cfe_18.insert_file_processing_type(?,?,?,?,?)}&quot;</span>);</div>
+<div class="line"><span class="lineno">  118</span>            stmnt.setString(1, <span class="stringliteral">&quot;template1&quot;</span>);</div>
+<div class="line"><span class="lineno">  119</span>            stmnt.setString(2, <span class="stringliteral">&quot;rul2&quot;</span>);</div>
+<div class="line"><span class="lineno">  120</span>            stmnt.setString(3, <span class="stringliteral">&quot;nom1&quot;</span>);</div>
+<div class="line"><span class="lineno">  121</span>            stmnt.setString(4, <span class="stringliteral">&quot;regex&quot;</span>);</div>
+<div class="line"><span class="lineno">  122</span>            stmnt.setString(5, null);</div>
+<div class="line"><span class="lineno">  123</span>            stmnt.execute();</div>
+<div class="line"><span class="lineno">  124</span>        });</div>
+<div class="line"><span class="lineno">  125</span>        Assertions.assertEquals(<span class="stringliteral">&quot;23000&quot;</span>, state.getSQLState());</div>
+<div class="line"><span class="lineno">  126</span>    }</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -310,19 +326,19 @@ Additional Inherited Members</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ProcedureProcessingTypeTest_8java_source.html#l00126">126</a> of file <a class="el" href="ProcedureProcessingTypeTest_8java_source.html">ProcedureProcessingTypeTest.java</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  126</span>                                                                 {</div>
-<div class="line"><span class="lineno">  127</span>        SQLException state = Assertions.assertThrows(SQLException.class, () -&gt; {</div>
-<div class="line"><span class="lineno">  128</span>            CallableStatement stmnt = conn.prepareCall(<span class="stringliteral">&quot;{CALL cfe_18.insert_file_processing_type(?,?,?,?,?)}&quot;</span>);</div>
-<div class="line"><span class="lineno">  129</span>            stmnt.setString(1, <span class="stringliteral">&quot;template1&quot;</span>);</div>
-<div class="line"><span class="lineno">  130</span>            stmnt.setString(2, null);</div>
-<div class="line"><span class="lineno">  131</span>            stmnt.setString(3, <span class="stringliteral">&quot;nom1&quot;</span>);</div>
-<div class="line"><span class="lineno">  132</span>            stmnt.setString(4, <span class="stringliteral">&quot;regex&quot;</span>);</div>
-<div class="line"><span class="lineno">  133</span>            stmnt.setString(5, <span class="stringliteral">&quot;YourNormalRegex&quot;</span>);</div>
-<div class="line"><span class="lineno">  134</span>            stmnt.execute();</div>
-<div class="line"><span class="lineno">  135</span>        });</div>
-<div class="line"><span class="lineno">  136</span>        Assertions.assertEquals(<span class="stringliteral">&quot;23000&quot;</span>, state.getSQLState());</div>
-<div class="line"><span class="lineno">  137</span>    }</div>
+<p class="definition">Definition at line <a class="el" href="ProcedureProcessingTypeTest_8java_source.html#l00141">141</a> of file <a class="el" href="ProcedureProcessingTypeTest_8java_source.html">ProcedureProcessingTypeTest.java</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  141</span>                                                                 {</div>
+<div class="line"><span class="lineno">  142</span>        SQLException state = Assertions.assertThrows(SQLException.class, () -&gt; {</div>
+<div class="line"><span class="lineno">  143</span>            CallableStatement stmnt = conn.prepareCall(<span class="stringliteral">&quot;{CALL cfe_18.insert_file_processing_type(?,?,?,?,?)}&quot;</span>);</div>
+<div class="line"><span class="lineno">  144</span>            stmnt.setString(1, <span class="stringliteral">&quot;template1&quot;</span>);</div>
+<div class="line"><span class="lineno">  145</span>            stmnt.setString(2, null);</div>
+<div class="line"><span class="lineno">  146</span>            stmnt.setString(3, <span class="stringliteral">&quot;nom1&quot;</span>);</div>
+<div class="line"><span class="lineno">  147</span>            stmnt.setString(4, <span class="stringliteral">&quot;regex&quot;</span>);</div>
+<div class="line"><span class="lineno">  148</span>            stmnt.setString(5, <span class="stringliteral">&quot;YourNormalRegex&quot;</span>);</div>
+<div class="line"><span class="lineno">  149</span>            stmnt.execute();</div>
+<div class="line"><span class="lineno">  150</span>        });</div>
+<div class="line"><span class="lineno">  151</span>        Assertions.assertEquals(<span class="stringliteral">&quot;23000&quot;</span>, state.getSQLState());</div>
+<div class="line"><span class="lineno">  152</span>    }</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -341,19 +357,19 @@ Additional Inherited Members</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ProcedureProcessingTypeTest_8java_source.html#l00139">139</a> of file <a class="el" href="ProcedureProcessingTypeTest_8java_source.html">ProcedureProcessingTypeTest.java</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  139</span>                                                                  {</div>
-<div class="line"><span class="lineno">  140</span>        SQLException state = Assertions.assertThrows(SQLException.class, () -&gt; {</div>
-<div class="line"><span class="lineno">  141</span>            CallableStatement stmnt = conn.prepareCall(<span class="stringliteral">&quot;{CALL cfe_18.insert_file_processing_type(?,?,?,?,?)}&quot;</span>);</div>
-<div class="line"><span class="lineno">  142</span>            stmnt.setString(1, null);</div>
-<div class="line"><span class="lineno">  143</span>            stmnt.setString(2, <span class="stringliteral">&quot;rul2&quot;</span>);</div>
-<div class="line"><span class="lineno">  144</span>            stmnt.setString(3, <span class="stringliteral">&quot;nom1&quot;</span>);</div>
-<div class="line"><span class="lineno">  145</span>            stmnt.setString(4, <span class="stringliteral">&quot;regex&quot;</span>);</div>
-<div class="line"><span class="lineno">  146</span>            stmnt.setString(5, <span class="stringliteral">&quot;YourNormalRegex&quot;</span>);</div>
-<div class="line"><span class="lineno">  147</span>            stmnt.execute();</div>
-<div class="line"><span class="lineno">  148</span>        });</div>
-<div class="line"><span class="lineno">  149</span>        Assertions.assertEquals(<span class="stringliteral">&quot;23000&quot;</span>, state.getSQLState());</div>
-<div class="line"><span class="lineno">  150</span>    }</div>
+<p class="definition">Definition at line <a class="el" href="ProcedureProcessingTypeTest_8java_source.html#l00154">154</a> of file <a class="el" href="ProcedureProcessingTypeTest_8java_source.html">ProcedureProcessingTypeTest.java</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  154</span>                                                                  {</div>
+<div class="line"><span class="lineno">  155</span>        SQLException state = Assertions.assertThrows(SQLException.class, () -&gt; {</div>
+<div class="line"><span class="lineno">  156</span>            CallableStatement stmnt = conn.prepareCall(<span class="stringliteral">&quot;{CALL cfe_18.insert_file_processing_type(?,?,?,?,?)}&quot;</span>);</div>
+<div class="line"><span class="lineno">  157</span>            stmnt.setString(1, null);</div>
+<div class="line"><span class="lineno">  158</span>            stmnt.setString(2, <span class="stringliteral">&quot;rul2&quot;</span>);</div>
+<div class="line"><span class="lineno">  159</span>            stmnt.setString(3, <span class="stringliteral">&quot;nom1&quot;</span>);</div>
+<div class="line"><span class="lineno">  160</span>            stmnt.setString(4, <span class="stringliteral">&quot;regex&quot;</span>);</div>
+<div class="line"><span class="lineno">  161</span>            stmnt.setString(5, <span class="stringliteral">&quot;YourNormalRegex&quot;</span>);</div>
+<div class="line"><span class="lineno">  162</span>            stmnt.execute();</div>
+<div class="line"><span class="lineno">  163</span>        });</div>
+<div class="line"><span class="lineno">  164</span>        Assertions.assertEquals(<span class="stringliteral">&quot;23000&quot;</span>, state.getSQLState());</div>
+<div class="line"><span class="lineno">  165</span>    }</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -372,19 +388,19 @@ Additional Inherited Members</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ProcedureProcessingTypeTest_8java_source.html#l00156">156</a> of file <a class="el" href="ProcedureProcessingTypeTest_8java_source.html">ProcedureProcessingTypeTest.java</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  156</span>                                                                    {</div>
-<div class="line"><span class="lineno">  157</span>        CallableStatement stmnt = conn.prepareCall(<span class="stringliteral">&quot;{CALL cfe_18.select_file_processing_type(?,?)}&quot;</span>);</div>
-<div class="line"><span class="lineno">  158</span>        stmnt.setInt(1, 1);</div>
-<div class="line"><span class="lineno">  159</span>        stmnt.setString(2, <span class="keyword">null</span>);</div>
-<div class="line"><span class="lineno">  160</span>        ResultSet rs = stmnt.executeQuery();</div>
-<div class="line"><span class="lineno">  161</span>        rs.next();</div>
-<div class="line"><span class="lineno">  162</span>        Assertions.assertEquals(<span class="stringliteral">&quot;RulesAreMadeToBeBroken&quot;</span>, rs.getString(<span class="stringliteral">&quot;ruleset&quot;</span>));</div>
-<div class="line"><span class="lineno">  163</span>        Assertions.assertEquals(<span class="stringliteral">&quot;TemplateForBaking&quot;</span>, rs.getString(<span class="stringliteral">&quot;template&quot;</span>));</div>
-<div class="line"><span class="lineno">  164</span>        Assertions.assertEquals(<span class="stringliteral">&quot;name1&quot;</span>, rs.getString(<span class="stringliteral">&quot;name&quot;</span>));</div>
-<div class="line"><span class="lineno">  165</span>        Assertions.assertEquals(<span class="stringliteral">&quot;regex&quot;</span>, rs.getString(<span class="stringliteral">&quot;inputtype&quot;</span>));</div>
-<div class="line"><span class="lineno">  166</span>        Assertions.assertEquals(<span class="stringliteral">&quot;YourNormalRegex&quot;</span>, rs.getString(<span class="stringliteral">&quot;inputvalue&quot;</span>));</div>
-<div class="line"><span class="lineno">  167</span>    }</div>
+<p class="definition">Definition at line <a class="el" href="ProcedureProcessingTypeTest_8java_source.html#l00171">171</a> of file <a class="el" href="ProcedureProcessingTypeTest_8java_source.html">ProcedureProcessingTypeTest.java</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  171</span>                                                                    {</div>
+<div class="line"><span class="lineno">  172</span>        CallableStatement stmnt = conn.prepareCall(<span class="stringliteral">&quot;{CALL cfe_18.select_file_processing_type(?,?)}&quot;</span>);</div>
+<div class="line"><span class="lineno">  173</span>        stmnt.setInt(1, 1);</div>
+<div class="line"><span class="lineno">  174</span>        stmnt.setString(2, <span class="keyword">null</span>);</div>
+<div class="line"><span class="lineno">  175</span>        ResultSet rs = stmnt.executeQuery();</div>
+<div class="line"><span class="lineno">  176</span>        rs.next();</div>
+<div class="line"><span class="lineno">  177</span>        Assertions.assertEquals(<span class="stringliteral">&quot;RulesAreMadeToBeBroken&quot;</span>, rs.getString(<span class="stringliteral">&quot;ruleset&quot;</span>));</div>
+<div class="line"><span class="lineno">  178</span>        Assertions.assertEquals(<span class="stringliteral">&quot;TemplateForBaking&quot;</span>, rs.getString(<span class="stringliteral">&quot;template&quot;</span>));</div>
+<div class="line"><span class="lineno">  179</span>        Assertions.assertEquals(<span class="stringliteral">&quot;name1&quot;</span>, rs.getString(<span class="stringliteral">&quot;name&quot;</span>));</div>
+<div class="line"><span class="lineno">  180</span>        Assertions.assertEquals(<span class="stringliteral">&quot;regex&quot;</span>, rs.getString(<span class="stringliteral">&quot;inputtype&quot;</span>));</div>
+<div class="line"><span class="lineno">  181</span>        Assertions.assertEquals(<span class="stringliteral">&quot;YourNormalRegex&quot;</span>, rs.getString(<span class="stringliteral">&quot;inputvalue&quot;</span>));</div>
+<div class="line"><span class="lineno">  182</span>    }</div>
 </div><!-- fragment -->
 </div>
 </div>

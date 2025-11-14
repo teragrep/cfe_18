@@ -137,7 +137,7 @@ Additional Inherited Members</h2></td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock">
-<p class="definition">Definition at line <a class="el" href="ProcedureGxGTest_8java_source.html#l00066">66</a> of file <a class="el" href="ProcedureGxGTest_8java_source.html">ProcedureGxGTest.java</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ProcedureGxGTest_8java_source.html#l00065">65</a> of file <a class="el" href="ProcedureGxGTest_8java_source.html">ProcedureGxGTest.java</a>.</p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="a2715cfedc29a8ff1985b09a15272b543" name="a2715cfedc29a8ff1985b09a15272b543"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a2715cfedc29a8ff1985b09a15272b543">&#9670;&#160;</a></span>ProcedureGxGTest()</h2>
@@ -155,10 +155,10 @@ Additional Inherited Members</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ProcedureGxGTest_8java_source.html#l00068">68</a> of file <a class="el" href="ProcedureGxGTest_8java_source.html">ProcedureGxGTest.java</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   68</span>                                         {</div>
-<div class="line"><span class="lineno">   69</span>        super(name);</div>
-<div class="line"><span class="lineno">   70</span>    }</div>
+<p class="definition">Definition at line <a class="el" href="ProcedureGxGTest_8java_source.html#l00067">67</a> of file <a class="el" href="ProcedureGxGTest_8java_source.html">ProcedureGxGTest.java</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   67</span>                                         {</div>
+<div class="line"><span class="lineno">   68</span>        super(name);</div>
+<div class="line"><span class="lineno">   69</span>    }</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -188,9 +188,10 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Reimplemented from <a class="el" href="classcom_1_1teragrep_1_1cfe18_1_1procedureTests_1_1DBUnitbase.html#a9a344256855635842c3336317a4bd573">com.teragrep.cfe18.procedureTests.DBUnitbase</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="ProcedureGxGTest_8java_source.html#l00073">73</a> of file <a class="el" href="ProcedureGxGTest_8java_source.html">ProcedureGxGTest.java</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   73</span>                                                     {</div>
-<div class="line"><span class="lineno">   74</span>        <span class="keywordflow">return</span> <span class="keyword">new</span> FlatXmlDataSetBuilder().build(Files.newInputStream(Paths.get(<span class="stringliteral">&quot;src/test/resources/XMLProcedureGxG/procedureGxGTestData.xml&quot;</span>)));</div>
+<p class="definition">Definition at line <a class="el" href="ProcedureGxGTest_8java_source.html#l00072">72</a> of file <a class="el" href="ProcedureGxGTest_8java_source.html">ProcedureGxGTest.java</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   72</span>                                                     {</div>
+<div class="line"><span class="lineno">   73</span>        <span class="keywordflow">return</span> <span class="keyword">new</span> FlatXmlDataSetBuilder()</div>
+<div class="line"><span class="lineno">   74</span>                .build(Files.newInputStream(Paths.get(<span class="stringliteral">&quot;src/test/resources/XMLProcedureGxG/procedureGxGTestData.xml&quot;</span>)));</div>
 <div class="line"><span class="lineno">   75</span>    }</div>
 </div><!-- fragment -->
 </div>
@@ -212,19 +213,23 @@ Additional Inherited Members</h2></td></tr>
 
 <p class="definition">Definition at line <a class="el" href="ProcedureGxGTest_8java_source.html#l00080">80</a> of file <a class="el" href="ProcedureGxGTest_8java_source.html">ProcedureGxGTest.java</a>.</p>
 <div class="fragment"><div class="line"><span class="lineno">   80</span>                                                                  {</div>
-<div class="line"><span class="lineno">   81</span>        IDataSet expectedDataSet = <span class="keyword">new</span> FlatXmlDataSetBuilder().build(<span class="keyword">new</span> File(<span class="stringliteral">&quot;src/test/resources/XMLProcedureGxG/procedureGxGTestDataExpected1.xml&quot;</span>));</div>
-<div class="line"><span class="lineno">   82</span>        ITable expectedTable1 = expectedDataSet.getTable(<span class="stringliteral">&quot;cfe_18.host_groups_x_capture_def_group&quot;</span>);</div>
-<div class="line"><span class="lineno">   83</span> </div>
-<div class="line"><span class="lineno">   84</span>        CallableStatement stmnt = conn.prepareCall(<span class="stringliteral">&quot;{call cfe_18.add_g_x_g(?,?)}&quot;</span>);</div>
-<div class="line"><span class="lineno">   85</span>        stmnt.setInt(1, 1); <span class="comment">//Host group id</span></div>
-<div class="line"><span class="lineno">   86</span>        stmnt.setInt(2, 6); <span class="comment">//Capture group id</span></div>
-<div class="line"><span class="lineno">   87</span>        stmnt.execute();</div>
-<div class="line"><span class="lineno">   88</span> </div>
-<div class="line"><span class="lineno">   89</span>        ITable actualTable1 = databaseConnection.createQueryTable(<span class="stringliteral">&quot;result&quot;</span>, <span class="stringliteral">&quot;select * from cfe_18.host_groups_x_capture_def_group&quot;</span>);</div>
-<div class="line"><span class="lineno">   90</span> </div>
-<div class="line"><span class="lineno">   91</span>        Assertion.assertEqualsIgnoreCols(expectedTable1, actualTable1, <span class="keyword">new</span> String[]{<span class="stringliteral">&quot;id&quot;</span>});</div>
+<div class="line"><span class="lineno">   81</span>        IDataSet expectedDataSet = <span class="keyword">new</span> FlatXmlDataSetBuilder()</div>
+<div class="line"><span class="lineno">   82</span>                .build(<span class="keyword">new</span> File(<span class="stringliteral">&quot;src/test/resources/XMLProcedureGxG/procedureGxGTestDataExpected1.xml&quot;</span>));</div>
+<div class="line"><span class="lineno">   83</span>        ITable expectedTable1 = expectedDataSet.getTable(<span class="stringliteral">&quot;cfe_18.host_groups_x_capture_def_group&quot;</span>);</div>
+<div class="line"><span class="lineno">   84</span> </div>
+<div class="line"><span class="lineno">   85</span>        CallableStatement stmnt = conn.prepareCall(<span class="stringliteral">&quot;{call cfe_18.add_g_x_g(?,?)}&quot;</span>);</div>
+<div class="line"><span class="lineno">   86</span>        stmnt.setInt(1, 1); <span class="comment">//Host group id</span></div>
+<div class="line"><span class="lineno">   87</span>        stmnt.setInt(2, 6); <span class="comment">//Capture group id</span></div>
+<div class="line"><span class="lineno">   88</span>        stmnt.execute();</div>
+<div class="line"><span class="lineno">   89</span> </div>
+<div class="line"><span class="lineno">   90</span>        ITable actualTable1 = databaseConnection</div>
+<div class="line"><span class="lineno">   91</span>                .createQueryTable(<span class="stringliteral">&quot;result&quot;</span>, <span class="stringliteral">&quot;select * from cfe_18.host_groups_x_capture_def_group&quot;</span>);</div>
 <div class="line"><span class="lineno">   92</span> </div>
-<div class="line"><span class="lineno">   93</span>    }</div>
+<div class="line"><span class="lineno">   93</span>        Assertion.assertEqualsIgnoreCols(expectedTable1, actualTable1, <span class="keyword">new</span> String[] {</div>
+<div class="line"><span class="lineno">   94</span>                <span class="stringliteral">&quot;id&quot;</span></div>
+<div class="line"><span class="lineno">   95</span>        });</div>
+<div class="line"><span class="lineno">   96</span> </div>
+<div class="line"><span class="lineno">   97</span>    }</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -243,16 +248,16 @@ Additional Inherited Members</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ProcedureGxGTest_8java_source.html#l00111">111</a> of file <a class="el" href="ProcedureGxGTest_8java_source.html">ProcedureGxGTest.java</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  111</span>                                                             {</div>
-<div class="line"><span class="lineno">  112</span>        SQLException state = Assertions.assertThrows(SQLException.class, () -&gt; {</div>
-<div class="line"><span class="lineno">  113</span>            CallableStatement stmnt = conn.prepareCall(<span class="stringliteral">&quot;{call cfe_18.add_g_x_g(?,?)}&quot;</span>);</div>
-<div class="line"><span class="lineno">  114</span>            stmnt.setInt(1, 1);</div>
-<div class="line"><span class="lineno">  115</span>            stmnt.setInt(2, 200);</div>
-<div class="line"><span class="lineno">  116</span>            stmnt.execute();</div>
-<div class="line"><span class="lineno">  117</span>        });</div>
-<div class="line"><span class="lineno">  118</span>        Assertions.assertEquals(<span class="stringliteral">&quot;45000&quot;</span>, state.getSQLState());</div>
-<div class="line"><span class="lineno">  119</span>    }</div>
+<p class="definition">Definition at line <a class="el" href="ProcedureGxGTest_8java_source.html#l00115">115</a> of file <a class="el" href="ProcedureGxGTest_8java_source.html">ProcedureGxGTest.java</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  115</span>                                                             {</div>
+<div class="line"><span class="lineno">  116</span>        SQLException state = Assertions.assertThrows(SQLException.class, () -&gt; {</div>
+<div class="line"><span class="lineno">  117</span>            CallableStatement stmnt = conn.prepareCall(<span class="stringliteral">&quot;{call cfe_18.add_g_x_g(?,?)}&quot;</span>);</div>
+<div class="line"><span class="lineno">  118</span>            stmnt.setInt(1, 1);</div>
+<div class="line"><span class="lineno">  119</span>            stmnt.setInt(2, 200);</div>
+<div class="line"><span class="lineno">  120</span>            stmnt.execute();</div>
+<div class="line"><span class="lineno">  121</span>        });</div>
+<div class="line"><span class="lineno">  122</span>        Assertions.assertEquals(<span class="stringliteral">&quot;45000&quot;</span>, state.getSQLState());</div>
+<div class="line"><span class="lineno">  123</span>    }</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -271,16 +276,16 @@ Additional Inherited Members</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ProcedureGxGTest_8java_source.html#l00098">98</a> of file <a class="el" href="ProcedureGxGTest_8java_source.html">ProcedureGxGTest.java</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   98</span>                                                          {</div>
-<div class="line"><span class="lineno">   99</span>        SQLException state = Assertions.assertThrows(SQLException.class, () -&gt; {</div>
-<div class="line"><span class="lineno">  100</span>            CallableStatement stmnt = conn.prepareCall(<span class="stringliteral">&quot;{call cfe_18.add_g_x_g(?,?)}&quot;</span>);</div>
-<div class="line"><span class="lineno">  101</span>            stmnt.setInt(1, 100);</div>
-<div class="line"><span class="lineno">  102</span>            stmnt.setInt(2, 2);</div>
-<div class="line"><span class="lineno">  103</span>            stmnt.execute();</div>
-<div class="line"><span class="lineno">  104</span>        });</div>
-<div class="line"><span class="lineno">  105</span>        Assertions.assertEquals(<span class="stringliteral">&quot;45000&quot;</span>, state.getSQLState());</div>
-<div class="line"><span class="lineno">  106</span>    }</div>
+<p class="definition">Definition at line <a class="el" href="ProcedureGxGTest_8java_source.html#l00102">102</a> of file <a class="el" href="ProcedureGxGTest_8java_source.html">ProcedureGxGTest.java</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  102</span>                                                          {</div>
+<div class="line"><span class="lineno">  103</span>        SQLException state = Assertions.assertThrows(SQLException.class, () -&gt; {</div>
+<div class="line"><span class="lineno">  104</span>            CallableStatement stmnt = conn.prepareCall(<span class="stringliteral">&quot;{call cfe_18.add_g_x_g(?,?)}&quot;</span>);</div>
+<div class="line"><span class="lineno">  105</span>            stmnt.setInt(1, 100);</div>
+<div class="line"><span class="lineno">  106</span>            stmnt.setInt(2, 2);</div>
+<div class="line"><span class="lineno">  107</span>            stmnt.execute();</div>
+<div class="line"><span class="lineno">  108</span>        });</div>
+<div class="line"><span class="lineno">  109</span>        Assertions.assertEquals(<span class="stringliteral">&quot;45000&quot;</span>, state.getSQLState());</div>
+<div class="line"><span class="lineno">  110</span>    }</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -299,19 +304,19 @@ Additional Inherited Members</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ProcedureGxGTest_8java_source.html#l00125">125</a> of file <a class="el" href="ProcedureGxGTest_8java_source.html">ProcedureGxGTest.java</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  125</span>                                                                     {</div>
-<div class="line"><span class="lineno">  126</span>        CallableStatement stmnt = conn.prepareCall(<span class="stringliteral">&quot;{CALL cfe_18.retrieve_g_x_g_details(?,?)}&quot;</span>);</div>
-<div class="line"><span class="lineno">  127</span>        stmnt.setString(1, <span class="stringliteral">&quot;capturegroup1&quot;</span>);</div>
-<div class="line"><span class="lineno">  128</span>        stmnt.setString(2, <span class="keyword">null</span>);</div>
-<div class="line"><span class="lineno">  129</span>        ResultSet rs = stmnt.executeQuery();</div>
-<div class="line"><span class="lineno">  130</span>        rs.next(); <span class="comment">// Forward to next</span></div>
-<div class="line"><span class="lineno">  131</span>        Assertions.assertEquals(<span class="stringliteral">&quot;capturegroup1&quot;</span>, rs.getString(<span class="stringliteral">&quot;capture_name&quot;</span>));</div>
-<div class="line"><span class="lineno">  132</span>        Assertions.assertEquals(<span class="stringliteral">&quot;host_group_1&quot;</span>, rs.getString(<span class="stringliteral">&quot;host_name&quot;</span>));</div>
-<div class="line"><span class="lineno">  133</span>        Assertions.assertEquals(1, rs.getInt(<span class="stringliteral">&quot;g_x_g_id&quot;</span>));</div>
-<div class="line"><span class="lineno">  134</span>        Assertions.assertEquals(<span class="stringliteral">&quot;cfe&quot;</span>, rs.getString(<span class="stringliteral">&quot;host_type&quot;</span>));</div>
-<div class="line"><span class="lineno">  135</span>        Assertions.assertEquals(<span class="stringliteral">&quot;cfe&quot;</span>, rs.getString(<span class="stringliteral">&quot;capture_type&quot;</span>));</div>
-<div class="line"><span class="lineno">  136</span>    }</div>
+<p class="definition">Definition at line <a class="el" href="ProcedureGxGTest_8java_source.html#l00129">129</a> of file <a class="el" href="ProcedureGxGTest_8java_source.html">ProcedureGxGTest.java</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  129</span>                                                                     {</div>
+<div class="line"><span class="lineno">  130</span>        CallableStatement stmnt = conn.prepareCall(<span class="stringliteral">&quot;{CALL cfe_18.retrieve_g_x_g_details(?,?)}&quot;</span>);</div>
+<div class="line"><span class="lineno">  131</span>        stmnt.setString(1, <span class="stringliteral">&quot;capturegroup1&quot;</span>);</div>
+<div class="line"><span class="lineno">  132</span>        stmnt.setString(2, <span class="keyword">null</span>);</div>
+<div class="line"><span class="lineno">  133</span>        ResultSet rs = stmnt.executeQuery();</div>
+<div class="line"><span class="lineno">  134</span>        rs.next(); <span class="comment">// Forward to next</span></div>
+<div class="line"><span class="lineno">  135</span>        Assertions.assertEquals(<span class="stringliteral">&quot;capturegroup1&quot;</span>, rs.getString(<span class="stringliteral">&quot;capture_name&quot;</span>));</div>
+<div class="line"><span class="lineno">  136</span>        Assertions.assertEquals(<span class="stringliteral">&quot;host_group_1&quot;</span>, rs.getString(<span class="stringliteral">&quot;host_name&quot;</span>));</div>
+<div class="line"><span class="lineno">  137</span>        Assertions.assertEquals(1, rs.getInt(<span class="stringliteral">&quot;g_x_g_id&quot;</span>));</div>
+<div class="line"><span class="lineno">  138</span>        Assertions.assertEquals(<span class="stringliteral">&quot;cfe&quot;</span>, rs.getString(<span class="stringliteral">&quot;host_type&quot;</span>));</div>
+<div class="line"><span class="lineno">  139</span>        Assertions.assertEquals(<span class="stringliteral">&quot;cfe&quot;</span>, rs.getString(<span class="stringliteral">&quot;capture_type&quot;</span>));</div>
+<div class="line"><span class="lineno">  140</span>    }</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -330,19 +335,19 @@ Additional Inherited Members</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ProcedureGxGTest_8java_source.html#l00143">143</a> of file <a class="el" href="ProcedureGxGTest_8java_source.html">ProcedureGxGTest.java</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  143</span>                                                                  {</div>
-<div class="line"><span class="lineno">  144</span>        CallableStatement stmnt = conn.prepareCall(<span class="stringliteral">&quot;{CALL cfe_18.retrieve_g_x_g_details(?,?)}&quot;</span>);</div>
-<div class="line"><span class="lineno">  145</span>        stmnt.setString(1, <span class="stringliteral">&quot;host_group_1&quot;</span>);</div>
-<div class="line"><span class="lineno">  146</span>        stmnt.setString(2, <span class="keyword">null</span>);</div>
-<div class="line"><span class="lineno">  147</span>        ResultSet rs = stmnt.executeQuery();</div>
-<div class="line"><span class="lineno">  148</span>        rs.next(); <span class="comment">// Forward to next</span></div>
-<div class="line"><span class="lineno">  149</span>        Assertions.assertEquals(<span class="stringliteral">&quot;capturegroup1&quot;</span>, rs.getString(<span class="stringliteral">&quot;capture_name&quot;</span>));</div>
-<div class="line"><span class="lineno">  150</span>        Assertions.assertEquals(<span class="stringliteral">&quot;host_group_1&quot;</span>, rs.getString(<span class="stringliteral">&quot;host_name&quot;</span>));</div>
-<div class="line"><span class="lineno">  151</span>        Assertions.assertEquals(1, rs.getInt(<span class="stringliteral">&quot;g_x_g_id&quot;</span>));</div>
-<div class="line"><span class="lineno">  152</span>        Assertions.assertEquals(<span class="stringliteral">&quot;cfe&quot;</span>, rs.getString(<span class="stringliteral">&quot;host_type&quot;</span>));</div>
-<div class="line"><span class="lineno">  153</span>        Assertions.assertEquals(<span class="stringliteral">&quot;cfe&quot;</span>,  rs.getString(<span class="stringliteral">&quot;capture_type&quot;</span>));</div>
-<div class="line"><span class="lineno">  154</span>    }</div>
+<p class="definition">Definition at line <a class="el" href="ProcedureGxGTest_8java_source.html#l00146">146</a> of file <a class="el" href="ProcedureGxGTest_8java_source.html">ProcedureGxGTest.java</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  146</span>                                                                  {</div>
+<div class="line"><span class="lineno">  147</span>        CallableStatement stmnt = conn.prepareCall(<span class="stringliteral">&quot;{CALL cfe_18.retrieve_g_x_g_details(?,?)}&quot;</span>);</div>
+<div class="line"><span class="lineno">  148</span>        stmnt.setString(1, <span class="stringliteral">&quot;host_group_1&quot;</span>);</div>
+<div class="line"><span class="lineno">  149</span>        stmnt.setString(2, <span class="keyword">null</span>);</div>
+<div class="line"><span class="lineno">  150</span>        ResultSet rs = stmnt.executeQuery();</div>
+<div class="line"><span class="lineno">  151</span>        rs.next(); <span class="comment">// Forward to next</span></div>
+<div class="line"><span class="lineno">  152</span>        Assertions.assertEquals(<span class="stringliteral">&quot;capturegroup1&quot;</span>, rs.getString(<span class="stringliteral">&quot;capture_name&quot;</span>));</div>
+<div class="line"><span class="lineno">  153</span>        Assertions.assertEquals(<span class="stringliteral">&quot;host_group_1&quot;</span>, rs.getString(<span class="stringliteral">&quot;host_name&quot;</span>));</div>
+<div class="line"><span class="lineno">  154</span>        Assertions.assertEquals(1, rs.getInt(<span class="stringliteral">&quot;g_x_g_id&quot;</span>));</div>
+<div class="line"><span class="lineno">  155</span>        Assertions.assertEquals(<span class="stringliteral">&quot;cfe&quot;</span>, rs.getString(<span class="stringliteral">&quot;host_type&quot;</span>));</div>
+<div class="line"><span class="lineno">  156</span>        Assertions.assertEquals(<span class="stringliteral">&quot;cfe&quot;</span>, rs.getString(<span class="stringliteral">&quot;capture_type&quot;</span>));</div>
+<div class="line"><span class="lineno">  157</span>    }</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -361,17 +366,17 @@ Additional Inherited Members</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ProcedureGxGTest_8java_source.html#l00160">160</a> of file <a class="el" href="ProcedureGxGTest_8java_source.html">ProcedureGxGTest.java</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  160</span>                                                                {</div>
-<div class="line"><span class="lineno">  161</span>        SQLException state = Assertions.assertThrows(SQLException.class, () -&gt; {</div>
-<div class="line"><span class="lineno">  162</span>            CallableStatement stmnt = conn.prepareCall(<span class="stringliteral">&quot;{CALL cfe_18.add_g_x_g(?,?)}&quot;</span>);</div>
-<div class="line"><span class="lineno">  163</span>            stmnt.setInt(1, 1);</div>
-<div class="line"><span class="lineno">  164</span>            stmnt.setInt(2, 7);</div>
-<div class="line"><span class="lineno">  165</span>            stmnt.execute();</div>
-<div class="line"><span class="lineno">  166</span>        });</div>
-<div class="line"><span class="lineno">  167</span> </div>
-<div class="line"><span class="lineno">  168</span>        Assertions.assertEquals(<span class="stringliteral">&quot;45000&quot;</span>, state.getSQLState());</div>
-<div class="line"><span class="lineno">  169</span>    }</div>
+<p class="definition">Definition at line <a class="el" href="ProcedureGxGTest_8java_source.html#l00163">163</a> of file <a class="el" href="ProcedureGxGTest_8java_source.html">ProcedureGxGTest.java</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  163</span>                                                                {</div>
+<div class="line"><span class="lineno">  164</span>        SQLException state = Assertions.assertThrows(SQLException.class, () -&gt; {</div>
+<div class="line"><span class="lineno">  165</span>            CallableStatement stmnt = conn.prepareCall(<span class="stringliteral">&quot;{CALL cfe_18.add_g_x_g(?,?)}&quot;</span>);</div>
+<div class="line"><span class="lineno">  166</span>            stmnt.setInt(1, 1);</div>
+<div class="line"><span class="lineno">  167</span>            stmnt.setInt(2, 7);</div>
+<div class="line"><span class="lineno">  168</span>            stmnt.execute();</div>
+<div class="line"><span class="lineno">  169</span>        });</div>
+<div class="line"><span class="lineno">  170</span> </div>
+<div class="line"><span class="lineno">  171</span>        Assertions.assertEquals(<span class="stringliteral">&quot;45000&quot;</span>, state.getSQLState());</div>
+<div class="line"><span class="lineno">  172</span>    }</div>
 </div><!-- fragment -->
 </div>
 </div>

@@ -87,7 +87,7 @@ Public Member Functions</h2></td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock">
-<p class="definition">Definition at line <a class="el" href="OAuth2ResourceServer_8java_source.html#l00065">65</a> of file <a class="el" href="OAuth2ResourceServer_8java_source.html">OAuth2ResourceServer.java</a>.</p>
+<p class="definition">Definition at line <a class="el" href="OAuth2ResourceServer_8java_source.html#l00068">68</a> of file <a class="el" href="OAuth2ResourceServer_8java_source.html">OAuth2ResourceServer.java</a>.</p>
 </div><h2 class="groupheader">Member Function Documentation</h2>
 <a id="a3452d15a67390eaa538f2de72490a65e" name="a3452d15a67390eaa538f2de72490a65e"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a3452d15a67390eaa538f2de72490a65e">&#9670;&#160;</a></span>securityFilterChain()</h2>
@@ -105,20 +105,20 @@ Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="OAuth2ResourceServer_8java_source.html#l00071">71</a> of file <a class="el" href="OAuth2ResourceServer_8java_source.html">OAuth2ResourceServer.java</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   71</span>                                                                                       {</div>
-<div class="line"><span class="lineno">   72</span>        <span class="comment">// @formatter:off</span></div>
-<div class="line"><span class="lineno">   73</span>        http.authorizeRequests().antMatchers(<span class="stringliteral">&quot;/swagger-ui/**&quot;</span>, <span class="stringliteral">&quot;/v3/api-docs/**&quot;</span>).permitAll().and()</div>
-<div class="line"><span class="lineno">   74</span>                .authorizeRequests((authorize) -&gt; authorize</div>
-<div class="line"><span class="lineno">   75</span>                        .requestMatchers().hasAuthority(<span class="stringliteral">&quot;SCOPE_message:read&quot;</span>)</div>
-<div class="line"><span class="lineno">   76</span>                        .anyRequest().authenticated()</div>
-<div class="line"><span class="lineno">   77</span>                )</div>
-<div class="line"><span class="lineno">   78</span>                .oauth2ResourceServer((oauth2) -&gt; oauth2</div>
-<div class="line"><span class="lineno">   79</span>                        .jwt((jwt) -&gt; jwt.decoder(jwtDecoder()))</div>
-<div class="line"><span class="lineno">   80</span>                );</div>
-<div class="line"><span class="lineno">   81</span>        <span class="comment">// @formatter:on</span></div>
-<div class="line"><span class="lineno">   82</span>        <span class="keywordflow">return</span> http.build();</div>
-<div class="line"><span class="lineno">   83</span>    }</div>
+<p class="definition">Definition at line <a class="el" href="OAuth2ResourceServer_8java_source.html#l00074">74</a> of file <a class="el" href="OAuth2ResourceServer_8java_source.html">OAuth2ResourceServer.java</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   74</span>                                                                                       {</div>
+<div class="line"><span class="lineno">   75</span>        <span class="comment">// @formatter:off</span></div>
+<div class="line"><span class="lineno">   76</span>        http.authorizeRequests().antMatchers(<span class="stringliteral">&quot;/swagger-ui/**&quot;</span>, <span class="stringliteral">&quot;/v3/api-docs/**&quot;</span>).permitAll().and()</div>
+<div class="line"><span class="lineno">   77</span>                .authorizeRequests((authorize) -&gt; authorize</div>
+<div class="line"><span class="lineno">   78</span>                        .requestMatchers().hasAuthority(<span class="stringliteral">&quot;SCOPE_message:read&quot;</span>)</div>
+<div class="line"><span class="lineno">   79</span>                        .anyRequest().authenticated()</div>
+<div class="line"><span class="lineno">   80</span>                )</div>
+<div class="line"><span class="lineno">   81</span>                .oauth2ResourceServer((oauth2) -&gt; oauth2</div>
+<div class="line"><span class="lineno">   82</span>                        .jwt((jwt) -&gt; jwt.decoder(jwtDecoder()))</div>
+<div class="line"><span class="lineno">   83</span>                );</div>
+<div class="line"><span class="lineno">   84</span>        <span class="comment">// @formatter:on</span></div>
+<div class="line"><span class="lineno">   85</span>        <span class="keywordflow">return</span> http.build();</div>
+<div class="line"><span class="lineno">   86</span>    }</div>
 </div><!-- fragment -->
 </div>
 </div>

@@ -131,15 +131,15 @@ Private Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="testData_2ProcedureSinkTest_8java_source.html#l00083">83</a> of file <a class="el" href="testData_2ProcedureSinkTest_8java_source.html">ProcedureSinkTest.java</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   83</span>                                                              {</div>
-<div class="line"><span class="lineno">   84</span> </div>
-<div class="line"><span class="lineno">   85</span>        Statement deleteStatement = conn.createStatement();</div>
-<div class="line"><span class="lineno">   86</span>        deleteStatement.addBatch(<span class="stringliteral">&quot;delete from flow.capture_sink&quot;</span>);</div>
-<div class="line"><span class="lineno">   87</span>        deleteStatement.addBatch(<span class="stringliteral">&quot;delete from flow.L7&quot;</span>);</div>
-<div class="line"><span class="lineno">   88</span>        deleteStatement.addBatch(<span class="stringliteral">&quot;delete from flow.flows&quot;</span>);</div>
-<div class="line"><span class="lineno">   89</span>        deleteStatement.executeBatch();</div>
-<div class="line"><span class="lineno">   90</span>    }</div>
+<p class="definition">Definition at line <a class="el" href="testData_2ProcedureSinkTest_8java_source.html#l00090">90</a> of file <a class="el" href="testData_2ProcedureSinkTest_8java_source.html">ProcedureSinkTest.java</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   90</span>                                                              {</div>
+<div class="line"><span class="lineno">   91</span> </div>
+<div class="line"><span class="lineno">   92</span>        Statement deleteStatement = conn.createStatement();</div>
+<div class="line"><span class="lineno">   93</span>        deleteStatement.addBatch(<span class="stringliteral">&quot;delete from flow.capture_sink&quot;</span>);</div>
+<div class="line"><span class="lineno">   94</span>        deleteStatement.addBatch(<span class="stringliteral">&quot;delete from flow.L7&quot;</span>);</div>
+<div class="line"><span class="lineno">   95</span>        deleteStatement.addBatch(<span class="stringliteral">&quot;delete from flow.flows&quot;</span>);</div>
+<div class="line"><span class="lineno">   96</span>        deleteStatement.executeBatch();</div>
+<div class="line"><span class="lineno">   97</span>    }</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -158,22 +158,26 @@ Private Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="testData_2ProcedureSinkTest_8java_source.html#l00069">69</a> of file <a class="el" href="testData_2ProcedureSinkTest_8java_source.html">ProcedureSinkTest.java</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   69</span>                                                {</div>
-<div class="line"><span class="lineno">   70</span> </div>
-<div class="line"><span class="lineno">   71</span>        <a class="code hl_function" href="classcom_1_1teragrep_1_1cfe18_1_1testData_1_1ProcedureSinkTest.html#a93b4494b1c4f01a228e59c39494211bd">initialize</a>(conn);</div>
-<div class="line"><span class="lineno">   72</span>        IDatabaseConnection connection = <span class="keyword">new</span> DatabaseConnection(conn);</div>
-<div class="line"><span class="lineno">   73</span>        <span class="comment">// partial database export</span></div>
-<div class="line"><span class="lineno">   74</span>        QueryDataSet partialDataSet = <span class="keyword">new</span> QueryDataSet(connection);</div>
-<div class="line"><span class="lineno">   75</span>        partialDataSet.addTable(<span class="stringliteral">&quot;flow.flows&quot;</span>);</div>
-<div class="line"><span class="lineno">   76</span>        partialDataSet.addTable(<span class="stringliteral">&quot;flow.L7&quot;</span>);</div>
-<div class="line"><span class="lineno">   77</span>        partialDataSet.addTable(<span class="stringliteral">&quot;flow.capture_sink&quot;</span>);</div>
-<div class="line"><span class="lineno">   78</span> </div>
-<div class="line"><span class="lineno">   79</span>        FlatXmlDataSet.write(partialDataSet, Files.newOutputStream(Paths.get(<span class="stringliteral">&quot;src/test/resources/XMLProcedureSink/procedureSinkData.xml&quot;</span>)));</div>
-<div class="line"><span class="lineno">   80</span>        <a class="code hl_function" href="classcom_1_1teragrep_1_1cfe18_1_1testData_1_1ProcedureSinkTest.html#aff0d93d4e19b228c4b7444daeb97f71b">cleanup</a>(conn);</div>
-<div class="line"><span class="lineno">   81</span>    }</div>
-<div class="ttc" id="aclasscom_1_1teragrep_1_1cfe18_1_1testData_1_1ProcedureSinkTest_html_a93b4494b1c4f01a228e59c39494211bd"><div class="ttname"><a href="classcom_1_1teragrep_1_1cfe18_1_1testData_1_1ProcedureSinkTest.html#a93b4494b1c4f01a228e59c39494211bd">com.teragrep.cfe18.testData.ProcedureSinkTest.initialize</a></div><div class="ttdeci">void initialize(Connection conn)</div><div class="ttdef"><b>Definition</b> <a href="testData_2ProcedureSinkTest_8java_source.html#l00092">ProcedureSinkTest.java:92</a></div></div>
-<div class="ttc" id="aclasscom_1_1teragrep_1_1cfe18_1_1testData_1_1ProcedureSinkTest_html_aff0d93d4e19b228c4b7444daeb97f71b"><div class="ttname"><a href="classcom_1_1teragrep_1_1cfe18_1_1testData_1_1ProcedureSinkTest.html#aff0d93d4e19b228c4b7444daeb97f71b">com.teragrep.cfe18.testData.ProcedureSinkTest.cleanup</a></div><div class="ttdeci">void cleanup(Connection conn)</div><div class="ttdef"><b>Definition</b> <a href="testData_2ProcedureSinkTest_8java_source.html#l00083">ProcedureSinkTest.java:83</a></div></div>
+<p class="definition">Definition at line <a class="el" href="testData_2ProcedureSinkTest_8java_source.html#l00072">72</a> of file <a class="el" href="testData_2ProcedureSinkTest_8java_source.html">ProcedureSinkTest.java</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   72</span>                                                {</div>
+<div class="line"><span class="lineno">   73</span> </div>
+<div class="line"><span class="lineno">   74</span>        <a class="code hl_function" href="classcom_1_1teragrep_1_1cfe18_1_1testData_1_1ProcedureSinkTest.html#a93b4494b1c4f01a228e59c39494211bd">initialize</a>(conn);</div>
+<div class="line"><span class="lineno">   75</span>        IDatabaseConnection connection = <span class="keyword">new</span> DatabaseConnection(conn);</div>
+<div class="line"><span class="lineno">   76</span>        <span class="comment">// partial database export</span></div>
+<div class="line"><span class="lineno">   77</span>        QueryDataSet partialDataSet = <span class="keyword">new</span> QueryDataSet(connection);</div>
+<div class="line"><span class="lineno">   78</span>        partialDataSet.addTable(<span class="stringliteral">&quot;flow.flows&quot;</span>);</div>
+<div class="line"><span class="lineno">   79</span>        partialDataSet.addTable(<span class="stringliteral">&quot;flow.L7&quot;</span>);</div>
+<div class="line"><span class="lineno">   80</span>        partialDataSet.addTable(<span class="stringliteral">&quot;flow.capture_sink&quot;</span>);</div>
+<div class="line"><span class="lineno">   81</span> </div>
+<div class="line"><span class="lineno">   82</span>        FlatXmlDataSet</div>
+<div class="line"><span class="lineno">   83</span>                .write(</div>
+<div class="line"><span class="lineno">   84</span>                        partialDataSet,</div>
+<div class="line"><span class="lineno">   85</span>                        Files.newOutputStream(Paths.get(<span class="stringliteral">&quot;src/test/resources/XMLProcedureSink/procedureSinkData.xml&quot;</span>))</div>
+<div class="line"><span class="lineno">   86</span>                );</div>
+<div class="line"><span class="lineno">   87</span>        <a class="code hl_function" href="classcom_1_1teragrep_1_1cfe18_1_1testData_1_1ProcedureSinkTest.html#aff0d93d4e19b228c4b7444daeb97f71b">cleanup</a>(conn);</div>
+<div class="line"><span class="lineno">   88</span>    }</div>
+<div class="ttc" id="aclasscom_1_1teragrep_1_1cfe18_1_1testData_1_1ProcedureSinkTest_html_a93b4494b1c4f01a228e59c39494211bd"><div class="ttname"><a href="classcom_1_1teragrep_1_1cfe18_1_1testData_1_1ProcedureSinkTest.html#a93b4494b1c4f01a228e59c39494211bd">com.teragrep.cfe18.testData.ProcedureSinkTest.initialize</a></div><div class="ttdeci">void initialize(Connection conn)</div><div class="ttdef"><b>Definition</b> <a href="testData_2ProcedureSinkTest_8java_source.html#l00099">ProcedureSinkTest.java:99</a></div></div>
+<div class="ttc" id="aclasscom_1_1teragrep_1_1cfe18_1_1testData_1_1ProcedureSinkTest_html_aff0d93d4e19b228c4b7444daeb97f71b"><div class="ttname"><a href="classcom_1_1teragrep_1_1cfe18_1_1testData_1_1ProcedureSinkTest.html#aff0d93d4e19b228c4b7444daeb97f71b">com.teragrep.cfe18.testData.ProcedureSinkTest.cleanup</a></div><div class="ttdeci">void cleanup(Connection conn)</div><div class="ttdef"><b>Definition</b> <a href="testData_2ProcedureSinkTest_8java_source.html#l00090">ProcedureSinkTest.java:90</a></div></div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -201,15 +205,18 @@ Private Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="testData_2ProcedureSinkTest_8java_source.html#l00092">92</a> of file <a class="el" href="testData_2ProcedureSinkTest_8java_source.html">ProcedureSinkTest.java</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   92</span>                                                                 {</div>
-<div class="line"><span class="lineno">   93</span> </div>
-<div class="line"><span class="lineno">   94</span>        Statement insertTestData = conn.createStatement();</div>
-<div class="line"><span class="lineno">   95</span>        insertTestData.addBatch(<span class="stringliteral">&quot;insert into flow.L7(id,app_protocol) values (1,&#39;prot1&#39;),(2,&#39;prot2&#39;);&quot;</span>);</div>
-<div class="line"><span class="lineno">   96</span>        insertTestData.addBatch(<span class="stringliteral">&quot;insert into flow.flows(id,flowname) values (1,&#39;flow1&#39;),(2,&#39;flow2&#39;);&quot;</span>);</div>
-<div class="line"><span class="lineno">   97</span>        insertTestData.addBatch(<span class="stringliteral">&quot;insert into flow.capture_sink(id,L7_id,flow_id,ip_address,sink_port) values (1,1,2,&#39;ip1&#39;,&#39;601&#39;),(2,1,1,&#39;ip55&#39;,&#39;601&#39;);&quot;</span>);</div>
-<div class="line"><span class="lineno">   98</span>        insertTestData.executeBatch();</div>
-<div class="line"><span class="lineno">   99</span>    }</div>
+<p class="definition">Definition at line <a class="el" href="testData_2ProcedureSinkTest_8java_source.html#l00099">99</a> of file <a class="el" href="testData_2ProcedureSinkTest_8java_source.html">ProcedureSinkTest.java</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   99</span>                                                                 {</div>
+<div class="line"><span class="lineno">  100</span> </div>
+<div class="line"><span class="lineno">  101</span>        Statement insertTestData = conn.createStatement();</div>
+<div class="line"><span class="lineno">  102</span>        insertTestData.addBatch(<span class="stringliteral">&quot;insert into flow.L7(id,app_protocol) values (1,&#39;prot1&#39;),(2,&#39;prot2&#39;);&quot;</span>);</div>
+<div class="line"><span class="lineno">  103</span>        insertTestData.addBatch(<span class="stringliteral">&quot;insert into flow.flows(id,flowname) values (1,&#39;flow1&#39;),(2,&#39;flow2&#39;);&quot;</span>);</div>
+<div class="line"><span class="lineno">  104</span>        insertTestData</div>
+<div class="line"><span class="lineno">  105</span>                .addBatch(</div>
+<div class="line"><span class="lineno">  106</span>                        <span class="stringliteral">&quot;insert into flow.capture_sink(id,L7_id,flow_id,ip_address,sink_port) values (1,1,2,&#39;ip1&#39;,&#39;601&#39;),(2,1,1,&#39;ip55&#39;,&#39;601&#39;);&quot;</span></div>
+<div class="line"><span class="lineno">  107</span>                );</div>
+<div class="line"><span class="lineno">  108</span>        insertTestData.executeBatch();</div>
+<div class="line"><span class="lineno">  109</span>    }</div>
 </div><!-- fragment -->
 </div>
 </div>

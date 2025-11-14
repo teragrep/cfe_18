@@ -186,8 +186,17 @@ Additional Inherited Members</h2></td></tr>
 
 <p class="definition">Definition at line <a class="el" href="ProcedureHostGroupFileTest_8java_source.html#l00075">75</a> of file <a class="el" href="ProcedureHostGroupFileTest_8java_source.html">ProcedureHostGroupFileTest.java</a>.</p>
 <div class="fragment"><div class="line"><span class="lineno">   75</span>                                                     {</div>
-<div class="line"><span class="lineno">   76</span>        <span class="keywordflow">return</span> <span class="keyword">new</span> FlatXmlDataSetBuilder().build(Files.newInputStream(Paths.get(<span class="stringliteral">&quot;src/test/resources/XMLProcedureHostGroup/procedureHostGroupTestData.xml&quot;</span>)));</div>
-<div class="line"><span class="lineno">   77</span>    }</div>
+<div class="line"><span class="lineno">   76</span>        <span class="keywordflow">return</span> <span class="keyword">new</span> FlatXmlDataSetBuilder()</div>
+<div class="line"><span class="lineno">   77</span>                .build(</div>
+<div class="line"><span class="lineno">   78</span>                        Files</div>
+<div class="line"><span class="lineno">   79</span>                                .newInputStream(</div>
+<div class="line"><span class="lineno">   80</span>                                        Paths</div>
+<div class="line"><span class="lineno">   81</span>                                                .<span class="keyword">get</span>(</div>
+<div class="line"><span class="lineno">   82</span>                                                        <span class="stringliteral">&quot;src/test/resources/XMLProcedureHostGroup/procedureHostGroupTestData.xml&quot;</span></div>
+<div class="line"><span class="lineno">   83</span>                                                )</div>
+<div class="line"><span class="lineno">   84</span>                                )</div>
+<div class="line"><span class="lineno">   85</span>                );</div>
+<div class="line"><span class="lineno">   86</span>    }</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -206,16 +215,16 @@ Additional Inherited Members</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ProcedureHostGroupFileTest_8java_source.html#l00127">127</a> of file <a class="el" href="ProcedureHostGroupFileTest_8java_source.html">ProcedureHostGroupFileTest.java</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  127</span>                                                                 {</div>
-<div class="line"><span class="lineno">  128</span>        SQLException state = Assertions.assertThrows(SQLException.class, () -&gt; {</div>
-<div class="line"><span class="lineno">  129</span>            CallableStatement stmnt = conn.prepareCall(<span class="stringliteral">&quot;{CALL location.add_host_group_with_host(?,?)}&quot;</span>);</div>
-<div class="line"><span class="lineno">  130</span>            stmnt.setInt(1, 1000);</div>
-<div class="line"><span class="lineno">  131</span>            stmnt.setString(2, <span class="stringliteral">&quot;host_group_1&quot;</span>);</div>
-<div class="line"><span class="lineno">  132</span>            stmnt.execute();</div>
-<div class="line"><span class="lineno">  133</span>        });</div>
-<div class="line"><span class="lineno">  134</span>        Assertions.assertEquals(<span class="stringliteral">&quot;45000&quot;</span>, state.getSQLState());</div>
-<div class="line"><span class="lineno">  135</span>    }</div>
+<p class="definition">Definition at line <a class="el" href="ProcedureHostGroupFileTest_8java_source.html#l00140">140</a> of file <a class="el" href="ProcedureHostGroupFileTest_8java_source.html">ProcedureHostGroupFileTest.java</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  140</span>                                                                 {</div>
+<div class="line"><span class="lineno">  141</span>        SQLException state = Assertions.assertThrows(SQLException.class, () -&gt; {</div>
+<div class="line"><span class="lineno">  142</span>            CallableStatement stmnt = conn.prepareCall(<span class="stringliteral">&quot;{CALL location.add_host_group_with_host(?,?)}&quot;</span>);</div>
+<div class="line"><span class="lineno">  143</span>            stmnt.setInt(1, 1000);</div>
+<div class="line"><span class="lineno">  144</span>            stmnt.setString(2, <span class="stringliteral">&quot;host_group_1&quot;</span>);</div>
+<div class="line"><span class="lineno">  145</span>            stmnt.execute();</div>
+<div class="line"><span class="lineno">  146</span>        });</div>
+<div class="line"><span class="lineno">  147</span>        Assertions.assertEquals(<span class="stringliteral">&quot;45000&quot;</span>, state.getSQLState());</div>
+<div class="line"><span class="lineno">  148</span>    }</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -234,24 +243,25 @@ Additional Inherited Members</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ProcedureHostGroupFileTest_8java_source.html#l00082">82</a> of file <a class="el" href="ProcedureHostGroupFileTest_8java_source.html">ProcedureHostGroupFileTest.java</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   82</span>                                                                    {</div>
-<div class="line"><span class="lineno">   83</span>        IDataSet expectedDataSet = <span class="keyword">new</span> FlatXmlDataSetBuilder().build(<span class="keyword">new</span> File(<span class="stringliteral">&quot;src/test/resources/XMLProcedureHostGroup/procedureHostGroupTestDataExpected1.xml&quot;</span>));</div>
-<div class="line"><span class="lineno">   84</span>        ITable expectedTable2 = expectedDataSet.getTable(<span class="stringliteral">&quot;location.host&quot;</span>);</div>
-<div class="line"><span class="lineno">   85</span>        ITable expectedTable3 = expectedDataSet.getTable(<span class="stringliteral">&quot;location.host_group&quot;</span>);</div>
-<div class="line"><span class="lineno">   86</span> </div>
-<div class="line"><span class="lineno">   87</span>        CallableStatement stmnt = conn.prepareCall(<span class="stringliteral">&quot;{call location.add_host_group_with_host(?,?)}&quot;</span>);</div>
-<div class="line"><span class="lineno">   88</span>        stmnt.setInt(1, 1); <span class="comment">// host id</span></div>
-<div class="line"><span class="lineno">   89</span>        stmnt.setString(2, <span class="stringliteral">&quot;host_group_6&quot;</span>);</div>
-<div class="line"><span class="lineno">   90</span>        stmnt.execute();</div>
-<div class="line"><span class="lineno">   91</span>        ITable actualTable2 = databaseConnection.createQueryTable(<span class="stringliteral">&quot;result&quot;</span>, <span class="stringliteral">&quot;select * from location.host&quot;</span>);</div>
-<div class="line"><span class="lineno">   92</span>        ITable actualTable3 = databaseConnection.createQueryTable(<span class="stringliteral">&quot;result&quot;</span>, <span class="stringliteral">&quot;select * from location.host_group&quot;</span>);</div>
-<div class="line"><span class="lineno">   93</span> </div>
-<div class="line"><span class="lineno">   94</span>        <span class="comment">//Assertion.assertEquals(expectedTable1, actualTable1); Currently under work. Host_group_x_host does not include host_group_id when adding new row?</span></div>
-<div class="line"><span class="lineno">   95</span>        Assertion.assertEquals(expectedTable2, actualTable2);</div>
-<div class="line"><span class="lineno">   96</span>        Assertion.assertEquals(expectedTable3, actualTable3);</div>
-<div class="line"><span class="lineno">   97</span> </div>
-<div class="line"><span class="lineno">   98</span>    }</div>
+<p class="definition">Definition at line <a class="el" href="ProcedureHostGroupFileTest_8java_source.html#l00091">91</a> of file <a class="el" href="ProcedureHostGroupFileTest_8java_source.html">ProcedureHostGroupFileTest.java</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   91</span>                                                                    {</div>
+<div class="line"><span class="lineno">   92</span>        IDataSet expectedDataSet = <span class="keyword">new</span> FlatXmlDataSetBuilder()</div>
+<div class="line"><span class="lineno">   93</span>                .build(<span class="keyword">new</span> File(<span class="stringliteral">&quot;src/test/resources/XMLProcedureHostGroup/procedureHostGroupTestDataExpected1.xml&quot;</span>));</div>
+<div class="line"><span class="lineno">   94</span>        ITable expectedTable2 = expectedDataSet.getTable(<span class="stringliteral">&quot;location.host&quot;</span>);</div>
+<div class="line"><span class="lineno">   95</span>        ITable expectedTable3 = expectedDataSet.getTable(<span class="stringliteral">&quot;location.host_group&quot;</span>);</div>
+<div class="line"><span class="lineno">   96</span> </div>
+<div class="line"><span class="lineno">   97</span>        CallableStatement stmnt = conn.prepareCall(<span class="stringliteral">&quot;{call location.add_host_group_with_host(?,?)}&quot;</span>);</div>
+<div class="line"><span class="lineno">   98</span>        stmnt.setInt(1, 1); <span class="comment">// host id</span></div>
+<div class="line"><span class="lineno">   99</span>        stmnt.setString(2, <span class="stringliteral">&quot;host_group_6&quot;</span>);</div>
+<div class="line"><span class="lineno">  100</span>        stmnt.execute();</div>
+<div class="line"><span class="lineno">  101</span>        ITable actualTable2 = databaseConnection.createQueryTable(<span class="stringliteral">&quot;result&quot;</span>, <span class="stringliteral">&quot;select * from location.host&quot;</span>);</div>
+<div class="line"><span class="lineno">  102</span>        ITable actualTable3 = databaseConnection.createQueryTable(<span class="stringliteral">&quot;result&quot;</span>, <span class="stringliteral">&quot;select * from location.host_group&quot;</span>);</div>
+<div class="line"><span class="lineno">  103</span> </div>
+<div class="line"><span class="lineno">  104</span>        <span class="comment">//Assertion.assertEquals(expectedTable1, actualTable1); Currently under work. Host_group_x_host does not include host_group_id when adding new row?</span></div>
+<div class="line"><span class="lineno">  105</span>        Assertion.assertEquals(expectedTable2, actualTable2);</div>
+<div class="line"><span class="lineno">  106</span>        Assertion.assertEquals(expectedTable3, actualTable3);</div>
+<div class="line"><span class="lineno">  107</span> </div>
+<div class="line"><span class="lineno">  108</span>    }</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -270,27 +280,30 @@ Additional Inherited Members</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ProcedureHostGroupFileTest_8java_source.html#l00103">103</a> of file <a class="el" href="ProcedureHostGroupFileTest_8java_source.html">ProcedureHostGroupFileTest.java</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  103</span>                                                                    {</div>
-<div class="line"><span class="lineno">  104</span>        IDataSet expectedDataSet = <span class="keyword">new</span> FlatXmlDataSetBuilder().build(<span class="keyword">new</span> File(<span class="stringliteral">&quot;src/test/resources/XMLProcedureHostGroup/procedureHostGroupTestDataExpected2.xml&quot;</span>));</div>
-<div class="line"><span class="lineno">  105</span>        ITable expectedTable1 = expectedDataSet.getTable(<span class="stringliteral">&quot;location.host_group_x_host&quot;</span>);</div>
-<div class="line"><span class="lineno">  106</span>        ITable expectedTable2 = expectedDataSet.getTable(<span class="stringliteral">&quot;location.host&quot;</span>);</div>
-<div class="line"><span class="lineno">  107</span>        ITable expectedTable3 = expectedDataSet.getTable(<span class="stringliteral">&quot;location.host_group&quot;</span>);</div>
-<div class="line"><span class="lineno">  108</span> </div>
-<div class="line"><span class="lineno">  109</span>        CallableStatement stmnt = conn.prepareCall(<span class="stringliteral">&quot;{call location.add_host_group_with_host(?,?)}&quot;</span>);</div>
-<div class="line"><span class="lineno">  110</span>        stmnt.setInt(1, 1); <span class="comment">// host id</span></div>
-<div class="line"><span class="lineno">  111</span>        stmnt.setString(2, <span class="stringliteral">&quot;new_host_group&quot;</span>);</div>
-<div class="line"><span class="lineno">  112</span>        stmnt.execute();</div>
-<div class="line"><span class="lineno">  113</span> </div>
-<div class="line"><span class="lineno">  114</span>        ITable actualTable1 = databaseConnection.createQueryTable(<span class="stringliteral">&quot;result&quot;</span>, <span class="stringliteral">&quot;select * from location.host_group_x_host&quot;</span>);</div>
-<div class="line"><span class="lineno">  115</span>        ITable actualTable2 = databaseConnection.createQueryTable(<span class="stringliteral">&quot;result&quot;</span>, <span class="stringliteral">&quot;select * from location.host&quot;</span>);</div>
-<div class="line"><span class="lineno">  116</span>        ITable actualTable3 = databaseConnection.createQueryTable(<span class="stringliteral">&quot;result&quot;</span>, <span class="stringliteral">&quot;select * from location.host_group&quot;</span>);</div>
-<div class="line"><span class="lineno">  117</span> </div>
-<div class="line"><span class="lineno">  118</span>        Assertion.assertEqualsIgnoreCols(expectedTable1, actualTable1, <span class="keyword">new</span> String[]{<span class="stringliteral">&quot;id&quot;</span>});</div>
-<div class="line"><span class="lineno">  119</span>        Assertion.assertEquals(expectedTable2, actualTable2);</div>
-<div class="line"><span class="lineno">  120</span>        Assertion.assertEquals(expectedTable3, actualTable3);</div>
-<div class="line"><span class="lineno">  121</span> </div>
-<div class="line"><span class="lineno">  122</span>    }</div>
+<p class="definition">Definition at line <a class="el" href="ProcedureHostGroupFileTest_8java_source.html#l00113">113</a> of file <a class="el" href="ProcedureHostGroupFileTest_8java_source.html">ProcedureHostGroupFileTest.java</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  113</span>                                                                    {</div>
+<div class="line"><span class="lineno">  114</span>        IDataSet expectedDataSet = <span class="keyword">new</span> FlatXmlDataSetBuilder()</div>
+<div class="line"><span class="lineno">  115</span>                .build(<span class="keyword">new</span> File(<span class="stringliteral">&quot;src/test/resources/XMLProcedureHostGroup/procedureHostGroupTestDataExpected2.xml&quot;</span>));</div>
+<div class="line"><span class="lineno">  116</span>        ITable expectedTable1 = expectedDataSet.getTable(<span class="stringliteral">&quot;location.host_group_x_host&quot;</span>);</div>
+<div class="line"><span class="lineno">  117</span>        ITable expectedTable2 = expectedDataSet.getTable(<span class="stringliteral">&quot;location.host&quot;</span>);</div>
+<div class="line"><span class="lineno">  118</span>        ITable expectedTable3 = expectedDataSet.getTable(<span class="stringliteral">&quot;location.host_group&quot;</span>);</div>
+<div class="line"><span class="lineno">  119</span> </div>
+<div class="line"><span class="lineno">  120</span>        CallableStatement stmnt = conn.prepareCall(<span class="stringliteral">&quot;{call location.add_host_group_with_host(?,?)}&quot;</span>);</div>
+<div class="line"><span class="lineno">  121</span>        stmnt.setInt(1, 1); <span class="comment">// host id</span></div>
+<div class="line"><span class="lineno">  122</span>        stmnt.setString(2, <span class="stringliteral">&quot;new_host_group&quot;</span>);</div>
+<div class="line"><span class="lineno">  123</span>        stmnt.execute();</div>
+<div class="line"><span class="lineno">  124</span> </div>
+<div class="line"><span class="lineno">  125</span>        ITable actualTable1 = databaseConnection.createQueryTable(<span class="stringliteral">&quot;result&quot;</span>, <span class="stringliteral">&quot;select * from location.host_group_x_host&quot;</span>);</div>
+<div class="line"><span class="lineno">  126</span>        ITable actualTable2 = databaseConnection.createQueryTable(<span class="stringliteral">&quot;result&quot;</span>, <span class="stringliteral">&quot;select * from location.host&quot;</span>);</div>
+<div class="line"><span class="lineno">  127</span>        ITable actualTable3 = databaseConnection.createQueryTable(<span class="stringliteral">&quot;result&quot;</span>, <span class="stringliteral">&quot;select * from location.host_group&quot;</span>);</div>
+<div class="line"><span class="lineno">  128</span> </div>
+<div class="line"><span class="lineno">  129</span>        Assertion.assertEqualsIgnoreCols(expectedTable1, actualTable1, <span class="keyword">new</span> String[] {</div>
+<div class="line"><span class="lineno">  130</span>                <span class="stringliteral">&quot;id&quot;</span></div>
+<div class="line"><span class="lineno">  131</span>        });</div>
+<div class="line"><span class="lineno">  132</span>        Assertion.assertEquals(expectedTable2, actualTable2);</div>
+<div class="line"><span class="lineno">  133</span>        Assertion.assertEquals(expectedTable3, actualTable3);</div>
+<div class="line"><span class="lineno">  134</span> </div>
+<div class="line"><span class="lineno">  135</span>    }</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -309,24 +322,24 @@ Additional Inherited Members</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ProcedureHostGroupFileTest_8java_source.html#l00140">140</a> of file <a class="el" href="ProcedureHostGroupFileTest_8java_source.html">ProcedureHostGroupFileTest.java</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  140</span>                                                                {</div>
-<div class="line"><span class="lineno">  141</span>        List&lt;Integer&gt; host_id = <span class="keyword">new</span> ArrayList&lt;&gt;();</div>
-<div class="line"><span class="lineno">  142</span>        List&lt;String&gt; md5 = <span class="keyword">new</span> ArrayList&lt;&gt;();</div>
-<div class="line"><span class="lineno">  143</span>        CallableStatement stmnt = conn.prepareCall(<span class="stringliteral">&quot;{CALL location.retrieve_host_group_details(?,?)}&quot;</span>);</div>
-<div class="line"><span class="lineno">  144</span>        stmnt.setString(1, <span class="stringliteral">&quot;host_group_1&quot;</span>);</div>
-<div class="line"><span class="lineno">  145</span>        stmnt.setString(2, <span class="keyword">null</span>);</div>
-<div class="line"><span class="lineno">  146</span>        ResultSet rs = stmnt.executeQuery();</div>
-<div class="line"><span class="lineno">  147</span>        <span class="keywordflow">while</span> (rs.next()) {</div>
-<div class="line"><span class="lineno">  148</span>            host_id.add(rs.getInt(<span class="stringliteral">&quot;host_id&quot;</span>));</div>
-<div class="line"><span class="lineno">  149</span>            md5.add(rs.getString(<span class="stringliteral">&quot;md5&quot;</span>));</div>
-<div class="line"><span class="lineno">  150</span>            Assertions.assertEquals(<span class="stringliteral">&quot;host_group_1&quot;</span>, rs.getString(<span class="stringliteral">&quot;group_name&quot;</span>));</div>
-<div class="line"><span class="lineno">  151</span>            Assertions.assertEquals(<span class="stringliteral">&quot;cfe&quot;</span>, rs.getString(<span class="stringliteral">&quot;host_type&quot;</span>));</div>
-<div class="line"><span class="lineno">  152</span>            Assertions.assertEquals(1, rs.getInt(<span class="stringliteral">&quot;host_group_id&quot;</span>));</div>
-<div class="line"><span class="lineno">  153</span>        }</div>
-<div class="line"><span class="lineno">  154</span>        Assertions.assertEquals(Arrays.asList(1, 2, 3, 4), host_id);</div>
-<div class="line"><span class="lineno">  155</span>        Assertions.assertEquals(Arrays.asList(<span class="stringliteral">&quot;12365&quot;</span>, <span class="stringliteral">&quot;12322&quot;</span>, <span class="stringliteral">&quot;1323&quot;</span>, <span class="stringliteral">&quot;4123&quot;</span>), md5);</div>
-<div class="line"><span class="lineno">  156</span>    }</div>
+<p class="definition">Definition at line <a class="el" href="ProcedureHostGroupFileTest_8java_source.html#l00153">153</a> of file <a class="el" href="ProcedureHostGroupFileTest_8java_source.html">ProcedureHostGroupFileTest.java</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  153</span>                                                                {</div>
+<div class="line"><span class="lineno">  154</span>        List&lt;Integer&gt; host_id = <span class="keyword">new</span> ArrayList&lt;&gt;();</div>
+<div class="line"><span class="lineno">  155</span>        List&lt;String&gt; md5 = <span class="keyword">new</span> ArrayList&lt;&gt;();</div>
+<div class="line"><span class="lineno">  156</span>        CallableStatement stmnt = conn.prepareCall(<span class="stringliteral">&quot;{CALL location.retrieve_host_group_details(?,?)}&quot;</span>);</div>
+<div class="line"><span class="lineno">  157</span>        stmnt.setString(1, <span class="stringliteral">&quot;host_group_1&quot;</span>);</div>
+<div class="line"><span class="lineno">  158</span>        stmnt.setString(2, <span class="keyword">null</span>);</div>
+<div class="line"><span class="lineno">  159</span>        ResultSet rs = stmnt.executeQuery();</div>
+<div class="line"><span class="lineno">  160</span>        <span class="keywordflow">while</span> (rs.next()) {</div>
+<div class="line"><span class="lineno">  161</span>            host_id.add(rs.getInt(<span class="stringliteral">&quot;host_id&quot;</span>));</div>
+<div class="line"><span class="lineno">  162</span>            md5.add(rs.getString(<span class="stringliteral">&quot;md5&quot;</span>));</div>
+<div class="line"><span class="lineno">  163</span>            Assertions.assertEquals(<span class="stringliteral">&quot;host_group_1&quot;</span>, rs.getString(<span class="stringliteral">&quot;group_name&quot;</span>));</div>
+<div class="line"><span class="lineno">  164</span>            Assertions.assertEquals(<span class="stringliteral">&quot;cfe&quot;</span>, rs.getString(<span class="stringliteral">&quot;host_type&quot;</span>));</div>
+<div class="line"><span class="lineno">  165</span>            Assertions.assertEquals(1, rs.getInt(<span class="stringliteral">&quot;host_group_id&quot;</span>));</div>
+<div class="line"><span class="lineno">  166</span>        }</div>
+<div class="line"><span class="lineno">  167</span>        Assertions.assertEquals(Arrays.asList(1, 2, 3, 4), host_id);</div>
+<div class="line"><span class="lineno">  168</span>        Assertions.assertEquals(Arrays.asList(<span class="stringliteral">&quot;12365&quot;</span>, <span class="stringliteral">&quot;12322&quot;</span>, <span class="stringliteral">&quot;1323&quot;</span>, <span class="stringliteral">&quot;4123&quot;</span>), md5);</div>
+<div class="line"><span class="lineno">  169</span>    }</div>
 </div><!-- fragment -->
 </div>
 </div>

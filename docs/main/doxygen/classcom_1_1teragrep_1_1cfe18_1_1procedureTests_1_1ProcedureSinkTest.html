@@ -182,8 +182,9 @@ Additional Inherited Members</h2></td></tr>
 
 <p class="definition">Definition at line <a class="el" href="procedureTests_2ProcedureSinkTest_8java_source.html#l00067">67</a> of file <a class="el" href="procedureTests_2ProcedureSinkTest_8java_source.html">ProcedureSinkTest.java</a>.</p>
 <div class="fragment"><div class="line"><span class="lineno">   67</span>                                                     {</div>
-<div class="line"><span class="lineno">   68</span>        <span class="keywordflow">return</span> <span class="keyword">new</span> FlatXmlDataSetBuilder().build(Files.newInputStream(Paths.get(<span class="stringliteral">&quot;src/test/resources/XMLProcedureSink/procedureSinkData.xml&quot;</span>)));</div>
-<div class="line"><span class="lineno">   69</span>    }</div>
+<div class="line"><span class="lineno">   68</span>        <span class="keywordflow">return</span> <span class="keyword">new</span> FlatXmlDataSetBuilder()</div>
+<div class="line"><span class="lineno">   69</span>                .build(Files.newInputStream(Paths.get(<span class="stringliteral">&quot;src/test/resources/XMLProcedureSink/procedureSinkData.xml&quot;</span>)));</div>
+<div class="line"><span class="lineno">   70</span>    }</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -202,29 +203,30 @@ Additional Inherited Members</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="procedureTests_2ProcedureSinkTest_8java_source.html#l00074">74</a> of file <a class="el" href="procedureTests_2ProcedureSinkTest_8java_source.html">ProcedureSinkTest.java</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   74</span>                                                  {</div>
-<div class="line"><span class="lineno">   75</span>        IDataSet expectedDataSet = <span class="keyword">new</span> FlatXmlDataSetBuilder().build(<span class="keyword">new</span> File(<span class="stringliteral">&quot;src/test/resources/XMLProcedureSink/procedureSinkExpectedData1.xml&quot;</span>));</div>
-<div class="line"><span class="lineno">   76</span>        ITable expectedTable = expectedDataSet.getTable(<span class="stringliteral">&quot;flow.capture_sink&quot;</span>);</div>
-<div class="line"><span class="lineno">   77</span>        ITable expectedTable1 = expectedDataSet.getTable(<span class="stringliteral">&quot;flow.L7&quot;</span>);</div>
-<div class="line"><span class="lineno">   78</span>        ITable expectedTable2 = expectedDataSet.getTable(<span class="stringliteral">&quot;flow.flows&quot;</span>);</div>
-<div class="line"><span class="lineno">   79</span> </div>
-<div class="line"><span class="lineno">   80</span>        CallableStatement stmnt = conn.prepareCall(<span class="stringliteral">&quot;{CALL flow.insert_sink(?,?,?,?)}&quot;</span>);</div>
-<div class="line"><span class="lineno">   81</span>        stmnt.setString(1, <span class="stringliteral">&quot;prot3&quot;</span>);</div>
-<div class="line"><span class="lineno">   82</span>        stmnt.setString(2, <span class="stringliteral">&quot;ip1&quot;</span>);</div>
-<div class="line"><span class="lineno">   83</span>        stmnt.setString(3, <span class="stringliteral">&quot;1234&quot;</span>);</div>
-<div class="line"><span class="lineno">   84</span>        stmnt.setInt(4, 2);</div>
-<div class="line"><span class="lineno">   85</span>        stmnt.execute();</div>
-<div class="line"><span class="lineno">   86</span> </div>
-<div class="line"><span class="lineno">   87</span>        ITable actualTable = databaseConnection.createQueryTable(<span class="stringliteral">&quot;result&quot;</span>, <span class="stringliteral">&quot;select * from flow.capture_sink&quot;</span>);</div>
-<div class="line"><span class="lineno">   88</span>        ITable actualTable1 = databaseConnection.createQueryTable(<span class="stringliteral">&quot;result&quot;</span>, <span class="stringliteral">&quot;select * from flow.L7&quot;</span>);</div>
-<div class="line"><span class="lineno">   89</span>        ITable actualTable2 = databaseConnection.createQueryTable(<span class="stringliteral">&quot;result&quot;</span>, <span class="stringliteral">&quot;select * from flow.flows&quot;</span>);</div>
-<div class="line"><span class="lineno">   90</span> </div>
-<div class="line"><span class="lineno">   91</span>        Assertion.assertEquals(expectedTable, actualTable);</div>
-<div class="line"><span class="lineno">   92</span>        Assertion.assertEquals(expectedTable1, actualTable1);</div>
-<div class="line"><span class="lineno">   93</span>        Assertion.assertEquals(expectedTable2, actualTable2);</div>
-<div class="line"><span class="lineno">   94</span> </div>
-<div class="line"><span class="lineno">   95</span>    }</div>
+<p class="definition">Definition at line <a class="el" href="procedureTests_2ProcedureSinkTest_8java_source.html#l00075">75</a> of file <a class="el" href="procedureTests_2ProcedureSinkTest_8java_source.html">ProcedureSinkTest.java</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   75</span>                                                  {</div>
+<div class="line"><span class="lineno">   76</span>        IDataSet expectedDataSet = <span class="keyword">new</span> FlatXmlDataSetBuilder()</div>
+<div class="line"><span class="lineno">   77</span>                .build(<span class="keyword">new</span> File(<span class="stringliteral">&quot;src/test/resources/XMLProcedureSink/procedureSinkExpectedData1.xml&quot;</span>));</div>
+<div class="line"><span class="lineno">   78</span>        ITable expectedTable = expectedDataSet.getTable(<span class="stringliteral">&quot;flow.capture_sink&quot;</span>);</div>
+<div class="line"><span class="lineno">   79</span>        ITable expectedTable1 = expectedDataSet.getTable(<span class="stringliteral">&quot;flow.L7&quot;</span>);</div>
+<div class="line"><span class="lineno">   80</span>        ITable expectedTable2 = expectedDataSet.getTable(<span class="stringliteral">&quot;flow.flows&quot;</span>);</div>
+<div class="line"><span class="lineno">   81</span> </div>
+<div class="line"><span class="lineno">   82</span>        CallableStatement stmnt = conn.prepareCall(<span class="stringliteral">&quot;{CALL flow.insert_sink(?,?,?,?)}&quot;</span>);</div>
+<div class="line"><span class="lineno">   83</span>        stmnt.setString(1, <span class="stringliteral">&quot;prot3&quot;</span>);</div>
+<div class="line"><span class="lineno">   84</span>        stmnt.setString(2, <span class="stringliteral">&quot;ip1&quot;</span>);</div>
+<div class="line"><span class="lineno">   85</span>        stmnt.setString(3, <span class="stringliteral">&quot;1234&quot;</span>);</div>
+<div class="line"><span class="lineno">   86</span>        stmnt.setInt(4, 2);</div>
+<div class="line"><span class="lineno">   87</span>        stmnt.execute();</div>
+<div class="line"><span class="lineno">   88</span> </div>
+<div class="line"><span class="lineno">   89</span>        ITable actualTable = databaseConnection.createQueryTable(<span class="stringliteral">&quot;result&quot;</span>, <span class="stringliteral">&quot;select * from flow.capture_sink&quot;</span>);</div>
+<div class="line"><span class="lineno">   90</span>        ITable actualTable1 = databaseConnection.createQueryTable(<span class="stringliteral">&quot;result&quot;</span>, <span class="stringliteral">&quot;select * from flow.L7&quot;</span>);</div>
+<div class="line"><span class="lineno">   91</span>        ITable actualTable2 = databaseConnection.createQueryTable(<span class="stringliteral">&quot;result&quot;</span>, <span class="stringliteral">&quot;select * from flow.flows&quot;</span>);</div>
+<div class="line"><span class="lineno">   92</span> </div>
+<div class="line"><span class="lineno">   93</span>        Assertion.assertEquals(expectedTable, actualTable);</div>
+<div class="line"><span class="lineno">   94</span>        Assertion.assertEquals(expectedTable1, actualTable1);</div>
+<div class="line"><span class="lineno">   95</span>        Assertion.assertEquals(expectedTable2, actualTable2);</div>
+<div class="line"><span class="lineno">   96</span> </div>
+<div class="line"><span class="lineno">   97</span>    }</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -243,18 +245,18 @@ Additional Inherited Members</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="procedureTests_2ProcedureSinkTest_8java_source.html#l00102">102</a> of file <a class="el" href="procedureTests_2ProcedureSinkTest_8java_source.html">ProcedureSinkTest.java</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  102</span>                                                        {</div>
-<div class="line"><span class="lineno">  103</span>        CallableStatement stmnt = conn.prepareCall(<span class="stringliteral">&quot;{CALL flow.select_sink(?,?)}&quot;</span>);</div>
-<div class="line"><span class="lineno">  104</span>        stmnt.setInt(1, 1);</div>
-<div class="line"><span class="lineno">  105</span>        stmnt.setString(2, <span class="keyword">null</span>);</div>
-<div class="line"><span class="lineno">  106</span>        ResultSet rs = stmnt.executeQuery();</div>
-<div class="line"><span class="lineno">  107</span>        rs.next();</div>
-<div class="line"><span class="lineno">  108</span>        Assertions.assertEquals(<span class="stringliteral">&quot;ip11&quot;</span>, rs.getString(<span class="stringliteral">&quot;ip&quot;</span>));</div>
-<div class="line"><span class="lineno">  109</span>        Assertions.assertEquals(<span class="stringliteral">&quot;601&quot;</span>, rs.getString(<span class="stringliteral">&quot;port&quot;</span>));</div>
-<div class="line"><span class="lineno">  110</span>        Assertions.assertEquals(<span class="stringliteral">&quot;prot1&quot;</span>, rs.getString(<span class="stringliteral">&quot;protocol&quot;</span>));</div>
-<div class="line"><span class="lineno">  111</span>        Assertions.assertEquals(2, rs.getInt(<span class="stringliteral">&quot;flow_id&quot;</span>));</div>
-<div class="line"><span class="lineno">  112</span>    }</div>
+<p class="definition">Definition at line <a class="el" href="procedureTests_2ProcedureSinkTest_8java_source.html#l00103">103</a> of file <a class="el" href="procedureTests_2ProcedureSinkTest_8java_source.html">ProcedureSinkTest.java</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  103</span>                                                        {</div>
+<div class="line"><span class="lineno">  104</span>        CallableStatement stmnt = conn.prepareCall(<span class="stringliteral">&quot;{CALL flow.select_sink(?,?)}&quot;</span>);</div>
+<div class="line"><span class="lineno">  105</span>        stmnt.setInt(1, 1);</div>
+<div class="line"><span class="lineno">  106</span>        stmnt.setString(2, <span class="keyword">null</span>);</div>
+<div class="line"><span class="lineno">  107</span>        ResultSet rs = stmnt.executeQuery();</div>
+<div class="line"><span class="lineno">  108</span>        rs.next();</div>
+<div class="line"><span class="lineno">  109</span>        Assertions.assertEquals(<span class="stringliteral">&quot;ip11&quot;</span>, rs.getString(<span class="stringliteral">&quot;ip&quot;</span>));</div>
+<div class="line"><span class="lineno">  110</span>        Assertions.assertEquals(<span class="stringliteral">&quot;601&quot;</span>, rs.getString(<span class="stringliteral">&quot;port&quot;</span>));</div>
+<div class="line"><span class="lineno">  111</span>        Assertions.assertEquals(<span class="stringliteral">&quot;prot1&quot;</span>, rs.getString(<span class="stringliteral">&quot;protocol&quot;</span>));</div>
+<div class="line"><span class="lineno">  112</span>        Assertions.assertEquals(2, rs.getInt(<span class="stringliteral">&quot;flow_id&quot;</span>));</div>
+<div class="line"><span class="lineno">  113</span>    }</div>
 </div><!-- fragment -->
 </div>
 </div>

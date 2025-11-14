@@ -131,15 +131,15 @@ Private Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ProcedureHostDataTestFile_8java_source.html#l00082">82</a> of file <a class="el" href="ProcedureHostDataTestFile_8java_source.html">ProcedureHostDataTestFile.java</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   82</span>                                                              {</div>
-<div class="line"><span class="lineno">   83</span> </div>
-<div class="line"><span class="lineno">   84</span>        Statement deleteStatement = conn.createStatement();</div>
-<div class="line"><span class="lineno">   85</span>        deleteStatement.addBatch(<span class="stringliteral">&quot;delete from cfe_00.host_type_cfe&quot;</span>);</div>
-<div class="line"><span class="lineno">   86</span>        deleteStatement.addBatch(<span class="stringliteral">&quot;delete from cfe_00.hubs&quot;</span>);</div>
-<div class="line"><span class="lineno">   87</span>        deleteStatement.addBatch(<span class="stringliteral">&quot;delete from location.host&quot;</span>);</div>
-<div class="line"><span class="lineno">   88</span>        deleteStatement.executeBatch();</div>
-<div class="line"><span class="lineno">   89</span>    }</div>
+<p class="definition">Definition at line <a class="el" href="ProcedureHostDataTestFile_8java_source.html#l00091">91</a> of file <a class="el" href="ProcedureHostDataTestFile_8java_source.html">ProcedureHostDataTestFile.java</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   91</span>                                                              {</div>
+<div class="line"><span class="lineno">   92</span> </div>
+<div class="line"><span class="lineno">   93</span>        Statement deleteStatement = conn.createStatement();</div>
+<div class="line"><span class="lineno">   94</span>        deleteStatement.addBatch(<span class="stringliteral">&quot;delete from cfe_00.host_type_cfe&quot;</span>);</div>
+<div class="line"><span class="lineno">   95</span>        deleteStatement.addBatch(<span class="stringliteral">&quot;delete from cfe_00.hubs&quot;</span>);</div>
+<div class="line"><span class="lineno">   96</span>        deleteStatement.addBatch(<span class="stringliteral">&quot;delete from location.host&quot;</span>);</div>
+<div class="line"><span class="lineno">   97</span>        deleteStatement.executeBatch();</div>
+<div class="line"><span class="lineno">   98</span>    }</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -158,21 +158,27 @@ Private Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ProcedureHostDataTestFile_8java_source.html#l00069">69</a> of file <a class="el" href="ProcedureHostDataTestFile_8java_source.html">ProcedureHostDataTestFile.java</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   69</span>                                                {</div>
-<div class="line"><span class="lineno">   70</span> </div>
-<div class="line"><span class="lineno">   71</span>        <a class="code hl_function" href="classcom_1_1teragrep_1_1cfe18_1_1testData_1_1ProcedureHostDataTestFile.html#ae5ad62f1aea1d5a4b4f76718ebc3f866">initialize</a>(conn);</div>
-<div class="line"><span class="lineno">   72</span>        IDatabaseConnection connection = <span class="keyword">new</span> DatabaseConnection(conn);</div>
-<div class="line"><span class="lineno">   73</span>        <span class="comment">// partial database export</span></div>
-<div class="line"><span class="lineno">   74</span>        QueryDataSet partialDataSet = <span class="keyword">new</span> QueryDataSet(connection);</div>
-<div class="line"><span class="lineno">   75</span>        partialDataSet.addTable(<span class="stringliteral">&quot;location.host&quot;</span>);</div>
-<div class="line"><span class="lineno">   76</span>        partialDataSet.addTable(<span class="stringliteral">&quot;cfe_00.hubs&quot;</span>);</div>
-<div class="line"><span class="lineno">   77</span>        partialDataSet.addTable(<span class="stringliteral">&quot;cfe_00.host_type_cfe&quot;</span>);</div>
-<div class="line"><span class="lineno">   78</span>        FlatXmlDataSet.write(partialDataSet, Files.newOutputStream(Paths.get(<span class="stringliteral">&quot;src/test/resources/XMLProcedureHost/procedureHostTestData.xml&quot;</span>)));</div>
-<div class="line"><span class="lineno">   79</span>        <a class="code hl_function" href="classcom_1_1teragrep_1_1cfe18_1_1testData_1_1ProcedureHostDataTestFile.html#a4cbe81d5657f0e4bc9940cdb4dafa3c7">cleanup</a>(conn);</div>
-<div class="line"><span class="lineno">   80</span>    }</div>
-<div class="ttc" id="aclasscom_1_1teragrep_1_1cfe18_1_1testData_1_1ProcedureHostDataTestFile_html_a4cbe81d5657f0e4bc9940cdb4dafa3c7"><div class="ttname"><a href="classcom_1_1teragrep_1_1cfe18_1_1testData_1_1ProcedureHostDataTestFile.html#a4cbe81d5657f0e4bc9940cdb4dafa3c7">com.teragrep.cfe18.testData.ProcedureHostDataTestFile.cleanup</a></div><div class="ttdeci">void cleanup(Connection conn)</div><div class="ttdef"><b>Definition</b> <a href="ProcedureHostDataTestFile_8java_source.html#l00082">ProcedureHostDataTestFile.java:82</a></div></div>
-<div class="ttc" id="aclasscom_1_1teragrep_1_1cfe18_1_1testData_1_1ProcedureHostDataTestFile_html_ae5ad62f1aea1d5a4b4f76718ebc3f866"><div class="ttname"><a href="classcom_1_1teragrep_1_1cfe18_1_1testData_1_1ProcedureHostDataTestFile.html#ae5ad62f1aea1d5a4b4f76718ebc3f866">com.teragrep.cfe18.testData.ProcedureHostDataTestFile.initialize</a></div><div class="ttdeci">void initialize(Connection conn)</div><div class="ttdef"><b>Definition</b> <a href="ProcedureHostDataTestFile_8java_source.html#l00091">ProcedureHostDataTestFile.java:91</a></div></div>
+<p class="definition">Definition at line <a class="el" href="ProcedureHostDataTestFile_8java_source.html#l00072">72</a> of file <a class="el" href="ProcedureHostDataTestFile_8java_source.html">ProcedureHostDataTestFile.java</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   72</span>                                                {</div>
+<div class="line"><span class="lineno">   73</span> </div>
+<div class="line"><span class="lineno">   74</span>        <a class="code hl_function" href="classcom_1_1teragrep_1_1cfe18_1_1testData_1_1ProcedureHostDataTestFile.html#ae5ad62f1aea1d5a4b4f76718ebc3f866">initialize</a>(conn);</div>
+<div class="line"><span class="lineno">   75</span>        IDatabaseConnection connection = <span class="keyword">new</span> DatabaseConnection(conn);</div>
+<div class="line"><span class="lineno">   76</span>        <span class="comment">// partial database export</span></div>
+<div class="line"><span class="lineno">   77</span>        QueryDataSet partialDataSet = <span class="keyword">new</span> QueryDataSet(connection);</div>
+<div class="line"><span class="lineno">   78</span>        partialDataSet.addTable(<span class="stringliteral">&quot;location.host&quot;</span>);</div>
+<div class="line"><span class="lineno">   79</span>        partialDataSet.addTable(<span class="stringliteral">&quot;cfe_00.hubs&quot;</span>);</div>
+<div class="line"><span class="lineno">   80</span>        partialDataSet.addTable(<span class="stringliteral">&quot;cfe_00.host_type_cfe&quot;</span>);</div>
+<div class="line"><span class="lineno">   81</span>        FlatXmlDataSet</div>
+<div class="line"><span class="lineno">   82</span>                .write(</div>
+<div class="line"><span class="lineno">   83</span>                        partialDataSet, Files</div>
+<div class="line"><span class="lineno">   84</span>                                .newOutputStream(</div>
+<div class="line"><span class="lineno">   85</span>                                        Paths.get(<span class="stringliteral">&quot;src/test/resources/XMLProcedureHost/procedureHostTestData.xml&quot;</span>)</div>
+<div class="line"><span class="lineno">   86</span>                                )</div>
+<div class="line"><span class="lineno">   87</span>                );</div>
+<div class="line"><span class="lineno">   88</span>        <a class="code hl_function" href="classcom_1_1teragrep_1_1cfe18_1_1testData_1_1ProcedureHostDataTestFile.html#a4cbe81d5657f0e4bc9940cdb4dafa3c7">cleanup</a>(conn);</div>
+<div class="line"><span class="lineno">   89</span>    }</div>
+<div class="ttc" id="aclasscom_1_1teragrep_1_1cfe18_1_1testData_1_1ProcedureHostDataTestFile_html_a4cbe81d5657f0e4bc9940cdb4dafa3c7"><div class="ttname"><a href="classcom_1_1teragrep_1_1cfe18_1_1testData_1_1ProcedureHostDataTestFile.html#a4cbe81d5657f0e4bc9940cdb4dafa3c7">com.teragrep.cfe18.testData.ProcedureHostDataTestFile.cleanup</a></div><div class="ttdeci">void cleanup(Connection conn)</div><div class="ttdef"><b>Definition</b> <a href="ProcedureHostDataTestFile_8java_source.html#l00091">ProcedureHostDataTestFile.java:91</a></div></div>
+<div class="ttc" id="aclasscom_1_1teragrep_1_1cfe18_1_1testData_1_1ProcedureHostDataTestFile_html_ae5ad62f1aea1d5a4b4f76718ebc3f866"><div class="ttname"><a href="classcom_1_1teragrep_1_1cfe18_1_1testData_1_1ProcedureHostDataTestFile.html#ae5ad62f1aea1d5a4b4f76718ebc3f866">com.teragrep.cfe18.testData.ProcedureHostDataTestFile.initialize</a></div><div class="ttdeci">void initialize(Connection conn)</div><div class="ttdef"><b>Definition</b> <a href="ProcedureHostDataTestFile_8java_source.html#l00100">ProcedureHostDataTestFile.java:100</a></div></div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -200,17 +206,20 @@ Private Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ProcedureHostDataTestFile_8java_source.html#l00091">91</a> of file <a class="el" href="ProcedureHostDataTestFile_8java_source.html">ProcedureHostDataTestFile.java</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   91</span>                                                                 {</div>
-<div class="line"><span class="lineno">   92</span> </div>
-<div class="line"><span class="lineno">   93</span>        Statement insertTestData = conn.createStatement();</div>
-<div class="line"><span class="lineno">   94</span> </div>
-<div class="line"><span class="lineno">   95</span>        insertTestData.addBatch(<span class="stringliteral">&quot;insert into location.host(id,MD5,fqhost,host_type) values (1,&#39;12365&#39;,&#39;1&#39;,&#39;cfe&#39;), (2,&#39;12322&#39;,&#39;2&#39;,&#39;manual&#39;), (3,&#39;1323&#39;,&#39;3&#39;,&#39;manual&#39;), (4,&#39;4123&#39;,&#39;4&#39;,&#39;manual&#39;), (5,&#39;5123&#39;,&#39;6&#39;,&#39;manual&#39;), (6,&#39;6123&#39;,&#39;7&#39;,&#39;manual&#39;), (7,&#39;7123&#39;,&#39;8&#39;,&#39;manual&#39;), (16,&#39;712&#39;,&#39;9&#39;,&#39;manual&#39;), (9,&#39;723&#39;,&#39;10&#39;,&#39;manual&#39;), (8,&#39;71233&#39;,&#39;11&#39;,&#39;manual&#39;), (10,&#39;712362&#39;,&#39;12&#39;,&#39;manual&#39;), (12,&#39;712653&#39;,&#39;13&#39;,&#39;manual&#39;), (17,&#39;71211233&#39;,&#39;14&#39;,&#39;manual&#39;), (11,&#39;712213123&#39;,&#39;15&#39;,&#39;manual&#39;), (21,&#39;7142213123&#39;,&#39;16&#39;,&#39;manual&#39;), (22,&#39;7125213123&#39;,&#39;17&#39;,&#39;manual&#39;), (23,&#39;7122613123&#39;,&#39;18&#39;,&#39;manual&#39;), (24,&#39;7122173123&#39;,&#39;19&#39;,&#39;manual&#39;), (15,&#39;75757122173123&#39;,&#39;20&#39;,&#39;manual&#39;);&quot;</span>);</div>
-<div class="line"><span class="lineno">   96</span>        insertTestData.addBatch(<span class="stringliteral">&quot;insert into cfe_00.hubs(id,host_id, ip, host_type) values (1,1,&#39;ip?&#39; ,&#39;cfe&#39;);&quot;</span>);</div>
-<div class="line"><span class="lineno">   97</span>        insertTestData.addBatch(<span class="stringliteral">&quot;insert into cfe_00.host_type_cfe(host_id, host_type, hub_id) values (1,&#39;cfe&#39;,1);&quot;</span>);</div>
-<div class="line"><span class="lineno">   98</span> </div>
-<div class="line"><span class="lineno">   99</span>        insertTestData.executeBatch();</div>
-<div class="line"><span class="lineno">  100</span>    }</div>
+<p class="definition">Definition at line <a class="el" href="ProcedureHostDataTestFile_8java_source.html#l00100">100</a> of file <a class="el" href="ProcedureHostDataTestFile_8java_source.html">ProcedureHostDataTestFile.java</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  100</span>                                                                 {</div>
+<div class="line"><span class="lineno">  101</span> </div>
+<div class="line"><span class="lineno">  102</span>        Statement insertTestData = conn.createStatement();</div>
+<div class="line"><span class="lineno">  103</span> </div>
+<div class="line"><span class="lineno">  104</span>        insertTestData</div>
+<div class="line"><span class="lineno">  105</span>                .addBatch(</div>
+<div class="line"><span class="lineno">  106</span>                        <span class="stringliteral">&quot;insert into location.host(id,MD5,fqhost,host_type) values (1,&#39;12365&#39;,&#39;1&#39;,&#39;cfe&#39;), (2,&#39;12322&#39;,&#39;2&#39;,&#39;manual&#39;), (3,&#39;1323&#39;,&#39;3&#39;,&#39;manual&#39;), (4,&#39;4123&#39;,&#39;4&#39;,&#39;manual&#39;), (5,&#39;5123&#39;,&#39;6&#39;,&#39;manual&#39;), (6,&#39;6123&#39;,&#39;7&#39;,&#39;manual&#39;), (7,&#39;7123&#39;,&#39;8&#39;,&#39;manual&#39;), (16,&#39;712&#39;,&#39;9&#39;,&#39;manual&#39;), (9,&#39;723&#39;,&#39;10&#39;,&#39;manual&#39;), (8,&#39;71233&#39;,&#39;11&#39;,&#39;manual&#39;), (10,&#39;712362&#39;,&#39;12&#39;,&#39;manual&#39;), (12,&#39;712653&#39;,&#39;13&#39;,&#39;manual&#39;), (17,&#39;71211233&#39;,&#39;14&#39;,&#39;manual&#39;), (11,&#39;712213123&#39;,&#39;15&#39;,&#39;manual&#39;), (21,&#39;7142213123&#39;,&#39;16&#39;,&#39;manual&#39;), (22,&#39;7125213123&#39;,&#39;17&#39;,&#39;manual&#39;), (23,&#39;7122613123&#39;,&#39;18&#39;,&#39;manual&#39;), (24,&#39;7122173123&#39;,&#39;19&#39;,&#39;manual&#39;), (15,&#39;75757122173123&#39;,&#39;20&#39;,&#39;manual&#39;);&quot;</span></div>
+<div class="line"><span class="lineno">  107</span>                );</div>
+<div class="line"><span class="lineno">  108</span>        insertTestData.addBatch(<span class="stringliteral">&quot;insert into cfe_00.hubs(id,host_id, ip, host_type) values (1,1,&#39;ip?&#39; ,&#39;cfe&#39;);&quot;</span>);</div>
+<div class="line"><span class="lineno">  109</span>        insertTestData.addBatch(<span class="stringliteral">&quot;insert into cfe_00.host_type_cfe(host_id, host_type, hub_id) values (1,&#39;cfe&#39;,1);&quot;</span>);</div>
+<div class="line"><span class="lineno">  110</span> </div>
+<div class="line"><span class="lineno">  111</span>        insertTestData.executeBatch();</div>
+<div class="line"><span class="lineno">  112</span>    }</div>
 </div><!-- fragment -->
 </div>
 </div>
