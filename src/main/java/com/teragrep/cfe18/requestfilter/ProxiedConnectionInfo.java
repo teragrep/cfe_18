@@ -49,6 +49,8 @@ import jakarta.json.Json;
 import jakarta.json.JsonObjectBuilder;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.Arrays;
+import java.util.List;
 
 public class ProxiedConnectionInfo implements JsonAble {
 
@@ -62,36 +64,16 @@ public class ProxiedConnectionInfo implements JsonAble {
     @Override
     public JsonObjectBuilder toJson() {
         JsonObjectBuilder proxiedConnectionInfo = Json.createObjectBuilder();
-        if (request.getHeader("X-Forwarded-For") != null) {
-            proxiedConnectionInfo.add("X-Forwarded-For", request.getHeader("X-Forwarded-For"));
-        } else {
-            proxiedConnectionInfo.addNull("X-Forwarded-For");
+
+        List<String> headers = Arrays.asList("X-Forwarded-For", "Forwarded", "X-Forwarded-Proto", "X-Forwarded-Port", "X-Real-IP", "Via");
+        for (String header : headers) {
+            if (request.getHeader(header) != null) {
+                proxiedConnectionInfo.add(header, request.getHeader(header));
+            } else {
+                proxiedConnectionInfo.addNull(header);
+            }
         }
-        if (request.getHeader("Forwarded") != null) {
-            proxiedConnectionInfo.add("Forwarded", request.getHeader("Forwarded"));
-        } else {
-            proxiedConnectionInfo.addNull("Forwarded");
-        }
-        if (request.getHeader("X-Forwarded-Proto") != null) {
-            proxiedConnectionInfo.add("X-Forwarded-Proto", request.getHeader("X-Forwarded-Proto"));
-        } else {
-            proxiedConnectionInfo.addNull("X-Forwarded-Proto");
-        }
-        if (request.getHeader("X-Forwarded-Port") != null) {
-            proxiedConnectionInfo.add("X-Forwarded-Port", request.getHeader("X-Forwarded-Port"));
-        } else {
-            proxiedConnectionInfo.addNull("X-Forwarded-Port");
-        }
-        if (request.getHeader("X-Real-IP") != null) {
-            proxiedConnectionInfo.add("X-Real-IP", request.getHeader("X-Real-IP"));
-        } else {
-            proxiedConnectionInfo.addNull("X-Real-IP");
-        }
-        if (request.getHeader("Via") != null) {
-            proxiedConnectionInfo.add("Via", request.getHeader("Via"));
-        } else {
-            proxiedConnectionInfo.addNull("Via");
-        }
+
         JsonObjectBuilder jsonObjectBuilder = Json.createObjectBuilder();
         jsonObjectBuilder.add("ProxiedConnectionInfo", proxiedConnectionInfo);
 
