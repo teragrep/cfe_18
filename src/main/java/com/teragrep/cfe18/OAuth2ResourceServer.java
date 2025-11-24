@@ -67,13 +67,19 @@ import java.security.interfaces.RSAPublicKey;
 @EnableMethodSecurity
 public class OAuth2ResourceServer {
 
+    private final RequestLoggingFilter requestLoggingFilter;
+
+    public OAuth2ResourceServer() {
+        this.requestLoggingFilter = new RequestLoggingFilter();
+    }
+
     @Value("${spring.security.oauth2.resourceserver.jwt.public-key-location}")
     RSAPublicKey key;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         // @formatter:off
-        http.authorizeRequests().antMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll().and()
+        http.addFilterBefore(requestLoggingFilter, org.springframework.security.web.authentication.www.BasicAuthenticationFilter.class).authorizeRequests().antMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll().and()
                 .authorizeRequests((authorize) -> authorize
                         .requestMatchers().hasAuthority("SCOPE_message:read")
                         .anyRequest().authenticated()
