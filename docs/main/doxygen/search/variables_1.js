@@ -18,5 +18,6 @@ var searchData=
   ['cfe_5f11_15',['cfe_11',['../enumcom_1_1teragrep_1_1cfe18_1_1handlers_1_1entities_1_1Storage_1_1StorageType.html#a8ee3c0665dc635291cfa6a4c936a0d8b',1,'com::teragrep::cfe18::handlers::entities::Storage::StorageType']]],
   ['cfe_5f12_16',['cfe_12',['../enumcom_1_1teragrep_1_1cfe18_1_1handlers_1_1entities_1_1Storage_1_1StorageType.html#aa973471256b55b6fbead0ade88d328b1',1,'com::teragrep::cfe18::handlers::entities::Storage::StorageType']]],
   ['cfe_5f19_17',['cfe_19',['../enumcom_1_1teragrep_1_1cfe18_1_1handlers_1_1entities_1_1Storage_1_1StorageType.html#a0aaf22bf074e89afcce520491c0053e4',1,'com::teragrep::cfe18::handlers::entities::Storage::StorageType']]],
-  ['cfe_5f23_18',['cfe_23',['../enumcom_1_1teragrep_1_1cfe18_1_1handlers_1_1entities_1_1Storage_1_1StorageType.html#a526229aff88db72c6b82a4ec1d80ea8c',1,'com::teragrep::cfe18::handlers::entities::Storage::StorageType']]]
+  ['cfe_5f23_18',['cfe_23',['../enumcom_1_1teragrep_1_1cfe18_1_1handlers_1_1entities_1_1Storage_1_1StorageType.html#a526229aff88db72c6b82a4ec1d80ea8c',1,'com::teragrep::cfe18::handlers::entities::Storage::StorageType']]],
+  ['classification_19',['classification',['../classcom_1_1teragrep_1_1cfe18_1_1requestfilter_1_1Classification.html#a677929fa4bd13c7ae6dd76d25aeaa913',1,'com::teragrep::cfe18::requestfilter::Classification']]]
 ];

@@ -1,0 +1,31 @@
+<map id="com.teragrep.cfe18.requestfilter.JsonAble" name="com.teragrep.cfe18.requestfilter.JsonAble">
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,421,240,461"/>
+<area shape="rect" id="Node000002" href="$classcom_1_1teragrep_1_1cfe18_1_1requestfilter_1_1Action.html" title=" " alt="" coords="303,5,538,45"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="126,407,140,333,168,238,190,188,216,140,248,94,286,55,304,43,307,48,290,59,252,98,220,142,194,191,173,240,145,335,131,408"/>
+<area shape="rect" id="Node000003" href="$classcom_1_1teragrep_1_1cfe18_1_1requestfilter_1_1Cause.html" title=" " alt="" coords="303,69,538,109"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="129,407,147,345,177,267,198,227,223,187,253,151,286,119,305,107,308,112,290,123,256,154,228,190,203,229,182,269,152,347,134,409"/>
+<area shape="rect" id="Node000004" href="$classcom_1_1teragrep_1_1cfe18_1_1requestfilter_1_1Classification.html" title=" " alt="" coords="303,133,538,173"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="133,408,155,357,187,296,231,235,257,207,286,183,307,171,310,176,290,188,261,211,235,238,192,299,159,360,138,410"/>
+<area shape="rect" id="Node000005" href="$classcom_1_1teragrep_1_1cfe18_1_1requestfilter_1_1Effect.html" title=" " alt="" coords="303,197,538,237"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="140,408,165,370,198,326,239,283,287,247,311,235,313,240,289,252,243,287,203,330,169,373,145,411"/>
+<area shape="rect" id="Node000006" href="$classcom_1_1teragrep_1_1cfe18_1_1requestfilter_1_1Granularity.html" title=" " alt="" coords="303,261,538,301"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="152,410,211,359,248,333,287,311,317,299,319,304,289,316,251,338,214,363,155,414"/>
+<area shape="rect" id="Node000007" href="$classcom_1_1teragrep_1_1cfe18_1_1requestfilter_1_1Location.html" title=" " alt="" coords="303,325,538,365"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="182,414,287,375,330,363,331,368,289,380,184,419"/>
+<area shape="rect" id="Node000008" href="$classcom_1_1teragrep_1_1cfe18_1_1requestfilter_1_1ProxiedConnectionInfo.html" title=" " alt="" coords="303,389,538,429"/>
+<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="254,425,303,419,303,425,254,430"/>
+<area shape="rect" id="Node000009" href="$classcom_1_1teragrep_1_1cfe18_1_1requestfilter_1_1RemoteInfo.html" title=" " alt="" coords="303,453,538,493"/>
+<area shape="poly" id="edge8_Node000001_Node000009" title=" " alt="" coords="254,453,303,458,303,463,254,458"/>
+<area shape="rect" id="Node000010" href="$classcom_1_1teragrep_1_1cfe18_1_1requestfilter_1_1RequestIdentity.html" title=" " alt="" coords="303,517,538,557"/>
+<area shape="poly" id="edge9_Node000001_Node000010" title=" " alt="" coords="184,464,289,503,331,515,330,520,287,508,182,469"/>
+<area shape="rect" id="Node000011" href="$classcom_1_1teragrep_1_1cfe18_1_1requestfilter_1_1RequestObject.html" title=" " alt="" coords="303,581,538,621"/>
+<area shape="poly" id="edge10_Node000001_Node000011" title=" " alt="" coords="155,469,214,519,251,545,289,567,319,579,317,584,287,572,248,550,211,524,152,473"/>
+<area shape="rect" id="Node000012" href="$classcom_1_1teragrep_1_1cfe18_1_1requestfilter_1_1Result.html" title=" " alt="" coords="303,645,538,685"/>
+<area shape="poly" id="edge11_Node000001_Node000012" title=" " alt="" coords="145,472,169,510,203,553,243,595,289,631,313,643,311,648,287,636,239,599,198,556,165,513,140,475"/>
+<area shape="rect" id="Node000013" href="$classcom_1_1teragrep_1_1cfe18_1_1requestfilter_1_1Subject.html" title=" " alt="" coords="303,709,538,749"/>
+<area shape="poly" id="edge12_Node000001_Node000013" title=" " alt="" coords="138,473,159,523,192,583,235,644,261,672,290,695,310,707,307,711,286,700,257,675,231,648,187,586,155,525,133,475"/>
+<area shape="rect" id="Node000014" href="$classcom_1_1teragrep_1_1cfe18_1_1requestfilter_1_1Timestamp.html" title=" " alt="" coords="303,773,538,813"/>
+<area shape="poly" id="edge13_Node000001_Node000014" title=" " alt="" coords="134,474,152,536,182,613,203,653,228,692,256,728,290,759,308,771,305,775,286,763,253,732,223,696,198,656,177,615,147,537,129,475"/>
+<area shape="rect" id="Node000015" href="$classcom_1_1teragrep_1_1cfe18_1_1requestfilter_1_1Type.html" title=" " alt="" coords="288,838,553,863"/>
+<area shape="poly" id="edge14_Node000001_Node000015" title=" " alt="" coords="131,475,144,548,172,644,193,693,219,741,251,785,290,823,310,835,307,840,286,827,247,789,215,744,188,696,167,645,139,550,125,476"/>
+</map>

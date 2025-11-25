@@ -75,20 +75,56 @@ $(function() {
 <div class="header">
   <div class="summary">
 <a href="#pub-methods">Public Member Functions</a> &#124;
+<a href="#pri-attribs">Private Attributes</a> &#124;
 <a href="classcom_1_1teragrep_1_1cfe18_1_1OAuth2ResourceServer-members.html">List of all members</a>  </div>
   <div class="headertitle"><div class="title">com.teragrep.cfe18.OAuth2ResourceServer Class Reference</div></div>
 </div><!--header-->
 <div class="contents">
+<div class="dynheader">
+Collaboration diagram for com.teragrep.cfe18.OAuth2ResourceServer:</div>
+<div class="dyncontent">
+<div class="center"><iframe scrolling="no" frameborder="0" src="classcom_1_1teragrep_1_1cfe18_1_1OAuth2ResourceServer__coll__graph.svg" width="252" height="228"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+<center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
+<tr class="memitem:acc0a8b4ca2a6767d159e21dfeff8f522" id="r_acc0a8b4ca2a6767d159e21dfeff8f522"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcom_1_1teragrep_1_1cfe18_1_1OAuth2ResourceServer.html#acc0a8b4ca2a6767d159e21dfeff8f522">OAuth2ResourceServer</a> ()</td></tr>
+<tr class="separator:acc0a8b4ca2a6767d159e21dfeff8f522"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3452d15a67390eaa538f2de72490a65e" id="r_a3452d15a67390eaa538f2de72490a65e"><td class="memItemLeft" align="right" valign="top">SecurityFilterChain&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcom_1_1teragrep_1_1cfe18_1_1OAuth2ResourceServer.html#a3452d15a67390eaa538f2de72490a65e">securityFilterChain</a> (HttpSecurity http)  throws Exception </td></tr>
 <tr class="separator:a3452d15a67390eaa538f2de72490a65e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pri-attribs" name="pri-attribs"></a>
+Private Attributes</h2></td></tr>
+<tr class="memitem:aaad9c5941995e34d852d685bcb127996" id="r_aaad9c5941995e34d852d685bcb127996"><td class="memItemLeft" align="right" valign="top">final <a class="el" href="classcom_1_1teragrep_1_1cfe18_1_1RequestLoggingFilter.html">RequestLoggingFilter</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcom_1_1teragrep_1_1cfe18_1_1OAuth2ResourceServer.html#aaad9c5941995e34d852d685bcb127996">requestLoggingFilter</a></td></tr>
+<tr class="separator:aaad9c5941995e34d852d685bcb127996"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock">
 <p class="definition">Definition at line <a class="el" href="OAuth2ResourceServer_8java_source.html#l00068">68</a> of file <a class="el" href="OAuth2ResourceServer_8java_source.html">OAuth2ResourceServer.java</a>.</p>
-</div><h2 class="groupheader">Member Function Documentation</h2>
+</div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
+<a id="acc0a8b4ca2a6767d159e21dfeff8f522" name="acc0a8b4ca2a6767d159e21dfeff8f522"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#acc0a8b4ca2a6767d159e21dfeff8f522">&#9670;&#160;</a></span>OAuth2ResourceServer()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">com.teragrep.cfe18.OAuth2ResourceServer.OAuth2ResourceServer </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="OAuth2ResourceServer_8java_source.html#l00072">72</a> of file <a class="el" href="OAuth2ResourceServer_8java_source.html">OAuth2ResourceServer.java</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   72</span>                                  {</div>
+<div class="line"><span class="lineno">   73</span>        this.requestLoggingFilter = <span class="keyword">new</span> RequestLoggingFilter();</div>
+<div class="line"><span class="lineno">   74</span>    }</div>
+</div><!-- fragment -->
+</div>
+</div>
+<h2 class="groupheader">Member Function Documentation</h2>
 <a id="a3452d15a67390eaa538f2de72490a65e" name="a3452d15a67390eaa538f2de72490a65e"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a3452d15a67390eaa538f2de72490a65e">&#9670;&#160;</a></span>securityFilterChain()</h2>
 
@@ -105,21 +141,47 @@ Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="OAuth2ResourceServer_8java_source.html#l00074">74</a> of file <a class="el" href="OAuth2ResourceServer_8java_source.html">OAuth2ResourceServer.java</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   74</span>                                                                                       {</div>
-<div class="line"><span class="lineno">   75</span>        <span class="comment">// @formatter:off</span></div>
-<div class="line"><span class="lineno">   76</span>        http.authorizeRequests().antMatchers(<span class="stringliteral">&quot;/swagger-ui/**&quot;</span>, <span class="stringliteral">&quot;/v3/api-docs/**&quot;</span>).permitAll().and()</div>
-<div class="line"><span class="lineno">   77</span>                .authorizeRequests((authorize) -&gt; authorize</div>
-<div class="line"><span class="lineno">   78</span>                        .requestMatchers().hasAuthority(<span class="stringliteral">&quot;SCOPE_message:read&quot;</span>)</div>
-<div class="line"><span class="lineno">   79</span>                        .anyRequest().authenticated()</div>
-<div class="line"><span class="lineno">   80</span>                )</div>
-<div class="line"><span class="lineno">   81</span>                .oauth2ResourceServer((oauth2) -&gt; oauth2</div>
-<div class="line"><span class="lineno">   82</span>                        .jwt((jwt) -&gt; jwt.decoder(jwtDecoder()))</div>
-<div class="line"><span class="lineno">   83</span>                );</div>
-<div class="line"><span class="lineno">   84</span>        <span class="comment">// @formatter:on</span></div>
-<div class="line"><span class="lineno">   85</span>        <span class="keywordflow">return</span> http.build();</div>
-<div class="line"><span class="lineno">   86</span>    }</div>
+<p class="definition">Definition at line <a class="el" href="OAuth2ResourceServer_8java_source.html#l00080">80</a> of file <a class="el" href="OAuth2ResourceServer_8java_source.html">OAuth2ResourceServer.java</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   80</span>                                                                                       {</div>
+<div class="line"><span class="lineno">   81</span>        <span class="comment">// @formatter:off</span></div>
+<div class="line"><span class="lineno">   82</span>        http.addFilterBefore(<a class="code hl_variable" href="classcom_1_1teragrep_1_1cfe18_1_1OAuth2ResourceServer.html#aaad9c5941995e34d852d685bcb127996">requestLoggingFilter</a>, org.springframework.security.web.authentication.www.BasicAuthenticationFilter.class).authorizeRequests().antMatchers(<span class="stringliteral">&quot;/swagger-ui/**&quot;</span>, <span class="stringliteral">&quot;/v3/api-docs/**&quot;</span>).permitAll().and()</div>
+<div class="line"><span class="lineno">   83</span>                .authorizeRequests((authorize) -&gt; authorize</div>
+<div class="line"><span class="lineno">   84</span>                        .requestMatchers().hasAuthority(<span class="stringliteral">&quot;SCOPE_message:read&quot;</span>)</div>
+<div class="line"><span class="lineno">   85</span>                        .anyRequest().authenticated()</div>
+<div class="line"><span class="lineno">   86</span>                )</div>
+<div class="line"><span class="lineno">   87</span>                .oauth2ResourceServer((oauth2) -&gt; oauth2</div>
+<div class="line"><span class="lineno">   88</span>                        .jwt((jwt) -&gt; jwt.decoder(jwtDecoder()))</div>
+<div class="line"><span class="lineno">   89</span>                );</div>
+<div class="line"><span class="lineno">   90</span>        <span class="comment">// @formatter:on</span></div>
+<div class="line"><span class="lineno">   91</span>        <span class="keywordflow">return</span> http.build();</div>
+<div class="line"><span class="lineno">   92</span>    }</div>
+<div class="ttc" id="aclasscom_1_1teragrep_1_1cfe18_1_1OAuth2ResourceServer_html_aaad9c5941995e34d852d685bcb127996"><div class="ttname"><a href="classcom_1_1teragrep_1_1cfe18_1_1OAuth2ResourceServer.html#aaad9c5941995e34d852d685bcb127996">com.teragrep.cfe18.OAuth2ResourceServer.requestLoggingFilter</a></div><div class="ttdeci">final RequestLoggingFilter requestLoggingFilter</div><div class="ttdef"><b>Definition</b> <a href="OAuth2ResourceServer_8java_source.html#l00070">OAuth2ResourceServer.java:70</a></div></div>
 </div><!-- fragment -->
+</div>
+</div>
+<h2 class="groupheader">Member Data Documentation</h2>
+<a id="aaad9c5941995e34d852d685bcb127996" name="aaad9c5941995e34d852d685bcb127996"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aaad9c5941995e34d852d685bcb127996">&#9670;&#160;</a></span>requestLoggingFilter</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">final <a class="el" href="classcom_1_1teragrep_1_1cfe18_1_1RequestLoggingFilter.html">RequestLoggingFilter</a> com.teragrep.cfe18.OAuth2ResourceServer.requestLoggingFilter</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="OAuth2ResourceServer_8java_source.html#l00070">70</a> of file <a class="el" href="OAuth2ResourceServer_8java_source.html">OAuth2ResourceServer.java</a>.</p>
+
 </div>
 </div>
 <hr/>The documentation for this class was generated from the following file:<ul>
