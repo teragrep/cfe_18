@@ -61,7 +61,7 @@ public class Result implements JsonAble {
     @Override
     public JsonObjectBuilder toJson() {
         JsonObjectBuilder resultBuilder = Json.createObjectBuilder();
-        if (response.getStatus() >= 200 && response.getStatus() <= 400) {
+        if (response.getStatus() >= 200 && response.getStatus() < 400) {
             resultBuilder.add("Result", "Success");
 
         }
