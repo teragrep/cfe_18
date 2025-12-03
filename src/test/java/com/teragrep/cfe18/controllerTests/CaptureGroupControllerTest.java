@@ -125,7 +125,7 @@ public class CaptureGroupControllerTest extends TestSpringBootInformation {
     @Order(1)
     public void testSelectAllEmpty() {
         // Asserting get request
-        HttpGet requestGet = new HttpGet("http://localhost:" + port + "/capture/group");
+        HttpGet requestGet = new HttpGet("http://localhost:" + port + "/v2/captures/group");
 
         requestGet.setHeader("Authorization", "Bearer " + token);
 
@@ -151,7 +151,7 @@ public class CaptureGroupControllerTest extends TestSpringBootInformation {
         // Capture Group
         CaptureGroup captureGroup = new CaptureGroup();
         captureGroup.setCaptureGroupName("groupRelp");
-        captureGroup.setCaptureGroupType(CaptureGroup.groupType.relp);
+        captureGroup.setCaptureGroupType(CaptureGroup.GroupType.RELP);
         captureGroup.setFlowId(555);
 
         String cgJson = gson.toJson(captureGroup);
@@ -160,7 +160,7 @@ public class CaptureGroupControllerTest extends TestSpringBootInformation {
         StringEntity requestEntityCaptureGroup = new StringEntity(String.valueOf(cgJson), ContentType.APPLICATION_JSON);
 
         // Creates the request
-        HttpPut requestCaptureGroup = new HttpPut("http://localhost:" + port + "/capture/group");
+        HttpPut requestCaptureGroup = new HttpPut("http://localhost:" + port + "/v2/captures/group");
         // set requestEntity to the put request
         requestCaptureGroup.setEntity(requestEntityCaptureGroup);
         // Header
@@ -197,7 +197,7 @@ public class CaptureGroupControllerTest extends TestSpringBootInformation {
         // Capture Group
         CaptureGroup captureGroup = new CaptureGroup();
         captureGroup.setCaptureGroupName("groupRelp");
-        captureGroup.setCaptureGroupType(CaptureGroup.groupType.relp);
+        captureGroup.setCaptureGroupType(CaptureGroup.GroupType.RELP);
         captureGroup.setFlowId(1);
 
         String cgJson = gson.toJson(captureGroup);
@@ -206,7 +206,7 @@ public class CaptureGroupControllerTest extends TestSpringBootInformation {
         StringEntity requestEntityCaptureGroup = new StringEntity(String.valueOf(cgJson), ContentType.APPLICATION_JSON);
 
         // Creates the request
-        HttpPut requestCaptureGroup = new HttpPut("http://localhost:" + port + "/capture/group");
+        HttpPut requestCaptureGroup = new HttpPut("http://localhost:" + port + "/v2/captures/group");
         // set requestEntity to the put request
         requestCaptureGroup.setEntity(requestEntityCaptureGroup);
         // Header
@@ -240,7 +240,7 @@ public class CaptureGroupControllerTest extends TestSpringBootInformation {
     @Order(4)
     public void testSelectCaptureGroup() {
         CaptureGroup captureGroup = new CaptureGroup();
-        captureGroup.setCaptureGroupType(CaptureGroup.groupType.relp);
+        captureGroup.setCaptureGroupType(CaptureGroup.GroupType.RELP);
         captureGroup.setId(1);
         captureGroup.setCaptureGroupName("groupRelp");
         captureGroup.setFlowId(1);
@@ -248,7 +248,7 @@ public class CaptureGroupControllerTest extends TestSpringBootInformation {
         String expectedJson = gson.toJson(captureGroup);
 
         // Asserting get request
-        HttpGet requestGet = new HttpGet("http://localhost:" + port + "/capture/group/1");
+        HttpGet requestGet = new HttpGet("http://localhost:" + port + "/v2/captures/group/1");
 
         requestGet.setHeader("Authorization", "Bearer " + token);
 
@@ -272,7 +272,7 @@ public class CaptureGroupControllerTest extends TestSpringBootInformation {
         CaptureGroup captureGroup2 = new CaptureGroup();
         captureGroup2.setId(2);
         captureGroup2.setCaptureGroupName("groupRelp2");
-        captureGroup2.setCaptureGroupType(CaptureGroup.groupType.relp);
+        captureGroup2.setCaptureGroupType(CaptureGroup.GroupType.RELP);
         captureGroup2.setFlowId(1);
 
         String cgJson = gson.toJson(captureGroup2);
@@ -281,7 +281,7 @@ public class CaptureGroupControllerTest extends TestSpringBootInformation {
         StringEntity requestEntityCaptureGroup = new StringEntity(String.valueOf(cgJson), ContentType.APPLICATION_JSON);
 
         // Creates the request
-        HttpPut requestCaptureGroup = new HttpPut("http://localhost:" + port + "/capture/group");
+        HttpPut requestCaptureGroup = new HttpPut("http://localhost:" + port + "/v2/captures/group");
         // set requestEntity to the put request
         requestCaptureGroup.setEntity(requestEntityCaptureGroup);
         // Header
@@ -293,7 +293,7 @@ public class CaptureGroupControllerTest extends TestSpringBootInformation {
         CaptureGroup captureGroup = new CaptureGroup();
         captureGroup.setId(1);
         captureGroup.setCaptureGroupName("groupRelp");
-        captureGroup.setCaptureGroupType(CaptureGroup.groupType.relp);
+        captureGroup.setCaptureGroupType(CaptureGroup.GroupType.RELP);
         captureGroup.setFlowId(1);
 
         expected.add(captureGroup);
@@ -302,7 +302,7 @@ public class CaptureGroupControllerTest extends TestSpringBootInformation {
         String expectedJson = gson.toJson(expected);
 
         // Asserting get request
-        HttpGet requestGet = new HttpGet("http://localhost:" + port + "/capture/group");
+        HttpGet requestGet = new HttpGet("http://localhost:" + port + "/v2/captures/group");
 
         requestGet.setHeader("Authorization", "Bearer " + token);
 
@@ -321,7 +321,7 @@ public class CaptureGroupControllerTest extends TestSpringBootInformation {
     @Test
     @Order(6)
     public void testDeleteNonExistentCaptureGroup() {
-        HttpDelete delete = new HttpDelete("http://localhost:" + port + "/capture/group/125412");
+        HttpDelete delete = new HttpDelete("http://localhost:" + port + "/v2/captures/group/125412");
 
         // Header
         delete.setHeader("Authorization", "Bearer " + token);
@@ -349,7 +349,7 @@ public class CaptureGroupControllerTest extends TestSpringBootInformation {
     @Order(7)
     public void testDeleteCaptureGroup() {
         //groupRelp
-        HttpDelete delete = new HttpDelete("http://localhost:" + port + "/capture/group/1");
+        HttpDelete delete = new HttpDelete("http://localhost:" + port + "/v2/captures/group/1");
 
         // Header
         delete.setHeader("Authorization", "Bearer " + token);
@@ -378,7 +378,7 @@ public class CaptureGroupControllerTest extends TestSpringBootInformation {
     @Order(8)
     public void testSelectNonExistentCaptureGroup() {
         // Asserting get request
-        HttpGet requestGet = new HttpGet("http://localhost:" + port + "/capture/group/112233");
+        HttpGet requestGet = new HttpGet("http://localhost:" + port + "/v2/captures/group/112233");
 
         requestGet.setHeader("Authorization", "Bearer " + token);
 

@@ -51,16 +51,14 @@ import io.swagger.v3.oas.annotations.media.Schema;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class CaptureGroup {
 
-    public enum groupType {
-        cfe, relp
+    public enum GroupType {
+        CFE, RELP
     }
 
+    @Schema(accessMode = Schema.AccessMode.READ_ONLY)
     private int id;
     private String captureGroupName;
-    private groupType captureGroupType;
-    @Schema(accessMode = Schema.AccessMode.READ_ONLY)
-    private String tag;
-    private Integer captureDefinitionId;
+    private GroupType captureGroupType;
     private Integer flowId;
 
     public int getId() {
@@ -79,28 +77,12 @@ public class CaptureGroup {
         this.captureGroupName = captureGroupName;
     }
 
-    public groupType getCaptureGroupType() {
+    public GroupType getCaptureGroupType() {
         return captureGroupType;
     }
 
-    public void setCaptureGroupType(groupType captureGroupType) {
+    public void setCaptureGroupType(GroupType captureGroupType) {
         this.captureGroupType = captureGroupType;
-    }
-
-    public String getTag() {
-        return tag;
-    }
-
-    public void setTag(String tag) {
-        this.tag = tag;
-    }
-
-    public Integer getCaptureDefinitionId() {
-        return captureDefinitionId;
-    }
-
-    public void setCaptureDefinitionId(Integer captureDefinitionId) {
-        this.captureDefinitionId = captureDefinitionId;
     }
 
     public Integer getFlowId() {
@@ -114,6 +96,6 @@ public class CaptureGroup {
     @Override
     public String toString() {
         return "CaptureGroup{" + "id=" + id + ", captureGroupName='" + captureGroupName + '\'' + ", captureGroupType="
-                + captureGroupType + ", tag='" + tag + '\'' + ", captureDefinitionId=" + captureDefinitionId + '}';
+                + captureGroupType + ", flowId=" + flowId + '}';
     }
 }

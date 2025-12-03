@@ -53,11 +53,11 @@ import java.util.List;
 @Mapper
 public interface CaptureGroupMapper {
 
-    CaptureGroup create(String groupName, CaptureGroup.groupType type, Integer flowId);
+    CaptureGroup create(String groupName, CaptureGroup.GroupType type, Integer flowId);
 
-    CaptureGroup get(int id, Integer version);
+    CaptureGroup get(int groupId, Integer version);
 
     List<CaptureGroup> getAll(Integer version);
 
-    void delete(int id);
+    void delete(int groupId);
 }

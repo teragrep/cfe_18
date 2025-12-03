@@ -68,7 +68,7 @@ import java.sql.SQLException;
 import java.util.List;
 
 @RestController
-@RequestMapping(path = "capture/group")
+@RequestMapping(path = "v2/captures/group")
 @SecurityRequirement(name = "api")
 public class CaptureGroupController {
 
@@ -144,7 +144,7 @@ public class CaptureGroupController {
     }
 
     @RequestMapping(
-            path = "/{id}",
+            path = "/{groupId}",
             method = RequestMethod.GET,
             produces = "application/json"
     )
@@ -171,15 +171,18 @@ public class CaptureGroupController {
                     content = @Content
             )
     })
-    public ResponseEntity<?> get(@PathVariable("id") int id, @RequestParam(required = false) Integer version) {
+    public ResponseEntity<?> get(
+            @PathVariable("groupId") int groupId,
+            @RequestParam(required = false) Integer version
+    ) {
         try {
-            CaptureGroup cg = captureGroupMapper.get(id, version);
+            CaptureGroup cg = captureGroupMapper.get(groupId, version);
             return new ResponseEntity<>(cg, HttpStatus.OK);
         }
         catch (RuntimeException ex) {
             LOGGER.error(ex.getMessage());
             JSONObject jsonErr = new JSONObject();
-            jsonErr.put("id", id);
+            jsonErr.put("id", groupId);
             jsonErr.put("message", ex.getCause().getMessage());
             final Throwable cause = ex.getCause();
             if (cause instanceof SQLException) {
@@ -220,7 +223,7 @@ public class CaptureGroupController {
     }
 
     @RequestMapping(
-            path = "/{id}",
+            path = "/{groupId}",
             method = RequestMethod.DELETE,
             produces = MediaType.APPLICATION_JSON_VALUE
     )
@@ -252,19 +255,19 @@ public class CaptureGroupController {
                     content = @Content
             )
     })
-    public ResponseEntity<String> delete(@PathVariable("id") int id) {
-        LOGGER.info("Deleting Capture group <[{}]>", id);
+    public ResponseEntity<String> delete(@PathVariable("groupId") int groupId) {
+        LOGGER.info("Deleting Capture group <[{}]>", groupId);
         try {
-            captureGroupMapper.delete(id);
+            captureGroupMapper.delete(groupId);
             JSONObject j = new JSONObject();
-            j.put("id", id);
+            j.put("id", groupId);
             j.put("message", "Capture group deleted");
             return new ResponseEntity<>(j.toString(), HttpStatus.OK);
         }
         catch (RuntimeException ex) {
             LOGGER.error(ex.getMessage());
             JSONObject jsonErr = new JSONObject();
-            jsonErr.put("id", id);
+            jsonErr.put("id", groupId);
             jsonErr.put("message", ex.getCause().getMessage());
             final Throwable cause = ex.getCause();
             if (cause instanceof SQLException) {
