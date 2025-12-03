@@ -221,7 +221,7 @@ public class CaptureRelpControllerTest extends TestSpringBootInformation {
         captureRelp2.setSourceType("relpsource1");
         captureRelp2.setProtocol("prot");
         captureRelp2.setFlow("capflow");
-        captureRelp2.setType(CaptureRelp.CaptureType.relp);
+        captureRelp2.setType(CaptureRelp.CaptureType.RELP);
 
         String json = gson.toJson(captureRelp2);
 
@@ -256,7 +256,7 @@ public class CaptureRelpControllerTest extends TestSpringBootInformation {
         captureRelp2.setSourceType("relpsource1");
         captureRelp2.setProtocol("prot");
         captureRelp2.setFlow("capflow");
-        captureRelp2.setType(CaptureRelp.CaptureType.relp);
+        captureRelp2.setType(CaptureRelp.CaptureType.RELP);
 
         expected.add(captureRelp2);
 

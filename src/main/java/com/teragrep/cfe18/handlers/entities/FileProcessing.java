@@ -50,7 +50,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 public class FileProcessing {
 
     public enum InputType {
-        regex, newline
+        REGEX, NEWLINE
     }
 
     @Schema(accessMode = Schema.AccessMode.READ_ONLY)

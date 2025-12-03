@@ -90,7 +90,7 @@ public class FileProcessingTypeControllerTest extends TestSpringBootInformation 
     public void testFileProcessingType() throws Exception {
 
         FileProcessing file = new FileProcessing();
-        file.setInputtype(FileProcessing.InputType.regex);
+        file.setInputtype(FileProcessing.InputType.REGEX);
         file.setInputvalue("normalregex");
         file.setRuleset("ruleset1");
         file.setName("name1");
@@ -138,7 +138,7 @@ public class FileProcessingTypeControllerTest extends TestSpringBootInformation 
     public void testGetFileProcessingTypeByName() throws Exception {
 
         FileProcessing file2 = new FileProcessing();
-        file2.setInputtype(FileProcessing.InputType.regex);
+        file2.setInputtype(FileProcessing.InputType.REGEX);
         file2.setInputvalue("normalregex");
         file2.setRuleset("ruleset1");
         file2.setName("name1");
@@ -159,7 +159,7 @@ public class FileProcessingTypeControllerTest extends TestSpringBootInformation 
         HttpClientBuilder.create().build().execute(request);
 
         FileProcessing file = new FileProcessing();
-        file.setInputtype(FileProcessing.InputType.regex);
+        file.setInputtype(FileProcessing.InputType.REGEX);
         file.setInputvalue("normalregex");
         file.setRuleset("ruleset1");
         file.setName("name1");
@@ -194,7 +194,7 @@ public class FileProcessingTypeControllerTest extends TestSpringBootInformation 
         // add another piece of data so that
         FileProcessing file1 = new FileProcessing();
         file1.setId(2);
-        file1.setInputtype(FileProcessing.InputType.regex);
+        file1.setInputtype(FileProcessing.InputType.REGEX);
         file1.setInputvalue("test");
         file1.setRuleset("test");
         file1.setName("test");
@@ -216,7 +216,7 @@ public class FileProcessingTypeControllerTest extends TestSpringBootInformation 
 
         FileProcessing file2 = new FileProcessing();
         file2.setId(1);
-        file2.setInputtype(FileProcessing.InputType.regex);
+        file2.setInputtype(FileProcessing.InputType.REGEX);
         file2.setInputvalue("normalregex");
         file2.setRuleset("ruleset1");
         file2.setName("name1");
@@ -240,8 +240,8 @@ public class FileProcessingTypeControllerTest extends TestSpringBootInformation 
 
         String responseStringGet = EntityUtils.toString(entityGet, "UTF-8");
 
-        assertThat(responseGet.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_OK));
         assertEquals(expectedJson, responseStringGet);
+        assertThat(responseGet.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_OK));
     }
 
     // Delete endpoint tests

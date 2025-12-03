@@ -85,7 +85,7 @@ public class StorageControllerTest extends TestSpringBootInformation {
     public void testInsertStorage() {
 
         Storage storage = new Storage();
-        storage.setStorageType(Storage.StorageType.cfe_04);
+        storage.setStorageType(Storage.StorageType.CFE_04);
         storage.setStorageName("cfe_04");
 
         String json = gson.toJson(storage);
@@ -132,7 +132,7 @@ public class StorageControllerTest extends TestSpringBootInformation {
 
         Storage storage = new Storage();
         storage.setStorageName("cfe_04");
-        storage.setStorageType(Storage.StorageType.cfe_04);
+        storage.setStorageType(Storage.StorageType.CFE_04);
         storage.setId(1);
 
         expected.add(storage);
@@ -161,7 +161,7 @@ public class StorageControllerTest extends TestSpringBootInformation {
     public void testFetchStorage() {
         Storage storage = new Storage();
         storage.setStorageName("cfe_04");
-        storage.setStorageType(Storage.StorageType.cfe_04);
+        storage.setStorageType(Storage.StorageType.CFE_04);
         storage.setId(1);
 
         String expectedJson = new Gson().toJson(storage);
@@ -255,9 +255,9 @@ public class StorageControllerTest extends TestSpringBootInformation {
 
         FlowStorage flowStorage = new FlowStorage();
         flowStorage.setId(1);
+        flowStorage.setStorage_type("CFE_04");
         flowStorage.setFlow("Testflow");
         flowStorage.setStorage_name("cfe_04");
-        flowStorage.setStorage_type("cfe_04");
         flowStorage.setStorage_id(1);
 
         expected.add(flowStorage);
@@ -287,9 +287,9 @@ public class StorageControllerTest extends TestSpringBootInformation {
 
         FlowStorage flowStorage = new FlowStorage();
         flowStorage.setId(1);
+        flowStorage.setStorage_type("CFE_04");
         flowStorage.setFlow("Testflow");
         flowStorage.setStorage_name("cfe_04");
-        flowStorage.setStorage_type("cfe_04");
         flowStorage.setStorage_id(1);
 
         expected.add(flowStorage);

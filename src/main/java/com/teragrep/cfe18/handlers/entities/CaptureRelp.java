@@ -52,7 +52,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 public class CaptureRelp {
 
     public enum CaptureType {
-        cfe, relp
+        CFE, RELP
     }
 
     @Schema(accessMode = Schema.AccessMode.READ_ONLY)

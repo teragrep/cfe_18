@@ -52,7 +52,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 public class Storage {
 
     public enum StorageType {
-        cfe_04, cfe_10, cfe_11, cfe_12, cfe_19, cfe_23
+        CFE_04, CFE_10, CFE_11, CFE_12, CFE_19, CFE_23
     }
 
     @Schema(accessMode = Schema.AccessMode.READ_ONLY)

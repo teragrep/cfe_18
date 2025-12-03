@@ -61,7 +61,7 @@ BEGIN
            h.md5    AS host_md5,
            h.fqhost AS host_fq
     FROM location.host FOR SYSTEM_TIME AS OF TRANSACTION @time h
-    WHERE h.host_type = 'relp';
+    WHERE h.host_type = 'RELP';
 END;
 //
 DELIMITER ;

@@ -85,7 +85,7 @@ public final class CaptureFileControllerTest extends TestSpringBootInformation {
     void testData() throws Exception {
         // Filecapturemeta
         FileProcessing file = new FileProcessing();
-        file.setInputtype(FileProcessing.InputType.regex);
+        file.setInputtype(FileProcessing.InputType.REGEX);
         file.setInputvalue("capregex");
         file.setRuleset("capruleset");
         file.setName("capname");
@@ -273,7 +273,7 @@ public final class CaptureFileControllerTest extends TestSpringBootInformation {
         captureFile.setTagPath("tagpath1");
         captureFile.setCapturePath("capturepath1");
         captureFile.setFileProcessingTypeId(1);
-        captureFile.setType(CaptureFile.CaptureType.cfe);
+        captureFile.setType(CaptureFile.CaptureType.CFE);
 
         String json = gson.toJson(captureFile);
 
@@ -311,7 +311,7 @@ public final class CaptureFileControllerTest extends TestSpringBootInformation {
         captureFile2.setTagPath("tagpath1");
         captureFile2.setCapturePath("capturepath1");
         captureFile2.setFileProcessingTypeId(1);
-        captureFile2.setType(CaptureFile.CaptureType.cfe);
+        captureFile2.setType(CaptureFile.CaptureType.CFE);
 
         expected.add(captureFile2);
 
