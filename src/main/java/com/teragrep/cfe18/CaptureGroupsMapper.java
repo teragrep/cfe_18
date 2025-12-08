@@ -45,19 +45,19 @@
  */
 package com.teragrep.cfe18;
 
-import com.teragrep.cfe18.handlers.entities.CaptureGroup;
+import com.teragrep.cfe18.handlers.entities.CaptureGroups;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
 
 @Mapper
-public interface CaptureGroupMapper {
+public interface CaptureGroupsMapper {
 
-    CaptureGroup create(String groupName, CaptureGroup.GroupType type, Integer flowId);
+    CaptureGroups create(String groupName, CaptureGroups.GroupType type, Integer flowId);
 
-    CaptureGroup get(int groupId, Integer version);
+    CaptureGroups get(int groupId, Integer version);
 
-    List<CaptureGroup> getAll(Integer version);
+    List<CaptureGroups> getAll(Integer version);
 
     void delete(int groupId);
 }

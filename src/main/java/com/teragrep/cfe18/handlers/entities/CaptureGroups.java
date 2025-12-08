@@ -49,7 +49,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class CaptureGroup {
+public class CaptureGroups {
 
     public enum GroupType {
         CFE, RELP
@@ -95,7 +95,7 @@ public class CaptureGroup {
 
     @Override
     public String toString() {
-        return "CaptureGroup{" + "id=" + id + ", captureGroupName='" + captureGroupName + '\'' + ", captureGroupType="
+        return "CaptureGroups{" + "id=" + id + ", captureGroupName='" + captureGroupName + '\'' + ", captureGroupType="
                 + captureGroupType + ", flowId=" + flowId + '}';
     }
 }

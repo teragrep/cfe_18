@@ -61,9 +61,9 @@ import java.sql.SQLException;
 Tests for capture group
 Uses dataset procedureCaptureGroupTestData.xml which is copied version of triggerTestData.xml
  */
-public class ProcedureCaptureGroupTest extends DBUnitbase {
+public class ProcedureCaptureGroupsTest extends DBUnitbase {
 
-    public ProcedureCaptureGroupTest(String name) {
+    public ProcedureCaptureGroupsTest(String name) {
         super(name);
     }
 

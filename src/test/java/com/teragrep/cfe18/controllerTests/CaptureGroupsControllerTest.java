@@ -46,7 +46,7 @@
 package com.teragrep.cfe18.controllerTests;
 
 import com.google.gson.Gson;
-import com.teragrep.cfe18.handlers.entities.CaptureGroup;
+import com.teragrep.cfe18.handlers.entities.CaptureGroups;
 import com.teragrep.cfe18.handlers.entities.Flow;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -75,7 +75,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @ExtendWith(MigrateDatabaseExtension.class)
-public class CaptureGroupControllerTest extends TestSpringBootInformation {
+public class CaptureGroupsControllerTest extends TestSpringBootInformation {
 
     Gson gson = new Gson();
 
@@ -136,7 +136,7 @@ public class CaptureGroupControllerTest extends TestSpringBootInformation {
 
         String responseStringGet = Assertions.assertDoesNotThrow(() -> EntityUtils.toString(entityGet, "UTF-8"));
 
-        List<CaptureGroup> expectedCaptureGroups = new ArrayList<>();
+        List<CaptureGroups> expectedCaptureGroups = new ArrayList<>();
 
         String expected = gson.toJson(expectedCaptureGroups);
 
@@ -149,12 +149,12 @@ public class CaptureGroupControllerTest extends TestSpringBootInformation {
     public void testCreateCaptureGroupInvalidFlow() {
 
         // Capture Group
-        CaptureGroup captureGroup = new CaptureGroup();
-        captureGroup.setCaptureGroupName("groupRelp");
-        captureGroup.setCaptureGroupType(CaptureGroup.GroupType.RELP);
-        captureGroup.setFlowId(555);
+        CaptureGroups captureGroups = new CaptureGroups();
+        captureGroups.setCaptureGroupName("groupRelp");
+        captureGroups.setCaptureGroupType(CaptureGroups.GroupType.RELP);
+        captureGroups.setFlowId(555);
 
-        String cgJson = gson.toJson(captureGroup);
+        String cgJson = gson.toJson(captureGroups);
 
         // forms the json to requestEntity
         StringEntity requestEntityCaptureGroup = new StringEntity(String.valueOf(cgJson), ContentType.APPLICATION_JSON);
@@ -195,12 +195,12 @@ public class CaptureGroupControllerTest extends TestSpringBootInformation {
     public void testCreateCaptureGroup() {
 
         // Capture Group
-        CaptureGroup captureGroup = new CaptureGroup();
-        captureGroup.setCaptureGroupName("groupRelp");
-        captureGroup.setCaptureGroupType(CaptureGroup.GroupType.RELP);
-        captureGroup.setFlowId(1);
+        CaptureGroups captureGroups = new CaptureGroups();
+        captureGroups.setCaptureGroupName("groupRelp");
+        captureGroups.setCaptureGroupType(CaptureGroups.GroupType.RELP);
+        captureGroups.setFlowId(1);
 
-        String cgJson = gson.toJson(captureGroup);
+        String cgJson = gson.toJson(captureGroups);
 
         // forms the json to requestEntity
         StringEntity requestEntityCaptureGroup = new StringEntity(String.valueOf(cgJson), ContentType.APPLICATION_JSON);
@@ -239,13 +239,13 @@ public class CaptureGroupControllerTest extends TestSpringBootInformation {
     @Test
     @Order(4)
     public void testSelectCaptureGroup() {
-        CaptureGroup captureGroup = new CaptureGroup();
-        captureGroup.setCaptureGroupType(CaptureGroup.GroupType.RELP);
-        captureGroup.setId(1);
-        captureGroup.setCaptureGroupName("groupRelp");
-        captureGroup.setFlowId(1);
+        CaptureGroups captureGroups = new CaptureGroups();
+        captureGroups.setCaptureGroupType(CaptureGroups.GroupType.RELP);
+        captureGroups.setId(1);
+        captureGroups.setCaptureGroupName("groupRelp");
+        captureGroups.setFlowId(1);
 
-        String expectedJson = gson.toJson(captureGroup);
+        String expectedJson = gson.toJson(captureGroups);
 
         // Asserting get request
         HttpGet requestGet = new HttpGet("http://localhost:" + port + "/v2/captures/group/1");
@@ -269,13 +269,13 @@ public class CaptureGroupControllerTest extends TestSpringBootInformation {
     public void testSelectAllCaptureGroups() {
 
         // Capture Group 2
-        CaptureGroup captureGroup2 = new CaptureGroup();
-        captureGroup2.setId(2);
-        captureGroup2.setCaptureGroupName("groupRelp2");
-        captureGroup2.setCaptureGroupType(CaptureGroup.GroupType.RELP);
-        captureGroup2.setFlowId(1);
+        CaptureGroups captureGroups2 = new CaptureGroups();
+        captureGroups2.setId(2);
+        captureGroups2.setCaptureGroupName("groupRelp2");
+        captureGroups2.setCaptureGroupType(CaptureGroups.GroupType.RELP);
+        captureGroups2.setFlowId(1);
 
-        String cgJson = gson.toJson(captureGroup2);
+        String cgJson = gson.toJson(captureGroups2);
 
         // forms the json to requestEntity
         StringEntity requestEntityCaptureGroup = new StringEntity(String.valueOf(cgJson), ContentType.APPLICATION_JSON);
@@ -289,15 +289,15 @@ public class CaptureGroupControllerTest extends TestSpringBootInformation {
 
         Assertions.assertDoesNotThrow(() -> HttpClientBuilder.create().build().execute(requestCaptureGroup));
 
-        ArrayList<CaptureGroup> expected = new ArrayList<>();
-        CaptureGroup captureGroup = new CaptureGroup();
-        captureGroup.setId(1);
-        captureGroup.setCaptureGroupName("groupRelp");
-        captureGroup.setCaptureGroupType(CaptureGroup.GroupType.RELP);
-        captureGroup.setFlowId(1);
+        ArrayList<CaptureGroups> expected = new ArrayList<>();
+        CaptureGroups captureGroups = new CaptureGroups();
+        captureGroups.setId(1);
+        captureGroups.setCaptureGroupName("groupRelp");
+        captureGroups.setCaptureGroupType(CaptureGroups.GroupType.RELP);
+        captureGroups.setFlowId(1);
 
-        expected.add(captureGroup);
-        expected.add(captureGroup2);
+        expected.add(captureGroups);
+        expected.add(captureGroups2);
 
         String expectedJson = gson.toJson(expected);
 

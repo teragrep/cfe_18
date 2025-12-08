@@ -57,9 +57,9 @@ import java.nio.file.Paths;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-public class TriggerHostGroupCaptureGroupFileTest extends DBUnitbase {
+public class TriggerHostGroupCaptureGroupsFileTest extends DBUnitbase {
 
-    public TriggerHostGroupCaptureGroupFileTest(String name) {
+    public TriggerHostGroupCaptureGroupsFileTest(String name) {
         super(name);
 
     }

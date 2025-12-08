@@ -2,7 +2,7 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.teragrep.cfe18.CaptureGroupMapper">
+<mapper namespace="com.teragrep.cfe18.CaptureGroupsMapper">
 
 
     <!-- Insert group               ( group_name VARCHAR(255), type VARCHAR(255) )-->
@@ -15,7 +15,7 @@
     <select id="get" resultMap="group" statementType="CALLABLE">
         {CALL cfe_18.select_capture_group(#{param1},#{param2})}
     </select>
-    <resultMap id="group" type="com.teragrep.cfe18.handlers.entities.CaptureGroup">
+    <resultMap id="group" type="com.teragrep.cfe18.handlers.entities.CaptureGroups">
         <result property="id"                       column="id"/>
         <result property="captureGroupName"         column="group_name"/>
         <result property="captureGroupType"         column="capture_type"/>
@@ -27,7 +27,7 @@
     <select id="getAll" resultMap="all" statementType="CALLABLE">
         {CALL cfe_18.select_all_capture_groups(#{param1})}
     </select>
-    <resultMap id="all" type="com.teragrep.cfe18.handlers.entities.CaptureGroup">
+    <resultMap id="all" type="com.teragrep.cfe18.handlers.entities.CaptureGroups">
         <result property="id"                       column="id"/>
         <result property="captureGroupName"         column="group_name"/>
         <result property="captureGroupType"         column="group_type"/>
@@ -42,7 +42,7 @@
 
 
     <!-- ID return map -->
-    <resultMap id="insertedID" type="com.teragrep.cfe18.handlers.entities.CaptureGroup">
+    <resultMap id="insertedID" type="com.teragrep.cfe18.handlers.entities.CaptureGroups">
         <result property="id"                       column="id"/>
     </resultMap>
 

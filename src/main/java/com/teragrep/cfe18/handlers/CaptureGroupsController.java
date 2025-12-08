@@ -45,8 +45,8 @@
  */
 package com.teragrep.cfe18.handlers;
 
-import com.teragrep.cfe18.CaptureGroupMapper;
-import com.teragrep.cfe18.handlers.entities.CaptureGroup;
+import com.teragrep.cfe18.CaptureGroupsMapper;
+import com.teragrep.cfe18.handlers.entities.CaptureGroups;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -70,9 +70,9 @@ import java.util.List;
 @RestController
 @RequestMapping(path = "v2/captures/group")
 @SecurityRequirement(name = "api")
-public class CaptureGroupController {
+public class CaptureGroupsController {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(CaptureGroupController.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(CaptureGroupsController.class);
 
     @Autowired
     DataSource dataSource;
@@ -81,7 +81,7 @@ public class CaptureGroupController {
     SqlSessionTemplate sqlSessionTemplate;
 
     @Autowired
-    CaptureGroupMapper captureGroupMapper;
+    CaptureGroupsMapper captureGroupsMapper;
 
     @RequestMapping(
             path = "",
@@ -96,7 +96,7 @@ public class CaptureGroupController {
                     content = {
                             @Content(
                                     mediaType = "application/json",
-                                    schema = @Schema(implementation = CaptureGroup.class)
+                                    schema = @Schema(implementation = CaptureGroups.class)
                             )
                     }
             ),
@@ -111,13 +111,13 @@ public class CaptureGroupController {
                     content = @Content
             )
     })
-    public ResponseEntity<String> create(@RequestBody CaptureGroup newCaptureGroup) {
-        LOGGER.info("About to insert <[{}]>", newCaptureGroup);
+    public ResponseEntity<String> create(@RequestBody CaptureGroups newCaptureGroups) {
+        LOGGER.info("About to insert <[{}]>", newCaptureGroups);
         try {
-            CaptureGroup c = captureGroupMapper
+            CaptureGroups c = captureGroupsMapper
                     .create(
-                            newCaptureGroup.getCaptureGroupName(), newCaptureGroup.getCaptureGroupType(),
-                            newCaptureGroup.getFlowId()
+                            newCaptureGroups.getCaptureGroupName(), newCaptureGroups.getCaptureGroupType(),
+                            newCaptureGroups.getFlowId()
                     );
             LOGGER.debug("Values returned <[{}]>", c);
             JSONObject jsonObject = new JSONObject();
@@ -128,7 +128,7 @@ public class CaptureGroupController {
         catch (RuntimeException ex) {
             LOGGER.error(ex.getMessage());
             JSONObject jsonErr = new JSONObject();
-            jsonErr.put("id", newCaptureGroup.getId());
+            jsonErr.put("id", newCaptureGroups.getId());
             jsonErr.put("message", ex.getCause().getMessage());
             final Throwable cause = ex.getCause();
             if (cause instanceof SQLException) {
@@ -156,7 +156,7 @@ public class CaptureGroupController {
                     content = {
                             @Content(
                                     mediaType = "application/json",
-                                    schema = @Schema(implementation = CaptureGroup.class)
+                                    schema = @Schema(implementation = CaptureGroups.class)
                             )
                     }
             ),
@@ -176,7 +176,7 @@ public class CaptureGroupController {
             @RequestParam(required = false) Integer version
     ) {
         try {
-            CaptureGroup cg = captureGroupMapper.get(groupId, version);
+            CaptureGroups cg = captureGroupsMapper.get(groupId, version);
             return new ResponseEntity<>(cg, HttpStatus.OK);
         }
         catch (RuntimeException ex) {
@@ -213,13 +213,13 @@ public class CaptureGroupController {
                     content = {
                             @Content(
                                     mediaType = "application/json",
-                                    schema = @Schema(implementation = CaptureGroup.class)
+                                    schema = @Schema(implementation = CaptureGroups.class)
                             )
                     }
             )
     })
-    public List<CaptureGroup> getAll(@RequestParam(required = false) Integer version) {
-        return captureGroupMapper.getAll(version);
+    public List<CaptureGroups> getAll(@RequestParam(required = false) Integer version) {
+        return captureGroupsMapper.getAll(version);
     }
 
     @RequestMapping(
@@ -235,7 +235,7 @@ public class CaptureGroupController {
                     content = {
                             @Content(
                                     mediaType = "application/json",
-                                    schema = @Schema(implementation = CaptureGroup.class)
+                                    schema = @Schema(implementation = CaptureGroups.class)
                             )
                     }
             ),
@@ -258,7 +258,7 @@ public class CaptureGroupController {
     public ResponseEntity<String> delete(@PathVariable("groupId") int groupId) {
         LOGGER.info("Deleting Capture group <[{}]>", groupId);
         try {
-            captureGroupMapper.delete(groupId);
+            captureGroupsMapper.delete(groupId);
             JSONObject j = new JSONObject();
             j.put("id", groupId);
             j.put("message", "Capture group deleted");
