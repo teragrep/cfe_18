@@ -167,7 +167,7 @@ $(document).ready(function() { init_codefold(0); });
 <div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span>        SQLException state = Assertions.assertThrows(SQLException.class, () -&gt; {</div>
 <div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span>            Statement stmnt = conn.createStatement();</div>
 <div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span>            stmnt.addBatch(<span class="stringliteral">&quot;insert into location.host_group_x_host values(60,3,2,&#39;cfe&#39;)&quot;</span>);</div>
-<div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span>            stmnt.addBatch(<span class="stringliteral">&quot;insert into cfe_18.capture_def_group_x_capture_def values(60,1,3,1,&#39;cfe&#39;)&quot;</span>);</div>
+<div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span>            stmnt.addBatch(<span class="stringliteral">&quot;insert into cfe_18.capture_def_group_x_capture_def values(60,1,3,1,&#39;cfe&#39;,1)&quot;</span>);</div>
 <div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span>            stmnt.executeBatch();</div>
 <div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span>        });</div>
 <div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span>        Assertions.assertEquals(<span class="stringliteral">&quot;17001&quot;</span>, state.getSQLState());</div>
@@ -188,10 +188,10 @@ $(document).ready(function() { init_codefold(0); });
 <div class="line"><a id="l00097" name="l00097"></a><span class="lineno">   97</span>        Statement stmnt = conn.createStatement();</div>
 <div class="line"><a id="l00098" name="l00098"></a><span class="lineno">   98</span>        stmnt</div>
 <div class="line"><a id="l00099" name="l00099"></a><span class="lineno">   99</span>                .addBatch(</div>
-<div class="line"><a id="l00100" name="l00100"></a><span class="lineno">  100</span>                        <span class="stringliteral">&quot;insert into cfe_18.capture_def_group(id,capture_def_group_name,capture_type) values(20,&#39;capture_group20&#39;,&#39;cfe&#39;)&quot;</span></div>
+<div class="line"><a id="l00100" name="l00100"></a><span class="lineno">  100</span>                        <span class="stringliteral">&quot;insert into cfe_18.capture_def_group(id,capture_def_group_name,capture_type,flow_id) values(20,&#39;capture_group20&#39;,&#39;cfe&#39;,1)&quot;</span></div>
 <div class="line"><a id="l00101" name="l00101"></a><span class="lineno">  101</span>                );</div>
 <div class="line"><a id="l00102" name="l00102"></a><span class="lineno">  102</span>        stmnt.executeBatch();</div>
-<div class="line"><a id="l00103" name="l00103"></a><span class="lineno">  103</span>        stmnt.addBatch(<span class="stringliteral">&quot;insert into cfe_18.capture_def_group_x_capture_def values(20,5,5,5,&#39;cfe&#39;)&quot;</span>);</div>
+<div class="line"><a id="l00103" name="l00103"></a><span class="lineno">  103</span>        stmnt.addBatch(<span class="stringliteral">&quot;insert into cfe_18.capture_def_group_x_capture_def values(20,5,5,5,&#39;cfe&#39;,1)&quot;</span>);</div>
 <div class="line"><a id="l00104" name="l00104"></a><span class="lineno">  104</span>        stmnt.executeBatch();</div>
 <div class="line"><a id="l00105" name="l00105"></a><span class="lineno">  105</span> </div>
 <div class="line"><a id="l00106" name="l00106"></a><span class="lineno">  106</span>        <span class="comment">// Fetch database data after executing your code</span></div>

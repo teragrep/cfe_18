@@ -1,7 +1,7 @@
 var searchData=
 [
   ['procedurecapturedatatest_0',['ProcedureCaptureDataTest',['../classcom_1_1teragrep_1_1cfe18_1_1testData_1_1ProcedureCaptureDataTest.html',1,'com::teragrep::cfe18::testData']]],
-  ['procedurecapturegrouptest_1',['ProcedureCaptureGroupTest',['../classcom_1_1teragrep_1_1cfe18_1_1procedureTests_1_1ProcedureCaptureGroupTest.html',1,'com::teragrep::cfe18::procedureTests']]],
+  ['procedurecapturegroupstest_1',['ProcedureCaptureGroupsTest',['../classcom_1_1teragrep_1_1cfe18_1_1procedureTests_1_1ProcedureCaptureGroupsTest.html',1,'com::teragrep::cfe18::procedureTests']]],
   ['procedurecapturemetafiletest_2',['ProcedureCaptureMetaFileTest',['../classcom_1_1teragrep_1_1cfe18_1_1procedureTests_1_1ProcedureCaptureMetaFileTest.html',1,'com::teragrep::cfe18::procedureTests']]],
   ['proceduregxgtest_3',['ProcedureGxGTest',['../classcom_1_1teragrep_1_1cfe18_1_1procedureTests_1_1ProcedureGxGTest.html',1,'com::teragrep::cfe18::procedureTests']]],
   ['procedurehostaddcfefiletest_4',['ProcedureHostAddCfeFileTest',['../classcom_1_1teragrep_1_1cfe18_1_1procedureTests_1_1ProcedureHostAddCfeFileTest.html',1,'com::teragrep::cfe18::procedureTests']]],

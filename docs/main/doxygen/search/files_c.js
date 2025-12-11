@@ -1,7 +1,7 @@
 var searchData=
 [
   ['procedurecapturedatatest_2ejava_0',['ProcedureCaptureDataTest.java',['../ProcedureCaptureDataTest_8java.html',1,'']]],
-  ['procedurecapturegrouptest_2ejava_1',['ProcedureCaptureGroupTest.java',['../ProcedureCaptureGroupTest_8java.html',1,'']]],
+  ['procedurecapturegroupstest_2ejava_1',['ProcedureCaptureGroupsTest.java',['../ProcedureCaptureGroupsTest_8java.html',1,'']]],
   ['procedurecapturemetafiletest_2ejava_2',['ProcedureCaptureMetaFileTest.java',['../ProcedureCaptureMetaFileTest_8java.html',1,'']]],
   ['proceduregxgtest_2ejava_3',['ProcedureGxGTest.java',['../ProcedureGxGTest_8java.html',1,'']]],
   ['procedurehostaddcfefiletest_2ejava_4',['ProcedureHostAddCfeFileTest.java',['../ProcedureHostAddCfeFileTest_8java.html',1,'']]],

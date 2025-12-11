@@ -16,7 +16,7 @@ var searchData=
   ['flowcontroller_2ejava_13',['FlowController.java',['../FlowController_8java.html',1,'']]],
   ['flowcontrollertest_14',['FlowControllerTest',['../classcom_1_1teragrep_1_1cfe18_1_1controllerTests_1_1FlowControllerTest.html',1,'com::teragrep::cfe18::controllerTests']]],
   ['flowcontrollertest_2ejava_15',['FlowControllerTest.java',['../FlowControllerTest_8java.html',1,'']]],
-  ['flowid_16',['flowId',['../classcom_1_1teragrep_1_1cfe18_1_1handlers_1_1entities_1_1Sink.html#a7930f7a59fd80666e8ce95d2ed27dd44',1,'com::teragrep::cfe18::handlers::entities::Sink']]],
+  ['flowid_16',['flowid',['../classcom_1_1teragrep_1_1cfe18_1_1handlers_1_1entities_1_1CaptureGroups.html#a5739d49b7932c221423ad041e8447e39',1,'com.teragrep.cfe18.handlers.entities.CaptureGroups.flowId'],['../classcom_1_1teragrep_1_1cfe18_1_1handlers_1_1entities_1_1Sink.html#a7930f7a59fd80666e8ce95d2ed27dd44',1,'com.teragrep.cfe18.handlers.entities.Sink.flowId']]],
   ['flowmapper_17',['FlowMapper',['../interfacecom_1_1teragrep_1_1cfe18_1_1FlowMapper.html',1,'com::teragrep::cfe18']]],
   ['flowmapper_2ejava_18',['FlowMapper.java',['../FlowMapper_8java.html',1,'']]],
   ['flowstorage_19',['FlowStorage',['../classcom_1_1teragrep_1_1cfe18_1_1handlers_1_1entities_1_1FlowStorage.html',1,'com::teragrep::cfe18::handlers::entities']]],

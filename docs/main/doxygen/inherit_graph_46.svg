@@ -11,10 +11,10 @@
 <!-- Node0 -->
 <g id="Node000000" class="node">
 <title>Node0</title>
-<g id="a_Node000000"><a xlink:href="classcom_1_1teragrep_1_1cfe18_1_1handlers_1_1entities_1_1HostMeta.html" target="_top" xlink:title=" ">
+<g id="a_Node000000"><a xlink:href="enumcom_1_1teragrep_1_1cfe18_1_1handlers_1_1entities_1_1HostGroup_1_1group__type.html" target="_top" xlink:title=" ">
 <polygon fill="white" stroke="#666666" points="200,-30 0,-30 0,0 200,0 200,-30"/>
 <text text-anchor="start" x="8" y="-18" font-family="Helvetica,sans-Serif" font-size="10.00">com.teragrep.cfe18.handlers.entities.</text>
-<text text-anchor="middle" x="100" y="-7" font-family="Helvetica,sans-Serif" font-size="10.00">HostMeta</text>
+<text text-anchor="middle" x="100" y="-7" font-family="Helvetica,sans-Serif" font-size="10.00">HostGroup.group_type</text>
 </a>
 </g>
 </g>
