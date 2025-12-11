@@ -2,48 +2,49 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.teragrep.cfe18.CaptureGroupMapper">
+<mapper namespace="com.teragrep.cfe18.CaptureGroupsMapper">
 
 
-    <!-- GET BY NAME -->
-    <select id="getCaptureGroupByName" resultMap="captureGroupByName" statementType="CALLABLE">
-        {CALL cfe_18.retrieve_capture_group_details(#{param1},#{param2})}
+    <!-- Insert group               ( group_name VARCHAR(255), type VARCHAR(255) )-->
+    <select id="create" resultMap="insertedID" statementType="CALLABLE">
+        {CALL cfe_18.insert_capture_group(#{param1},#{param2},#{param3})}
     </select>
-    <resultMap type="com.teragrep.cfe18.handlers.entities.CaptureGroup" id="captureGroupByName">
-        <result property="capture_def_group_name" column="group_name"/>
-        <result property="capture_definition_id" column="capture_definition_id"/>
-        <result property="capture_group_type" column="capture_type"/>
-        <result property="id" column="capture_group_id"/>
+
+
+    <!-- get group                  ( capture_group_id INT, tx_id INT ) -->
+    <select id="get" resultMap="group" statementType="CALLABLE">
+        {CALL cfe_18.select_capture_group(#{param1},#{param2})}
+    </select>
+    <resultMap id="group" type="com.teragrep.cfe18.handlers.entities.CaptureGroups">
+        <result property="id"                       column="id"/>
+        <result property="captureGroupName"         column="group_name"/>
+        <result property="captureGroupType"         column="capture_type"/>
+        <result property="flowId"         column="flow_id"/>
     </resultMap>
 
 
-    <!-- Insert new one -->
-    <select id="addNewCaptureGroup" resultMap="insertedID" statementType="CALLABLE">
-        {CALL
-        cfe_18.add_capture_group_with_capture(#{param1},#{param2})}
+    <!-- GET ALL                    ( tx_id INT ) -->
+    <select id="getAll" resultMap="all" statementType="CALLABLE">
+        {CALL cfe_18.select_all_capture_groups(#{param1})}
     </select>
-    <resultMap id="insertedID" type="com.teragrep.cfe18.handlers.entities.CaptureGroup">
-        <result property="capture_def_group_name" column="name"/>
-        <result property="id" column="last"/>
+    <resultMap id="all" type="com.teragrep.cfe18.handlers.entities.CaptureGroups">
+        <result property="id"                       column="id"/>
+        <result property="captureGroupName"         column="group_name"/>
+        <result property="captureGroupType"         column="group_type"/>
+        <result property="flowId"         column="flow_id"/>
     </resultMap>
 
 
-    <!-- GET ALL -->
-    <select id="getAllCaptureGroup" resultMap="allCaptureGroup" statementType="CALLABLE">
-        {CALL cfe_18.retrieve_all_capture_groups(#{param1})}
+    <!-- Delete                     ( capture_group_id INT ) -->
+    <select id="delete" statementType="CALLABLE">
+        {CALL cfe_18.delete_capture_group(#{param1})}
     </select>
-    <resultMap id="allCaptureGroup" type="com.teragrep.cfe18.handlers.entities.CaptureGroup">
-        <result property="capture_def_group_name" column="group_name"/>
-        <result property="capture_group_type" column="group_type"/>
-        <result property="tag" column="capture_tag"/>
-        <result property="capture_definition_id" column="capture_id"/>
+
+
+    <!-- ID return map -->
+    <resultMap id="insertedID" type="com.teragrep.cfe18.handlers.entities.CaptureGroups">
+        <result property="id"                       column="id"/>
     </resultMap>
-
-
-    <!-- Delete -->
-    <select id="deleteCaptureGroup" statementType="CALLABLE">
-        {CALL cfe_18.remove_capture_group(#{param1})}
-    </select>
 
 </mapper>
 

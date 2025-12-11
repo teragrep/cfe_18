@@ -43,24 +43,59 @@
  * Teragrep, the applicable Commercial License may apply to this file if you as
  * a licensee so wish it.
  */
-use cfe_18;
-DELIMITER //
-CREATE OR REPLACE PROCEDURE remove_capture_group(capture_group_name varchar(255))
-BEGIN
-    DECLARE EXIT HANDLER FOR SQLEXCEPTION
-        BEGIN
-            ROLLBACK;
-            RESIGNAL;
-        END;
-    START TRANSACTION;
+package com.teragrep.cfe18.handlers.entities;
 
-    if (select id from cfe_18.capture_def_group where capture_def_group_name = capture_group_name) is null then
-        SELECT JSON_OBJECT('id', null, 'message', 'Capture group does not exist') into @cg;
-        signal sqlstate '45000' set message_text = @cg;
-    end if;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import io.swagger.v3.oas.annotations.media.Schema;
 
-    delete from cfe_18.capture_def_group where capture_def_group_name = capture_group_name;
-    COMMIT;
-END;
-//
-DELIMITER ;
+@JsonInclude(JsonInclude.Include.NON_NULL)
+public class CaptureGroups {
+
+    public enum GroupType {
+        CFE, RELP
+    }
+
+    @Schema(accessMode = Schema.AccessMode.READ_ONLY)
+    private int id;
+    private String captureGroupName;
+    private GroupType captureGroupType;
+    private Integer flowId;
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getCaptureGroupName() {
+        return captureGroupName;
+    }
+
+    public void setCaptureGroupName(String captureGroupName) {
+        this.captureGroupName = captureGroupName;
+    }
+
+    public GroupType getCaptureGroupType() {
+        return captureGroupType;
+    }
+
+    public void setCaptureGroupType(GroupType captureGroupType) {
+        this.captureGroupType = captureGroupType;
+    }
+
+    public Integer getFlowId() {
+        return flowId;
+    }
+
+    public void setFlowId(Integer flowId) {
+        this.flowId = flowId;
+    }
+
+    @Override
+    public String toString() {
+        return "CaptureGroups{" + "id=" + id + ", captureGroupName='" + captureGroupName + '\'' + ", captureGroupType="
+                + captureGroupType + ", flowId=" + flowId + '}';
+    }
+}

@@ -43,71 +43,25 @@
  * Teragrep, the applicable Commercial License may apply to this file if you as
  * a licensee so wish it.
  */
-package com.teragrep.cfe18.handlers.entities;
+USE cfe_18;
+DELIMITER //
+CREATE OR REPLACE PROCEDURE delete_capture_group(capture_group_id INT)
+BEGIN
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+        BEGIN
+            ROLLBACK;
+            RESIGNAL;
+        END;
+    START TRANSACTION;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-import io.swagger.v3.oas.annotations.media.Schema;
+    IF ((SELECT COUNT(id) FROM cfe_18.capture_def_group WHERE id = capture_group_id) = 0) THEN
+        SELECT JSON_OBJECT('id', capture_group_id, 'message', 'Capture group does not exist') INTO @cg;
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = @cg;
+    END IF;
 
-@JsonInclude(JsonInclude.Include.NON_NULL)
-public class CaptureGroup {
+    DELETE FROM cfe_18.capture_def_group WHERE id = capture_group_id;
+    COMMIT;
 
-    public enum group_type {
-        cfe, relp
-    }
-
-    private String capture_def_group_name;
-    private Integer capture_definition_id;
-    @Schema(accessMode = Schema.AccessMode.READ_ONLY)
-    private group_type capture_group_type;
-    @Schema(accessMode = Schema.AccessMode.READ_ONLY)
-    private int id;
-    @Schema(accessMode = Schema.AccessMode.READ_ONLY)
-    private String tag;
-
-    public String getTag() {
-        return tag;
-    }
-
-    public void setTag(String tag) {
-        this.tag = tag;
-    }
-
-    public String getCapture_def_group_name() {
-        return capture_def_group_name;
-    }
-
-    public void setCapture_def_group_name(String capture_def_group_name) {
-        this.capture_def_group_name = capture_def_group_name;
-    }
-
-    public Integer getCapture_definition_id() {
-        return capture_definition_id;
-    }
-
-    public void setCapture_definition_id(Integer capture_definition_id) {
-        this.capture_definition_id = capture_definition_id;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public group_type getCapture_group_type() {
-        return capture_group_type;
-    }
-
-    public void setCapture_group_type(group_type capture_group_type) {
-        this.capture_group_type = capture_group_type;
-    }
-
-    @Override
-    public String toString() {
-        return "CaptureGroup{" + "capture_def_group_name='" + capture_def_group_name + '\'' + ", capture_definition_id="
-                + capture_definition_id + ", capture_group_type=" + capture_group_type + ", id=" + id + ", tag='" + tag
-                + '\'' + '}';
-    }
-}
+END;
+//
+DELIMITER ;

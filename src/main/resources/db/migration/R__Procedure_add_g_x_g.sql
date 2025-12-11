@@ -54,8 +54,8 @@ BEGIN
         END;
     START TRANSACTION;
     if ((select distinct capture_type
-         from cfe_18.capture_def_group_x_capture_def
-         where capture_def_group_id = proc_capture_group_id) !=
+         from cfe_18.capture_def_group
+         where id = proc_capture_group_id) !=
         (select distinct host_type from location.host_group_x_host where host_group_id = proc_host_group_id)) then
         SELECT JSON_OBJECT('id', NULL, 'message', ' type mismatch between host group and capture group') into @gxg;
         signal sqlstate '45000' set message_text = @gxg;
@@ -68,9 +68,9 @@ BEGIN
         SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = @gxgh;
     END IF;
     --  Check if capture group exists before junction
-    IF (select distinct capture_def_group_id
-        from cfe_18.capture_def_group_x_capture_def
-        where capture_def_group_id = proc_capture_group_id) IS NULL THEN
+    IF (select distinct id
+        from cfe_18.capture_def_group
+        where id = proc_capture_group_id) IS NULL THEN
         SELECT JSON_OBJECT('id', NULL, 'message', ' CAPTURE group does not exist') into @gxgc;
         SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = @gxgc;
     END IF;

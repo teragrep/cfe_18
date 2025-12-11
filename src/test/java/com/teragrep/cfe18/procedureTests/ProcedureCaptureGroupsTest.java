@@ -55,19 +55,15 @@ import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.sql.CallableStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 /*
 Tests for capture group
 Uses dataset procedureCaptureGroupTestData.xml which is copied version of triggerTestData.xml
  */
-public class ProcedureCaptureGroupTest extends DBUnitbase {
+public class ProcedureCaptureGroupsTest extends DBUnitbase {
 
-    public ProcedureCaptureGroupTest(String name) {
+    public ProcedureCaptureGroupsTest(String name) {
         super(name);
     }
 
@@ -102,9 +98,10 @@ public class ProcedureCaptureGroupTest extends DBUnitbase {
         ITable expectedTable1 = expectedDataSet.getTable("cfe_18.capture_def_group_x_capture_def");
         ITable expectedTable2 = expectedDataSet.getTable("cfe_18.capture_def_group");
 
-        CallableStatement stmnt = conn.prepareCall("{call cfe_18.add_capture_group_with_capture(?,?)}");
+        CallableStatement stmnt = conn.prepareCall("{call cfe_18.insert_capture_group(?,?,?)}");
         stmnt.setString(1, "group1");
-        stmnt.setInt(2, 1);
+        stmnt.setString(2, "cfe");
+        stmnt.setInt(3, 1);
         stmnt.execute();
 
         ITable actualTable1 = databaseConnection
@@ -133,9 +130,10 @@ public class ProcedureCaptureGroupTest extends DBUnitbase {
         ITable expectedTable1 = expectedDataSet.getTable("cfe_18.capture_def_group_x_capture_def");
         ITable expectedTable2 = expectedDataSet.getTable("cfe_18.capture_def_group");
 
-        CallableStatement stmnt = conn.prepareCall("{call cfe_18.add_capture_group_with_capture(?,?)}");
-        stmnt.setString(1, "group1");
-        stmnt.setInt(2, 2);
+        CallableStatement stmnt = conn.prepareCall("{call cfe_18.insert_capture_group(?,?,?)}");
+        stmnt.setString(1, "capturegroup6");
+        stmnt.setString(2, "cfe");
+        stmnt.setInt(3, 1);
         stmnt.execute();
 
         ITable actualTable1 = databaseConnection
@@ -151,34 +149,12 @@ public class ProcedureCaptureGroupTest extends DBUnitbase {
     }
 
     /*
-    capture_group retrieval needs to be checked aswell. It is important that the values are gathered
-     */
-    public void testRetrieveCaptureGroup() throws Exception {
-        List<Integer> actualList = new ArrayList<>();
-        CallableStatement stmnt = conn.prepareCall("{CALL cfe_18.retrieve_capture_group_details(?,?)}");
-        stmnt.setString(1, "capturegroup1");
-        stmnt.setString(2, null);
-        ResultSet rs = stmnt.executeQuery();
-        while (rs.next()) {
-            actualList.add(rs.getInt("capture_definition_id"));
-            String group_name = rs.getString("group_name");
-            String capture_type = rs.getString("capture_type");
-            int capture_group_id = rs.getInt("capture_group_id");
-            Assertions.assertEquals("capturegroup1", group_name);
-            Assertions.assertEquals("cfe", capture_type);
-            Assertions.assertEquals(1, capture_group_id);
-        }
-        Assertions.assertEquals(Arrays.asList(1, 2, 3, 4), actualList);
-
-    }
-
-    /*
     If the capture_group does not exist. This needs to be tested.
      */
     public void testCaptureGroupIsMissing() throws Exception {
         SQLException state = Assertions.assertThrows(SQLException.class, () -> {
-            CallableStatement stmnt = conn.prepareCall("{CALL cfe_18.retrieve_capture_group_details(?,?)}");
-            stmnt.setString(1, "groupThatDontExist");
+            CallableStatement stmnt = conn.prepareCall("{CALL cfe_18.select_capture_group(?,?)}");
+            stmnt.setInt(1, 55555);
             stmnt.setString(2, null);
             stmnt.execute();
         });

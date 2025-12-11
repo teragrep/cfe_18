@@ -43,21 +43,37 @@
  * Teragrep, the applicable Commercial License may apply to this file if you as
  * a licensee so wish it.
  */
-package com.teragrep.cfe18;
+USE cfe_18;
+DELIMITER //
+CREATE OR REPLACE PROCEDURE select_capture_group(capture_group_id INT, tx_id INT)
+BEGIN
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+        BEGIN
+            ROLLBACK;
+            RESIGNAL;
+        END;
+    START TRANSACTION;
 
-import com.teragrep.cfe18.handlers.entities.CaptureGroup;
-import org.apache.ibatis.annotations.Mapper;
+    IF (tx_id) IS NULL THEN
+        SET @time = (SELECT MAX(transaction_id) FROM mysql.transaction_registry);
+    ELSE
+        SET @time = tx_id;
+    END IF;
 
-import java.util.List;
+    IF ((SELECT COUNT(cdg.id)
+         FROM capture_def_group FOR SYSTEM_TIME AS OF TRANSACTION @time cdg
+         WHERE cdg.id = capture_group_id) = 0) THEN
+        SELECT JSON_OBJECT('id', capture_group_id, 'message', 'Capture group not found') INTO @gc;
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = @gc;
+    END IF;
 
-@Mapper
-public interface CaptureGroupMapper {
-
-    List<CaptureGroup> getCaptureGroupByName(String capture_def_group_name, Integer version);
-
-    CaptureGroup addNewCaptureGroup(String capture_def_group_name, Integer capture_definition_id);
-
-    List<CaptureGroup> getAllCaptureGroup(Integer version);
-
-    CaptureGroup deleteCaptureGroup(String name);
-}
+    SELECT cdg.id                     AS id,
+           cdg.capture_def_group_name AS group_name,
+           cdg.capture_type           AS capture_type,
+           cdg.flow_id                AS flow_id
+    FROM cfe_18.capture_def_group FOR SYSTEM_TIME AS OF TRANSACTION @time cdg
+    WHERE cdg.id = capture_group_id;
+    COMMIT;
+END;
+//
+DELIMITER ;
