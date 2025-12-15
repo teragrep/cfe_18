@@ -273,7 +273,7 @@ public final class CaptureFileControllerTest extends TestSpringBootInformation {
         captureFile.setTagPath("tagpath1");
         captureFile.setCapturePath("capturepath1");
         captureFile.setFileProcessingTypeId(1);
-        captureFile.setType(CaptureFile.CaptureType.CFE);
+        captureFile.setType(IntegrationType.CFE);
 
         String json = gson.toJson(captureFile);
 
@@ -311,7 +311,7 @@ public final class CaptureFileControllerTest extends TestSpringBootInformation {
         captureFile2.setTagPath("tagpath1");
         captureFile2.setCapturePath("capturepath1");
         captureFile2.setFileProcessingTypeId(1);
-        captureFile2.setType(CaptureFile.CaptureType.CFE);
+        captureFile2.setType(IntegrationType.CFE);
 
         expected.add(captureFile2);
 

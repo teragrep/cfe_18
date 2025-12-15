@@ -48,6 +48,7 @@ package com.teragrep.cfe18.controllerTests;
 import com.google.gson.Gson;
 import com.teragrep.cfe18.handlers.entities.CaptureGroups;
 import com.teragrep.cfe18.handlers.entities.Flow;
+import com.teragrep.cfe18.handlers.entities.IntegrationType;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
@@ -151,7 +152,7 @@ public class CaptureGroupsControllerTest extends TestSpringBootInformation {
         // Capture Group
         CaptureGroups captureGroups = new CaptureGroups();
         captureGroups.setCaptureGroupName("groupRelp");
-        captureGroups.setCaptureGroupType(CaptureGroups.GroupType.RELP);
+        captureGroups.setCaptureGroupType(IntegrationType.RELP);
         captureGroups.setFlowId(555);
 
         String cgJson = gson.toJson(captureGroups);
@@ -197,7 +198,7 @@ public class CaptureGroupsControllerTest extends TestSpringBootInformation {
         // Capture Group
         CaptureGroups captureGroups = new CaptureGroups();
         captureGroups.setCaptureGroupName("groupRelp");
-        captureGroups.setCaptureGroupType(CaptureGroups.GroupType.RELP);
+        captureGroups.setCaptureGroupType(IntegrationType.RELP);
         captureGroups.setFlowId(1);
 
         String cgJson = gson.toJson(captureGroups);
@@ -240,7 +241,7 @@ public class CaptureGroupsControllerTest extends TestSpringBootInformation {
     @Order(4)
     public void testSelectCaptureGroup() {
         CaptureGroups captureGroups = new CaptureGroups();
-        captureGroups.setCaptureGroupType(CaptureGroups.GroupType.RELP);
+        captureGroups.setCaptureGroupType(IntegrationType.RELP);
         captureGroups.setId(1);
         captureGroups.setCaptureGroupName("groupRelp");
         captureGroups.setFlowId(1);
@@ -272,7 +273,7 @@ public class CaptureGroupsControllerTest extends TestSpringBootInformation {
         CaptureGroups captureGroups2 = new CaptureGroups();
         captureGroups2.setId(2);
         captureGroups2.setCaptureGroupName("groupRelp2");
-        captureGroups2.setCaptureGroupType(CaptureGroups.GroupType.RELP);
+        captureGroups2.setCaptureGroupType(IntegrationType.RELP);
         captureGroups2.setFlowId(1);
 
         String cgJson = gson.toJson(captureGroups2);
@@ -293,7 +294,7 @@ public class CaptureGroupsControllerTest extends TestSpringBootInformation {
         CaptureGroups captureGroups = new CaptureGroups();
         captureGroups.setId(1);
         captureGroups.setCaptureGroupName("groupRelp");
-        captureGroups.setCaptureGroupType(CaptureGroups.GroupType.RELP);
+        captureGroups.setCaptureGroupType(IntegrationType.RELP);
         captureGroups.setFlowId(1);
 
         expected.add(captureGroups);

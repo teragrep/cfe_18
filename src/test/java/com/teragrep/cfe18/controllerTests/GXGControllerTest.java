@@ -118,7 +118,7 @@ public class GXGControllerTest extends TestSpringBootInformation {
         // Capture Group
         CaptureGroups captureGroup = new CaptureGroups();
         captureGroup.setCaptureGroupName("groupRelp");
-        captureGroup.setCaptureGroupType(CaptureGroups.GroupType.RELP);
+        captureGroup.setCaptureGroupType(IntegrationType.RELP);
         captureGroup.setFlowId(1);
 
         String cgJson = gson.toJson(captureGroup);
@@ -275,7 +275,7 @@ public class GXGControllerTest extends TestSpringBootInformation {
         hostGroup.setHost_group_name("hostgroup1");
         hostGroup.setMd5("relpHostmd5");
         hostGroup.setId(1);
-        hostGroup.setHost_group_type(HostGroup.GroupType.RELP);
+        hostGroup.setHost_group_type(IntegrationType.RELP);
 
         expected.add(hostGroup);
 
@@ -339,7 +339,7 @@ public class GXGControllerTest extends TestSpringBootInformation {
         hostGroup.setHost_group_name("hostgroup1");
         hostGroup.setMd5("relpHostmd5");
         hostGroup.setId(1);
-        hostGroup.setHost_group_type(HostGroup.GroupType.RELP);
+        hostGroup.setHost_group_type(IntegrationType.RELP);
 
         expected.add(hostGroup);
 

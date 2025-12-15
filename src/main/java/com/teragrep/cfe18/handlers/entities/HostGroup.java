@@ -51,10 +51,6 @@ import io.swagger.v3.oas.annotations.media.Schema;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class HostGroup {
 
-    public enum GroupType {
-        CFE, RELP
-    }
-
     private int host_id;
     private String host_group_name;
     @Schema(accessMode = Schema.AccessMode.READ_ONLY)
@@ -62,7 +58,7 @@ public class HostGroup {
     @Schema(accessMode = Schema.AccessMode.READ_ONLY)
     private int id;
     @Schema(accessMode = Schema.AccessMode.READ_ONLY)
-    private GroupType host_group_type;
+    private IntegrationType host_group_type;
 
     public int getHost_id() {
         return host_id;
@@ -80,11 +76,11 @@ public class HostGroup {
         this.host_group_name = host_group_name;
     }
 
-    public GroupType getHost_group_type() {
+    public IntegrationType getHost_group_type() {
         return host_group_type;
     }
 
-    public void setHost_group_type(GroupType host_group_type) {
+    public void setHost_group_type(IntegrationType host_group_type) {
         this.host_group_type = host_group_type;
     }
 
