@@ -45,69 +45,8 @@
  */
 package com.teragrep.cfe18.handlers.entities;
 
-import io.swagger.v3.oas.annotations.media.Schema;
+public enum StorageType {
 
-public class FileProcessing {
+    CFE_04, CFE_10, CFE_11, CFE_12, CFE_19, CFE_23
 
-    @Schema(accessMode = Schema.AccessMode.READ_ONLY)
-    private Integer id;
-    private String name;
-    private InputType inputtype;
-    private String inputvalue;
-    private String ruleset;
-    private String template;
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public InputType getInputtype() {
-        return inputtype;
-    }
-
-    public void setInputtype(InputType inputtype) {
-        this.inputtype = inputtype;
-    }
-
-    public String getInputvalue() {
-        return inputvalue;
-    }
-
-    public void setInputvalue(String inputvalue) {
-        this.inputvalue = inputvalue;
-    }
-
-    public String getRuleset() {
-        return ruleset;
-    }
-
-    public void setRuleset(String ruleset) {
-        this.ruleset = ruleset;
-    }
-
-    public String getTemplate() {
-        return template;
-    }
-
-    public void setTemplate(String template) {
-        this.template = template;
-    }
-
-    @Override
-    public String toString() {
-        return "FileProcessing{" + "inputtype=" + inputtype + ", inputvalue='" + inputvalue + '\'' + ", ruleset='"
-                + ruleset + '\'' + ", name='" + name + '\'' + ", template='" + template + '\'' + ", id=" + id + '}';
-    }
 }

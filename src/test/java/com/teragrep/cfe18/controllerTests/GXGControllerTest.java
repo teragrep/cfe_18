@@ -305,8 +305,8 @@ public class GXGControllerTest extends TestSpringBootInformation {
         linkage.setId(1);
         linkage.setCapture_group_name("groupRelp");
         linkage.setHost_group_name("hostgroup1");
-        linkage.setHost_group_type(Linkage.GroupType.RELP);
-        linkage.setCapture_group_type(Linkage.GroupType.RELP);
+        linkage.setHost_group_type(IntegrationType.RELP);
+        linkage.setCapture_group_type(IntegrationType.RELP);
         linkage.setHost_group_id(1);
         linkage.setCapture_group_id(1);
 
@@ -372,8 +372,8 @@ public class GXGControllerTest extends TestSpringBootInformation {
         linkage.setHost_group_name("hostgroup1");
         linkage.setHost_group_id(1);
         linkage.setCapture_group_id(1);
-        linkage.setHost_group_type(Linkage.GroupType.RELP);
-        linkage.setCapture_group_type(Linkage.GroupType.RELP);
+        linkage.setHost_group_type(IntegrationType.RELP);
+        linkage.setCapture_group_type(IntegrationType.RELP);
 
         expected.add(linkage);
 

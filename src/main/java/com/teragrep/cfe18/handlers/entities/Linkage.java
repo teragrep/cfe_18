@@ -51,10 +51,6 @@ import io.swagger.v3.oas.annotations.media.Schema;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class Linkage {
 
-    public enum GroupType {
-        CFE, RELP
-    }
-
     @Schema(accessMode = Schema.AccessMode.READ_ONLY)
     private int id;
     @Schema(accessMode = Schema.AccessMode.READ_ONLY)
@@ -62,9 +58,9 @@ public class Linkage {
     @Schema(accessMode = Schema.AccessMode.READ_ONLY)
     private String host_group_name;
     @Schema(accessMode = Schema.AccessMode.READ_ONLY)
-    private GroupType host_group_type;
+    private IntegrationType host_group_type;
     @Schema(accessMode = Schema.AccessMode.READ_ONLY)
-    private GroupType capture_group_type;
+    private IntegrationType capture_group_type;
 
     private int host_group_id;
     private int capture_group_id;
@@ -93,19 +89,19 @@ public class Linkage {
         this.host_group_name = host_group_name;
     }
 
-    public GroupType getHost_group_type() {
+    public IntegrationType getHost_group_type() {
         return host_group_type;
     }
 
-    public void setHost_group_type(GroupType host_group_type) {
+    public void setHost_group_type(IntegrationType host_group_type) {
         this.host_group_type = host_group_type;
     }
 
-    public GroupType getCapture_group_type() {
+    public IntegrationType getCapture_group_type() {
         return capture_group_type;
     }
 
-    public void setCapture_group_type(GroupType capture_group_type) {
+    public void setCapture_group_type(IntegrationType capture_group_type) {
         this.capture_group_type = capture_group_type;
     }
 

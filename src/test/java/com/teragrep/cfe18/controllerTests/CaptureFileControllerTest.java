@@ -85,7 +85,7 @@ public final class CaptureFileControllerTest extends TestSpringBootInformation {
     void testData() throws Exception {
         // Filecapturemeta
         FileProcessing file = new FileProcessing();
-        file.setInputtype(FileProcessing.InputType.REGEX);
+        file.setInputtype(InputType.REGEX);
         file.setInputvalue("capregex");
         file.setRuleset("capruleset");
         file.setName("capname");

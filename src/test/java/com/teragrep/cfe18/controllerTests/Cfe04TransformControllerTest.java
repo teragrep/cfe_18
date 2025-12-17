@@ -48,6 +48,7 @@ package com.teragrep.cfe18.controllerTests;
 import com.google.gson.Gson;
 import com.teragrep.cfe18.handlers.entities.Cfe04Transform;
 import com.teragrep.cfe18.handlers.entities.Storage;
+import com.teragrep.cfe18.handlers.entities.StorageType;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
@@ -89,7 +90,7 @@ public class Cfe04TransformControllerTest extends TestSpringBootInformation {
 
         // Insert base cfe_04 storage first
         Storage storage = new Storage();
-        storage.setStorageType(Storage.StorageType.CFE_04);
+        storage.setStorageType(StorageType.CFE_04);
         storage.setStorageName("cfe_04");
         String json2 = gson.toJson(storage);
 
