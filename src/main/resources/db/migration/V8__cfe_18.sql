@@ -151,7 +151,7 @@ create table cfe_18.file_processing_type
 (
     id          int auto_increment primary key,
     name        varchar(48),
-    inputtype   enum('regex','newline') not null,
+    inputtype   enum('REGEX','NEWLINE') not null,
     inputvalue  varchar(255) not null,
     ruleset     varchar(1000) not null,
     template    varchar(255) not null,

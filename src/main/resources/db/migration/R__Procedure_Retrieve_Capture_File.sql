@@ -66,7 +66,7 @@ BEGIN
     end if;
 
 
-    if (select capture_type from cfe_18.capture_definition for system_time as of transaction @time where capture_type = 'cfe' and id = proc_id) is not null then
+    if (select capture_type from cfe_18.capture_definition for system_time as of transaction @time where capture_type = 'CFE' and id = proc_id) is not null then
         select c.id                 as id,
                t.tag                as tag,
                a.app                as app,
@@ -106,7 +106,7 @@ BEGIN
           and pt.id = cmf.processing_type_id;
     elseif (select capture_type
             from cfe_18.capture_definition for system_time as of transaction @time
-            where capture_type = 'relp'
+            where capture_type = 'RELP'
               and id = proc_id) is not null then
         select c.id                 as id,
                t.tag                as tag,
