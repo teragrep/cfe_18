@@ -58,7 +58,7 @@ BEGIN
         from location.host
         where MD5 = proc_MD5
           and fqhost = proc_fqhost
-          and host_type != 'RELP') is not null then
+          and host_type != 'relp') is not null then
         select id into @id from location.host where MD5 = proc_MD5 and fqhost = proc_fqhost;
         SELECT JSON_OBJECT('id', @id, 'message', 'Host exists with different host type') into @host;
         signal sqlstate '45000' set message_text = @host;
@@ -67,12 +67,12 @@ BEGIN
         from location.host
         where MD5 = proc_MD5
           and fqhost = proc_fqhost
-          and host_type = 'RELP') is null then
+          and host_type = 'relp') is null then
         insert into location.host(MD5, fqhost, host_type)
-        values (proc_MD5, proc_fqhost, 'RELP');
+        values (proc_MD5, proc_fqhost, 'relp');
         select last_insert_id() into @id;
     else
-        select id into @id from location.host where MD5 = proc_MD5 and fqhost = proc_fqhost and host_type = 'RELP';
+        select id into @id from location.host where MD5 = proc_MD5 and fqhost = proc_fqhost and host_type = 'relp';
     end if;
     COMMIT;
     select @id as last;

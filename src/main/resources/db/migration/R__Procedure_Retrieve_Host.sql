@@ -69,7 +69,7 @@ BEGIN
         where h.id = proc_host_id) is not null then
         SELECT JSON_OBJECT('id', proc_host_id, 'message', 'Host given is hub') into @hub;
         signal sqlstate '45100' set message_text = @hub;
-    elseif (select id from location.host for system_time as of transaction @time where id = proc_host_id and host_type = 'CFE') then
+    elseif (select id from location.host for system_time as of transaction @time where id = proc_host_id and host_type = 'cfe') then
 
         select h.id          as host_id,
                h.md5         as host_md5,
@@ -87,7 +87,7 @@ BEGIN
         where h.id = proc_host_id
           and hm.host_id = proc_host_id
           and h3.id = h2.host_id;
-    elseif (select id from location.host for system_time as of transaction @time where id = proc_host_id and host_type = 'RELP') then
+    elseif (select id from location.host for system_time as of transaction @time where id = proc_host_id and host_type = 'relp') then
         select id        as host_id,
                md5       as md5,
                fqhost    as fqhost,

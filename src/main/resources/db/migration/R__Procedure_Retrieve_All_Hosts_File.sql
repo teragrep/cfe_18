@@ -66,7 +66,7 @@ BEGIN
              LEFT JOIN cfe_00.host_type_cfe FOR SYSTEM_TIME AS OF TRANSACTION @time htc ON h.id = htc.host_id
              LEFT JOIN cfe_00.hubs FOR SYSTEM_TIME AS OF TRANSACTION @time h2 ON htc.hub_id = h2.id
              LEFT JOIN location.host FOR SYSTEM_TIME AS OF TRANSACTION @time h3 ON h2.host_id = h3.id
-    WHERE h.host_type = 'CFE';
+    WHERE h.host_type = 'cfe';
 END;
 //
 DELIMITER ;

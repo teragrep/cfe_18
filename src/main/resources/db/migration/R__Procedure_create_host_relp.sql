@@ -55,7 +55,7 @@ BEGIN
     START TRANSACTION;
 
     -- type check
-    IF ((SELECT COUNT(id) FROM location.host WHERE MD5 = proc_MD5 AND fqhost = proc_fqhost AND host_type != 'RELP') >
+    IF ((SELECT COUNT(id) FROM location.host WHERE MD5 = proc_MD5 AND fqhost = proc_fqhost AND host_type != 'relp') >
         0) THEN
         SELECT JSON_OBJECT('id', (SELECT id FROM location.host WHERE MD5 = proc_MD5 AND fqhost = proc_fqhost),
                            'message', 'Host exists with different type')
@@ -67,12 +67,12 @@ BEGIN
          FROM location.host
          WHERE MD5 = proc_MD5
            AND fqhost = proc_fqhost
-           AND host_type = 'RELP') = 0) THEN
+           AND host_type = 'relp') = 0) THEN
         INSERT INTO location.host(MD5, fqhost, host_type)
-        VALUES (proc_MD5, proc_fqhost, 'RELP');
+        VALUES (proc_MD5, proc_fqhost, 'relp');
         SELECT LAST_INSERT_ID() AS id;
     ELSE
-        SELECT id AS id FROM location.host WHERE MD5 = proc_MD5 AND fqhost = proc_fqhost AND host_type = 'RELP';
+        SELECT id AS id FROM location.host WHERE MD5 = proc_MD5 AND fqhost = proc_fqhost AND host_type = 'relp';
     END IF;
     COMMIT;
 END;

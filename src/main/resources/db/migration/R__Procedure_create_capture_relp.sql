@@ -130,7 +130,7 @@ BEGIN
            AND tag_id = @TagId
            AND L7_id = @L7Id
            AND flow_id = @FlowId
-           AND capture_type = 'RELP') > 0) THEN
+           AND capture_type = 'relp') > 0) THEN
         -- return ID
         SELECT id
                    AS id
@@ -143,15 +143,15 @@ BEGIN
           AND tag_id = @TagId
           AND L7_id = @L7Id
           AND flow_id = @FlowId
-          AND capture_type = 'RELP';
+          AND capture_type = 'relp';
         -- else insert new capture record
     ELSE
-        INSERT INTO cfe_18.capture_type(capture_type) VALUES ('RELP');
+        INSERT INTO cfe_18.capture_type(capture_type) VALUES ('relp');
         SELECT LAST_INSERT_ID() INTO @TypeId;
         INSERT INTO cfe_18.capture_definition(tag_id, application_id, captureIndex_id, retentionTime_id,
                                               captureSourcetype_id, category_id, capture_type, capture_type_id, L7_id,
                                               flow_id)
-        VALUES (@TagId, @ApplicationId, @IndexId, @RetentionId, @SourceId, @CategoryId, 'RELP', @TypeId, @L7Id,
+        VALUES (@TagId, @ApplicationId, @IndexId, @RetentionId, @SourceId, @CategoryId, 'relp', @TypeId, @L7Id,
                 @FlowId);
         -- return ID
         SELECT LAST_INSERT_ID() AS id;

@@ -55,7 +55,7 @@ BEGIN
     START TRANSACTION;
 
     -- type check
-    IF ((SELECT COUNT(id) FROM location.host WHERE MD5 = proc_MD5 AND fqhost = proc_fqhost AND host_type != 'CFE') >
+    IF ((SELECT COUNT(id) FROM location.host WHERE MD5 = proc_MD5 AND fqhost = proc_fqhost AND host_type != 'cfe') >
         0) THEN
         SELECT JSON_OBJECT('id', (SELECT id FROM location.host WHERE MD5 = proc_MD5 AND fqhost = proc_fqhost),
                            'message', 'Host exists with different type')
@@ -74,16 +74,16 @@ BEGIN
              FROM location.host h
              WHERE h.MD5 = proc_MD5
                AND h.fqhost = proc_fqhost
-               AND h.host_type = 'CFE') = 0) THEN
+               AND h.host_type = 'cfe') = 0) THEN
             -- insert base table
             INSERT INTO location.host(MD5, fqhost, host_type)
-            VALUES (proc_MD5, proc_fqhost, 'CFE');
+            VALUES (proc_MD5, proc_fqhost, 'cfe');
 
             SELECT LAST_INSERT_ID() into @id;
 
             -- insert type table which links the host to a hub
             INSERT INTO cfe_00.host_type_cfe(host_id, host_type, hub_id)
-            VALUES (@id, 'CFE', (SELECT cfe_00.hubs.id
+            VALUES (@id, 'cfe', (SELECT cfe_00.hubs.id
                                  FROM cfe_00.hubs
                                           INNER JOIN(SELECT id
                                                      FROM location.host
@@ -98,7 +98,7 @@ BEGIN
             FROM location.host h
             WHERE h.MD5 = proc_MD5
               AND h.fqhost = proc_fqhost
-              AND h.host_type = 'CFE';
+              AND h.host_type = 'cfe';
         END IF;
     END IF;
     COMMIT;

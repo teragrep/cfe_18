@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <dataset>
-    <location.host id="1" MD5="12365" fqhost="1" host_type="CFE"/>
+    <location.host id="1" MD5="12365" fqhost="1" host_type="cfe"/>
     <location.host id="2" MD5="12322" fqhost="2" host_type="manual"/>
     <location.host id="3" MD5="1323" fqhost="3" host_type="manual"/>
     <location.host id="4" MD5="4123" fqhost="4" host_type="manual"/>
@@ -19,7 +19,7 @@
     <location.host id="22" MD5="7125213123" fqhost="17" host_type="manual"/>
     <location.host id="23" MD5="7122613123" fqhost="18" host_type="manual"/>
     <location.host id="24" MD5="7122173123" fqhost="19" host_type="manual"/>
-    <location.host id="25" MD5="relpmd5" fqhost="relpfqhost" host_type="RELP"/>
-    <cfe_00.hubs id="1" host_id="1" ip="ip?" host_type="CFE"/>
-    <cfe_00.host_type_cfe host_id="1" host_type="CFE" hub_id="1"/>
+    <location.host id="25" MD5="relpmd5" fqhost="relpfqhost" host_type="relp"/>
+    <cfe_00.hubs id="1" host_id="1" ip="ip?" host_type="cfe"/>
+    <cfe_00.host_type_cfe host_id="1" host_type="cfe" hub_id="1"/>
 </dataset>

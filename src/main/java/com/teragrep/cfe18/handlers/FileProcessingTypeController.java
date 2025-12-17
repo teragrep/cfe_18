@@ -193,7 +193,7 @@ public class FileProcessingTypeController {
             FileProcessing n = fileProcessingTypeMapper
                     .create(
                             newFileProcessing.getTemplate(), newFileProcessing.getRuleset(),
-                            newFileProcessing.getName(), newFileProcessing.getInputtype().toString().toUpperCase(),
+                            newFileProcessing.getName(), newFileProcessing.getInputtype().toString(),
                             newFileProcessing.getInputvalue()
                     );
             LOGGER.debug("Values returned <[{}]>", n);

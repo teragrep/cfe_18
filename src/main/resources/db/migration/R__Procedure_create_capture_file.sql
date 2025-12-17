@@ -161,10 +161,10 @@ BEGIN
            AND processing_type_id = file_processing_id) = 0) THEN
         -- insert new one
         INSERT INTO cfe_18.capture_type(capture_type)
-        VALUES ('CFE');
+        VALUES ('cfe');
         SELECT LAST_INSERT_ID() INTO @CaptureTypeId;
         INSERT INTO cfe_18.capture_meta_file(id, capturePath, tagPath, processing_type_id, capture_type)
-        VALUES (@CaptureTypeId, capture_path, tag_path, file_processing_id, 'CFE');
+        VALUES (@CaptureTypeId, capture_path, tag_path, file_processing_id, 'cfe');
     ELSE
         -- if exists then select capture_meta_file ID for later
         SELECT cmf.id
@@ -184,7 +184,7 @@ BEGIN
            AND retentionTime_id = @RetentionId
            AND captureSourcetype_id = @SourceId
            AND category_id = @CategoryId
-           AND capture_type = 'CFE'
+           AND capture_type = 'cfe'
            AND capture_type_id = @CaptureTypeId
            AND L7_id = @L7Id
            AND flow_id = @FlowId) = 0) THEN
@@ -193,7 +193,7 @@ BEGIN
         INSERT INTO cfe_18.capture_definition (tag_id, application_id, captureIndex_id, retentionTime_id,
                                                captureSourcetype_id, category_id, capture_type, capture_type_id, L7_id,
                                                flow_id)
-        VALUES (@TagId, @ApplicationId, @IndexId, @RetentionId, @SourceId, @CategoryId, 'CFE', @CaptureTypeId, @L7Id,
+        VALUES (@TagId, @ApplicationId, @IndexId, @RetentionId, @SourceId, @CategoryId, 'cfe', @CaptureTypeId, @L7Id,
                 @FlowId);
         SELECT LAST_INSERT_ID() INTO @c_id;
     ELSE
@@ -207,7 +207,7 @@ BEGIN
           AND retentionTime_id = @RetentionId
           AND captureSourcetype_id = @SourceId
           AND category_id = @CategoryId
-          AND capture_type = 'CFE'
+          AND capture_type = 'cfe'
           AND capture_type_id = @CaptureTypeId
           AND L7_id = @L7Id
           AND flow_id = @FlowId;

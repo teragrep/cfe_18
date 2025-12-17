@@ -47,7 +47,7 @@ use cfe_18;
 DELIMITER //
 CREATE OR REPLACE PROCEDURE insert_file_processing_type(template_filename varchar(255), rule varchar(1000),
                                                             rule_name varchar(255),
-                                                            inputtype enum('REGEX','NEWLINE'), inputvalue varchar(255)
+                                                            inputtype enum('regex','newline'), inputvalue varchar(255)
 )
 BEGIN
     DECLARE EXIT HANDLER FOR SQLEXCEPTION

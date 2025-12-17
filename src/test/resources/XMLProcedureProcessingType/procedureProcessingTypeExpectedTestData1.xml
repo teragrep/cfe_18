@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <dataset>
-    <cfe_18.file_processing_type id="1" name="name1" inputtype="REGEX" inputvalue="YourNormalRegex" ruleset="RulesAreMadeToBeBroken" template="TemplateForBaking"/>
-    <cfe_18.file_processing_type id="2" name="name2" inputtype="NEWLINE" inputvalue="NewlineForNewbies" ruleset="RulesAreMadeToBeBroken" template="TemplateForBaking"/>
-    <cfe_18.file_processing_type id="3" name="TestName1" inputtype="REGEX" inputvalue="TestRegex2" ruleset="TestRule1" template="TestTemplate1"/>
+    <cfe_18.file_processing_type id="1" name="name1" inputtype="regex" inputvalue="YourNormalRegex" ruleset="RulesAreMadeToBeBroken" template="TemplateForBaking"/>
+    <cfe_18.file_processing_type id="2" name="name2" inputtype="newline" inputvalue="NewlineForNewbies" ruleset="RulesAreMadeToBeBroken" template="TemplateForBaking"/>
+    <cfe_18.file_processing_type id="3" name="TestName1" inputtype="regex" inputvalue="TestRegex2" ruleset="TestRule1" template="TestTemplate1"/>
 </dataset>
