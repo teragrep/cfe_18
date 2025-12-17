@@ -116,9 +116,9 @@ public class GXGControllerTest extends TestSpringBootInformation {
         String actual2 = responseJson2.get("message").toString();
 
         // Capture Group
-        CaptureGroup captureGroup = new CaptureGroup();
+        CaptureGroups captureGroup = new CaptureGroups();
         captureGroup.setCaptureGroupName("groupRelp");
-        captureGroup.setCaptureGroupType(CaptureGroup.groupType.relp);
+        captureGroup.setCaptureGroupType(CaptureGroups.GroupType.RELP);
         captureGroup.setFlowId(1);
 
         String cgJson = gson.toJson(captureGroup);
@@ -127,7 +127,7 @@ public class GXGControllerTest extends TestSpringBootInformation {
         StringEntity requestEntityCaptureGroup = new StringEntity(String.valueOf(cgJson), ContentType.APPLICATION_JSON);
 
         // Creates the request
-        HttpPut requestCaptureGroup = new HttpPut("http://localhost:" + port + "/capture/group");
+        HttpPut requestCaptureGroup = new HttpPut("http://localhost:" + port + "/v2/captures/group");
         // set requestEntity to the put request
         requestCaptureGroup.setEntity(requestEntityCaptureGroup);
         // Header
