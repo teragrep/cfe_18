@@ -21,5 +21,7 @@ var searchData=
   ['apisessionmapper_18',['ApiSessionMapper',['../interfacecom_1_1teragrep_1_1cfe18_1_1ApiSessionMapper.html',1,'com::teragrep::cfe18']]],
   ['apisessionmapper_2ejava_19',['ApiSessionMapper.java',['../ApiSessionMapper_8java.html',1,'']]],
   ['application_20',['application',['../classcom_1_1teragrep_1_1cfe18_1_1handlers_1_1entities_1_1CaptureDefinition.html#a5d0fb04303cdf369f721085a2c4feb1d',1,'com.teragrep.cfe18.handlers.entities.CaptureDefinition.application'],['../classcom_1_1teragrep_1_1cfe18_1_1handlers_1_1entities_1_1CaptureFile.html#a8bdada72af1358ae7739a7f3566f4022',1,'com.teragrep.cfe18.handlers.entities.CaptureFile.application'],['../classcom_1_1teragrep_1_1cfe18_1_1handlers_1_1entities_1_1CaptureRelp.html#a8f6e7b81c7efde55762f1f3ddbc1d9f9',1,'com.teragrep.cfe18.handlers.entities.CaptureRelp.application']]],
-  ['arch_21',['arch',['../classcom_1_1teragrep_1_1cfe18_1_1handlers_1_1entities_1_1HostMeta.html#a9d0b152d05ba6288d1491e0fe6f0681e',1,'com::teragrep::cfe18::handlers::entities::HostMeta']]]
+  ['arch_21',['arch',['../classcom_1_1teragrep_1_1cfe18_1_1handlers_1_1entities_1_1HostMeta.html#a9d0b152d05ba6288d1491e0fe6f0681e',1,'com::teragrep::cfe18::handlers::entities::HostMeta']]],
+  ['aws_22',['AWS',['../enumcom_1_1teragrep_1_1cfe18_1_1handlers_1_1entities_1_1IntegrationType.html#a171992a88a1a8806bd74e1f114228626',1,'com::teragrep::cfe18::handlers::entities::IntegrationType']]],
+  ['azure_23',['AZURE',['../enumcom_1_1teragrep_1_1cfe18_1_1handlers_1_1entities_1_1IntegrationType.html#a0ad35f66d8c07aa5aea9e770d0a8ed93',1,'com::teragrep::cfe18::handlers::entities::IntegrationType']]]
 ];

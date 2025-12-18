@@ -129,7 +129,7 @@ Static Private Attributes</h2></td></tr>
 <div class="line"><span class="lineno">  193</span>            FileProcessing n = fileProcessingTypeMapper</div>
 <div class="line"><span class="lineno">  194</span>                    .<a class="code hl_function" href="interfacecom_1_1teragrep_1_1cfe18_1_1FileProcessingTypeMapper.html#a4c917638a15ea82e467b4859297728c2">create</a>(</div>
 <div class="line"><span class="lineno">  195</span>                            newFileProcessing.getTemplate(), newFileProcessing.getRuleset(),</div>
-<div class="line"><span class="lineno">  196</span>                            newFileProcessing.getName(), newFileProcessing.getInputtype().toString(),</div>
+<div class="line"><span class="lineno">  196</span>                            newFileProcessing.getName(), newFileProcessing.getInputtype().toString().toUpperCase(),</div>
 <div class="line"><span class="lineno">  197</span>                            newFileProcessing.getInputvalue()</div>
 <div class="line"><span class="lineno">  198</span>                    );</div>
 <div class="line"><span class="lineno">  199</span>            <a class="code hl_variable" href="classcom_1_1teragrep_1_1cfe18_1_1handlers_1_1FileProcessingTypeController.html#adb60f8d71c14933c28208c76f22acda7">LOGGER</a>.debug(<span class="stringliteral">&quot;Values returned &lt;[{}]&gt;&quot;</span>, n);</div>

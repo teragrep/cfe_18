@@ -499,9 +499,9 @@ Private Attributes</h2></td></tr>
 <div class="line"><span class="lineno">  255</span> </div>
 <div class="line"><span class="lineno">  256</span>        FlowStorage flowStorage = <span class="keyword">new</span> FlowStorage();</div>
 <div class="line"><span class="lineno">  257</span>        flowStorage.setId(1);</div>
-<div class="line"><span class="lineno">  258</span>        flowStorage.setFlow(<span class="stringliteral">&quot;Testflow&quot;</span>);</div>
-<div class="line"><span class="lineno">  259</span>        flowStorage.setStorage_name(<span class="stringliteral">&quot;cfe_04&quot;</span>);</div>
-<div class="line"><span class="lineno">  260</span>        flowStorage.setStorage_type(<span class="stringliteral">&quot;cfe_04&quot;</span>);</div>
+<div class="line"><span class="lineno">  258</span>        flowStorage.setStorage_type(<span class="stringliteral">&quot;CFE_04&quot;</span>);</div>
+<div class="line"><span class="lineno">  259</span>        flowStorage.setFlow(<span class="stringliteral">&quot;Testflow&quot;</span>);</div>
+<div class="line"><span class="lineno">  260</span>        flowStorage.setStorage_name(<span class="stringliteral">&quot;cfe_04&quot;</span>);</div>
 <div class="line"><span class="lineno">  261</span>        flowStorage.setStorage_id(1);</div>
 <div class="line"><span class="lineno">  262</span> </div>
 <div class="line"><span class="lineno">  263</span>        expected.add(flowStorage);</div>
@@ -547,9 +547,9 @@ Private Attributes</h2></td></tr>
 <div class="line"><span class="lineno">  287</span> </div>
 <div class="line"><span class="lineno">  288</span>        FlowStorage flowStorage = <span class="keyword">new</span> FlowStorage();</div>
 <div class="line"><span class="lineno">  289</span>        flowStorage.setId(1);</div>
-<div class="line"><span class="lineno">  290</span>        flowStorage.setFlow(<span class="stringliteral">&quot;Testflow&quot;</span>);</div>
-<div class="line"><span class="lineno">  291</span>        flowStorage.setStorage_name(<span class="stringliteral">&quot;cfe_04&quot;</span>);</div>
-<div class="line"><span class="lineno">  292</span>        flowStorage.setStorage_type(<span class="stringliteral">&quot;cfe_04&quot;</span>);</div>
+<div class="line"><span class="lineno">  290</span>        flowStorage.setStorage_type(<span class="stringliteral">&quot;CFE_04&quot;</span>);</div>
+<div class="line"><span class="lineno">  291</span>        flowStorage.setFlow(<span class="stringliteral">&quot;Testflow&quot;</span>);</div>
+<div class="line"><span class="lineno">  292</span>        flowStorage.setStorage_name(<span class="stringliteral">&quot;cfe_04&quot;</span>);</div>
 <div class="line"><span class="lineno">  293</span>        flowStorage.setStorage_id(1);</div>
 <div class="line"><span class="lineno">  294</span> </div>
 <div class="line"><span class="lineno">  295</span>        expected.add(flowStorage);</div>
@@ -592,7 +592,7 @@ Private Attributes</h2></td></tr>
 <div class="fragment"><div class="line"><span class="lineno">  161</span>                                   {</div>
 <div class="line"><span class="lineno">  162</span>        Storage storage = <span class="keyword">new</span> Storage();</div>
 <div class="line"><span class="lineno">  163</span>        storage.setStorageName(<span class="stringliteral">&quot;cfe_04&quot;</span>);</div>
-<div class="line"><span class="lineno">  164</span>        storage.setStorageType(Storage.StorageType.cfe_04);</div>
+<div class="line"><span class="lineno">  164</span>        storage.setStorageType(StorageType.CFE_04);</div>
 <div class="line"><span class="lineno">  165</span>        storage.setId(1);</div>
 <div class="line"><span class="lineno">  166</span> </div>
 <div class="line"><span class="lineno">  167</span>        String expectedJson = <span class="keyword">new</span> Gson().toJson(storage);</div>
@@ -637,7 +637,7 @@ Private Attributes</h2></td></tr>
 <div class="line"><span class="lineno">  132</span> </div>
 <div class="line"><span class="lineno">  133</span>        Storage storage = <span class="keyword">new</span> Storage();</div>
 <div class="line"><span class="lineno">  134</span>        storage.setStorageName(<span class="stringliteral">&quot;cfe_04&quot;</span>);</div>
-<div class="line"><span class="lineno">  135</span>        storage.setStorageType(Storage.StorageType.cfe_04);</div>
+<div class="line"><span class="lineno">  135</span>        storage.setStorageType(StorageType.CFE_04);</div>
 <div class="line"><span class="lineno">  136</span>        storage.setId(1);</div>
 <div class="line"><span class="lineno">  137</span> </div>
 <div class="line"><span class="lineno">  138</span>        expected.add(storage);</div>
@@ -878,7 +878,7 @@ Private Attributes</h2></td></tr>
 <div class="fragment"><div class="line"><span class="lineno">   85</span>                                    {</div>
 <div class="line"><span class="lineno">   86</span> </div>
 <div class="line"><span class="lineno">   87</span>        Storage storage = <span class="keyword">new</span> Storage();</div>
-<div class="line"><span class="lineno">   88</span>        storage.setStorageType(Storage.StorageType.cfe_04);</div>
+<div class="line"><span class="lineno">   88</span>        storage.setStorageType(StorageType.CFE_04);</div>
 <div class="line"><span class="lineno">   89</span>        storage.setStorageName(<span class="stringliteral">&quot;cfe_04&quot;</span>);</div>
 <div class="line"><span class="lineno">   90</span> </div>
 <div class="line"><span class="lineno">   91</span>        String json = gson.toJson(storage);</div>

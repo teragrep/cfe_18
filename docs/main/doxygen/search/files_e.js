@@ -8,6 +8,7 @@ var searchData=
   ['storagecontroller_2ejava_5',['StorageController.java',['../StorageController_8java.html',1,'']]],
   ['storagecontrollertest_2ejava_6',['StorageControllerTest.java',['../StorageControllerTest_8java.html',1,'']]],
   ['storagemapper_2ejava_7',['StorageMapper.java',['../StorageMapper_8java.html',1,'']]],
-  ['subject_2ejava_8',['Subject.java',['../Subject_8java.html',1,'']]],
-  ['swaggerconfiguration_2ejava_9',['SwaggerConfiguration.java',['../SwaggerConfiguration_8java.html',1,'']]]
+  ['storagetype_2ejava_8',['StorageType.java',['../StorageType_8java.html',1,'']]],
+  ['subject_2ejava_9',['Subject.java',['../Subject_8java.html',1,'']]],
+  ['swaggerconfiguration_2ejava_10',['SwaggerConfiguration.java',['../SwaggerConfiguration_8java.html',1,'']]]
 ];

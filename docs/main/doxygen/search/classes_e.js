@@ -8,7 +8,7 @@ var searchData=
   ['storagecontroller_5',['StorageController',['../classcom_1_1teragrep_1_1cfe18_1_1handlers_1_1StorageController.html',1,'com::teragrep::cfe18::handlers']]],
   ['storagecontrollertest_6',['StorageControllerTest',['../classcom_1_1teragrep_1_1cfe18_1_1controllerTests_1_1StorageControllerTest.html',1,'com::teragrep::cfe18::controllerTests']]],
   ['storagemapper_7',['StorageMapper',['../interfacecom_1_1teragrep_1_1cfe18_1_1StorageMapper.html',1,'com::teragrep::cfe18']]],
-  ['storagetype_8',['StorageType',['../enumcom_1_1teragrep_1_1cfe18_1_1handlers_1_1entities_1_1Storage_1_1StorageType.html',1,'com::teragrep::cfe18::handlers::entities::Storage']]],
+  ['storagetype_8',['StorageType',['../enumcom_1_1teragrep_1_1cfe18_1_1handlers_1_1entities_1_1StorageType.html',1,'com::teragrep::cfe18::handlers::entities']]],
   ['subject_9',['Subject',['../classcom_1_1teragrep_1_1cfe18_1_1requestfilter_1_1Subject.html',1,'com::teragrep::cfe18::requestfilter']]],
   ['swaggerconfiguration_10',['SwaggerConfiguration',['../classcom_1_1teragrep_1_1cfe18_1_1SwaggerConfiguration.html',1,'com::teragrep::cfe18']]]
 ];

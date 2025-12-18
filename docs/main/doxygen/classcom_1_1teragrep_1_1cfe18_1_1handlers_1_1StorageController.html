@@ -181,7 +181,7 @@ Static Private Attributes</h2></td></tr>
 <div class="fragment"><div class="line"><span class="lineno">  455</span>                                                                          {</div>
 <div class="line"><span class="lineno">  456</span>        <a class="code hl_variable" href="classcom_1_1teragrep_1_1cfe18_1_1handlers_1_1StorageController.html#a66f225bb65b9ff392fd965505e8a40f0">LOGGER</a>.info(<span class="stringliteral">&quot;About to insert &lt;[{}]&gt;&quot;</span>, newStorage);</div>
 <div class="line"><span class="lineno">  457</span>        <span class="keywordflow">try</span> {</div>
-<div class="line"><span class="lineno">  458</span>            Storage s = storageMapper.<a class="code hl_function" href="interfacecom_1_1teragrep_1_1cfe18_1_1StorageMapper.html#afcf396c09c01da264b1bc94a570b099c">create</a>(newStorage.getStorageType(), newStorage.getStorageName());</div>
+<div class="line"><span class="lineno">  458</span>            Storage s = storageMapper.<a class="code hl_function" href="interfacecom_1_1teragrep_1_1cfe18_1_1StorageMapper.html#aaa0dc479ed31f98a6abde4533750d1b5">create</a>(newStorage.getStorageType(), newStorage.getStorageName());</div>
 <div class="line"><span class="lineno">  459</span>            <a class="code hl_variable" href="classcom_1_1teragrep_1_1cfe18_1_1handlers_1_1StorageController.html#a66f225bb65b9ff392fd965505e8a40f0">LOGGER</a>.debug(<span class="stringliteral">&quot;Values returned &lt;[{}]&gt;&quot;</span>, s);</div>
 <div class="line"><span class="lineno">  460</span>            JSONObject jsonObject = <span class="keyword">new</span> JSONObject();</div>
 <div class="line"><span class="lineno">  461</span>            jsonObject.put(<span class="stringliteral">&quot;id&quot;</span>, s.getId());</div>
@@ -205,7 +205,7 @@ Static Private Attributes</h2></td></tr>
 <div class="line"><span class="lineno">  479</span>            <span class="keywordflow">return</span> <span class="keyword">new</span> ResponseEntity&lt;&gt;(jsonErr.toString(), HttpStatus.BAD_REQUEST);</div>
 <div class="line"><span class="lineno">  480</span>        }</div>
 <div class="line"><span class="lineno">  481</span>    }</div>
-<div class="ttc" id="ainterfacecom_1_1teragrep_1_1cfe18_1_1StorageMapper_html_afcf396c09c01da264b1bc94a570b099c"><div class="ttname"><a href="interfacecom_1_1teragrep_1_1cfe18_1_1StorageMapper.html#afcf396c09c01da264b1bc94a570b099c">com.teragrep.cfe18.StorageMapper.create</a></div><div class="ttdeci">Storage create(Storage.StorageType storageType, String storageName)</div></div>
+<div class="ttc" id="ainterfacecom_1_1teragrep_1_1cfe18_1_1StorageMapper_html_aaa0dc479ed31f98a6abde4533750d1b5"><div class="ttname"><a href="interfacecom_1_1teragrep_1_1cfe18_1_1StorageMapper.html#aaa0dc479ed31f98a6abde4533750d1b5">com.teragrep.cfe18.StorageMapper.create</a></div><div class="ttdeci">Storage create(StorageType storageType, String storageName)</div></div>
 </div><!-- fragment -->
 </div>
 </div>

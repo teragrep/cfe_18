@@ -318,9 +318,9 @@ Private Attributes</h2></td></tr>
 <div class="line"><span class="lineno">  116</span>        String actual2 = responseJson2.get(<span class="stringliteral">&quot;message&quot;</span>).toString();</div>
 <div class="line"><span class="lineno">  117</span> </div>
 <div class="line"><span class="lineno">  118</span>        <span class="comment">// Capture Group</span></div>
-<div class="line"><span class="lineno">  119</span>        CaptureGroup captureGroup = <span class="keyword">new</span> CaptureGroup();</div>
+<div class="line"><span class="lineno">  119</span>        CaptureGroups captureGroup = <span class="keyword">new</span> CaptureGroups();</div>
 <div class="line"><span class="lineno">  120</span>        captureGroup.setCaptureGroupName(<span class="stringliteral">&quot;groupRelp&quot;</span>);</div>
-<div class="line"><span class="lineno">  121</span>        captureGroup.setCaptureGroupType(CaptureGroup.groupType.relp);</div>
+<div class="line"><span class="lineno">  121</span>        captureGroup.setCaptureGroupType(IntegrationType.RELP);</div>
 <div class="line"><span class="lineno">  122</span>        captureGroup.setFlowId(1);</div>
 <div class="line"><span class="lineno">  123</span> </div>
 <div class="line"><span class="lineno">  124</span>        String cgJson = gson.toJson(captureGroup);</div>
@@ -329,7 +329,7 @@ Private Attributes</h2></td></tr>
 <div class="line"><span class="lineno">  127</span>        StringEntity requestEntityCaptureGroup = <span class="keyword">new</span> StringEntity(String.valueOf(cgJson), ContentType.APPLICATION_JSON);</div>
 <div class="line"><span class="lineno">  128</span> </div>
 <div class="line"><span class="lineno">  129</span>        <span class="comment">// Creates the request</span></div>
-<div class="line"><span class="lineno">  130</span>        HttpPut requestCaptureGroup = <span class="keyword">new</span> HttpPut(<span class="stringliteral">&quot;http://localhost:&quot;</span> + <a class="code hl_variable" href="classcom_1_1teragrep_1_1cfe18_1_1controllerTests_1_1GXGControllerTest.html#aaf8c23c3cecd2904f400dbdeaa0dd9a4">port</a> + <span class="stringliteral">&quot;/capture/group&quot;</span>);</div>
+<div class="line"><span class="lineno">  130</span>        HttpPut requestCaptureGroup = <span class="keyword">new</span> HttpPut(<span class="stringliteral">&quot;http://localhost:&quot;</span> + <a class="code hl_variable" href="classcom_1_1teragrep_1_1cfe18_1_1controllerTests_1_1GXGControllerTest.html#aaf8c23c3cecd2904f400dbdeaa0dd9a4">port</a> + <span class="stringliteral">&quot;/v2/captures/group&quot;</span>);</div>
 <div class="line"><span class="lineno">  131</span>        <span class="comment">// set requestEntity to the put request</span></div>
 <div class="line"><span class="lineno">  132</span>        requestCaptureGroup.setEntity(requestEntityCaptureGroup);</div>
 <div class="line"><span class="lineno">  133</span>        <span class="comment">// Header</span></div>
@@ -597,11 +597,11 @@ Private Attributes</h2></td></tr>
 <div class="fragment"><div class="line"><span class="lineno">  335</span>                                                             {</div>
 <div class="line"><span class="lineno">  336</span>        ArrayList&lt;HostGroup&gt; expected = <span class="keyword">new</span> ArrayList&lt;&gt;();</div>
 <div class="line"><span class="lineno">  337</span>        HostGroup hostGroup = <span class="keyword">new</span> HostGroup();</div>
-<div class="line"><span class="lineno">  338</span>        hostGroup.setMd5(<span class="stringliteral">&quot;relpHostmd5&quot;</span>);</div>
-<div class="line"><span class="lineno">  339</span>        hostGroup.setHost_id(1);</div>
-<div class="line"><span class="lineno">  340</span>        hostGroup.setHost_group_name(<span class="stringliteral">&quot;hostgroup1&quot;</span>);</div>
-<div class="line"><span class="lineno">  341</span>        hostGroup.setHost_group_type(HostGroup.group_type.relp);</div>
-<div class="line"><span class="lineno">  342</span>        hostGroup.setId(1);</div>
+<div class="line"><span class="lineno">  338</span>        hostGroup.setHost_id(1);</div>
+<div class="line"><span class="lineno">  339</span>        hostGroup.setHost_group_name(<span class="stringliteral">&quot;hostgroup1&quot;</span>);</div>
+<div class="line"><span class="lineno">  340</span>        hostGroup.setMd5(<span class="stringliteral">&quot;relpHostmd5&quot;</span>);</div>
+<div class="line"><span class="lineno">  341</span>        hostGroup.setId(1);</div>
+<div class="line"><span class="lineno">  342</span>        hostGroup.setHost_group_type(IntegrationType.RELP);</div>
 <div class="line"><span class="lineno">  343</span> </div>
 <div class="line"><span class="lineno">  344</span>        expected.add(hostGroup);</div>
 <div class="line"><span class="lineno">  345</span> </div>
@@ -648,10 +648,10 @@ Private Attributes</h2></td></tr>
 <div class="line"><span class="lineno">  370</span>        linkage.setId(1);</div>
 <div class="line"><span class="lineno">  371</span>        linkage.setCapture_group_name(<span class="stringliteral">&quot;groupRelp&quot;</span>);</div>
 <div class="line"><span class="lineno">  372</span>        linkage.setHost_group_name(<span class="stringliteral">&quot;hostgroup1&quot;</span>);</div>
-<div class="line"><span class="lineno">  373</span>        linkage.setHost_group_type(Linkage.group_type.relp);</div>
-<div class="line"><span class="lineno">  374</span>        linkage.setCapture_group_type(Linkage.group_type.relp);</div>
-<div class="line"><span class="lineno">  375</span>        linkage.setHost_group_id(1);</div>
-<div class="line"><span class="lineno">  376</span>        linkage.setCapture_group_id(1);</div>
+<div class="line"><span class="lineno">  373</span>        linkage.setHost_group_id(1);</div>
+<div class="line"><span class="lineno">  374</span>        linkage.setCapture_group_id(1);</div>
+<div class="line"><span class="lineno">  375</span>        linkage.setHost_group_type(IntegrationType.RELP);</div>
+<div class="line"><span class="lineno">  376</span>        linkage.setCapture_group_type(IntegrationType.RELP);</div>
 <div class="line"><span class="lineno">  377</span> </div>
 <div class="line"><span class="lineno">  378</span>        expected.add(linkage);</div>
 <div class="line"><span class="lineno">  379</span> </div>
@@ -668,8 +668,8 @@ Private Attributes</h2></td></tr>
 <div class="line"><span class="lineno">  390</span> </div>
 <div class="line"><span class="lineno">  391</span>        String responseStringGet = EntityUtils.toString(entityGet, <span class="stringliteral">&quot;UTF-8&quot;</span>);</div>
 <div class="line"><span class="lineno">  392</span> </div>
-<div class="line"><span class="lineno">  393</span>        assertThat(responseGet.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_OK));</div>
-<div class="line"><span class="lineno">  394</span>        assertEquals(expectedJson, responseStringGet);</div>
+<div class="line"><span class="lineno">  393</span>        assertEquals(expectedJson, responseStringGet);</div>
+<div class="line"><span class="lineno">  394</span>        assertThat(responseGet.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_OK));</div>
 <div class="line"><span class="lineno">  395</span> </div>
 <div class="line"><span class="lineno">  396</span>    }</div>
 </div><!-- fragment -->
@@ -694,11 +694,11 @@ Private Attributes</h2></td></tr>
 <div class="fragment"><div class="line"><span class="lineno">  271</span>                                                         {</div>
 <div class="line"><span class="lineno">  272</span>        ArrayList&lt;HostGroup&gt; expected = <span class="keyword">new</span> ArrayList&lt;&gt;();</div>
 <div class="line"><span class="lineno">  273</span>        HostGroup hostGroup = <span class="keyword">new</span> HostGroup();</div>
-<div class="line"><span class="lineno">  274</span>        hostGroup.setMd5(<span class="stringliteral">&quot;relpHostmd5&quot;</span>);</div>
-<div class="line"><span class="lineno">  275</span>        hostGroup.setHost_id(1);</div>
-<div class="line"><span class="lineno">  276</span>        hostGroup.setHost_group_name(<span class="stringliteral">&quot;hostgroup1&quot;</span>);</div>
-<div class="line"><span class="lineno">  277</span>        hostGroup.setHost_group_type(HostGroup.group_type.relp);</div>
-<div class="line"><span class="lineno">  278</span>        hostGroup.setId(1);</div>
+<div class="line"><span class="lineno">  274</span>        hostGroup.setHost_id(1);</div>
+<div class="line"><span class="lineno">  275</span>        hostGroup.setHost_group_name(<span class="stringliteral">&quot;hostgroup1&quot;</span>);</div>
+<div class="line"><span class="lineno">  276</span>        hostGroup.setMd5(<span class="stringliteral">&quot;relpHostmd5&quot;</span>);</div>
+<div class="line"><span class="lineno">  277</span>        hostGroup.setId(1);</div>
+<div class="line"><span class="lineno">  278</span>        hostGroup.setHost_group_type(IntegrationType.RELP);</div>
 <div class="line"><span class="lineno">  279</span> </div>
 <div class="line"><span class="lineno">  280</span>        expected.add(hostGroup);</div>
 <div class="line"><span class="lineno">  281</span> </div>
@@ -715,8 +715,8 @@ Private Attributes</h2></td></tr>
 <div class="line"><span class="lineno">  292</span> </div>
 <div class="line"><span class="lineno">  293</span>        String responseStringGet = EntityUtils.toString(entityGet, <span class="stringliteral">&quot;UTF-8&quot;</span>);</div>
 <div class="line"><span class="lineno">  294</span> </div>
-<div class="line"><span class="lineno">  295</span>        assertThat(responseGet.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_OK));</div>
-<div class="line"><span class="lineno">  296</span>        assertEquals(expectedJson, responseStringGet);</div>
+<div class="line"><span class="lineno">  295</span>        assertEquals(expectedJson, responseStringGet);</div>
+<div class="line"><span class="lineno">  296</span>        assertThat(responseGet.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_OK));</div>
 <div class="line"><span class="lineno">  297</span> </div>
 <div class="line"><span class="lineno">  298</span>    }</div>
 </div><!-- fragment -->
@@ -744,8 +744,8 @@ Private Attributes</h2></td></tr>
 <div class="line"><span class="lineno">  305</span>        linkage.setId(1);</div>
 <div class="line"><span class="lineno">  306</span>        linkage.setCapture_group_name(<span class="stringliteral">&quot;groupRelp&quot;</span>);</div>
 <div class="line"><span class="lineno">  307</span>        linkage.setHost_group_name(<span class="stringliteral">&quot;hostgroup1&quot;</span>);</div>
-<div class="line"><span class="lineno">  308</span>        linkage.setHost_group_type(Linkage.group_type.relp);</div>
-<div class="line"><span class="lineno">  309</span>        linkage.setCapture_group_type(Linkage.group_type.relp);</div>
+<div class="line"><span class="lineno">  308</span>        linkage.setHost_group_type(IntegrationType.RELP);</div>
+<div class="line"><span class="lineno">  309</span>        linkage.setCapture_group_type(IntegrationType.RELP);</div>
 <div class="line"><span class="lineno">  310</span>        linkage.setHost_group_id(1);</div>
 <div class="line"><span class="lineno">  311</span>        linkage.setCapture_group_id(1);</div>
 <div class="line"><span class="lineno">  312</span> </div>
@@ -764,8 +764,8 @@ Private Attributes</h2></td></tr>
 <div class="line"><span class="lineno">  325</span> </div>
 <div class="line"><span class="lineno">  326</span>        String responseStringGet = EntityUtils.toString(entityGet, <span class="stringliteral">&quot;UTF-8&quot;</span>);</div>
 <div class="line"><span class="lineno">  327</span> </div>
-<div class="line"><span class="lineno">  328</span>        assertThat(responseGet.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_OK));</div>
-<div class="line"><span class="lineno">  329</span>        assertEquals(expectedJson, responseStringGet);</div>
+<div class="line"><span class="lineno">  328</span>        assertEquals(expectedJson, responseStringGet);</div>
+<div class="line"><span class="lineno">  329</span>        assertThat(responseGet.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_OK));</div>
 <div class="line"><span class="lineno">  330</span> </div>
 <div class="line"><span class="lineno">  331</span>    }</div>
 </div><!-- fragment -->

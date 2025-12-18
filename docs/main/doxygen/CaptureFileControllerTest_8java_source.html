@@ -169,7 +169,7 @@ $(document).ready(function() { init_codefold(0); });
 <div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span>    <span class="keywordtype">void</span> testData() throws Exception {</div>
 <div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span>        <span class="comment">// Filecapturemeta</span></div>
 <div class="line"><a id="l00087" name="l00087"></a><span class="lineno">   87</span>        FileProcessing file = <span class="keyword">new</span> FileProcessing();</div>
-<div class="line"><a id="l00088" name="l00088"></a><span class="lineno">   88</span>        file.setInputtype(FileProcessing.InputType.regex);</div>
+<div class="line"><a id="l00088" name="l00088"></a><span class="lineno">   88</span>        file.setInputtype(InputType.REGEX);</div>
 <div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span>        file.setInputvalue(<span class="stringliteral">&quot;capregex&quot;</span>);</div>
 <div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span>        file.setRuleset(<span class="stringliteral">&quot;capruleset&quot;</span>);</div>
 <div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span>        file.setName(<span class="stringliteral">&quot;capname&quot;</span>);</div>
@@ -360,7 +360,7 @@ $(document).ready(function() { init_codefold(0); });
 <div class="line"><a id="l00273" name="l00273"></a><span class="lineno">  273</span>        captureFile.setTagPath(<span class="stringliteral">&quot;tagpath1&quot;</span>);</div>
 <div class="line"><a id="l00274" name="l00274"></a><span class="lineno">  274</span>        captureFile.setCapturePath(<span class="stringliteral">&quot;capturepath1&quot;</span>);</div>
 <div class="line"><a id="l00275" name="l00275"></a><span class="lineno">  275</span>        captureFile.setFileProcessingTypeId(1);</div>
-<div class="line"><a id="l00276" name="l00276"></a><span class="lineno">  276</span>        captureFile.setType(CaptureFile.CaptureType.cfe);</div>
+<div class="line"><a id="l00276" name="l00276"></a><span class="lineno">  276</span>        captureFile.setType(IntegrationType.CFE);</div>
 <div class="line"><a id="l00277" name="l00277"></a><span class="lineno">  277</span> </div>
 <div class="line"><a id="l00278" name="l00278"></a><span class="lineno">  278</span>        String json = gson.toJson(captureFile);</div>
 <div class="line"><a id="l00279" name="l00279"></a><span class="lineno">  279</span> </div>
@@ -400,7 +400,7 @@ $(document).ready(function() { init_codefold(0); });
 <div class="line"><a id="l00311" name="l00311"></a><span class="lineno">  311</span>        captureFile2.setTagPath(<span class="stringliteral">&quot;tagpath1&quot;</span>);</div>
 <div class="line"><a id="l00312" name="l00312"></a><span class="lineno">  312</span>        captureFile2.setCapturePath(<span class="stringliteral">&quot;capturepath1&quot;</span>);</div>
 <div class="line"><a id="l00313" name="l00313"></a><span class="lineno">  313</span>        captureFile2.setFileProcessingTypeId(1);</div>
-<div class="line"><a id="l00314" name="l00314"></a><span class="lineno">  314</span>        captureFile2.setType(CaptureFile.CaptureType.cfe);</div>
+<div class="line"><a id="l00314" name="l00314"></a><span class="lineno">  314</span>        captureFile2.setType(IntegrationType.CFE);</div>
 <div class="line"><a id="l00315" name="l00315"></a><span class="lineno">  315</span> </div>
 <div class="line"><a id="l00316" name="l00316"></a><span class="lineno">  316</span>        expected.add(captureFile2);</div>
 <div class="line"><a id="l00317" name="l00317"></a><span class="lineno">  317</span> </div>
