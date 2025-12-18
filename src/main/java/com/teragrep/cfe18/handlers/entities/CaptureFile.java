@@ -51,10 +51,6 @@ import io.swagger.v3.oas.annotations.media.Schema;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class CaptureFile {
 
-    public enum CaptureType {
-        cfe, relp
-    }
-
     @Schema(accessMode = Schema.AccessMode.READ_ONLY)
     private Integer id;
     private String application;
@@ -69,7 +65,7 @@ public class CaptureFile {
     private String capturePath;
     private int fileProcessingTypeId;
     @Schema(accessMode = Schema.AccessMode.READ_ONLY)
-    private CaptureType type;
+    private IntegrationType type;
 
     public Integer getId() {
         return id;
@@ -167,11 +163,11 @@ public class CaptureFile {
         this.fileProcessingTypeId = fileProcessingTypeId;
     }
 
-    public CaptureType getType() {
+    public IntegrationType getType() {
         return type;
     }
 
-    public void setType(CaptureType type) {
+    public void setType(IntegrationType type) {
         this.type = type;
     }
 

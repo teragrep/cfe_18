@@ -177,7 +177,7 @@ public class ProcedureProcessingTypeTest extends DBUnitbase {
         Assertions.assertEquals("RulesAreMadeToBeBroken", rs.getString("ruleset"));
         Assertions.assertEquals("TemplateForBaking", rs.getString("template"));
         Assertions.assertEquals("name1", rs.getString("name"));
-        Assertions.assertEquals("regex", rs.getString("inputtype"));
+        Assertions.assertEquals("REGEX", rs.getString("inputtype"));
         Assertions.assertEquals("YourNormalRegex", rs.getString("inputvalue"));
     }
 }

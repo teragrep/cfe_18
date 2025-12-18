@@ -116,9 +116,9 @@ public class GXGControllerTest extends TestSpringBootInformation {
         String actual2 = responseJson2.get("message").toString();
 
         // Capture Group
-        CaptureGroup captureGroup = new CaptureGroup();
+        CaptureGroups captureGroup = new CaptureGroups();
         captureGroup.setCaptureGroupName("groupRelp");
-        captureGroup.setCaptureGroupType(CaptureGroup.groupType.relp);
+        captureGroup.setCaptureGroupType(IntegrationType.RELP);
         captureGroup.setFlowId(1);
 
         String cgJson = gson.toJson(captureGroup);
@@ -127,7 +127,7 @@ public class GXGControllerTest extends TestSpringBootInformation {
         StringEntity requestEntityCaptureGroup = new StringEntity(String.valueOf(cgJson), ContentType.APPLICATION_JSON);
 
         // Creates the request
-        HttpPut requestCaptureGroup = new HttpPut("http://localhost:" + port + "/capture/group");
+        HttpPut requestCaptureGroup = new HttpPut("http://localhost:" + port + "/v2/captures/group");
         // set requestEntity to the put request
         requestCaptureGroup.setEntity(requestEntityCaptureGroup);
         // Header
@@ -271,11 +271,11 @@ public class GXGControllerTest extends TestSpringBootInformation {
     public void testRetrieveHostGroup() throws Exception {
         ArrayList<HostGroup> expected = new ArrayList<>();
         HostGroup hostGroup = new HostGroup();
-        hostGroup.setMd5("relpHostmd5");
         hostGroup.setHost_id(1);
         hostGroup.setHost_group_name("hostgroup1");
-        hostGroup.setHost_group_type(HostGroup.group_type.relp);
+        hostGroup.setMd5("relpHostmd5");
         hostGroup.setId(1);
+        hostGroup.setHost_group_type(IntegrationType.RELP);
 
         expected.add(hostGroup);
 
@@ -292,8 +292,8 @@ public class GXGControllerTest extends TestSpringBootInformation {
 
         String responseStringGet = EntityUtils.toString(entityGet, "UTF-8");
 
-        assertThat(responseGet.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_OK));
         assertEquals(expectedJson, responseStringGet);
+        assertThat(responseGet.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_OK));
 
     }
 
@@ -305,8 +305,8 @@ public class GXGControllerTest extends TestSpringBootInformation {
         linkage.setId(1);
         linkage.setCapture_group_name("groupRelp");
         linkage.setHost_group_name("hostgroup1");
-        linkage.setHost_group_type(Linkage.group_type.relp);
-        linkage.setCapture_group_type(Linkage.group_type.relp);
+        linkage.setHost_group_type(IntegrationType.RELP);
+        linkage.setCapture_group_type(IntegrationType.RELP);
         linkage.setHost_group_id(1);
         linkage.setCapture_group_id(1);
 
@@ -325,8 +325,8 @@ public class GXGControllerTest extends TestSpringBootInformation {
 
         String responseStringGet = EntityUtils.toString(entityGet, "UTF-8");
 
-        assertThat(responseGet.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_OK));
         assertEquals(expectedJson, responseStringGet);
+        assertThat(responseGet.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_OK));
 
     }
 
@@ -335,11 +335,11 @@ public class GXGControllerTest extends TestSpringBootInformation {
     public void testRetrieveAllHostGroups() throws Exception {
         ArrayList<HostGroup> expected = new ArrayList<>();
         HostGroup hostGroup = new HostGroup();
-        hostGroup.setMd5("relpHostmd5");
         hostGroup.setHost_id(1);
         hostGroup.setHost_group_name("hostgroup1");
-        hostGroup.setHost_group_type(HostGroup.group_type.relp);
+        hostGroup.setMd5("relpHostmd5");
         hostGroup.setId(1);
+        hostGroup.setHost_group_type(IntegrationType.RELP);
 
         expected.add(hostGroup);
 
@@ -370,10 +370,10 @@ public class GXGControllerTest extends TestSpringBootInformation {
         linkage.setId(1);
         linkage.setCapture_group_name("groupRelp");
         linkage.setHost_group_name("hostgroup1");
-        linkage.setHost_group_type(Linkage.group_type.relp);
-        linkage.setCapture_group_type(Linkage.group_type.relp);
         linkage.setHost_group_id(1);
         linkage.setCapture_group_id(1);
+        linkage.setHost_group_type(IntegrationType.RELP);
+        linkage.setCapture_group_type(IntegrationType.RELP);
 
         expected.add(linkage);
 
@@ -390,8 +390,8 @@ public class GXGControllerTest extends TestSpringBootInformation {
 
         String responseStringGet = EntityUtils.toString(entityGet, "UTF-8");
 
-        assertThat(responseGet.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_OK));
         assertEquals(expectedJson, responseStringGet);
+        assertThat(responseGet.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_OK));
 
     }
 

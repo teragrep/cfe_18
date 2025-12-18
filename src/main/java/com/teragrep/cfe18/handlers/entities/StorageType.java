@@ -45,53 +45,8 @@
  */
 package com.teragrep.cfe18.handlers.entities;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-import io.swagger.v3.oas.annotations.media.Schema;
+public enum StorageType {
 
-@JsonInclude(JsonInclude.Include.NON_NULL)
-public class CaptureGroups {
+    CFE_04, CFE_10, CFE_11, CFE_12, CFE_19, CFE_23
 
-    @Schema(accessMode = Schema.AccessMode.READ_ONLY)
-    private int id;
-    private String captureGroupName;
-    private IntegrationType captureGroupType;
-    private Integer flowId;
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public String getCaptureGroupName() {
-        return captureGroupName;
-    }
-
-    public void setCaptureGroupName(String captureGroupName) {
-        this.captureGroupName = captureGroupName;
-    }
-
-    public IntegrationType getCaptureGroupType() {
-        return captureGroupType;
-    }
-
-    public void setCaptureGroupType(IntegrationType captureGroupType) {
-        this.captureGroupType = captureGroupType;
-    }
-
-    public Integer getFlowId() {
-        return flowId;
-    }
-
-    public void setFlowId(Integer flowId) {
-        this.flowId = flowId;
-    }
-
-    @Override
-    public String toString() {
-        return "CaptureGroups{" + "id=" + id + ", captureGroupName='" + captureGroupName + '\'' + ", captureGroupType="
-                + captureGroupType + ", flowId=" + flowId + '}';
-    }
 }

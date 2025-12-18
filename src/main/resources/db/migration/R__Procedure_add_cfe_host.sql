@@ -72,22 +72,22 @@ BEGIN
             from location.host
             where MD5 = proc_MD5
               and fqhost = proc_fqhost
-              and host_type = 'cfe') is null then
+              and host_type = 'CFE') is null then
             insert into location.host(MD5, fqhost, host_type)
-            values (proc_MD5, proc_fqhost, 'cfe');
+            values (proc_MD5, proc_fqhost, 'CFE');
             select last_insert_id() into @id;
         else
-            select id into @id from location.host where MD5 = proc_MD5 and fqhost = proc_fqhost and host_type = 'cfe';
+            select id into @id from location.host where MD5 = proc_MD5 and fqhost = proc_fqhost and host_type = 'CFE';
         end if;
     end if;
 
     if (select host_id
         from cfe_00.host_type_cfe
         where host_id = @id
-          and host_type = 'cfe'
+          and host_type = 'CFE'
           and hub_id = @hubs_id) is null then
         insert into cfe_00.host_type_cfe(host_id, host_type, hub_id)
-        values (@id, 'cfe', @hubs_id);
+        values (@id, 'CFE', @hubs_id);
     end if;
     commit;
     select @id as last;

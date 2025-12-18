@@ -51,10 +51,6 @@ import io.swagger.v3.oas.annotations.media.Schema;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class Storage {
 
-    public enum StorageType {
-        cfe_04, cfe_10, cfe_11, cfe_12, cfe_19, cfe_23
-    }
-
     @Schema(accessMode = Schema.AccessMode.READ_ONLY)
     private int id;
     private String storageName;

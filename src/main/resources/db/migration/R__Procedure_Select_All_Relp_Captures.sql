@@ -79,7 +79,7 @@ BEGIN
                         ON cd.flow_id = cas.flow_id AND cd.L7_id = cas.L7_id
              INNER JOIN flow.L7 FOR SYSTEM_TIME AS OF TRANSACTION @time L7 ON cd.L7_id = L7.id
              LEFT JOIN capture_type FOR SYSTEM_TIME AS OF TRANSACTION @time ct ON cd.capture_type_id = ct.id
-    WHERE cd.capture_type='relp';
+    WHERE cd.capture_type='RELP';
 END;
 //
 DELIMITER ;

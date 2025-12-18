@@ -49,10 +49,6 @@ import io.swagger.v3.oas.annotations.media.Schema;
 
 public class FileProcessing {
 
-    public enum InputType {
-        regex, newline
-    }
-
     @Schema(accessMode = Schema.AccessMode.READ_ONLY)
     private Integer id;
     private String name;

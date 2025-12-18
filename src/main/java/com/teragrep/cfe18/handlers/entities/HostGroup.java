@@ -51,18 +51,14 @@ import io.swagger.v3.oas.annotations.media.Schema;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class HostGroup {
 
-    public enum group_type {
-        cfe, relp
-    }
-
     private int host_id;
     private String host_group_name;
-    @Schema(accessMode = Schema.AccessMode.READ_ONLY)
-    private group_type host_group_type;
     @Schema(accessMode = Schema.AccessMode.READ_ONLY)
     private String md5;
     @Schema(accessMode = Schema.AccessMode.READ_ONLY)
     private int id;
+    @Schema(accessMode = Schema.AccessMode.READ_ONLY)
+    private IntegrationType host_group_type;
 
     public int getHost_id() {
         return host_id;
@@ -80,11 +76,11 @@ public class HostGroup {
         this.host_group_name = host_group_name;
     }
 
-    public group_type getHost_group_type() {
+    public IntegrationType getHost_group_type() {
         return host_group_type;
     }
 
-    public void setHost_group_type(group_type host_group_type) {
+    public void setHost_group_type(IntegrationType host_group_type) {
         this.host_group_type = host_group_type;
     }
 
@@ -106,7 +102,7 @@ public class HostGroup {
 
     @Override
     public String toString() {
-        return "HostGroup{" + "host_id=" + host_id + ", host_group_name='" + host_group_name + '\''
-                + ", host_group_type=" + host_group_type + ", md5='" + md5 + '\'' + ", id=" + id + '}';
+        return "HostGroup{" + "host_id=" + host_id + ", host_group_name='" + host_group_name + '\'' + ", md5='" + md5
+                + '\'' + ", id=" + id + ", host_group_type=" + host_group_type + '}';
     }
 }

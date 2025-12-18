@@ -51,10 +51,6 @@ import io.swagger.v3.oas.annotations.media.Schema;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class CaptureRelp {
 
-    public enum CaptureType {
-        cfe, relp
-    }
-
     @Schema(accessMode = Schema.AccessMode.READ_ONLY)
     private Integer id;
     private String tag;
@@ -66,7 +62,7 @@ public class CaptureRelp {
     private String flow;
     private String protocol;
     @Schema(accessMode = Schema.AccessMode.READ_ONLY)
-    private CaptureType type;
+    private IntegrationType type;
 
     public Integer getId() {
         return id;
@@ -140,11 +136,11 @@ public class CaptureRelp {
         this.protocol = protocol;
     }
 
-    public CaptureType getType() {
+    public IntegrationType getType() {
         return type;
     }
 
-    public void setType(CaptureType type) {
+    public void setType(IntegrationType type) {
         this.type = type;
     }
 
