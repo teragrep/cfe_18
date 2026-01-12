@@ -60,22 +60,16 @@ BEGIN
         SET @time = tx_id;
     END IF;
 
-    IF ((SELECT COUNT(cdg.id)
-         FROM capture_def_group FOR SYSTEM_TIME AS OF TRANSACTION @time cdg
-         WHERE cdg.id = capture_group_id) = 0) THEN
+    IF ((SELECT COUNT(cdgxcd.id)
+         FROM capture_def_group_x_capture_def FOR SYSTEM_TIME AS OF TRANSACTION @time cdgxcd
+         WHERE cdgxcd.capture_def_group_id = capture_group_id) = 0) THEN
         SELECT JSON_OBJECT('id', capture_group_id, 'message', 'Capture group not found') INTO @gc;
         SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = @gc;
     END IF;
 
-    SELECT cd.id AS capture_definition_id
-    FROM cfe_18.capture_def_group FOR SYSTEM_TIME AS OF TRANSACTION @time cdg
-             INNER JOIN capture_def_group_x_capture_def FOR SYSTEM_TIME AS OF TRANSACTION @time cdgxcd
-                        ON cdg.id = cdgxcd.capture_def_group_id
-             INNER JOIN capture_definition FOR SYSTEM_TIME AS OF TRANSACTION @time cd
-                        ON cdgxcd.capture_def_id = cd.id AND cdgxcd.tag_id = cd.tag_id
-    WHERE cdg.id = capture_group_id
-      AND cd.id = cdgxcd.capture_def_id
-      AND cd.tag_id = cdgxcd.tag_id;
+    SELECT cdgxcd.capture_def_id AS capture_definition_id
+        FROM cfe_18.capture_def_group_x_capture_def FOR SYSTEM_TIME AS OF TRANSACTION @time cdgxcd
+    WHERE cdgxcd.capture_def_group_id = capture_group_id;
     COMMIT;
 END;
 //

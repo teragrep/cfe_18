@@ -53,9 +53,11 @@ import java.util.List;
 @Mapper
 public interface CaptureGroupMapper {
 
-    CaptureGroup create(final Integer captureDefinitionId, final Integer captureGroupId);
+    CaptureGroup create(final Integer groupId, final Integer captureId);
 
-    CaptureGroup get(final Integer id, final Integer version);
+    List<CaptureGroup> getCaptures(final Integer groupId, final Integer version);
+
+    List<CaptureGroup> getGroups(final Integer captureId, final Integer version);
 
     List<CaptureGroup> getAll(final Integer version);
 

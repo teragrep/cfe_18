@@ -48,10 +48,10 @@ package com.teragrep.cfe18.handlers.entities;
 public class CaptureGroup {
 
     private int id;
-    private int captureGroupId;
+    private int groupId;
+    private IntegrationType type;
     private int captureDefinitionId;
     private int flowId;
-    private int tagId;
 
     public int getId() {
         return id;
@@ -61,12 +61,20 @@ public class CaptureGroup {
         this.id = id;
     }
 
-    public int getCaptureGroupId() {
-        return captureGroupId;
+    public int getGroupId() {
+        return groupId;
     }
 
-    public void setCaptureGroupId(int captureGroupId) {
-        this.captureGroupId = captureGroupId;
+    public void setGroupId(int groupId) {
+        this.groupId = groupId;
+    }
+
+    public IntegrationType getType() {
+        return type;
+    }
+
+    public void setType(IntegrationType type) {
+        this.type = type;
     }
 
     public int getCaptureDefinitionId() {
@@ -85,17 +93,9 @@ public class CaptureGroup {
         this.flowId = flowId;
     }
 
-    public int getTagId() {
-        return tagId;
-    }
-
-    public void setTagId(int tagId) {
-        this.tagId = tagId;
-    }
-
     @Override
     public String toString() {
-        return "CaptureGroup{" + "id=" + id + ", captureGroupId=" + captureGroupId + ", captureDefinitionId="
-                + captureDefinitionId + ", flowId=" + flowId + ", tagId=" + tagId + '}';
+        return "CaptureGroup{" + "id=" + id + ", groupId=" + groupId + ", type=" + type + ", captureDefinitionId="
+                + captureDefinitionId + ", flowId=" + flowId + '}';
     }
 }

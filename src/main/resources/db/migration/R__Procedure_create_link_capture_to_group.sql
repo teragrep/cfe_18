@@ -46,11 +46,10 @@
 
 
 -- Links capture to a group
--- Takes capture_group name and type
 -- returns ID of the group created
 USE cfe_18;
 DELIMITER //
-CREATE OR REPLACE PROCEDURE insert_capture_to_group(capture_id INT, capture_group_id INT)
+CREATE OR REPLACE PROCEDURE insert_capture_to_group(capture_group_id INT, capture_id INT)
 BEGIN
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
         BEGIN
@@ -62,13 +61,13 @@ BEGIN
     -- check if capture_definition ID is valid
     IF ((SELECT COUNT(c.id) FROM cfe_18.capture_definition c WHERE c.id = capture_id) = 0) THEN
         SELECT JSON_OBJECT('id', capture_id, 'message', 'Capture does not exist') INTO @capture;
-        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = @capture;
+        SIGNAL SQLSTATE '45001' SET MESSAGE_TEXT = @capture;
     END IF;
 
     -- check if capture_group ID is valid
     IF ((SELECT COUNT(cdg.id) FROM cfe_18.capture_def_group cdg WHERE cdg.id = capture_group_id) = 0) THEN
         SELECT JSON_OBJECT('id', capture_group_id, 'message', 'Group does not exist') INTO @group;
-        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = @group;
+        SIGNAL SQLSTATE '45002' SET MESSAGE_TEXT = @group;
     END IF;
 
     -- check if types match. Select given capture and type while subquerying capture groups type to see if they match.
@@ -82,31 +81,31 @@ BEGIN
     END IF;
 
     -- stored variables are readable than subqueries
-    SELECT tag_id INTO @tagId FROM cfe_18.capture_definition c WHERE c.id = capture_id;
-    SELECT capture_type INTO @type FROM cfe_18.capture_def_group WHERE id = capture_group_id;
-    -- flow_id is used from Capture Group rather than Capture Definition.
-    SELECT flow_id into @flowId from cfe_18.capture_def_group where id = capture_group_id;
+    SELECT tag_id INTO @tag_id FROM cfe_18.capture_definition c WHERE c.id = capture_id;
+    SELECT capture_type INTO @type FROM cfe_18.capture_def_group cdg WHERE cdg.id = capture_group_id;
+    SELECT flow_id into @flow_id FROM cfe_18.capture_def_group cdg  WHERE cdg.id = capture_group_id;
 
     -- if record does not exist
     IF ((SELECT COUNT(id)
          FROM cfe_18.capture_def_group_x_capture_def
          WHERE capture_def_group_id = capture_group_id
            AND capture_def_id = capture_id
-           AND tag_id = @tagId
-           AND capture_type = @type) = 0) THEN
-        -- subqueries fetch relevant information from capture_def for insertion
+           AND tag_id = @tag_id
+           AND capture_type = @type
+           AND flow_id = @flow_id) = 0) THEN
+        -- insert new one
         INSERT INTO capture_def_group_x_capture_def(capture_def_id, capture_def_group_id, tag_id, capture_type, flow_id)
-        VALUES (capture_id, capture_group_id, @tagId, @type, @flowId);
+        VALUES (capture_id, capture_group_id, @tag_id, @type, @flow_id);
 
         -- return ID
-        SELECT capture_def_group_id AS id
+        SELECT id AS id
         FROM cfe_18.capture_def_group_x_capture_def cdgxcd
         WHERE cdgxcd.capture_def_group_id = capture_group_id
           AND cdgxcd.capture_def_id = capture_id;
 
-        -- return ID
     ELSE
-        SELECT capture_def_group_id AS id
+        -- return ID
+        SELECT id AS id
         FROM cfe_18.capture_def_group_x_capture_def cdgxcd
         WHERE cdgxcd.capture_def_group_id = capture_group_id
           AND cdgxcd.capture_def_id = capture_id;
