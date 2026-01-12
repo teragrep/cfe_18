@@ -45,25 +45,32 @@
  */
 USE cfe_18;
 DELIMITER //
-CREATE OR REPLACE PROCEDURE select_all_captures_in_groups(tx_id INT)
+CREATE OR REPLACE PROCEDURE select_groups_for_capture(capture_def_id INT, tx_id INT)
 BEGIN
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
         BEGIN
             ROLLBACK;
             RESIGNAL;
         END;
+    START TRANSACTION;
+
     IF (tx_id) IS NULL THEN
         SET @time = (SELECT MAX(transaction_id) FROM mysql.transaction_registry);
     ELSE
         SET @time = tx_id;
     END IF;
-    SELECT cdgxcd.id                   AS id,
-           cdgxcd.capture_def_group_id AS capture_group_id,
-           cdgxcd.capture_type         AS type,
-           cdgxcd.capture_def_id       AS capture_id,
-           cdgxcd.flow_id              AS flow_id
+
+    IF ((SELECT COUNT(cdgxcd.id)
+         FROM capture_def_group_x_capture_def FOR SYSTEM_TIME AS OF TRANSACTION @time cdgxcd
+         WHERE cdgxcd.capture_def_id = capture_def_id) = 0) THEN
+        SELECT JSON_OBJECT('id', capture_def_id, 'message', 'Capture not found') INTO @c;
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = @c;
+    END IF;
+
+    SELECT cdgxcd.capture_def_group_id AS capture_group_id
     FROM cfe_18.capture_def_group_x_capture_def FOR SYSTEM_TIME AS OF TRANSACTION @time cdgxcd
-             INNER JOIN capture_definition FOR SYSTEM_TIME AS OF TRANSACTION @time cd ON cdgxcd.capture_def_id = cd.id;
+    WHERE cdgxcd.capture_def_id = capture_def_id;
+    COMMIT;
 END;
 //
 DELIMITER ;
