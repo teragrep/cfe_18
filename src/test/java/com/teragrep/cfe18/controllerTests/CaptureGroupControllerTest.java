@@ -46,9 +46,7 @@
 package com.teragrep.cfe18.controllerTests;
 
 import com.google.gson.Gson;
-import com.teragrep.cfe18.handlers.entities.CaptureGroups;
-import com.teragrep.cfe18.handlers.entities.Flow;
-import com.teragrep.cfe18.handlers.entities.IntegrationType;
+import com.teragrep.cfe18.handlers.entities.*;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
@@ -68,8 +66,6 @@ import org.springframework.boot.test.web.server.LocalServerPort;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.equalTo;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -85,48 +81,175 @@ public class CaptureGroupControllerTest extends TestSpringBootInformation {
 
     @Test
     @BeforeAll
-    public void testData() throws Exception {
+    public void testData() {
         // add flow
         Flow flow = new Flow();
         flow.setName("capflow");
-        String json2 = gson.toJson(flow);
+        String flowJson = gson.toJson(flow);
 
         // forms the json to requestEntity
-        StringEntity requestEntity2 = new StringEntity(String.valueOf(json2), ContentType.APPLICATION_JSON);
+        StringEntity flowRequestEntity = new StringEntity(String.valueOf(flowJson), ContentType.APPLICATION_JSON);
 
         // Creates the request
-        HttpPut request2 = new HttpPut("http://localhost:" + port + "/flow");
+        HttpPut flowRequest = new HttpPut("http://localhost:" + port + "/flow");
         // set requestEntity to the put request
-        request2.setEntity(requestEntity2);
+        flowRequest.setEntity(flowRequestEntity);
         // Header
-        request2.setHeader("Authorization", "Bearer " + token);
+        flowRequest.setHeader("Authorization", "Bearer " + token);
 
         // Get the response from endpoint
-        HttpResponse httpResponse2 = HttpClientBuilder.create().build().execute(request2);
+        HttpResponse flowResponse = Assertions
+                .assertDoesNotThrow(() -> HttpClientBuilder.create().build().execute(flowRequest));
 
         // Get the entity from response
-        HttpEntity entity2 = httpResponse2.getEntity();
+        HttpEntity flowEntity = flowResponse.getEntity();
 
         // Entity response string
-        String response2 = EntityUtils.toString(entity2);
+        String flowAsResponse = Assertions.assertDoesNotThrow(() -> EntityUtils.toString(flowEntity));
 
         // Parsing response as JSONObject
-        JSONObject responseJson2 = new JSONObject(response2);
-
-        String expected2 = "New flow created";
+        JSONObject flowAsJson = Assertions.assertDoesNotThrow(() -> new JSONObject(flowAsResponse));
 
         // Creating string from Json that was given as a response
-        String actual2 = responseJson2.get("message").toString();
+        String flowAsActual = Assertions.assertDoesNotThrow(() -> flowAsJson.get("message").toString());
 
-        assertEquals(expected2, actual2);
-        assertThat(httpResponse2.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_CREATED));
+        String flowAsExpected = "New flow created";
+
+        // Capture Group
+        CaptureGroups captureGroups = new CaptureGroups();
+        captureGroups.setCaptureGroupName("groupRelp");
+        captureGroups.setCaptureGroupType(IntegrationType.RELP);
+        captureGroups.setFlowId(1);
+
+        String groupJson = gson.toJson(captureGroups);
+
+        // forms the json to requestEntity
+        StringEntity captureGroupRequestEntity = new StringEntity(
+                String.valueOf(groupJson),
+                ContentType.APPLICATION_JSON
+        );
+
+        // Creates the request
+        HttpPut requestCaptureGroup = new HttpPut("http://localhost:" + port + "/v2/captures/group");
+        // set requestEntity to the put request
+        requestCaptureGroup.setEntity(captureGroupRequestEntity);
+        // Header
+        requestCaptureGroup.setHeader("Authorization", "Bearer " + token);
+
+        // Get the response from endpoint
+        HttpResponse captureGroupResponse = Assertions
+                .assertDoesNotThrow(() -> HttpClientBuilder.create().build().execute(requestCaptureGroup));
+
+        // Get the entity from response
+        HttpEntity captureGroupEntity = captureGroupResponse.getEntity();
+
+        // Entity response string
+        String captureGroupAsResponse = Assertions.assertDoesNotThrow(() -> EntityUtils.toString(captureGroupEntity));
+
+        // Parsing response as JSONObject
+        JSONObject captureGroupAsJson = Assertions.assertDoesNotThrow(() -> new JSONObject(captureGroupAsResponse));
+
+        // Creating expected message as JSON Object from the data that was sent towards endpoint
+        String captureGroupAsExpected = "New capture group created";
+
+        // Creating string from Json that was given as a response
+        String captureGroupAsActual = Assertions.assertDoesNotThrow(() -> captureGroupAsJson.get("message").toString());
+
+        // insert sink
+        Sink sink = new Sink();
+        sink.setFlowId(1);
+        sink.setPort("cap");
+        sink.setIpAddress("capsink");
+        sink.setProtocol("prot");
+
+        String sinkJson = gson.toJson(sink);
+
+        // forms the json to requestEntity
+        StringEntity sinkEntity = new StringEntity(String.valueOf(sinkJson), ContentType.APPLICATION_JSON);
+
+        // Creates the request
+        HttpPut sinkRequest = new HttpPut("http://localhost:" + port + "/sink");
+        // set requestEntity to the put request
+        sinkRequest.setEntity(sinkEntity);
+        // Header
+        sinkRequest.setHeader("Authorization", "Bearer " + token);
+
+        // Get the response from endpoint
+        HttpResponse sinkResponse = Assertions
+                .assertDoesNotThrow(() -> HttpClientBuilder.create().build().execute(sinkRequest));
+
+        // Get the entity from response
+        HttpEntity sinkAsEntity = sinkResponse.getEntity();
+
+        // Entity response string
+        String sinkAsResponse = Assertions.assertDoesNotThrow(() -> EntityUtils.toString(sinkAsEntity));
+
+        // Parsing response as JSONObject
+        JSONObject sinkAsJson = Assertions.assertDoesNotThrow(() -> new JSONObject(sinkAsResponse));
+
+        String sinkAsExpected = "New sink created";
+
+        // Creating string from Json that was given as a response
+        String sinkAsActual = Assertions.assertDoesNotThrow(() -> sinkAsJson.get("message").toString());
+
+        // insert capture
+        CaptureRelp captureRelp = new CaptureRelp();
+        captureRelp.setTag("relpTag");
+        captureRelp.setRetentionTime("P30D");
+        captureRelp.setCategory("audit");
+        captureRelp.setApplication("relp");
+        captureRelp.setIndex("audit_relp");
+        captureRelp.setSourceType("relpsource1");
+        captureRelp.setProtocol("prot");
+        captureRelp.setFlow("capFlow");
+
+        String captureJson = gson.toJson(captureRelp);
+
+        // forms the json to requestEntity
+        StringEntity captureEntity = new StringEntity(String.valueOf(captureJson), ContentType.APPLICATION_JSON);
+
+        // Creates the request
+        HttpPut captureRequest = new HttpPut("http://localhost:" + port + "/capture/relp");
+        // set requestEntity to the put request
+        captureRequest.setEntity(captureEntity);
+        // Header
+        captureRequest.setHeader("Authorization", "Bearer " + token);
+
+        // Get the response from endpoint
+        HttpResponse captureResponse = Assertions
+                .assertDoesNotThrow(() -> HttpClientBuilder.create().build().execute(captureRequest));
+
+        // Get the entity from response
+        HttpEntity captureAsEntity = captureResponse.getEntity();
+
+        // Entity response string
+        String captureAsResponse = Assertions.assertDoesNotThrow(() -> EntityUtils.toString(captureAsEntity));
+
+        // Parsing response as JSONObject
+        JSONObject captureAsJson = Assertions.assertDoesNotThrow(() -> new JSONObject(captureAsResponse));
+
+        // Creating expected message as JSON Object from the data that was sent towards endpoint
+        String captureAsExpected = "New capture created";
+
+        // Creating string from Json that was given as a response
+        String captureAsActual = Assertions.assertDoesNotThrow(() -> captureAsJson.get("message").toString());
+
+        // Assertions
+        assertEquals(flowAsExpected, flowAsActual);
+        assertEquals(HttpStatus.SC_CREATED, flowResponse.getStatusLine().getStatusCode());
+        assertEquals(captureGroupAsExpected, captureGroupAsActual);
+        assertEquals(HttpStatus.SC_CREATED, captureGroupResponse.getStatusLine().getStatusCode());
+        assertEquals(sinkAsExpected, sinkAsActual);
+        assertEquals(HttpStatus.SC_CREATED, sinkResponse.getStatusLine().getStatusCode());
+        assertEquals(captureAsExpected, captureAsActual);
+        assertEquals(HttpStatus.SC_CREATED, captureResponse.getStatusLine().getStatusCode());
     }
 
     @Test
     @Order(1)
     public void testSelectAllEmpty() {
         // Asserting get request
-        HttpGet requestGet = new HttpGet("http://localhost:" + port + "/v2/captures/group");
+        HttpGet requestGet = new HttpGet("http://localhost:" + port + "/v2/captures/group/capture");
 
         requestGet.setHeader("Authorization", "Bearer " + token);
 
@@ -147,239 +270,9 @@ public class CaptureGroupControllerTest extends TestSpringBootInformation {
 
     @Test
     @Order(2)
-    public void testCreateCaptureGroupInvalidFlow() {
-
-        // Capture Group
-        CaptureGroups captureGroups = new CaptureGroups();
-        captureGroups.setCaptureGroupName("groupRelp");
-        captureGroups.setCaptureGroupType(IntegrationType.RELP);
-        captureGroups.setFlowId(555);
-
-        String cgJson = gson.toJson(captureGroups);
-
-        // forms the json to requestEntity
-        StringEntity requestEntityCaptureGroup = new StringEntity(String.valueOf(cgJson), ContentType.APPLICATION_JSON);
-
-        // Creates the request
-        HttpPut requestCaptureGroup = new HttpPut("http://localhost:" + port + "/v2/captures/group");
-        // set requestEntity to the put request
-        requestCaptureGroup.setEntity(requestEntityCaptureGroup);
-        // Header
-        requestCaptureGroup.setHeader("Authorization", "Bearer " + token);
-
-        // Get the response from endpoint
-        HttpResponse httpResponse = Assertions
-                .assertDoesNotThrow(() -> HttpClientBuilder.create().build().execute(requestCaptureGroup));
-
-        // Get the entity from response
-        HttpEntity entity = httpResponse.getEntity();
-
-        // Entity response string
-        String responseString = Assertions.assertDoesNotThrow(() -> EntityUtils.toString(entity));
-
-        // Parsing response as JSONObject
-        JSONObject responseAsJson = Assertions.assertDoesNotThrow(() -> new JSONObject(responseString));
-
-        // Creating expected message as JSON Object from the data that was sent towards endpoint
-        String expected = "Record does not exist";
-
-        // Creating string from Json that was given as a response
-        String actual = Assertions.assertDoesNotThrow(() -> responseAsJson.get("message").toString());
-
-        // Assertions
-        assertEquals(HttpStatus.SC_NOT_FOUND, httpResponse.getStatusLine().getStatusCode());
-        assertEquals(expected, actual);
-    }
-
-    @Test
-    @Order(3)
-    public void testCreateCaptureGroup() {
-
-        // Capture Group
-        CaptureGroups captureGroups = new CaptureGroups();
-        captureGroups.setCaptureGroupName("groupRelp");
-        captureGroups.setCaptureGroupType(IntegrationType.RELP);
-        captureGroups.setFlowId(1);
-
-        String cgJson = gson.toJson(captureGroups);
-
-        // forms the json to requestEntity
-        StringEntity requestEntityCaptureGroup = new StringEntity(String.valueOf(cgJson), ContentType.APPLICATION_JSON);
-
-        // Creates the request
-        HttpPut requestCaptureGroup = new HttpPut("http://localhost:" + port + "/v2/captures/group");
-        // set requestEntity to the put request
-        requestCaptureGroup.setEntity(requestEntityCaptureGroup);
-        // Header
-        requestCaptureGroup.setHeader("Authorization", "Bearer " + token);
-
-        // Get the response from endpoint
-        HttpResponse httpResponse = Assertions
-                .assertDoesNotThrow(() -> HttpClientBuilder.create().build().execute(requestCaptureGroup));
-
-        // Get the entity from response
-        HttpEntity entity = httpResponse.getEntity();
-
-        // Entity response string
-        String responseString = Assertions.assertDoesNotThrow(() -> EntityUtils.toString(entity));
-
-        // Parsing response as JSONObject
-        JSONObject responseAsJson = Assertions.assertDoesNotThrow(() -> new JSONObject(responseString));
-
-        // Creating expected message as JSON Object from the data that was sent towards endpoint
-        String expected = "New capture group created";
-
-        // Creating string from Json that was given as a response
-        String actual = Assertions.assertDoesNotThrow(() -> responseAsJson.get("message").toString());
-
-        // Assertions
-        assertEquals(HttpStatus.SC_CREATED, httpResponse.getStatusLine().getStatusCode());
-        assertEquals(expected, actual);
-    }
-
-    @Test
-    @Order(4)
-    public void testSelectCaptureGroup() {
-        CaptureGroups captureGroups = new CaptureGroups();
-        captureGroups.setCaptureGroupType(IntegrationType.RELP);
-        captureGroups.setId(1);
-        captureGroups.setCaptureGroupName("groupRelp");
-        captureGroups.setFlowId(1);
-
-        String expectedJson = gson.toJson(captureGroups);
-
+    public void testSelectEmptyCaptures() {
         // Asserting get request
-        HttpGet requestGet = new HttpGet("http://localhost:" + port + "/v2/captures/group/1");
-
-        requestGet.setHeader("Authorization", "Bearer " + token);
-
-        HttpResponse responseGet = Assertions
-                .assertDoesNotThrow(() -> HttpClientBuilder.create().build().execute(requestGet));
-
-        HttpEntity entityGet = responseGet.getEntity();
-
-        String responseStringGet = Assertions.assertDoesNotThrow(() -> EntityUtils.toString(entityGet, "UTF-8"));
-
-        assertEquals(expectedJson, responseStringGet);
-        assertEquals(HttpStatus.SC_OK, responseGet.getStatusLine().getStatusCode());
-
-    }
-
-    @Test
-    @Order(5)
-    public void testSelectAllCaptureGroups() {
-
-        // Capture Group 2
-        CaptureGroups captureGroups2 = new CaptureGroups();
-        captureGroups2.setId(2);
-        captureGroups2.setCaptureGroupName("groupRelp2");
-        captureGroups2.setCaptureGroupType(IntegrationType.RELP);
-        captureGroups2.setFlowId(1);
-
-        String cgJson = gson.toJson(captureGroups2);
-
-        // forms the json to requestEntity
-        StringEntity requestEntityCaptureGroup = new StringEntity(String.valueOf(cgJson), ContentType.APPLICATION_JSON);
-
-        // Creates the request
-        HttpPut requestCaptureGroup = new HttpPut("http://localhost:" + port + "/v2/captures/group");
-        // set requestEntity to the put request
-        requestCaptureGroup.setEntity(requestEntityCaptureGroup);
-        // Header
-        requestCaptureGroup.setHeader("Authorization", "Bearer " + token);
-
-        Assertions.assertDoesNotThrow(() -> HttpClientBuilder.create().build().execute(requestCaptureGroup));
-
-        ArrayList<CaptureGroups> expected = new ArrayList<>();
-        CaptureGroups captureGroups = new CaptureGroups();
-        captureGroups.setId(1);
-        captureGroups.setCaptureGroupName("groupRelp");
-        captureGroups.setCaptureGroupType(IntegrationType.RELP);
-        captureGroups.setFlowId(1);
-
-        expected.add(captureGroups);
-        expected.add(captureGroups2);
-
-        String expectedJson = gson.toJson(expected);
-
-        // Asserting get request
-        HttpGet requestGet = new HttpGet("http://localhost:" + port + "/v2/captures/group");
-
-        requestGet.setHeader("Authorization", "Bearer " + token);
-
-        HttpResponse responseGet = Assertions
-                .assertDoesNotThrow(() -> HttpClientBuilder.create().build().execute(requestGet));
-
-        HttpEntity entityGet = responseGet.getEntity();
-
-        String responseStringGet = Assertions.assertDoesNotThrow(() -> EntityUtils.toString(entityGet, "UTF-8"));
-
-        assertEquals(expectedJson, responseStringGet);
-        assertEquals(HttpStatus.SC_OK, responseGet.getStatusLine().getStatusCode());
-
-    }
-
-    @Test
-    @Order(6)
-    public void testDeleteNonExistentCaptureGroup() {
-        HttpDelete delete = new HttpDelete("http://localhost:" + port + "/v2/captures/group/125412");
-
-        // Header
-        delete.setHeader("Authorization", "Bearer " + token);
-
-        HttpResponse deleteResponse = Assertions
-                .assertDoesNotThrow(() -> HttpClientBuilder.create().build().execute(delete));
-
-        HttpEntity entityDelete = deleteResponse.getEntity();
-
-        String responseStringGet = Assertions.assertDoesNotThrow(() -> EntityUtils.toString(entityDelete, "UTF-8"));
-
-        // Parsing response as JSONObject
-        JSONObject responseAsJson = Assertions.assertDoesNotThrow(() -> new JSONObject(responseStringGet));
-
-        // Creating string from Json that was given as a response
-        String actual = Assertions.assertDoesNotThrow(() -> responseAsJson.get("message").toString());
-        // Creating expected message as JSON Object from the data that was sent towards endpoint
-        String expected = "Record does not exist";
-
-        assertEquals(expected, actual);
-        assertEquals(HttpStatus.SC_NOT_FOUND, deleteResponse.getStatusLine().getStatusCode());
-    }
-
-    @Test
-    @Order(7)
-    public void testDeleteCaptureGroup() {
-        //groupRelp
-        HttpDelete delete = new HttpDelete("http://localhost:" + port + "/v2/captures/group/1");
-
-        // Header
-        delete.setHeader("Authorization", "Bearer " + token);
-
-        HttpResponse deleteResponse = Assertions
-                .assertDoesNotThrow(() -> HttpClientBuilder.create().build().execute(delete));
-
-        HttpEntity entityDelete = deleteResponse.getEntity();
-
-        String responseStringGet = Assertions.assertDoesNotThrow(() -> EntityUtils.toString(entityDelete, "UTF-8"));
-
-        // Parsing response as JSONObject
-        JSONObject responseAsJson = Assertions.assertDoesNotThrow(() -> new JSONObject(responseStringGet));
-
-        // Creating string from Json that was given as a response
-        String actual = Assertions.assertDoesNotThrow(() -> responseAsJson.get("message").toString());
-
-        // Creating expected message as JSON Object from the data that was sent towards endpoint
-        String expected = "Capture group deleted";
-
-        assertEquals(expected, actual);
-        assertEquals(HttpStatus.SC_OK, deleteResponse.getStatusLine().getStatusCode());
-    }
-
-    @Test
-    @Order(8)
-    public void testSelectNonExistentCaptureGroup() {
-        // Asserting get request
-        HttpGet requestGet = new HttpGet("http://localhost:" + port + "/v2/captures/group/112233");
+        HttpGet requestGet = new HttpGet("http://localhost:" + port + "/v2/captures/group/capture/1");
 
         requestGet.setHeader("Authorization", "Bearer " + token);
 
@@ -398,7 +291,411 @@ public class CaptureGroupControllerTest extends TestSpringBootInformation {
 
         assertEquals(expected, actual);
         assertEquals(HttpStatus.SC_NOT_FOUND, responseGet.getStatusLine().getStatusCode());
+    }
+
+    @Test
+    @Order(3)
+    public void testSelectEmptyGroups() {
+        // Asserting get request
+        HttpGet requestGet = new HttpGet("http://localhost:" + port + "/v2/captures/group/capture/groups/1");
+
+        requestGet.setHeader("Authorization", "Bearer " + token);
+
+        HttpResponse responseGet = Assertions
+                .assertDoesNotThrow(() -> HttpClientBuilder.create().build().execute(requestGet));
+
+        HttpEntity entityGet = responseGet.getEntity();
+
+        String responseStringGet = Assertions.assertDoesNotThrow(() -> EntityUtils.toString(entityGet, "UTF-8"));
+
+        JSONObject responseAsJson = Assertions.assertDoesNotThrow(() -> new JSONObject(responseStringGet));
+
+        String actual = Assertions.assertDoesNotThrow(() -> responseAsJson.getString("message"));
+
+        String expected = "Record does not exist";
+
+        assertEquals(expected, actual);
+        assertEquals(HttpStatus.SC_NOT_FOUND, responseGet.getStatusLine().getStatusCode());
+    }
+
+    @Test
+    @Order(4)
+    public void testCreateLinkInvalidCapture() {
+
+        // Creates the request
+        HttpPut requestCaptureGroup = new HttpPut("http://localhost:" + port + "/v2/captures/group/capture/1/67");
+        // Header
+        requestCaptureGroup.setHeader("Authorization", "Bearer " + token);
+
+        // Get the response from endpoint
+        HttpResponse httpResponse = Assertions
+                .assertDoesNotThrow(() -> HttpClientBuilder.create().build().execute(requestCaptureGroup));
+
+        // Get the entity from response
+        HttpEntity entity = httpResponse.getEntity();
+
+        // Entity response string
+        String responseString = Assertions.assertDoesNotThrow(() -> EntityUtils.toString(entity));
+
+        // Parsing response as JSONObject
+        JSONObject responseAsJson = Assertions.assertDoesNotThrow(() -> new JSONObject(responseString));
+
+        // Creating expected message as JSON Object from the data that was sent towards endpoint
+        String expected = "Capture does not exist";
+
+        // Creating string from Json that was given as a response
+        String actual = Assertions.assertDoesNotThrow(() -> responseAsJson.get("message").toString());
+
+        // Assertions
+        assertEquals(HttpStatus.SC_NOT_FOUND, httpResponse.getStatusLine().getStatusCode());
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    @Order(5)
+    public void testCreateLinkInvalidGroup() {
+
+        // Creates the request
+        HttpPut requestCaptureGroup = new HttpPut("http://localhost:" + port + "/v2/captures/group/capture/67/1");
+        // Header
+        requestCaptureGroup.setHeader("Authorization", "Bearer " + token);
+
+        // Get the response from endpoint
+        HttpResponse httpResponse = Assertions
+                .assertDoesNotThrow(() -> HttpClientBuilder.create().build().execute(requestCaptureGroup));
+
+        // Get the entity from response
+        HttpEntity entity = httpResponse.getEntity();
+
+        // Entity response string
+        String responseString = Assertions.assertDoesNotThrow(() -> EntityUtils.toString(entity));
+
+        // Parsing response as JSONObject
+        JSONObject responseAsJson = Assertions.assertDoesNotThrow(() -> new JSONObject(responseString));
+
+        // Creating expected message as JSON Object from the data that was sent towards endpoint
+        String expected = "Group does not exist";
+
+        // Creating string from Json that was given as a response
+        String actual = Assertions.assertDoesNotThrow(() -> responseAsJson.get("message").toString());
+
+        // Assertions
+        assertEquals(HttpStatus.SC_NOT_FOUND, httpResponse.getStatusLine().getStatusCode());
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    @Order(6)
+    public void testInsertWrongTypeCaptureToGroup() {
+        // Filecapturemeta
+        FileProcessing file = new FileProcessing();
+        file.setInputtype(InputType.REGEX);
+        file.setInputvalue("capregex");
+        file.setRuleset("capruleset");
+        file.setName("capname");
+        file.setTemplate("regex.moustache");
+
+        String json = gson.toJson(file);
+
+        // forms the json to requestEntity
+        StringEntity requestEntity = new StringEntity(String.valueOf(json), ContentType.APPLICATION_JSON);
+
+        // Creates the request
+        HttpPut request = new HttpPut("http://localhost:" + port + "/file/capture/meta/rule");
+        // set requestEntity to the put request
+        request.setEntity(requestEntity);
+        // Header
+        request.setHeader("Authorization", "Bearer " + token);
+
+        // Get the response from endpoint
+        HttpResponse httpResponseFileId = Assertions
+                .assertDoesNotThrow(() -> HttpClientBuilder.create().build().execute(request));
+
+        // Get the entity from response
+        HttpEntity entityFileId = httpResponseFileId.getEntity();
+
+        // Entity response string
+        String responseFileId = Assertions.assertDoesNotThrow(() -> EntityUtils.toString(entityFileId));
+
+        // Parsing response as JSONObject
+        JSONObject responseJson = Assertions.assertDoesNotThrow(() -> new JSONObject(responseFileId));
+
+        // Creating expected message as JSON Object from the data that was sent towards endpoint
+        String expected1 = "New file processing type created";
+
+        // Creating string from Json that was given as a response
+        String actual1 = Assertions.assertDoesNotThrow(() -> responseJson.get("message").toString());
+
+        // CaptureFile
+        CaptureFile captureFile = new CaptureFile();
+        captureFile.setTag("f466e5a4-tagpath1");
+        captureFile.setRetentionTime("P30D");
+        captureFile.setCategory("audit");
+        captureFile.setApplication("app1");
+        captureFile.setIndex("app1_audit");
+        captureFile.setSourceType("sourcetype1");
+        captureFile.setProtocol("prot");
+        captureFile.setFlow("capflow");
+        captureFile.setTagPath("tagpath1");
+        captureFile.setCapturePath("capturepath1");
+        captureFile.setFileProcessingTypeId(1);
+
+        String jsonCapture = gson.toJson(captureFile);
+
+        // forms the json to requestEntity
+        StringEntity captureEntity = new StringEntity(String.valueOf(jsonCapture), ContentType.APPLICATION_JSON);
+
+        // Creates the request
+        HttpPut captureRequest = new HttpPut("http://localhost:" + port + "/capture/file");
+        // set requestEntity to the put request
+        captureRequest.setEntity(captureEntity);
+        // Header
+        captureRequest.setHeader("Authorization", "Bearer " + token);
+
+        // Get the response from endpoint
+        HttpResponse captureResponse = Assertions
+                .assertDoesNotThrow(() -> HttpClientBuilder.create().build().execute(captureRequest));
+
+        // Get the entity from response
+        HttpEntity captureAsEntity = captureResponse.getEntity();
+
+        // Entity response string
+        String captureAsResponse = Assertions.assertDoesNotThrow(() -> EntityUtils.toString(captureAsEntity));
+
+        // Parsing response as JSONObject
+        JSONObject captureAsJson = Assertions.assertDoesNotThrow(() -> new JSONObject(captureAsResponse));
+
+        // Creating expected message as JSON Object from the data that was sent towards endpoint
+        String captureAsExpected = "New capture created";
+
+        // Creating string from Json that was given as a response
+        String captureAsActual = Assertions.assertDoesNotThrow(() -> captureAsJson.get("message").toString());
+
+        // Creates the request
+        HttpPut requestCaptureGroup = new HttpPut("http://localhost:" + port + "/v2/captures/group/capture/1/2");
+        // Header
+        requestCaptureGroup.setHeader("Authorization", "Bearer " + token);
+
+        // Get the response from endpoint
+        HttpResponse httpResponse = Assertions
+                .assertDoesNotThrow(() -> HttpClientBuilder.create().build().execute(requestCaptureGroup));
+
+        // Get the entity from response
+        HttpEntity entity = httpResponse.getEntity();
+
+        // Entity response string
+        String responseString = Assertions.assertDoesNotThrow(() -> EntityUtils.toString(entity));
+
+        // Parsing response as JSONObject
+        JSONObject responseAsJson = Assertions.assertDoesNotThrow(() -> new JSONObject(responseString));
+
+        // Creating expected message as JSON Object from the data that was sent towards endpoint
+        String expected = "Type mismatch between capture group and capture";
+
+        // Creating string from Json that was given as a response
+        String actual = Assertions.assertDoesNotThrow(() -> responseAsJson.get("message").toString());
+
+        // Assertions
+        assertEquals(expected1, actual1);
+        assertEquals(HttpStatus.SC_CREATED, httpResponseFileId.getStatusLine().getStatusCode());
+
+        assertEquals(captureAsExpected, captureAsActual);
+        assertEquals(HttpStatus.SC_CREATED, captureResponse.getStatusLine().getStatusCode());
+
+        assertEquals(expected, actual);
+        assertEquals(HttpStatus.SC_CONFLICT, httpResponse.getStatusLine().getStatusCode());
 
     }
 
+    @Test
+    @Order(7)
+    public void testInsertValidCaptureToGroup() {
+        HttpPut requestCaptureGroup = new HttpPut("http://localhost:" + port + "/v2/captures/group/capture/1/1");
+        // Header
+        requestCaptureGroup.setHeader("Authorization", "Bearer " + token);
+
+        // Get the response from endpoint
+        HttpResponse httpResponse = Assertions
+                .assertDoesNotThrow(() -> HttpClientBuilder.create().build().execute(requestCaptureGroup));
+
+        // Get the entity from response
+        HttpEntity entity = httpResponse.getEntity();
+
+        // Entity response string
+        String responseString = Assertions.assertDoesNotThrow(() -> EntityUtils.toString(entity));
+
+        // Parsing response as JSONObject
+        JSONObject responseAsJson = Assertions.assertDoesNotThrow(() -> new JSONObject(responseString));
+
+        // Creating expected message as JSON Object from the data that was sent towards endpoint
+        String expected = "Capture linked with group";
+
+        // Creating string from Json that was given as a response
+        String actual = Assertions.assertDoesNotThrow(() -> responseAsJson.get("message").toString());
+
+        assertEquals(expected, actual);
+        assertEquals(HttpStatus.SC_CREATED, httpResponse.getStatusLine().getStatusCode());
+    }
+
+    @Test
+    @Order(8)
+    public void testInsertCaptureToGroupDuplicateTag() {
+        // insert another capture with same tag
+        CaptureRelp captureRelp = new CaptureRelp();
+        captureRelp.setTag("relpTag");
+        captureRelp.setRetentionTime("P15D");
+        captureRelp.setCategory("audit");
+        captureRelp.setApplication("relp2");
+        captureRelp.setIndex("audit_relp2");
+        captureRelp.setSourceType("relpsource2");
+        captureRelp.setProtocol("prot");
+        captureRelp.setFlow("capFlow");
+
+        String captureJson = gson.toJson(captureRelp);
+
+        // forms the json to requestEntity
+        StringEntity captureEntity = new StringEntity(String.valueOf(captureJson), ContentType.APPLICATION_JSON);
+
+        // Creates the request
+        HttpPut captureRequest = new HttpPut("http://localhost:" + port + "/capture/relp");
+        // set requestEntity to the put request
+        captureRequest.setEntity(captureEntity);
+        // Header
+        captureRequest.setHeader("Authorization", "Bearer " + token);
+
+        // Get the response from endpoint
+        HttpResponse captureResponse = Assertions
+                .assertDoesNotThrow(() -> HttpClientBuilder.create().build().execute(captureRequest));
+
+        // Get the entity from response
+        HttpEntity captureAsEntity = captureResponse.getEntity();
+
+        // Entity response string
+        String captureAsResponse = Assertions.assertDoesNotThrow(() -> EntityUtils.toString(captureAsEntity));
+
+        // Parsing response as JSONObject
+        JSONObject captureAsJson = Assertions.assertDoesNotThrow(() -> new JSONObject(captureAsResponse));
+
+        // Creating expected message as JSON Object from the data that was sent towards endpoint
+        String captureAsExpected = "New capture created";
+
+        // Creating string from Json that was given as a response
+        String captureAsActual = Assertions.assertDoesNotThrow(() -> captureAsJson.get("message").toString());
+
+        HttpPut requestCaptureGroup = new HttpPut("http://localhost:" + port + "/v2/captures/group/capture/1/3");
+        // Header
+        requestCaptureGroup.setHeader("Authorization", "Bearer " + token);
+
+        // Get the response from endpoint
+        HttpResponse httpResponse = Assertions
+                .assertDoesNotThrow(() -> HttpClientBuilder.create().build().execute(requestCaptureGroup));
+
+        // Get the entity from response
+        HttpEntity entity = httpResponse.getEntity();
+
+        // Entity response string
+        String responseString = Assertions.assertDoesNotThrow(() -> EntityUtils.toString(entity));
+
+        // Parsing response as JSONObject
+        JSONObject responseAsJson = Assertions.assertDoesNotThrow(() -> new JSONObject(responseString));
+
+        // Creating expected message as JSON Object from the data that was sent towards endpoint
+        String expected = "Tag already exists within given group";
+
+        // Creating string from Json that was given as a response
+        String actual = Assertions.assertDoesNotThrow(() -> responseAsJson.get("message").toString());
+
+        assertEquals(captureAsExpected, captureAsActual);
+        assertEquals(HttpStatus.SC_CREATED, captureResponse.getStatusLine().getStatusCode());
+
+        assertEquals(expected, actual);
+        assertEquals(HttpStatus.SC_CONFLICT, httpResponse.getStatusLine().getStatusCode());
+    }
+
+    @Test
+    @Order(9)
+    public void testDeleteInvalidGroup() {
+        HttpDelete delete = new HttpDelete("http://localhost:" + port + "/v2/captures/group/capture/67/3");
+
+        // Header
+        delete.setHeader("Authorization", "Bearer " + token);
+
+        HttpResponse deleteResponse = Assertions
+                .assertDoesNotThrow(() -> HttpClientBuilder.create().build().execute(delete));
+
+        HttpEntity entityDelete = deleteResponse.getEntity();
+
+        String responseStringGet = Assertions.assertDoesNotThrow(() -> EntityUtils.toString(entityDelete, "UTF-8"));
+
+        // Parsing response as JSONObject
+        JSONObject responseAsJson = Assertions.assertDoesNotThrow(() -> new JSONObject(responseStringGet));
+
+        // Creating string from Json that was given as a response
+        String actual = Assertions.assertDoesNotThrow(() -> responseAsJson.get("message").toString());
+
+        // Creating expected message as JSON Object from the data that was sent towards endpoint
+        String expected = "Record does not exist";
+
+        assertEquals(expected, actual);
+        assertEquals(HttpStatus.SC_NOT_FOUND, deleteResponse.getStatusLine().getStatusCode());
+    }
+
+    @Test
+    @Order(10)
+    public void testDeleteInvalidCapture() {
+        HttpDelete delete = new HttpDelete("http://localhost:" + port + "/v2/captures/group/capture/1/67");
+
+        // Header
+        delete.setHeader("Authorization", "Bearer " + token);
+
+        HttpResponse deleteResponse = Assertions
+                .assertDoesNotThrow(() -> HttpClientBuilder.create().build().execute(delete));
+
+        HttpEntity entityDelete = deleteResponse.getEntity();
+
+        String responseStringGet = Assertions.assertDoesNotThrow(() -> EntityUtils.toString(entityDelete, "UTF-8"));
+
+        // Parsing response as JSONObject
+        JSONObject responseAsJson = Assertions.assertDoesNotThrow(() -> new JSONObject(responseStringGet));
+
+        // Creating string from Json that was given as a response
+        String actual = Assertions.assertDoesNotThrow(() -> responseAsJson.get("message").toString());
+
+        // Creating expected message as JSON Object from the data that was sent towards endpoint
+        String expected = "Record does not exist";
+
+        assertEquals(expected, actual);
+        assertEquals(HttpStatus.SC_NOT_FOUND, deleteResponse.getStatusLine().getStatusCode());
+
+    }
+
+    @Test
+    @Order(11)
+    public void testDeleteValidLinkage() {
+
+        HttpDelete delete = new HttpDelete("http://localhost:" + port + "/v2/captures/group/capture/1/1");
+
+        // Header
+        delete.setHeader("Authorization", "Bearer " + token);
+
+        HttpResponse deleteResponse = Assertions
+                .assertDoesNotThrow(() -> HttpClientBuilder.create().build().execute(delete));
+
+        HttpEntity entityDelete = deleteResponse.getEntity();
+
+        String responseStringGet = Assertions.assertDoesNotThrow(() -> EntityUtils.toString(entityDelete, "UTF-8"));
+
+        // Parsing response as JSONObject
+        JSONObject responseAsJson = Assertions.assertDoesNotThrow(() -> new JSONObject(responseStringGet));
+
+        // Creating string from Json that was given as a response
+        String actual = Assertions.assertDoesNotThrow(() -> responseAsJson.get("message").toString());
+
+        // Creating expected message as JSON Object from the data that was sent towards endpoint
+        String expected = "Capture deleted from group";
+
+        assertEquals(expected, actual);
+        assertEquals(HttpStatus.SC_OK, deleteResponse.getStatusLine().getStatusCode());
+
+    }
 }
