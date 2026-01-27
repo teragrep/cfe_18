@@ -56,11 +56,11 @@ begin
     from location.host_group_x_host hgxh
              INNER JOIN (SELECT DISTINCT hgxldg.host_group_id
                          from host_groups_x_capture_def_group hgxldg
-                                  INNER JOIN (SELECT ldgxld.tag_id, ldgxld.capture_def_group_id
+                                  INNER JOIN (SELECT DISTINCT(ldgxld.capture_def_group_id)
                                               from capture_def_group_x_capture_def ldgxld
-                                                       INNER JOIN (select tag_id, id
-                                                                   from capture_def_group_x_capture_def tagsid) ttdwst
-                                                                  ON ldgxld.id = ttdwst.id
+                                                       INNER JOIN (select tag_id, capture_def_group_id
+                                                                    from capture_def_group_x_capture_def taqs_with_groups) ttdwst
+                                                                  ON ldgxld.capture_def_group_id = ttdwst.capture_def_group_id
                                               where ldgxld.capture_def_group_id = new.capture_def_group_id
                                                  or ldgxld.tag_id = new.tag_id) ttdwcg
                                              ON ttdwcg.capture_def_group_id = hgxldg.capture_group_id) tthwcd
@@ -70,6 +70,5 @@ begin
     end if;
 
 end//
-
 
 
