@@ -43,34 +43,31 @@
  * Teragrep, the applicable Commercial License may apply to this file if you as
  * a licensee so wish it.
  */
-use cfe_18;
+USE cfe_18;
 DELIMITER //
-create trigger if not exists cant_add_existing_tag_into_group
-    before insert
-    on cfe_18.capture_def_group_x_capture_def
-    for each row
-begin
-    declare truthvalue int;
-    select if(count(DISTINCT hgxh.host_id) = count(hgxh.host_id), true, false)
-    into truthvalue
-    from location.host_group_x_host hgxh
-             INNER JOIN (SELECT DISTINCT hgxldg.host_group_id
-                         from host_groups_x_capture_def_group hgxldg
-                                  INNER JOIN (SELECT DISTINCT(ldgxld.capture_def_group_id)
-                                              from capture_def_group_x_capture_def ldgxld
-                                                       INNER JOIN (select tag_id, capture_def_group_id
-                                                                    from capture_def_group_x_capture_def taqs_with_groups) ttdwst
-                                                                  ON ldgxld.capture_def_group_id = ttdwst.capture_def_group_id
-                                              where ldgxld.capture_def_group_id = new.capture_def_group_id
-                                                 or ldgxld.tag_id = new.tag_id) ttdwcg
-                                             ON ttdwcg.capture_def_group_id = hgxldg.capture_group_id) tthwcd
-                        ON hgxh.host_group_id = tthwcd.host_group_id;
-    if truthvalue = 0 then
-        signal sqlstate '17001' set message_text = 'DUPLICATE TAG ERROR';
-    end if;
-end;
+CREATE OR REPLACE PROCEDURE select_all_captures_in_groups(tx_id INT)
+BEGIN
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+        BEGIN
+            ROLLBACK;
+            RESIGNAL;
+        END;
+    IF (tx_id) IS NULL THEN
+        SET @time = (SELECT MAX(transaction_id) FROM mysql.transaction_registry);
+    ELSE
+        SET @time = tx_id;
+    END IF;
+    -- select while aggregating capture_def_id s to separate listing
+    SELECT distinct cdgxcd.capture_def_group_id                                  AS capture_group_id,
+           cdgxcd.capture_type                                          AS type,
+           cdgxcd.flow_id                                               AS flow_id,
+           (SELECT
+                JSON_ARRAYAGG(c.capture_def_id)
+            FROM capture_def_group_x_capture_def FOR SYSTEM_TIME AS OF TRANSACTION @time c
+            WHERE cdgxcd.capture_def_group_id = c.capture_def_group_id) AS capture_defs
+    FROM cfe_18.capture_def_group_x_capture_def FOR SYSTEM_TIME AS OF TRANSACTION @time cdgxcd
+             INNER JOIN capture_definition FOR SYSTEM_TIME AS OF TRANSACTION @time cd ON cdgxcd.capture_def_id = cd.id
+    ORDER BY cdgxcd.capture_def_group_id;
+END;
 //
 DELIMITER ;
-
-
-
