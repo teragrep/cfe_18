@@ -69,5 +69,6 @@ begin
         signal sqlstate '17005'
             set message_text = 'duplicate found when combining groups';
     end if;
-end
+end;
 //
+DELIMITER ;

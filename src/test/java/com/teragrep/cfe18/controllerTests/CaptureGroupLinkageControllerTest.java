@@ -47,6 +47,8 @@ package com.teragrep.cfe18.controllerTests;
 
 import com.google.gson.Gson;
 import com.teragrep.cfe18.handlers.entities.*;
+import jakarta.json.Json;
+import jakarta.json.JsonArrayBuilder;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
@@ -72,7 +74,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @ExtendWith(MigrateDatabaseExtension.class)
-public class CaptureGroupControllerTest extends TestSpringBootInformation {
+public class CaptureGroupLinkageControllerTest extends TestSpringBootInformation {
 
     Gson gson = new Gson();
 
@@ -614,6 +616,79 @@ public class CaptureGroupControllerTest extends TestSpringBootInformation {
 
     @Test
     @Order(9)
+    public void testSelectAll() {
+        JsonArrayBuilder jsonArrayBuilder = Json.createArrayBuilder();
+        JsonArrayBuilder captureDefs = Json.createArrayBuilder();
+        captureDefs.add(1);
+        jsonArrayBuilder
+                .add(Json.createObjectBuilder().add("capture_def_ids", captureDefs.build().toString()).add("groupId", 1).add("type", "RELP").add("flowId", 1));
+
+        // Asserting get request
+        HttpGet requestGet = new HttpGet("http://localhost:" + port + "/v2/captures/group/capture");
+
+        requestGet.setHeader("Authorization", "Bearer " + token);
+
+        HttpResponse responseGet = Assertions
+                .assertDoesNotThrow(() -> HttpClientBuilder.create().build().execute(requestGet));
+
+        HttpEntity entityGet = responseGet.getEntity();
+
+        String responseStringGet = Assertions.assertDoesNotThrow(() -> EntityUtils.toString(entityGet, "UTF-8"));
+
+        String expected = jsonArrayBuilder.build().toString();
+
+        assertEquals(expected, responseStringGet);
+        assertEquals(HttpStatus.SC_OK, responseGet.getStatusLine().getStatusCode());
+    }
+
+    @Test
+    @Order(10)
+    public void testSelectCaptures() {
+        JsonArrayBuilder expectedBuilder = Json.createArrayBuilder();
+        expectedBuilder.add(Json.createObjectBuilder().add("id", 1));
+        // Asserting get request
+        HttpGet requestGet = new HttpGet("http://localhost:" + port + "/v2/captures/group/capture/1");
+
+        requestGet.setHeader("Authorization", "Bearer " + token);
+
+        HttpResponse responseGet = Assertions
+                .assertDoesNotThrow(() -> HttpClientBuilder.create().build().execute(requestGet));
+
+        HttpEntity entityGet = responseGet.getEntity();
+
+        String responseStringGet = Assertions.assertDoesNotThrow(() -> EntityUtils.toString(entityGet, "UTF-8"));
+
+        String expected = expectedBuilder.build().toString();
+
+        assertEquals(expected, responseStringGet);
+        assertEquals(HttpStatus.SC_OK, responseGet.getStatusLine().getStatusCode());
+    }
+
+    @Test
+    @Order(11)
+    public void testSelectGroups() {
+        JsonArrayBuilder expectedBuilder = Json.createArrayBuilder();
+        expectedBuilder.add(Json.createObjectBuilder().add("id", 1));
+        // Asserting get request
+        HttpGet requestGet = new HttpGet("http://localhost:" + port + "/v2/captures/group/capture/groups/1");
+
+        requestGet.setHeader("Authorization", "Bearer " + token);
+
+        HttpResponse responseGet = Assertions
+                .assertDoesNotThrow(() -> HttpClientBuilder.create().build().execute(requestGet));
+
+        HttpEntity entityGet = responseGet.getEntity();
+
+        String responseStringGet = Assertions.assertDoesNotThrow(() -> EntityUtils.toString(entityGet, "UTF-8"));
+
+        String expected = expectedBuilder.build().toString();
+
+        assertEquals(expected, responseStringGet);
+        assertEquals(HttpStatus.SC_OK, responseGet.getStatusLine().getStatusCode());
+    }
+
+    @Test
+    @Order(12)
     public void testDeleteInvalidGroup() {
         HttpDelete delete = new HttpDelete("http://localhost:" + port + "/v2/captures/group/capture/67/3");
 
@@ -641,7 +716,7 @@ public class CaptureGroupControllerTest extends TestSpringBootInformation {
     }
 
     @Test
-    @Order(10)
+    @Order(13)
     public void testDeleteInvalidCapture() {
         HttpDelete delete = new HttpDelete("http://localhost:" + port + "/v2/captures/group/capture/1/67");
 
@@ -670,7 +745,7 @@ public class CaptureGroupControllerTest extends TestSpringBootInformation {
     }
 
     @Test
-    @Order(11)
+    @Order(14)
     public void testDeleteValidLinkage() {
 
         HttpDelete delete = new HttpDelete("http://localhost:" + port + "/v2/captures/group/capture/1/1");

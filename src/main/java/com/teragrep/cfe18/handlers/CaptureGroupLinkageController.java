@@ -45,14 +45,15 @@
  */
 package com.teragrep.cfe18.handlers;
 
-import com.teragrep.cfe18.CaptureGroupMapper;
-import com.teragrep.cfe18.handlers.entities.CaptureGroup;
+import com.teragrep.cfe18.CaptureGroupLinkageMapper;
+import com.teragrep.cfe18.handlers.entities.CaptureDefinition;
+import com.teragrep.cfe18.handlers.entities.CaptureGroups;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import jakarta.json.Json;
 import org.json.JSONObject;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.slf4j.Logger;
@@ -66,13 +67,14 @@ import org.springframework.web.bind.annotation.*;
 import javax.sql.DataSource;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping(path = "v2/captures/group/capture")
 @SecurityRequirement(name = "api")
-public class CaptureGroupController {
+public class CaptureGroupLinkageController {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(CaptureGroupController.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(CaptureGroupLinkageController.class);
 
     @Autowired
     DataSource dataSource;
@@ -81,7 +83,7 @@ public class CaptureGroupController {
     SqlSessionTemplate sqlSessionTemplate;
 
     @Autowired
-    CaptureGroupMapper captureGroupMapper;
+    CaptureGroupLinkageMapper captureGroupMapper;
 
     @RequestMapping(
             path = "/{groupId}/{captureId}",
@@ -92,13 +94,7 @@ public class CaptureGroupController {
     @ApiResponses(value = {
             @ApiResponse(
                     responseCode = "201",
-                    description = "Capture linked with group",
-                    content = {
-                            @Content(
-                                    mediaType = "application/json",
-                                    schema = @Schema(implementation = CaptureGroup.class)
-                            )
-                    }
+                    description = "Capture linked with group"
             ),
             @ApiResponse(
                     responseCode = "404",
@@ -132,10 +128,10 @@ public class CaptureGroupController {
     ) {
         LOGGER.info("About to insert <[{}]>", captureId);
         try {
-            CaptureGroup c = captureGroupMapper.create(groupId, captureId);
-            LOGGER.info("Values returned what happened with linking <[{}]>", c);
+            Integer returnedGroupId = captureGroupMapper.create(groupId, captureId);
+            LOGGER.info("Values returned what happened with linking <[{}]>", returnedGroupId);
             JSONObject jsonObject = new JSONObject();
-            jsonObject.put("id", c.getId());
+            jsonObject.put("id", returnedGroupId);
             jsonObject.put("message", "Capture linked with group");
             return new ResponseEntity<>(jsonObject.toString(), HttpStatus.CREATED);
         }
@@ -181,13 +177,7 @@ public class CaptureGroupController {
     @ApiResponses(value = {
             @ApiResponse(
                     responseCode = "200",
-                    description = "Found the captures",
-                    content = {
-                            @Content(
-                                    mediaType = "application/json",
-                                    schema = @Schema(implementation = CaptureGroup.class)
-                            )
-                    }
+                    description = "Found the captures"
             ),
             @ApiResponse(
                     responseCode = "404",
@@ -200,7 +190,7 @@ public class CaptureGroupController {
             @RequestParam(required = false) Integer version
     ) {
         try {
-            List<CaptureGroup> cg = captureGroupMapper.getCaptures(groupId, version);
+            List<CaptureDefinition> cg = captureGroupMapper.getCaptures(groupId, version);
             return new ResponseEntity<>(cg, HttpStatus.OK);
         }
         catch (RuntimeException ex) {
@@ -230,13 +220,7 @@ public class CaptureGroupController {
     @ApiResponses(value = {
             @ApiResponse(
                     responseCode = "200",
-                    description = "Found the groups",
-                    content = {
-                            @Content(
-                                    mediaType = "application/json",
-                                    schema = @Schema(implementation = CaptureGroup.class)
-                            )
-                    }
+                    description = "Found the groups"
             ),
             @ApiResponse(
                     responseCode = "404",
@@ -249,7 +233,7 @@ public class CaptureGroupController {
             @RequestParam(required = false) Integer version
     ) {
         try {
-            List<CaptureGroup> cg = captureGroupMapper.getGroups(captureId, version);
+            List<CaptureGroups> cg = captureGroupMapper.getGroups(captureId, version);
             return new ResponseEntity<>(cg, HttpStatus.OK);
         }
         catch (RuntimeException ex) {
@@ -282,17 +266,13 @@ public class CaptureGroupController {
     @ApiResponses(value = {
             @ApiResponse(
                     responseCode = "200",
-                    description = "Successfully retrieved",
-                    content = {
-                            @Content(
-                                    mediaType = "application/json",
-                                    schema = @Schema(implementation = CaptureGroup.class)
-                            )
-                    }
+                    description = "Successfully retrieved"
             )
     })
-    public List<CaptureGroup> getAll(@RequestParam(required = false) Integer version) {
-        return captureGroupMapper.getAll(version);
+    public ResponseEntity<String> getAll(@RequestParam(required = false) Integer version) {
+        List<Map<String, String>> asMap = captureGroupMapper.getAll(version);
+        String asReturnBody = Json.createArrayBuilder(asMap).build().toString();
+        return new ResponseEntity<>(asReturnBody, HttpStatus.OK);
     }
 
     @RequestMapping(
@@ -304,13 +284,7 @@ public class CaptureGroupController {
     @ApiResponses(value = {
             @ApiResponse(
                     responseCode = "200",
-                    description = "Capture deleted from group",
-                    content = {
-                            @Content(
-                                    mediaType = "application/json",
-                                    schema = @Schema(implementation = CaptureGroup.class)
-                            )
-                    }
+                    description = "Capture deleted from group"
             ),
             @ApiResponse(
                     responseCode = "404",

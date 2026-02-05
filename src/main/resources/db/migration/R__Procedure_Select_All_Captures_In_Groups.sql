@@ -57,13 +57,17 @@ BEGIN
     ELSE
         SET @time = tx_id;
     END IF;
-    SELECT cdgxcd.id                   AS id,
-           cdgxcd.capture_def_group_id AS capture_group_id,
-           cdgxcd.capture_type         AS type,
-           cdgxcd.capture_def_id       AS capture_id,
-           cdgxcd.flow_id              AS flow_id
+    -- select while aggregating capture_def_id s to separate listing
+    SELECT distinct cdgxcd.capture_def_group_id                                  AS capture_group_id,
+           cdgxcd.capture_type                                          AS type,
+           cdgxcd.flow_id                                               AS flow_id,
+           (SELECT
+                JSON_ARRAYAGG(c.capture_def_id)
+            FROM capture_def_group_x_capture_def FOR SYSTEM_TIME AS OF TRANSACTION @time c
+            WHERE cdgxcd.capture_def_group_id = c.capture_def_group_id) AS capture_defs
     FROM cfe_18.capture_def_group_x_capture_def FOR SYSTEM_TIME AS OF TRANSACTION @time cdgxcd
-             INNER JOIN capture_definition FOR SYSTEM_TIME AS OF TRANSACTION @time cd ON cdgxcd.capture_def_id = cd.id;
+             INNER JOIN capture_definition FOR SYSTEM_TIME AS OF TRANSACTION @time cd ON cdgxcd.capture_def_id = cd.id
+    ORDER BY cdgxcd.capture_def_group_id;
 END;
 //
 DELIMITER ;

@@ -54,7 +54,7 @@ BEGIN
         END;
     START TRANSACTION;
 
-    IF ((SELECT COUNT(id)
+    IF ((SELECT COUNT(capture_def_group_id)
          FROM cfe_18.capture_def_group_x_capture_def
          WHERE capture_def_id = capture_id
            AND capture_def_group_id = capture_group_id) = 0) THEN
