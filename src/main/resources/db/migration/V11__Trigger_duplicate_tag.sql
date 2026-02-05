@@ -68,7 +68,9 @@ begin
     if truthvalue = 0 then
         signal sqlstate '17001' set message_text = 'DUPLICATE TAG ERROR';
     end if;
+end;
+//
+DELIMITER ;
 
-end//
 
 

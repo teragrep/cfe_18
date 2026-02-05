@@ -60,7 +60,7 @@ BEGIN
         SET @time = tx_id;
     END IF;
 
-    IF ((SELECT COUNT(cdgxcd.id)
+    IF ((SELECT COUNT(cdgxcd.capture_def_id)
          FROM capture_def_group_x_capture_def FOR SYSTEM_TIME AS OF TRANSACTION @time cdgxcd
          WHERE cdgxcd.capture_def_id = capture_def_id) = 0) THEN
         SELECT JSON_OBJECT('id', capture_def_id, 'message', 'Capture not found') INTO @c;

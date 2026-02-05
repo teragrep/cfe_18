@@ -72,7 +72,7 @@ BEGIN
 
     -- check if types match. Select given capture and type while subquerying capture groups type to see if they match.
     -- If no matching rows is found then type is mismatched.
-    IF ((SELECT COUNT(id)
+    IF ((SELECT COUNT(c.id)
          FROM cfe_18.capture_definition c
          WHERE c.capture_type = (SELECT capture_type FROM cfe_18.capture_def_group cdg WHERE cdg.id = capture_group_id)
            AND c.id = capture_id) = 0) THEN
@@ -86,26 +86,23 @@ BEGIN
     SELECT flow_id into @flow_id FROM cfe_18.capture_def_group cdg  WHERE cdg.id = capture_group_id;
 
     -- if record does not exist
-    IF ((SELECT COUNT(id)
+    IF ((SELECT COUNT(capture_def_group_id)
          FROM cfe_18.capture_def_group_x_capture_def
          WHERE capture_def_group_id = capture_group_id
-           AND capture_def_id = capture_id
-           AND tag_id = @tag_id
-           AND capture_type = @type
-           AND flow_id = @flow_id) = 0) THEN
+           AND capture_def_id = capture_id) = 0) THEN
         -- insert new one
         INSERT INTO capture_def_group_x_capture_def(capture_def_id, capture_def_group_id, tag_id, capture_type, flow_id)
         VALUES (capture_id, capture_group_id, @tag_id, @type, @flow_id);
 
         -- return ID
-        SELECT id AS id
+        SELECT capture_def_group_id AS id
         FROM cfe_18.capture_def_group_x_capture_def cdgxcd
         WHERE cdgxcd.capture_def_group_id = capture_group_id
           AND cdgxcd.capture_def_id = capture_id;
 
     ELSE
         -- return ID
-        SELECT id AS id
+        SELECT capture_def_group_id AS id
         FROM cfe_18.capture_def_group_x_capture_def cdgxcd
         WHERE cdgxcd.capture_def_group_id = capture_group_id
           AND cdgxcd.capture_def_id = capture_id;
