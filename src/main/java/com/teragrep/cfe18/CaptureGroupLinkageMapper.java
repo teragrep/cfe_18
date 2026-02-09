@@ -45,7 +45,6 @@
  */
 package com.teragrep.cfe18;
 
-import com.teragrep.cfe18.handlers.entities.CaptureDefinition;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;

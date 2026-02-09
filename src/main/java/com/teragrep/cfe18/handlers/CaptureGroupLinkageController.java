@@ -46,13 +46,11 @@
 package com.teragrep.cfe18.handlers;
 
 import com.teragrep.cfe18.CaptureGroupLinkageMapper;
-import com.teragrep.cfe18.handlers.entities.CaptureDefinition;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
-import jakarta.json.Json;
 import org.json.JSONObject;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.slf4j.Logger;
