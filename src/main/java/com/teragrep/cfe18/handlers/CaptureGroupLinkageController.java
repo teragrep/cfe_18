@@ -47,7 +47,6 @@ package com.teragrep.cfe18.handlers;
 
 import com.teragrep.cfe18.CaptureGroupLinkageMapper;
 import com.teragrep.cfe18.handlers.entities.CaptureDefinition;
-import com.teragrep.cfe18.handlers.entities.CaptureGroups;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -67,10 +66,9 @@ import org.springframework.web.bind.annotation.*;
 import javax.sql.DataSource;
 import java.sql.SQLException;
 import java.util.List;
-import java.util.Map;
 
 @RestController
-@RequestMapping(path = "v2/captures/group/capture")
+@RequestMapping(path = "v2/captures/group")
 @SecurityRequirement(name = "api")
 public class CaptureGroupLinkageController {
 
@@ -86,7 +84,7 @@ public class CaptureGroupLinkageController {
     CaptureGroupLinkageMapper captureGroupMapper;
 
     @RequestMapping(
-            path = "/{groupId}/{captureId}",
+            path = "/{groupId}/members/{captureId}",
             method = RequestMethod.PUT,
             produces = "application/json"
     )
@@ -169,7 +167,7 @@ public class CaptureGroupLinkageController {
     }
 
     @RequestMapping(
-            path = "/{groupId}",
+            path = "/{groupId}/members",
             method = RequestMethod.GET,
             produces = "application/json"
     )
@@ -185,13 +183,13 @@ public class CaptureGroupLinkageController {
                     content = @Content
             )
     })
-    public ResponseEntity<?> getCaptures(
+    public ResponseEntity<String> get(
             @PathVariable("groupId") int groupId,
             @RequestParam(required = false) Integer version
     ) {
         try {
-            List<CaptureDefinition> cg = captureGroupMapper.getCaptures(groupId, version);
-            return new ResponseEntity<>(cg, HttpStatus.OK);
+            List<Integer> cg = captureGroupMapper.get(groupId, version);
+            return new ResponseEntity<>(cg.toString(), HttpStatus.OK);
         }
         catch (RuntimeException ex) {
             LOGGER.error(ex.getMessage());
@@ -212,71 +210,7 @@ public class CaptureGroupLinkageController {
     }
 
     @RequestMapping(
-            path = "/groups/{captureId}",
-            method = RequestMethod.GET,
-            produces = "application/json"
-    )
-    @Operation(summary = "Fetch groups that are linked with capture")
-    @ApiResponses(value = {
-            @ApiResponse(
-                    responseCode = "200",
-                    description = "Found the groups"
-            ),
-            @ApiResponse(
-                    responseCode = "404",
-                    description = "Capture does not exist",
-                    content = @Content
-            )
-    })
-    public ResponseEntity<?> getGroups(
-            @PathVariable("captureId") int captureId,
-            @RequestParam(required = false) Integer version
-    ) {
-        try {
-            List<CaptureGroups> cg = captureGroupMapper.getGroups(captureId, version);
-            return new ResponseEntity<>(cg, HttpStatus.OK);
-        }
-        catch (RuntimeException ex) {
-            LOGGER.error(ex.getMessage());
-            JSONObject jsonErr = new JSONObject();
-            jsonErr.put("message", ex.getCause().getMessage());
-            jsonErr.put("id", captureId);
-            final Throwable cause = ex.getCause();
-            if (cause instanceof SQLException) {
-                LOGGER.error((cause).getMessage());
-                String state = ((SQLException) cause).getSQLState();
-                if (state.equals("45000")) {
-                    jsonErr.put("message", "Record does not exist");
-                    return new ResponseEntity<>(jsonErr.toString(), HttpStatus.NOT_FOUND);
-                }
-            }
-            return new ResponseEntity<>(jsonErr.toString(), HttpStatus.BAD_REQUEST);
-        }
-    }
-
-    @RequestMapping(
-            path = "",
-            method = RequestMethod.GET,
-            produces = "application/json"
-    )
-    @Operation(
-            summary = "Fetch all captures in all groups if linked",
-            description = "Will return empty list if there are no captures with groups to fetch"
-    )
-    @ApiResponses(value = {
-            @ApiResponse(
-                    responseCode = "200",
-                    description = "Successfully retrieved"
-            )
-    })
-    public ResponseEntity<String> getAll(@RequestParam(required = false) Integer version) {
-        List<Map<String, String>> asMap = captureGroupMapper.getAll(version);
-        String asReturnBody = Json.createArrayBuilder(asMap).build().toString();
-        return new ResponseEntity<>(asReturnBody, HttpStatus.OK);
-    }
-
-    @RequestMapping(
-            path = "/{groupId}/{captureId}",
+            path = "/{groupId}/members/{captureId}",
             method = RequestMethod.DELETE,
             produces = MediaType.APPLICATION_JSON_VALUE
     )
