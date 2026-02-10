@@ -95,14 +95,14 @@ BEGIN
         VALUES (capture_id, capture_group_id, @tag_id, @type, @flow_id);
 
         -- return ID
-        SELECT capture_def_group_id AS id
+        SELECT capture_def_id AS id
         FROM cfe_18.capture_def_group_x_capture_def cdgxcd
         WHERE cdgxcd.capture_def_group_id = capture_group_id
           AND cdgxcd.capture_def_id = capture_id;
 
     ELSE
         -- return ID
-        SELECT capture_def_group_id AS id
+        SELECT capture_def_id AS id
         FROM cfe_18.capture_def_group_x_capture_def cdgxcd
         WHERE cdgxcd.capture_def_group_id = capture_group_id
           AND cdgxcd.capture_def_id = capture_id;
