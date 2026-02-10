@@ -124,10 +124,10 @@ public class CaptureGroupLinkageController {
     ) {
         LOGGER.info("About to insert <[{}]>", captureId);
         try {
-            Integer returnedGroupId = captureGroupMapper.create(groupId, captureId);
-            LOGGER.info("Values returned what happened with linking <[{}]>", returnedGroupId);
+            Integer returnedCaptureId = captureGroupMapper.create(groupId, captureId);
+            LOGGER.info("Values returned what happened with linking <[{}]>", returnedCaptureId);
             JSONObject jsonObject = new JSONObject();
-            jsonObject.put("id", returnedGroupId);
+            jsonObject.put("id", returnedCaptureId);
             jsonObject.put("message", "Capture linked with group");
             return new ResponseEntity<>(jsonObject.toString(), HttpStatus.CREATED);
         }

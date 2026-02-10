@@ -484,6 +484,10 @@ public class CaptureGroupLinkageControllerTest extends TestSpringBootInformation
         // Creating string from Json that was given as a response
         String actual = Assertions.assertDoesNotThrow(() -> responseAsJson.get("message").toString());
 
+        // Asserting that capture ID 1 is returned after creating
+        int actualId = Assertions.assertDoesNotThrow(() -> responseAsJson.getInt("id"));
+
+        assertEquals(1, actualId);
         assertEquals(expected, actual);
         assertEquals(HttpStatus.SC_CREATED, httpResponse.getStatusLine().getStatusCode());
     }
