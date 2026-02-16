@@ -92,7 +92,7 @@ create table instance_targets
     rebindInterval         int          not null,
     resumerIntervalMax     int          not null,
     userResumerIntervalMax boolean      not null,
-    constraint ´TargetToFlowTargets´ foreign key (flow_id, flow_target_id) references flow.flow_targets (flow_id, id),
+    constraint ´TargetToFlowTargets´ foreign key (flow_id, flow_target_id) references flow.flow_storages (flow_id, id),
     constraint ´TargetToInstanceTargets´ foreign key (flow_id, instance_id) references instances (flow_id, id),
     start_trxid BIGINT UNSIGNED GENERATED ALWAYS AS ROW START INVISIBLE,
     end_trxid BIGINT UNSIGNED GENERATED ALWAYS AS ROW END INVISIBLE,
