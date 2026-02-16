@@ -41,16 +41,6 @@ CREATE TABLE flow.cfe_04_indexes
 ) WITH SYSTEM VERSIONING;
 
 
-CREATE TABLE flow.storage_indexes
-(
-    storage_id INT,
-    index_id   INT,
-    cfe_type   VARCHAR(6) NOT NULL CHECK (cfe_type IN ('cfe_10', 'cfe_23', 'cfe_04')),
-    PRIMARY KEY (storage_id, index_id),
-    CONSTRAINT FOREIGN KEY (index_id) REFERENCES cfe_18.captureIndex (id),
-    CONSTRAINT FOREIGN KEY (storage_id, cfe_type) REFERENCES flow.storages (id, cfe_type)
-
-);
 
 -- sourcetypes references sourcetypes id
 CREATE TABLE flow.cfe_04_sourcetypes
@@ -85,15 +75,6 @@ CREATE TABLE flow.cfe_04_sourcetype_x_transform
     PERIOD FOR SYSTEM_TIME(start_trxid, end_trxid)
 ) WITH SYSTEM VERSIONING;
 
-CREATE TABLE flow.storage_sourcetypes
-(
-    storage_id    INT        NOT NULL,
-    sourcetype_id INT        NOT NULL,
-    cfe_type      VARCHAR(6) NOT NULL CHECK (cfe_type IN ('cfe_10', 'cfe_23', 'cfe_04')),
-    PRIMARY KEY (storage_id, sourcetype_id),
-    CONSTRAINT FOREIGN KEY (storage_id, cfe_type) REFERENCES flow.storages (id, cfe_type),
-    CONSTRAINT FOREIGN KEY (sourcetype_id) REFERENCES cfe_18.captureSourcetype (id)
-);
 
 CREATE TABLE flow.cfe_04_override
 (
@@ -133,21 +114,23 @@ CREATE TABLE flow.cfe_04_global
 
 
 
-CREATE TABLE capture_def_x_flow_targets
+CREATE TABLE capture_def_x_flow_storages
 (
     id             INT PRIMARY KEY AUTO_INCREMENT,
     capture_def_id INT NOT NULL,
     flow_id        INT NOT NULL,
-    flow_target_id INT NOT NULL,
+    flow_storage_id INT NOT NULL,
     sourcetype_id  INT NOT NULL,
     index_id       INT NOT NULL,
-    CONSTRAINT ´target_id_TO_flow_targets´ FOREIGN KEY (flow_id, flow_target_id) REFERENCES flow.flow_targets (flow_id, storage_id),
+    CONSTRAINT ´target_id_TO_flow_targets´ FOREIGN KEY (flow_id, flow_storage_id) REFERENCES flow.flow_storages (flow_id, storage_id),
     CONSTRAINT ´capture_def_id_TO_capture_definition´ FOREIGN KEY (flow_id, capture_def_id) REFERENCES cfe_18.capture_definition (flow_id, id) ON DELETE CASCADE,
     CONSTRAINT ´capture_def_WITH_source_type´ FOREIGN KEY (capture_def_id, sourcetype_id) REFERENCES cfe_18.capture_definition (id, captureSourcetype_id),
     CONSTRAINT ´capture_def_WITH_index´ FOREIGN KEY (capture_def_id, index_id) REFERENCES cfe_18.capture_definition (id, captureIndex_id),
-    CONSTRAINT ´check_storage_sourcetype´ FOREIGN KEY (flow_target_id, sourcetype_id) REFERENCES flow.storage_sourcetypes (storage_id, sourcetype_id),
-    CONSTRAINT ´check_storage_index´ FOREIGN KEY (flow_target_id, index_id) REFERENCES flow.storage_indexes (storage_id, index_id),
-    UNIQUE (capture_def_id, flow_id, flow_target_id),
+    CONSTRAINT ´check_storage_sourcetype´ FOREIGN KEY (flow_storage_id, sourcetype_id) REFERENCES cfe_18.storage_sourcetypes (storage_id, sourcetype_id),
+    CONSTRAINT ´check_storage_index´ FOREIGN KEY (flow_storage_id, index_id) REFERENCES cfe_18.storage_indexes (storage_id, index_id),
+    UNIQUE ( flow_id, flow_storage_id),
+    UNIQUE ( flow_id, capture_def_id),
+    UNIQUE (capture_def_id, flow_id, flow_storage_id),
     start_trxid    BIGINT UNSIGNED GENERATED ALWAYS AS ROW START INVISIBLE,
     end_trxid      BIGINT UNSIGNED GENERATED ALWAYS AS ROW END INVISIBLE,
     PERIOD FOR SYSTEM_TIME(start_trxid, end_trxid)
