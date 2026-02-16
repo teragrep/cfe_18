@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.teragrep.cfe18.CaptureGroupLinkageMapper">
+
+
+    <!-- insert link  ( capture_group_id INT, capture_id INT ) -->
+    <select id="create" resultType="Integer" statementType="CALLABLE">
+        {CALL cfe_18.insert_capture_to_group(#{param1},#{param2})}
+    </select>
+
+    <!-- getCaptures    (capture_group_id INT, tx_id INT) -->
+    <select id="get" resultMap="captureIds" statementType="CALLABLE">
+        {CALL cfe_18.select_captures_in_group(#{param1},#{param2})}
+    </select>
+    <resultMap id="captureIds" type="java.lang.Integer">
+        <result property="id"      column="capture_definition_id"/>
+    </resultMap>
+
+    <!-- DELETE link ( capture_id INT, capture_group_id INT ) -->
+    <select id="delete" statementType="CALLABLE">
+        {CALL cfe_18.delete_capture_from_group(#{param1},#{param2})}
+    </select>
+
+</mapper>
+

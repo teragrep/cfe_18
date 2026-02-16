@@ -204,7 +204,7 @@ create table capture_def_group
     capture_def_group_name varchar(64) unique not null,
     capture_type           varchar(64)        not null check (capture_type in
                                                               ('aws', 'manual', 'cfe', 'windows', 'hec', 'azure',
-                                                               'relp')),
+                                                               'RELP')),
     flow_id                int not null,
     unique (id, flow_id),
     unique (id, capture_type),
@@ -216,7 +216,6 @@ create table capture_def_group
 
 create table capture_def_group_x_capture_def
 (
-    id                   int auto_increment primary key,
     capture_def_id       int         not null,
     capture_def_group_id int         not null,
     tag_id               int         not null,
@@ -224,13 +223,12 @@ create table capture_def_group_x_capture_def
                                                      ('aws', 'manual', 'cfe', 'windows', 'hec',
                                                       'azure', 'relp')),
     flow_id              int not null,
+    primary key (capture_def_group_id, capture_def_id),
     constraint sameFlowCapture FOREIGN KEY (capture_def_id, flow_id) REFERENCES cfe_18.capture_definition(id, flow_id),
     constraint sameFlowGroup FOREIGN KEY (capture_def_group_id, flow_id) REFERENCES cfe_18.capture_def_group(id, flow_id),
-    constraint captureToCaptureGroupType foreign key (capture_def_id, capture_type) references cfe_18.capture_definition (id, capture_type) on delete cascade,
-    constraint captureTypeToCaptureGroup foreign key (capture_def_group_id, capture_type) references cfe_18.capture_def_group (id, capture_type) on delete cascade,
-    unique key (capture_def_group_id, capture_def_id),
+    constraint captureToCaptureGroupType foreign key (capture_def_id, capture_type) references cfe_18.capture_definition (id, capture_type),
+    constraint captureTypeToCaptureGroup foreign key (capture_def_group_id, capture_type) references cfe_18.capture_def_group (id, capture_type),
     unique key (capture_def_group_id, tag_id),
-    index (capture_type, capture_def_group_id),
     start_trxid BIGINT UNSIGNED GENERATED ALWAYS AS ROW START INVISIBLE,
     end_trxid BIGINT UNSIGNED GENERATED ALWAYS AS ROW END INVISIBLE,
     PERIOD FOR SYSTEM_TIME(start_trxid, end_trxid)

@@ -75,31 +75,31 @@
     <cfe_18.capture_def_group id="5" capture_def_group_name="capturegroup5" capture_type="cfe" flow_id="1"/>
     <cfe_18.capture_def_group id="6" capture_def_group_name="capturegroup6" capture_type="cfe" flow_id="1"/>
     <cfe_18.capture_def_group id="7" capture_def_group_name="capturegroup7" capture_type="relp" flow_id="1"/>
-    <cfe_18.capture_def_group_x_capture_def id="1" capture_def_id="1" capture_def_group_id="1" tag_id="1"
+    <cfe_18.capture_def_group_x_capture_def capture_def_id="1" capture_def_group_id="1" tag_id="1"
                                             capture_type="cfe" flow_id="1"/>
-    <cfe_18.capture_def_group_x_capture_def id="2" capture_def_id="2" capture_def_group_id="1" tag_id="2"
+    <cfe_18.capture_def_group_x_capture_def capture_def_id="2" capture_def_group_id="1" tag_id="2"
                                             capture_type="cfe" flow_id="1"/>
-    <cfe_18.capture_def_group_x_capture_def id="3" capture_def_id="3" capture_def_group_id="1" tag_id="3"
+    <cfe_18.capture_def_group_x_capture_def capture_def_id="3" capture_def_group_id="1" tag_id="3"
                                             capture_type="cfe" flow_id="1"/>
-    <cfe_18.capture_def_group_x_capture_def id="4" capture_def_id="4" capture_def_group_id="1" tag_id="4"
+    <cfe_18.capture_def_group_x_capture_def capture_def_id="4" capture_def_group_id="1" tag_id="4"
                                             capture_type="cfe" flow_id="1"/>
-    <cfe_18.capture_def_group_x_capture_def id="5" capture_def_id="5" capture_def_group_id="2" tag_id="5"
+    <cfe_18.capture_def_group_x_capture_def capture_def_id="5" capture_def_group_id="2" tag_id="5"
                                             capture_type="cfe" flow_id="1"/>
-    <cfe_18.capture_def_group_x_capture_def id="6" capture_def_id="6" capture_def_group_id="2" tag_id="10"
+    <cfe_18.capture_def_group_x_capture_def capture_def_id="6" capture_def_group_id="2" tag_id="10"
                                             capture_type="cfe" flow_id="1"/>
-    <cfe_18.capture_def_group_x_capture_def id="7" capture_def_id="7" capture_def_group_id="2" tag_id="7"
+    <cfe_18.capture_def_group_x_capture_def capture_def_id="7" capture_def_group_id="2" tag_id="7"
                                             capture_type="cfe" flow_id="1"/>
-    <cfe_18.capture_def_group_x_capture_def id="8" capture_def_id="2" capture_def_group_id="2" tag_id="2"
+    <cfe_18.capture_def_group_x_capture_def capture_def_id="2" capture_def_group_id="2" tag_id="2"
                                             capture_type="cfe" flow_id="1"/>
-    <cfe_18.capture_def_group_x_capture_def id="9" capture_def_id="10" capture_def_group_id="3" tag_id="9"
+    <cfe_18.capture_def_group_x_capture_def capture_def_id="10" capture_def_group_id="3" tag_id="9"
                                             capture_type="cfe" flow_id="1"/>
-    <cfe_18.capture_def_group_x_capture_def id="10" capture_def_id="8" capture_def_group_id="4" tag_id="8"
+    <cfe_18.capture_def_group_x_capture_def  capture_def_id="8" capture_def_group_id="4" tag_id="8"
                                             capture_type="cfe" flow_id="1"/>
-    <cfe_18.capture_def_group_x_capture_def id="11" capture_def_id="12" capture_def_group_id="5" tag_id="10"
+    <cfe_18.capture_def_group_x_capture_def  capture_def_id="12" capture_def_group_id="5" tag_id="10"
                                             capture_type="cfe" flow_id="1"/>
-    <cfe_18.capture_def_group_x_capture_def id="12" capture_def_id="8" capture_def_group_id="6" tag_id="8"
+    <cfe_18.capture_def_group_x_capture_def  capture_def_id="8" capture_def_group_id="6" tag_id="8"
                                             capture_type="cfe" flow_id="1"/>
-    <cfe_18.capture_def_group_x_capture_def id="13" capture_def_id="13" capture_def_group_id="7" tag_id="1"
+    <cfe_18.capture_def_group_x_capture_def  capture_def_id="13" capture_def_group_id="7" tag_id="1"
                                             capture_type="relp" flow_id="1"/>
     <location.host id="1" fqhost="1" MD5="12365" host_type="cfe"/>
     <location.host id="2" fqhost="12" MD5="12322" host_type="cfe"/>

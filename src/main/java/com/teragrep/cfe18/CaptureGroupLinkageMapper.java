@@ -43,34 +43,18 @@
  * Teragrep, the applicable Commercial License may apply to this file if you as
  * a licensee so wish it.
  */
-use cfe_18;
-DELIMITER //
-create trigger if not exists cant_add_existing_tag_into_group
-    before insert
-    on cfe_18.capture_def_group_x_capture_def
-    for each row
-begin
-    declare truthvalue int;
-    select if(count(DISTINCT hgxh.host_id) = count(hgxh.host_id), true, false)
-    into truthvalue
-    from location.host_group_x_host hgxh
-             INNER JOIN (SELECT DISTINCT hgxldg.host_group_id
-                         from host_groups_x_capture_def_group hgxldg
-                                  INNER JOIN (SELECT DISTINCT(ldgxld.capture_def_group_id)
-                                              from capture_def_group_x_capture_def ldgxld
-                                                       INNER JOIN (select tag_id, capture_def_group_id
-                                                                    from capture_def_group_x_capture_def taqs_with_groups) ttdwst
-                                                                  ON ldgxld.capture_def_group_id = ttdwst.capture_def_group_id
-                                              where ldgxld.capture_def_group_id = new.capture_def_group_id
-                                                 or ldgxld.tag_id = new.tag_id) ttdwcg
-                                             ON ttdwcg.capture_def_group_id = hgxldg.capture_group_id) tthwcd
-                        ON hgxh.host_group_id = tthwcd.host_group_id;
-    if truthvalue = 0 then
-        signal sqlstate '17001' set message_text = 'DUPLICATE TAG ERROR';
-    end if;
-end;
-//
-DELIMITER ;
+package com.teragrep.cfe18;
 
+import org.apache.ibatis.annotations.Mapper;
 
+import java.util.List;
 
+@Mapper
+public interface CaptureGroupLinkageMapper {
+
+    Integer create(final Integer groupId, final Integer captureId);
+
+    List<Integer> get(final Integer groupId, final Integer version);
+
+    void delete(final Integer groupId, final Integer CaptureDefinitionId);
+}

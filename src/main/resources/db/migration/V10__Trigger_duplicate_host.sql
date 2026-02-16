@@ -68,5 +68,7 @@ begin
     if truthvalue = 0 then
         signal sqlstate '17002' set message_text = 'DUPLICATE HOST ERROR';
     end if;
-end //
+end;
+//
+DELIMITER ;
 
