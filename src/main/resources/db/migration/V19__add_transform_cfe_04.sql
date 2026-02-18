@@ -47,15 +47,18 @@ USE flow;
 
 CREATE TABLE flow.cfe_04_transforms
 (
-    id              INT PRIMARY KEY, -- not auto-increment because it has to match cfe_04 ID
-    name            VARCHAR(255) NOT NULL,
+    id              INT AUTO_INCREMENT PRIMARY KEY,
+    cfe_04_id       INT          NOT NULL,
+    transform_name  VARCHAR(255) NOT NULL,
     write_meta      BOOLEAN      NOT NULL,
     write_default   BOOLEAN      NOT NULL,
     default_value   VARCHAR(255) NOT NULL,
     destination_key VARCHAR(255) NOT NULL,
     regex           VARCHAR(255) NOT NULL,
     format          VARCHAR(255) NOT NULL,
-    CONSTRAINT FOREIGN KEY (id) REFERENCES flow.cfe_04 (id),
+    CONSTRAINT FOREIGN KEY (cfe_04_id) REFERENCES flow.cfe_04 (id),
+    UNIQUE (cfe_04_id, id),
+    UNIQUE (cfe_04_id, transform_name),
     start_trxid     BIGINT UNSIGNED GENERATED ALWAYS AS ROW START INVISIBLE,
     end_trxid       BIGINT UNSIGNED GENERATED ALWAYS AS ROW END INVISIBLE,
     PERIOD FOR SYSTEM_TIME(start_trxid, end_trxid)
