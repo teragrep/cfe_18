@@ -57,14 +57,13 @@ BEGIN
     ELSE
         SET @time = tx_id;
     END IF;
-    SELECT DISTINCT htc.hub_id AS id,
+    SELECT DISTINCT h.id       AS id,
                     h2.id      AS host_id,
                     h2.fqhost  AS hub_fq_host,
                     h.ip       AS ip,
                     h2.MD5     AS md5
     FROM cfe_00.hubs FOR SYSTEM_TIME AS OF TRANSACTION @time h
-             INNER JOIN location.host FOR SYSTEM_TIME AS OF TRANSACTION @time h2 ON h2.id = h.host_id
-             INNER JOIN cfe_00.host_type_cfe FOR SYSTEM_TIME AS OF TRANSACTION @time htc ON h.id = htc.hub_id;
+             INNER JOIN location.host FOR SYSTEM_TIME AS OF TRANSACTION @time h2 ON h2.id = h.host_id;
 
 
 END;

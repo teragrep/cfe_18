@@ -97,7 +97,7 @@ public class HostFileControllerTest extends TestSpringBootInformation {
         StringEntity requestEntity1 = new StringEntity(String.valueOf(json1), ContentType.APPLICATION_JSON);
 
         // Creates the request
-        HttpPut request1 = new HttpPut("http://localhost:" + port + "/host/hub");
+        HttpPut request1 = new HttpPut("http://localhost:" + port + "/v2/host/hub");
         // set requestEntity to the put request
         request1.setEntity(requestEntity1);
         // Header

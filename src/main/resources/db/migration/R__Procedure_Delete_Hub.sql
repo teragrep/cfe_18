@@ -59,6 +59,7 @@ BEGIN
     END IF;
 
     -- check if there are hosts using the hub before deleting
+    -- Without this check all the hosts connected to hub are deleted. This is due to host_type_cfe delete on cascade hosts.
     IF ((SELECT COUNT(htc.host_id)
          FROM cfe_00.host_type_cfe htc
          WHERE htc.hub_id = input_hub_id
@@ -67,8 +68,7 @@ BEGIN
                                     INNER JOIN hubs h2 ON h.id = h2.host_id
                            WHERE h2.id = input_hub_id)) > 0) THEN
         SELECT JSON_OBJECT('id', input_hub_id, 'message', 'Hosts use the hub') INTO @ha;
-        -- Signals constraint error since schema design is reversed and allows deleting hub that hosts rely on.
-        -- Should maybe rework schema on this part since it hides flawed design.
+        -- Signal user error due to user not removing hosts from Hub before deleting.
         SIGNAL SQLSTATE '23000' SET MESSAGE_TEXT = @ha;
     END IF;
     -- select the host id before deleting hub since it's not accessible later
