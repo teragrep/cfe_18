@@ -76,7 +76,7 @@ public class TokenTest extends TestSpringBootInformation {
     public void testToken() throws IOException {
 
         // Given
-        HttpUriRequest request = new HttpGet("http://localhost:" + port + "/capture/file/jwt");
+        HttpUriRequest request = new HttpGet("http://localhost:" + port + "/v2/captures/definitions/files/jwt");
         request.setHeader("Authorization", "Bearer " + token);
         // When
 
@@ -96,7 +96,7 @@ public class TokenTest extends TestSpringBootInformation {
     public void testInvalidToken() throws IOException {
 
         // Given
-        HttpUriRequest request2 = new HttpGet("http://localhost:" + port + "/capture/file/jwt");
+        HttpUriRequest request2 = new HttpGet("http://localhost:" + port + "/v2/captures/definitions/files/jwt");
         request2.setHeader("Authorization", "Bearer noToken");
 
         // When
@@ -112,7 +112,7 @@ public class TokenTest extends TestSpringBootInformation {
     public void testNoToken() throws IOException {
 
         // Given
-        HttpUriRequest request2 = new HttpGet("http://localhost:" + port + "/capture/file/jwt");
+        HttpUriRequest request2 = new HttpGet("http://localhost:" + port + "/v2/captures/definitions/files/jwt");
 
         // When
 

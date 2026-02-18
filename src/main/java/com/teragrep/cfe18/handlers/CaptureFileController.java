@@ -71,7 +71,7 @@ import java.sql.SQLException;
 import java.util.List;
 
 @RestController
-@RequestMapping(path = "/capture/file")
+@RequestMapping(path = "/v2/captures/definitions/files")
 @SecurityRequirement(name = "api")
 public class CaptureFileController {
 

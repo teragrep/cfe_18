@@ -228,7 +228,7 @@ public final class CaptureFileControllerTest extends TestSpringBootInformation {
         StringEntity requestEntity3 = new StringEntity(String.valueOf(jsonFile), ContentType.APPLICATION_JSON);
 
         // Creates the request
-        HttpPut request3 = new HttpPut("http://localhost:" + port + "/capture/file");
+        HttpPut request3 = new HttpPut("http://localhost:" + port + "/v2/captures/definitions/files");
         // set requestEntity to the put request
         request3.setEntity(requestEntity3);
         // Header
@@ -278,7 +278,7 @@ public final class CaptureFileControllerTest extends TestSpringBootInformation {
         String json = gson.toJson(captureFile);
 
         // Asserting get request                                            // cfe id
-        HttpGet requestGet = new HttpGet("http://localhost:" + port + "/capture/file/1");
+        HttpGet requestGet = new HttpGet("http://localhost:" + port + "/v2/captures/definitions/files/1");
 
         requestGet.setHeader("Authorization", "Bearer " + token);
 
@@ -318,7 +318,7 @@ public final class CaptureFileControllerTest extends TestSpringBootInformation {
         String expectedJson = gson.toJson(expected);
 
         // Asserting get request
-        HttpGet requestGet = new HttpGet("http://localhost:" + port + "/capture/file");
+        HttpGet requestGet = new HttpGet("http://localhost:" + port + "/v2/captures/definitions/files");
 
         requestGet.setHeader("Authorization", "Bearer " + token);
 
@@ -336,7 +336,7 @@ public final class CaptureFileControllerTest extends TestSpringBootInformation {
     @Test
     @Order(4)
     public void testDeleteNonExistentCapture() throws Exception {
-        HttpDelete delete = new HttpDelete("http://localhost:" + port + "/capture/file/124124");
+        HttpDelete delete = new HttpDelete("http://localhost:" + port + "/v2/captures/definitions/files/124124");
 
         // Header
         delete.setHeader("Authorization", "Bearer " + token);
@@ -363,7 +363,7 @@ public final class CaptureFileControllerTest extends TestSpringBootInformation {
     @Test
     @Order(5)
     public void testDeleteCapture() throws Exception {
-        HttpDelete delete = new HttpDelete("http://localhost:" + port + "/capture/file/1");
+        HttpDelete delete = new HttpDelete("http://localhost:" + port + "/v2/captures/definitions/files/1");
 
         // Header
         delete.setHeader("Authorization", "Bearer " + token);
