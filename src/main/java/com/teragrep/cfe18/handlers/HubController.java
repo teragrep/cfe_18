@@ -68,7 +68,7 @@ import java.sql.SQLException;
 import java.util.List;
 
 @RestController
-@RequestMapping(path = "host/hub")
+@RequestMapping(path = "v2/host/hub")
 @SecurityRequirement(name = "api")
 public class HubController {
 
@@ -83,28 +83,45 @@ public class HubController {
     @Autowired
     HubMapper hubMapper;
 
-    @RequestMapping(path = "", method = RequestMethod.PUT, produces = "application/json")
+    @RequestMapping(
+            path = "",
+            method = RequestMethod.PUT,
+            produces = "application/json"
+    )
     @Operation(summary = "Create new hub")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "201", description = "New hub created",
-                    content = {@Content(mediaType = "application/json",
-                            schema = @Schema(implementation = Hub.class))}),
-            @ApiResponse(responseCode = "409", description = "ID,MD5 or fqhost already exists",
-                    content = @Content),
-            @ApiResponse(responseCode = "400", description = "Internal server error, contact admin", content = @Content)})
+            @ApiResponse(
+                    responseCode = "201",
+                    description = "New hub created",
+                    content = {
+                            @Content(
+                                    mediaType = "application/json",
+                                    schema = @Schema(implementation = Hub.class)
+                            )
+                    }
+            ),
+            @ApiResponse(
+                    responseCode = "409",
+                    description = "ID,MD5 or fqhost already exists",
+                    content = @Content
+            ),
+            @ApiResponse(
+                    responseCode = "400",
+                    description = "Internal server error, contact admin",
+                    content = @Content
+            )
+    })
     public ResponseEntity<String> create(@RequestBody Hub newHub) {
         LOGGER.info("About to insert <[{}]>", newHub);
         try {
-            Hub h = hubMapper.create(
-                    newHub.getFqHost(),
-                    newHub.getMd5(),
-                    newHub.getIp());
+            Hub h = hubMapper.create(newHub.getFqHost(), newHub.getMd5(), newHub.getIp());
             LOGGER.debug("Values returned <[{}]>", h);
             JSONObject jsonObject = new JSONObject();
             jsonObject.put("id", h.getId());
             jsonObject.put("message", "New hub created");
             return new ResponseEntity<>(jsonObject.toString(), HttpStatus.CREATED);
-        } catch (RuntimeException ex) {
+        }
+        catch (RuntimeException ex) {
             LOGGER.error(ex.getMessage());
             JSONObject jsonErr = new JSONObject();
             jsonErr.put("id", newHub.getId());
@@ -123,21 +140,41 @@ public class HubController {
         }
     }
 
-    @RequestMapping(path = "/{id}", method = RequestMethod.GET, produces = "application/json")
+    @RequestMapping(
+            path = "/{id}",
+            method = RequestMethod.GET,
+            produces = "application/json"
+    )
     @Operation(summary = "Fetch hub")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Hub retrieved",
-                    content = {@Content(mediaType = "application/json",
-                            schema = @Schema(implementation = Hub.class))}),
-            @ApiResponse(responseCode = "404", description = "Hub does not exist with the given ID",
-                    content = @Content),
-            @ApiResponse(responseCode = "400", description = "Internal server error, contact admin", content = @Content)})
-    public ResponseEntity<?> get(@PathVariable("id") int id, @RequestParam(required = false) Integer version) {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Hub retrieved",
+                    content = {
+                            @Content(
+                                    mediaType = "application/json",
+                                    schema = @Schema(implementation = Hub.class)
+                            )
+                    }
+            ),
+            @ApiResponse(
+                    responseCode = "404",
+                    description = "Hub does not exist with the given ID",
+                    content = @Content
+            ),
+            @ApiResponse(
+                    responseCode = "400",
+                    description = "Internal server error, contact admin",
+                    content = @Content
+            )
+    })
+    public ResponseEntity<String> get(@PathVariable("id") int id, @RequestParam(required = false) Integer version) {
         LOGGER.info("About to fetch <[{}]>", id);
         try {
             Hub h = hubMapper.get(id, version);
-            return new ResponseEntity<>(h, HttpStatus.OK);
-        } catch (RuntimeException ex) {
+            return new ResponseEntity<>(h.toString(), HttpStatus.OK);
+        }
+        catch (RuntimeException ex) {
             LOGGER.error(ex.getMessage());
             JSONObject jsonErr = new JSONObject();
             jsonErr.put("id", id);
@@ -156,27 +193,64 @@ public class HubController {
         }
     }
 
-    @RequestMapping(path = "", method = RequestMethod.GET, produces = "application/json")
-    @Operation(summary = "Fetch all hubs", description = "Will return empty list if there are no hubs to fetch")
+    @RequestMapping(
+            path = "",
+            method = RequestMethod.GET,
+            produces = "application/json"
+    )
+    @Operation(
+            summary = "Fetch all hubs",
+            description = "Will return empty list if there are no hubs to fetch"
+    )
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Successfully retrieved",
-                    content = {@Content(mediaType = "application/json",
-                            schema = @Schema(implementation = Hub.class))})})
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Successfully retrieved",
+                    content = {
+                            @Content(
+                                    mediaType = "application/json",
+                                    schema = @Schema(implementation = Hub.class)
+                            )
+                    }
+            )
+    })
     public List<Hub> getAll(@RequestParam(required = false) Integer version) {
         return hubMapper.getAll(version);
     }
 
-    @RequestMapping(path = "/{id}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(
+            path = "/{id}",
+            method = RequestMethod.DELETE,
+            produces = MediaType.APPLICATION_JSON_VALUE
+    )
     @Operation(summary = "Delete hub")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Hub deleted",
-                    content = {@Content(mediaType = "application/json",
-                            schema = @Schema(implementation = Hub.class))}),
-            @ApiResponse(responseCode = "404", description = "Hub does not exist",
-                    content = @Content),
-            @ApiResponse(responseCode = "409", description = "Hub is being used",
-                    content = @Content),
-            @ApiResponse(responseCode = "400", description = "Internal server error, contact admin", content = @Content)})
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Hub deleted",
+                    content = {
+                            @Content(
+                                    mediaType = "application/json",
+                                    schema = @Schema(implementation = Hub.class)
+                            )
+                    }
+            ),
+            @ApiResponse(
+                    responseCode = "404",
+                    description = "Hub does not exist",
+                    content = @Content
+            ),
+            @ApiResponse(
+                    responseCode = "409",
+                    description = "Hub is being used",
+                    content = @Content
+            ),
+            @ApiResponse(
+                    responseCode = "400",
+                    description = "Internal server error, contact admin",
+                    content = @Content
+            )
+    })
     public ResponseEntity<String> delete(@PathVariable("id") int id) {
         LOGGER.info("Deleting Hub <[{}]>", id);
         try {
@@ -185,7 +259,8 @@ public class HubController {
             j.put("id", id);
             j.put("message", "Hub deleted");
             return new ResponseEntity<>(j.toString(), HttpStatus.OK);
-        } catch (RuntimeException ex) {
+        }
+        catch (RuntimeException ex) {
             LOGGER.error(ex.getMessage());
             JSONObject jsonErr = new JSONObject();
             jsonErr.put("id", id);
@@ -198,8 +273,9 @@ public class HubController {
                 if (state.equals("23000")) {
                     jsonErr.put("message", "Is in use");
                     return new ResponseEntity<>(jsonErr.toString(), HttpStatus.CONFLICT);
-                // 45000 = Custom error, row does not exist
-                } else if (state.equals("45000")) {
+                    // 45000 = Custom error, row does not exist
+                }
+                else if (state.equals("45000")) {
                     jsonErr.put("message", "Record does not exist");
                     return new ResponseEntity<>(jsonErr.toString(), HttpStatus.NOT_FOUND);
                 }
@@ -208,5 +284,3 @@ public class HubController {
         }
     }
 }
-
-
