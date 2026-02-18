@@ -58,36 +58,36 @@ BEGIN
          FROM location.host h
          WHERE h.MD5 = md5
            AND h.fqhost = fqhost
-           AND h.host_type = 'cfe') = 0) THEN
+           AND h.host_type = 'CFE') = 0) THEN
 
         INSERT INTO location.host(MD5, fqhost, host_type)
-        VALUES (md5, fqhost, 'cfe');
+        VALUES (md5, fqhost, 'CFE');
         SELECT LAST_INSERT_ID() INTO @hid;
     ELSE
-        SELECT id INTO @hid FROM location.host h WHERE h.MD5 = md5 AND h.fqhost = fqhost AND h.host_type = 'cfe';
+        SELECT id INTO @hid FROM location.host h WHERE h.MD5 = md5 AND h.fqhost = fqhost AND h.host_type = 'CFE';
     END IF;
 
     IF ((SELECT COUNT(h.host_id)
          FROM cfe_00.hubs h
          WHERE h.host_id = @hid
            AND h.ip = ip
-           AND h.host_type = 'cfe') = 0) THEN
+           AND h.host_type = 'CFE') = 0) THEN
 
         INSERT INTO cfe_00.hubs(host_id, ip, host_type)
-        VALUES (@hid, ip, 'cfe');
+        VALUES (@hid, ip, 'CFE');
         SELECT LAST_INSERT_ID() INTO @id;
     ELSE
-        SELECT id INTO @id FROM cfe_00.hubs h WHERE h.host_id = @hid AND h.ip = ip AND h.host_type = 'cfe';
+        SELECT id INTO @id FROM cfe_00.hubs h WHERE h.host_id = @hid AND h.ip = ip AND h.host_type = 'CFE';
     END IF;
 
     IF ((SELECT COUNT(host_id)
          FROM cfe_00.host_type_cfe htc
          WHERE htc.host_id = @hid
-           AND htc.host_type = 'cfe'
+           AND htc.host_type = 'CFE'
            AND htc.hub_id = @id) = 0) THEN
 
         INSERT INTO cfe_00.host_type_cfe(host_id, host_type, hub_id)
-        VALUES (@hid, 'cfe', @id);
+        VALUES (@hid, 'CFE', @id);
     END IF;
     COMMIT;
     SELECT @id AS id;

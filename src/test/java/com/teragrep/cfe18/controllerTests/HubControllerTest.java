@@ -90,19 +90,18 @@ public class HubControllerTest extends TestSpringBootInformation {
         String json2 = gson.toJson(hub2);
 
         // forms the json to requestEntity
-        StringEntity requestEntity2 = new StringEntity(
-                String.valueOf(json2),
-                ContentType.APPLICATION_JSON);
+        StringEntity requestEntity2 = new StringEntity(String.valueOf(json2), ContentType.APPLICATION_JSON);
 
         // Creates the request
-        HttpPut request2 = new HttpPut("http://localhost:" + port + "/host/hub");
+        HttpPut request2 = new HttpPut("http://localhost:" + port + "/v2/host/hub");
         // set requestEntity to the put request
         request2.setEntity(requestEntity2);
         // Header
         request2.setHeader("Authorization", "Bearer " + token);
 
         // Get the response from endpoint
-        HttpResponse httpResponse = Assertions.assertDoesNotThrow(() -> HttpClientBuilder.create().build().execute(request2));
+        HttpResponse httpResponse = Assertions
+                .assertDoesNotThrow(() -> HttpClientBuilder.create().build().execute(request2));
 
         // Get the entity from response
         HttpEntity entity = httpResponse.getEntity();
@@ -128,9 +127,7 @@ public class HubControllerTest extends TestSpringBootInformation {
         String json = gson.toJson(host);
 
         // forms the json to requestEntity
-        StringEntity requestEntity = new StringEntity(
-                String.valueOf(json),
-                ContentType.APPLICATION_JSON);
+        StringEntity requestEntity = new StringEntity(String.valueOf(json), ContentType.APPLICATION_JSON);
 
         // Creates the request
         HttpPut request = new HttpPut("http://localhost:" + port + "/host/file");
@@ -140,7 +137,8 @@ public class HubControllerTest extends TestSpringBootInformation {
         request.setHeader("Authorization", "Bearer " + token);
 
         // Get the response from endpoint
-        HttpResponse httpResponse2 = Assertions.assertDoesNotThrow(() -> HttpClientBuilder.create().build().execute(request));
+        HttpResponse httpResponse2 = Assertions
+                .assertDoesNotThrow(() -> HttpClientBuilder.create().build().execute(request));
 
         // Get the entity from response
         HttpEntity entity2 = httpResponse2.getEntity();
@@ -175,26 +173,24 @@ public class HubControllerTest extends TestSpringBootInformation {
         String json = gson.toJson(hub);
 
         // forms the json to requestEntity
-        StringEntity requestEntity = new StringEntity(
-                String.valueOf(json),
-                ContentType.APPLICATION_JSON);
+        StringEntity requestEntity = new StringEntity(String.valueOf(json), ContentType.APPLICATION_JSON);
 
         // Creates the request
-        HttpPut request = new HttpPut("http://localhost:" + port + "/host/hub");
+        HttpPut request = new HttpPut("http://localhost:" + port + "/v2/host/hub");
         // set requestEntity to the put request
         request.setEntity(requestEntity);
         // Header
         request.setHeader("Authorization", "Bearer " + token);
 
         // Get the response from endpoint
-        HttpResponse httpResponse = Assertions.assertDoesNotThrow(() -> HttpClientBuilder.create().build().execute(request));
+        HttpResponse httpResponse = Assertions
+                .assertDoesNotThrow(() -> HttpClientBuilder.create().build().execute(request));
 
         // Get the entity from response
         HttpEntity entity = httpResponse.getEntity();
 
         // Entity response string
         String responseString = Assertions.assertDoesNotThrow(() -> EntityUtils.toString(entity));
-
 
         // Parsing response as JSONObject
         JSONObject responseAsJson = Assertions.assertDoesNotThrow(() -> new JSONObject(responseString));
@@ -220,20 +216,19 @@ public class HubControllerTest extends TestSpringBootInformation {
         hub.setIp("hubip2");
         hub.setId(1);
 
-        String json = gson.toJson(hub);
-
         // Asserting get request                                        // request host_id as path variable
-        HttpGet requestGet = new HttpGet("http://localhost:" + port + "/host/hub/" + 1);
+        HttpGet requestGet = new HttpGet("http://localhost:" + port + "/v2/host/hub/" + 1);
 
         requestGet.setHeader("Authorization", "Bearer " + token);
 
-        HttpResponse responseGet = Assertions.assertDoesNotThrow(() -> HttpClientBuilder.create().build().execute(requestGet));
+        HttpResponse responseGet = Assertions
+                .assertDoesNotThrow(() -> HttpClientBuilder.create().build().execute(requestGet));
 
         HttpEntity entityGet = Assertions.assertDoesNotThrow(() -> responseGet.getEntity());
 
         String responseStringGet = Assertions.assertDoesNotThrow(() -> EntityUtils.toString(entityGet, "UTF-8"));
 
-        assertEquals(json, responseStringGet);
+        assertEquals(hub.toString(), responseStringGet);
         assertEquals(HttpStatus.SC_OK, responseGet.getStatusLine().getStatusCode());
     }
 
@@ -262,11 +257,12 @@ public class HubControllerTest extends TestSpringBootInformation {
         String json = gson.toJson(expected);
 
         // Asserting get request                                        // request host_id as path variable
-        HttpGet requestGet = new HttpGet("http://localhost:" + port + "/host/hub");
+        HttpGet requestGet = new HttpGet("http://localhost:" + port + "/v2/host/hub");
 
         requestGet.setHeader("Authorization", "Bearer " + token);
 
-        HttpResponse responseGet = Assertions.assertDoesNotThrow(() -> HttpClientBuilder.create().build().execute(requestGet));
+        HttpResponse responseGet = Assertions
+                .assertDoesNotThrow(() -> HttpClientBuilder.create().build().execute(requestGet));
 
         HttpEntity entityGet = responseGet.getEntity();
 
@@ -281,12 +277,13 @@ public class HubControllerTest extends TestSpringBootInformation {
     public void testDeleteHubInUse() {
         // try to delete given hub when host is using the given hub
 
-        HttpDelete delete = new HttpDelete("http://localhost:" + port + "/host/hub/" + 1);
+        HttpDelete delete = new HttpDelete("http://localhost:" + port + "/v2/host/hub/" + 1);
 
         // Header
         delete.setHeader("Authorization", "Bearer " + token);
 
-        HttpResponse deleteResponse = Assertions.assertDoesNotThrow(() -> HttpClientBuilder.create().build().execute(delete));
+        HttpResponse deleteResponse = Assertions
+                .assertDoesNotThrow(() -> HttpClientBuilder.create().build().execute(delete));
 
         HttpEntity entityDelete = deleteResponse.getEntity();
 
@@ -307,12 +304,13 @@ public class HubControllerTest extends TestSpringBootInformation {
     @Test
     @Order(6)
     public void testDeleteNonExistentHub() {
-        HttpDelete delete = new HttpDelete("http://localhost:" + port + "/host/hub/" + 112412214);
+        HttpDelete delete = new HttpDelete("http://localhost:" + port + "/v2/host/hub/" + 112412214);
 
         // Header
         delete.setHeader("Authorization", "Bearer " + token);
 
-        HttpResponse deleteResponse = Assertions.assertDoesNotThrow(() -> HttpClientBuilder.create().build().execute(delete));
+        HttpResponse deleteResponse = Assertions
+                .assertDoesNotThrow(() -> HttpClientBuilder.create().build().execute(delete));
 
         HttpEntity entityDelete = deleteResponse.getEntity();
 
@@ -333,12 +331,13 @@ public class HubControllerTest extends TestSpringBootInformation {
     @Test
     @Order(7)
     public void testDeleteHub() {
-        HttpDelete delete = new HttpDelete("http://localhost:" + port + "/host/hub/" + 2);
+        HttpDelete delete = new HttpDelete("http://localhost:" + port + "/v2/host/hub/" + 2);
 
         // Header
         delete.setHeader("Authorization", "Bearer " + token);
 
-        HttpResponse deleteResponse = Assertions.assertDoesNotThrow(() -> HttpClientBuilder.create().build().execute(delete));
+        HttpResponse deleteResponse = Assertions
+                .assertDoesNotThrow(() -> HttpClientBuilder.create().build().execute(delete));
 
         HttpEntity entityDelete = deleteResponse.getEntity();
 
@@ -358,4 +357,3 @@ public class HubControllerTest extends TestSpringBootInformation {
     }
 
 }
-

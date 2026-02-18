@@ -51,7 +51,7 @@ create table hubs
     id        int auto_increment primary key,
     host_id   int unique   not null,
     ip        varchar(255) not null,
-    host_type varchar(20)  not null check (host_type = 'cfe'),
+    host_type varchar(20)  not null check (host_type = 'CFE'),
     constraint ´HubIdToHost´ foreign key (host_id, host_type) references location.host (id, host_type),
     start_trxid BIGINT UNSIGNED GENERATED ALWAYS AS ROW START INVISIBLE,
     end_trxid BIGINT UNSIGNED GENERATED ALWAYS AS ROW END INVISIBLE,
@@ -93,7 +93,7 @@ create table bundles
 create table host_type_cfe
 (
     host_id   int         not null,
-    host_type varchar(20) not null check (host_type = 'cfe'),
+    host_type varchar(20) not null check (host_type = 'CFE'),
     hub_id    int         not null,
     constraint hostTypeCfe foreign key (host_id, host_type) references location.host (id, host_type) on delete cascade,
     constraint hub_id_TO_hubs foreign key (hub_id) references hubs (id),
