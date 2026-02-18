@@ -101,12 +101,7 @@ public class Hub {
 
     @Override
     public String toString() {
-        return "Hub{" +
-                "id=" + id +
-                ", hostId=" + hostId +
-                ", fqHost='" + fqHost + '\'' +
-                ", md5='" + md5 + '\'' +
-                ", ip='" + ip + '\'' +
-                '}';
+        return "Hub{" + "id=" + id + ", hostId=" + hostId + ", fqHost='" + fqHost + '\'' + ", md5='" + md5 + '\''
+                + ", ip='" + ip + '\'' + '}';
     }
 }
