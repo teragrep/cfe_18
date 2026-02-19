@@ -58,8 +58,8 @@ CREATE TABLE flow.cfe_04_sourcetype_x_transform
     cfe_04_id            INT NOT NULL,
     cfe_04_sourcetype_id INT NOT NULL,
     cfe_04_transform_id  INT NOT NULL,
-    PRIMARY KEY (cfe_04_id, cfe_04_sourcetype_id ,  cfe_04_transform_id),
-    CONSTRAINT FOREIGN KEY (cfe_04_id,cfe_04_transform_id) REFERENCES flow.cfe_04_transforms (cfe_04_id,id),
+    PRIMARY KEY (cfe_04_id, cfe_04_sourcetype_id, cfe_04_transform_id),
+    CONSTRAINT FOREIGN KEY (cfe_04_id, cfe_04_transform_id) REFERENCES flow.cfe_04_transforms (cfe_04_id, id),
     CONSTRAINT FOREIGN KEY (cfe_04_id, cfe_04_sourcetype_id) REFERENCES flow.cfe_04_sourcetypes (cfe_04_id, capture_sourcetype_id),
     start_trxid          BIGINT UNSIGNED GENERATED ALWAYS AS ROW START INVISIBLE,
     end_trxid            BIGINT UNSIGNED GENERATED ALWAYS AS ROW END INVISIBLE,
@@ -82,10 +82,10 @@ CREATE TABLE flow.cfe_04_override
 
 CREATE TABLE flow.cfe_04_fields
 (
-    id          INT PRIMARY KEY AUTO_INCREMENT, -- separate primary key allowing multiple fields per cfe_04
+    id          INT PRIMARY KEY AUTO_INCREMENT,
     cfe_04_id   INT          NOT NULL,
-    name        VARCHAR(255) NOT NULL,
-    UNIQUE (name, cfe_04_id),
+    fields_name VARCHAR(255) NOT NULL,
+    UNIQUE (cfe_04_id, fields_name),
     CONSTRAINT FOREIGN KEY (cfe_04_id) REFERENCES flow.cfe_04 (id),
     start_trxid BIGINT UNSIGNED GENERATED ALWAYS AS ROW START INVISIBLE,
     end_trxid   BIGINT UNSIGNED GENERATED ALWAYS AS ROW END INVISIBLE,
@@ -94,7 +94,9 @@ CREATE TABLE flow.cfe_04_fields
 
 CREATE TABLE flow.cfe_04_global
 (
-    cfe_04_id         INT PRIMARY KEY, -- not auto-increment because it has to match cfe_04 ID
+    id                INT PRIMARY KEY AUTO_INCREMENT,
+    cfe_04_id         INT          NOT NULL,
+    truncate          VARCHAR(255) NOT NULL,
     last_chance_index VARCHAR(255) NOT NULL,
     max_days_ago      VARCHAR(255) NOT NULL,
     CONSTRAINT FOREIGN KEY (cfe_04_id) REFERENCES flow.cfe_04 (id),
@@ -102,8 +104,6 @@ CREATE TABLE flow.cfe_04_global
     end_trxid         BIGINT UNSIGNED GENERATED ALWAYS AS ROW END INVISIBLE,
     PERIOD FOR SYSTEM_TIME(start_trxid, end_trxid)
 ) WITH SYSTEM VERSIONING;
-
-
 
 CREATE TABLE capture_def_x_flow_storages
 (
