@@ -229,7 +229,7 @@ Private Attributes</h2></td></tr>
 
 <p class="definition">Definition at line <a class="el" href="CaptureRelpControllerTest_8java_source.html#l00312">312</a> of file <a class="el" href="CaptureRelpControllerTest_8java_source.html">CaptureRelpControllerTest.java</a>.</p>
 <div class="fragment"><div class="line"><span class="lineno">  312</span>                                                     {</div>
-<div class="line"><span class="lineno">  313</span>        HttpDelete delete = <span class="keyword">new</span> HttpDelete(<span class="stringliteral">&quot;http://localhost:&quot;</span> + <a class="code hl_variable" href="classcom_1_1teragrep_1_1cfe18_1_1controllerTests_1_1CaptureRelpControllerTest.html#ab1519db1e284b60d33b406df34312652">port</a> + <span class="stringliteral">&quot;/capture/relp/1&quot;</span>);</div>
+<div class="line"><span class="lineno">  313</span>        HttpDelete delete = <span class="keyword">new</span> HttpDelete(<span class="stringliteral">&quot;http://localhost:&quot;</span> + <a class="code hl_variable" href="classcom_1_1teragrep_1_1cfe18_1_1controllerTests_1_1CaptureRelpControllerTest.html#ab1519db1e284b60d33b406df34312652">port</a> + <span class="stringliteral">&quot;/v2/captures/definitions/relp-streams/1&quot;</span>);</div>
 <div class="line"><span class="lineno">  314</span> </div>
 <div class="line"><span class="lineno">  315</span>        <span class="comment">// Header</span></div>
 <div class="line"><span class="lineno">  316</span>        delete.setHeader(<span class="stringliteral">&quot;Authorization&quot;</span>, <span class="stringliteral">&quot;Bearer &quot;</span> + token);</div>
@@ -272,7 +272,7 @@ Private Attributes</h2></td></tr>
 
 <p class="definition">Definition at line <a class="el" href="CaptureRelpControllerTest_8java_source.html#l00285">285</a> of file <a class="el" href="CaptureRelpControllerTest_8java_source.html">CaptureRelpControllerTest.java</a>.</p>
 <div class="fragment"><div class="line"><span class="lineno">  285</span>                                                                {</div>
-<div class="line"><span class="lineno">  286</span>        HttpDelete delete = <span class="keyword">new</span> HttpDelete(<span class="stringliteral">&quot;http://localhost:&quot;</span> + <a class="code hl_variable" href="classcom_1_1teragrep_1_1cfe18_1_1controllerTests_1_1CaptureRelpControllerTest.html#ab1519db1e284b60d33b406df34312652">port</a> + <span class="stringliteral">&quot;/capture/relp/124124&quot;</span>);</div>
+<div class="line"><span class="lineno">  286</span>        HttpDelete delete = <span class="keyword">new</span> HttpDelete(<span class="stringliteral">&quot;http://localhost:&quot;</span> + <a class="code hl_variable" href="classcom_1_1teragrep_1_1cfe18_1_1controllerTests_1_1CaptureRelpControllerTest.html#ab1519db1e284b60d33b406df34312652">port</a> + <span class="stringliteral">&quot;/v2/captures/definitions/relp-streams/124124&quot;</span>);</div>
 <div class="line"><span class="lineno">  287</span> </div>
 <div class="line"><span class="lineno">  288</span>        <span class="comment">// Header</span></div>
 <div class="line"><span class="lineno">  289</span>        delete.setHeader(<span class="stringliteral">&quot;Authorization&quot;</span>, <span class="stringliteral">&quot;Bearer &quot;</span> + token);</div>
@@ -337,7 +337,7 @@ Private Attributes</h2></td></tr>
 <div class="line"><span class="lineno">  265</span>        <span class="comment">// Test Get ALL</span></div>
 <div class="line"><span class="lineno">  266</span> </div>
 <div class="line"><span class="lineno">  267</span>        <span class="comment">// Asserting get request</span></div>
-<div class="line"><span class="lineno">  268</span>        HttpGet requestGet = <span class="keyword">new</span> HttpGet(<span class="stringliteral">&quot;http://localhost:&quot;</span> + <a class="code hl_variable" href="classcom_1_1teragrep_1_1cfe18_1_1controllerTests_1_1CaptureRelpControllerTest.html#ab1519db1e284b60d33b406df34312652">port</a> + <span class="stringliteral">&quot;/capture/relp&quot;</span>);</div>
+<div class="line"><span class="lineno">  268</span>        HttpGet requestGet = <span class="keyword">new</span> HttpGet(<span class="stringliteral">&quot;http://localhost:&quot;</span> + <a class="code hl_variable" href="classcom_1_1teragrep_1_1cfe18_1_1controllerTests_1_1CaptureRelpControllerTest.html#ab1519db1e284b60d33b406df34312652">port</a> + <span class="stringliteral">&quot;/v2/captures/definitions/relp-streams&quot;</span>);</div>
 <div class="line"><span class="lineno">  269</span> </div>
 <div class="line"><span class="lineno">  270</span>        requestGet.setHeader(<span class="stringliteral">&quot;Authorization&quot;</span>, <span class="stringliteral">&quot;Bearer &quot;</span> + token);</div>
 <div class="line"><span class="lineno">  271</span> </div>
@@ -386,7 +386,7 @@ Private Attributes</h2></td></tr>
 <div class="line"><span class="lineno">  226</span>        String json = gson.toJson(captureRelp2);</div>
 <div class="line"><span class="lineno">  227</span> </div>
 <div class="line"><span class="lineno">  228</span>        <span class="comment">// Asserting get request                                            // relp id</span></div>
-<div class="line"><span class="lineno">  229</span>        HttpGet requestGet = <span class="keyword">new</span> HttpGet(<span class="stringliteral">&quot;http://localhost:&quot;</span> + <a class="code hl_variable" href="classcom_1_1teragrep_1_1cfe18_1_1controllerTests_1_1CaptureRelpControllerTest.html#ab1519db1e284b60d33b406df34312652">port</a> + <span class="stringliteral">&quot;/capture/relp/1&quot;</span>);</div>
+<div class="line"><span class="lineno">  229</span>        HttpGet requestGet = <span class="keyword">new</span> HttpGet(<span class="stringliteral">&quot;http://localhost:&quot;</span> + <a class="code hl_variable" href="classcom_1_1teragrep_1_1cfe18_1_1controllerTests_1_1CaptureRelpControllerTest.html#ab1519db1e284b60d33b406df34312652">port</a> + <span class="stringliteral">&quot;/v2/captures/definitions/relp-streams/1&quot;</span>);</div>
 <div class="line"><span class="lineno">  230</span> </div>
 <div class="line"><span class="lineno">  231</span>        requestGet.setHeader(<span class="stringliteral">&quot;Authorization&quot;</span>, <span class="stringliteral">&quot;Bearer &quot;</span> + token);</div>
 <div class="line"><span class="lineno">  232</span> </div>
@@ -435,7 +435,7 @@ Private Attributes</h2></td></tr>
 <div class="line"><span class="lineno">  179</span>        StringEntity requestEntity3 = <span class="keyword">new</span> StringEntity(String.valueOf(jsonFile), ContentType.APPLICATION_JSON);</div>
 <div class="line"><span class="lineno">  180</span> </div>
 <div class="line"><span class="lineno">  181</span>        <span class="comment">// Creates the request</span></div>
-<div class="line"><span class="lineno">  182</span>        HttpPut request3 = <span class="keyword">new</span> HttpPut(<span class="stringliteral">&quot;http://localhost:&quot;</span> + <a class="code hl_variable" href="classcom_1_1teragrep_1_1cfe18_1_1controllerTests_1_1CaptureRelpControllerTest.html#ab1519db1e284b60d33b406df34312652">port</a> + <span class="stringliteral">&quot;/capture/relp&quot;</span>);</div>
+<div class="line"><span class="lineno">  182</span>        HttpPut request3 = <span class="keyword">new</span> HttpPut(<span class="stringliteral">&quot;http://localhost:&quot;</span> + <a class="code hl_variable" href="classcom_1_1teragrep_1_1cfe18_1_1controllerTests_1_1CaptureRelpControllerTest.html#ab1519db1e284b60d33b406df34312652">port</a> + <span class="stringliteral">&quot;/v2/captures/definitions/relp-streams&quot;</span>);</div>
 <div class="line"><span class="lineno">  183</span>        <span class="comment">// set requestEntity to the put request</span></div>
 <div class="line"><span class="lineno">  184</span>        request3.setEntity(requestEntity3);</div>
 <div class="line"><span class="lineno">  185</span>        <span class="comment">// Header</span></div>

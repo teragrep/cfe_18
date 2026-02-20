@@ -130,7 +130,7 @@ Private Attributes</h2></td></tr>
 
 <p class="definition">Definition at line <a class="el" href="CaptureFileControllerTest_8java_source.html#l00365">365</a> of file <a class="el" href="CaptureFileControllerTest_8java_source.html">CaptureFileControllerTest.java</a>.</p>
 <div class="fragment"><div class="line"><span class="lineno">  365</span>                                                     {</div>
-<div class="line"><span class="lineno">  366</span>        HttpDelete delete = <span class="keyword">new</span> HttpDelete(<span class="stringliteral">&quot;http://localhost:&quot;</span> + <a class="code hl_variable" href="classcom_1_1teragrep_1_1cfe18_1_1controllerTests_1_1CaptureFileControllerTest.html#a931a3b921371a243fc54a3dbc48fe9d9">port</a> + <span class="stringliteral">&quot;/capture/file/1&quot;</span>);</div>
+<div class="line"><span class="lineno">  366</span>        HttpDelete delete = <span class="keyword">new</span> HttpDelete(<span class="stringliteral">&quot;http://localhost:&quot;</span> + <a class="code hl_variable" href="classcom_1_1teragrep_1_1cfe18_1_1controllerTests_1_1CaptureFileControllerTest.html#a931a3b921371a243fc54a3dbc48fe9d9">port</a> + <span class="stringliteral">&quot;/v2/captures/definitions/files/1&quot;</span>);</div>
 <div class="line"><span class="lineno">  367</span> </div>
 <div class="line"><span class="lineno">  368</span>        <span class="comment">// Header</span></div>
 <div class="line"><span class="lineno">  369</span>        delete.setHeader(<span class="stringliteral">&quot;Authorization&quot;</span>, <span class="stringliteral">&quot;Bearer &quot;</span> + token);</div>
@@ -174,7 +174,7 @@ Private Attributes</h2></td></tr>
 
 <p class="definition">Definition at line <a class="el" href="CaptureFileControllerTest_8java_source.html#l00338">338</a> of file <a class="el" href="CaptureFileControllerTest_8java_source.html">CaptureFileControllerTest.java</a>.</p>
 <div class="fragment"><div class="line"><span class="lineno">  338</span>                                                                {</div>
-<div class="line"><span class="lineno">  339</span>        HttpDelete delete = <span class="keyword">new</span> HttpDelete(<span class="stringliteral">&quot;http://localhost:&quot;</span> + <a class="code hl_variable" href="classcom_1_1teragrep_1_1cfe18_1_1controllerTests_1_1CaptureFileControllerTest.html#a931a3b921371a243fc54a3dbc48fe9d9">port</a> + <span class="stringliteral">&quot;/capture/file/124124&quot;</span>);</div>
+<div class="line"><span class="lineno">  339</span>        HttpDelete delete = <span class="keyword">new</span> HttpDelete(<span class="stringliteral">&quot;http://localhost:&quot;</span> + <a class="code hl_variable" href="classcom_1_1teragrep_1_1cfe18_1_1controllerTests_1_1CaptureFileControllerTest.html#a931a3b921371a243fc54a3dbc48fe9d9">port</a> + <span class="stringliteral">&quot;/v2/captures/definitions/files/124124&quot;</span>);</div>
 <div class="line"><span class="lineno">  340</span> </div>
 <div class="line"><span class="lineno">  341</span>        <span class="comment">// Header</span></div>
 <div class="line"><span class="lineno">  342</span>        delete.setHeader(<span class="stringliteral">&quot;Authorization&quot;</span>, <span class="stringliteral">&quot;Bearer &quot;</span> + token);</div>
@@ -240,7 +240,7 @@ Private Attributes</h2></td></tr>
 <div class="line"><span class="lineno">  318</span>        String expectedJson = gson.toJson(expected);</div>
 <div class="line"><span class="lineno">  319</span> </div>
 <div class="line"><span class="lineno">  320</span>        <span class="comment">// Asserting get request</span></div>
-<div class="line"><span class="lineno">  321</span>        HttpGet requestGet = <span class="keyword">new</span> HttpGet(<span class="stringliteral">&quot;http://localhost:&quot;</span> + <a class="code hl_variable" href="classcom_1_1teragrep_1_1cfe18_1_1controllerTests_1_1CaptureFileControllerTest.html#a931a3b921371a243fc54a3dbc48fe9d9">port</a> + <span class="stringliteral">&quot;/capture/file&quot;</span>);</div>
+<div class="line"><span class="lineno">  321</span>        HttpGet requestGet = <span class="keyword">new</span> HttpGet(<span class="stringliteral">&quot;http://localhost:&quot;</span> + <a class="code hl_variable" href="classcom_1_1teragrep_1_1cfe18_1_1controllerTests_1_1CaptureFileControllerTest.html#a931a3b921371a243fc54a3dbc48fe9d9">port</a> + <span class="stringliteral">&quot;/v2/captures/definitions/files&quot;</span>);</div>
 <div class="line"><span class="lineno">  322</span> </div>
 <div class="line"><span class="lineno">  323</span>        requestGet.setHeader(<span class="stringliteral">&quot;Authorization&quot;</span>, <span class="stringliteral">&quot;Bearer &quot;</span> + token);</div>
 <div class="line"><span class="lineno">  324</span> </div>
@@ -292,7 +292,7 @@ Private Attributes</h2></td></tr>
 <div class="line"><span class="lineno">  278</span>        String json = gson.toJson(captureFile);</div>
 <div class="line"><span class="lineno">  279</span> </div>
 <div class="line"><span class="lineno">  280</span>        <span class="comment">// Asserting get request                                            // cfe id</span></div>
-<div class="line"><span class="lineno">  281</span>        HttpGet requestGet = <span class="keyword">new</span> HttpGet(<span class="stringliteral">&quot;http://localhost:&quot;</span> + <a class="code hl_variable" href="classcom_1_1teragrep_1_1cfe18_1_1controllerTests_1_1CaptureFileControllerTest.html#a931a3b921371a243fc54a3dbc48fe9d9">port</a> + <span class="stringliteral">&quot;/capture/file/1&quot;</span>);</div>
+<div class="line"><span class="lineno">  281</span>        HttpGet requestGet = <span class="keyword">new</span> HttpGet(<span class="stringliteral">&quot;http://localhost:&quot;</span> + <a class="code hl_variable" href="classcom_1_1teragrep_1_1cfe18_1_1controllerTests_1_1CaptureFileControllerTest.html#a931a3b921371a243fc54a3dbc48fe9d9">port</a> + <span class="stringliteral">&quot;/v2/captures/definitions/files/1&quot;</span>);</div>
 <div class="line"><span class="lineno">  282</span> </div>
 <div class="line"><span class="lineno">  283</span>        requestGet.setHeader(<span class="stringliteral">&quot;Authorization&quot;</span>, <span class="stringliteral">&quot;Bearer &quot;</span> + token);</div>
 <div class="line"><span class="lineno">  284</span> </div>
@@ -347,7 +347,7 @@ Private Attributes</h2></td></tr>
 <div class="line"><span class="lineno">  228</span>        StringEntity requestEntity3 = <span class="keyword">new</span> StringEntity(String.valueOf(jsonFile), ContentType.APPLICATION_JSON);</div>
 <div class="line"><span class="lineno">  229</span> </div>
 <div class="line"><span class="lineno">  230</span>        <span class="comment">// Creates the request</span></div>
-<div class="line"><span class="lineno">  231</span>        HttpPut request3 = <span class="keyword">new</span> HttpPut(<span class="stringliteral">&quot;http://localhost:&quot;</span> + <a class="code hl_variable" href="classcom_1_1teragrep_1_1cfe18_1_1controllerTests_1_1CaptureFileControllerTest.html#a931a3b921371a243fc54a3dbc48fe9d9">port</a> + <span class="stringliteral">&quot;/capture/file&quot;</span>);</div>
+<div class="line"><span class="lineno">  231</span>        HttpPut request3 = <span class="keyword">new</span> HttpPut(<span class="stringliteral">&quot;http://localhost:&quot;</span> + <a class="code hl_variable" href="classcom_1_1teragrep_1_1cfe18_1_1controllerTests_1_1CaptureFileControllerTest.html#a931a3b921371a243fc54a3dbc48fe9d9">port</a> + <span class="stringliteral">&quot;/v2/captures/definitions/files&quot;</span>);</div>
 <div class="line"><span class="lineno">  232</span>        <span class="comment">// set requestEntity to the put request</span></div>
 <div class="line"><span class="lineno">  233</span>        request3.setEntity(requestEntity3);</div>
 <div class="line"><span class="lineno">  234</span>        <span class="comment">// Header</span></div>

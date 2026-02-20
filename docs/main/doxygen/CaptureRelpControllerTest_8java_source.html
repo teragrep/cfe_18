@@ -266,7 +266,7 @@ $(document).ready(function() { init_codefold(0); });
 <div class="line"><a id="l00179" name="l00179"></a><span class="lineno">  179</span>        StringEntity requestEntity3 = <span class="keyword">new</span> StringEntity(String.valueOf(jsonFile), ContentType.APPLICATION_JSON);</div>
 <div class="line"><a id="l00180" name="l00180"></a><span class="lineno">  180</span> </div>
 <div class="line"><a id="l00181" name="l00181"></a><span class="lineno">  181</span>        <span class="comment">// Creates the request</span></div>
-<div class="line"><a id="l00182" name="l00182"></a><span class="lineno">  182</span>        HttpPut request3 = <span class="keyword">new</span> HttpPut(<span class="stringliteral">&quot;http://localhost:&quot;</span> + port + <span class="stringliteral">&quot;/capture/relp&quot;</span>);</div>
+<div class="line"><a id="l00182" name="l00182"></a><span class="lineno">  182</span>        HttpPut request3 = <span class="keyword">new</span> HttpPut(<span class="stringliteral">&quot;http://localhost:&quot;</span> + port + <span class="stringliteral">&quot;/v2/captures/definitions/relp-streams&quot;</span>);</div>
 <div class="line"><a id="l00183" name="l00183"></a><span class="lineno">  183</span>        <span class="comment">// set requestEntity to the put request</span></div>
 <div class="line"><a id="l00184" name="l00184"></a><span class="lineno">  184</span>        request3.setEntity(requestEntity3);</div>
 <div class="line"><a id="l00185" name="l00185"></a><span class="lineno">  185</span>        <span class="comment">// Header</span></div>
@@ -315,7 +315,7 @@ $(document).ready(function() { init_codefold(0); });
 <div class="line"><a id="l00226" name="l00226"></a><span class="lineno">  226</span>        String json = gson.toJson(captureRelp2);</div>
 <div class="line"><a id="l00227" name="l00227"></a><span class="lineno">  227</span> </div>
 <div class="line"><a id="l00228" name="l00228"></a><span class="lineno">  228</span>        <span class="comment">// Asserting get request                                            // relp id</span></div>
-<div class="line"><a id="l00229" name="l00229"></a><span class="lineno">  229</span>        HttpGet requestGet = <span class="keyword">new</span> HttpGet(<span class="stringliteral">&quot;http://localhost:&quot;</span> + port + <span class="stringliteral">&quot;/capture/relp/1&quot;</span>);</div>
+<div class="line"><a id="l00229" name="l00229"></a><span class="lineno">  229</span>        HttpGet requestGet = <span class="keyword">new</span> HttpGet(<span class="stringliteral">&quot;http://localhost:&quot;</span> + port + <span class="stringliteral">&quot;/v2/captures/definitions/relp-streams/1&quot;</span>);</div>
 <div class="line"><a id="l00230" name="l00230"></a><span class="lineno">  230</span> </div>
 <div class="line"><a id="l00231" name="l00231"></a><span class="lineno">  231</span>        requestGet.setHeader(<span class="stringliteral">&quot;Authorization&quot;</span>, <span class="stringliteral">&quot;Bearer &quot;</span> + token);</div>
 <div class="line"><a id="l00232" name="l00232"></a><span class="lineno">  232</span> </div>
@@ -356,7 +356,7 @@ $(document).ready(function() { init_codefold(0); });
 <div class="line"><a id="l00265" name="l00265"></a><span class="lineno">  265</span>        <span class="comment">// Test Get ALL</span></div>
 <div class="line"><a id="l00266" name="l00266"></a><span class="lineno">  266</span> </div>
 <div class="line"><a id="l00267" name="l00267"></a><span class="lineno">  267</span>        <span class="comment">// Asserting get request</span></div>
-<div class="line"><a id="l00268" name="l00268"></a><span class="lineno">  268</span>        HttpGet requestGet = <span class="keyword">new</span> HttpGet(<span class="stringliteral">&quot;http://localhost:&quot;</span> + port + <span class="stringliteral">&quot;/capture/relp&quot;</span>);</div>
+<div class="line"><a id="l00268" name="l00268"></a><span class="lineno">  268</span>        HttpGet requestGet = <span class="keyword">new</span> HttpGet(<span class="stringliteral">&quot;http://localhost:&quot;</span> + port + <span class="stringliteral">&quot;/v2/captures/definitions/relp-streams&quot;</span>);</div>
 <div class="line"><a id="l00269" name="l00269"></a><span class="lineno">  269</span> </div>
 <div class="line"><a id="l00270" name="l00270"></a><span class="lineno">  270</span>        requestGet.setHeader(<span class="stringliteral">&quot;Authorization&quot;</span>, <span class="stringliteral">&quot;Bearer &quot;</span> + token);</div>
 <div class="line"><a id="l00271" name="l00271"></a><span class="lineno">  271</span> </div>
@@ -376,7 +376,7 @@ $(document).ready(function() { init_codefold(0); });
 <div class="line"><a id="l00284" name="l00284"></a><span class="lineno">  284</span>    @Order(5)</div>
 <div class="foldopen" id="foldopen00285" data-start="{" data-end="}">
 <div class="line"><a id="l00285" name="l00285"></a><span class="lineno"><a class="line" href="classcom_1_1teragrep_1_1cfe18_1_1controllerTests_1_1CaptureRelpControllerTest.html#a62014f63899dcb0e7b82c032d82dd680">  285</a></span>    public <span class="keywordtype">void</span> testDeleteNonExistentCapture() throws Exception {</div>
-<div class="line"><a id="l00286" name="l00286"></a><span class="lineno">  286</span>        HttpDelete delete = <span class="keyword">new</span> HttpDelete(<span class="stringliteral">&quot;http://localhost:&quot;</span> + port + <span class="stringliteral">&quot;/capture/relp/124124&quot;</span>);</div>
+<div class="line"><a id="l00286" name="l00286"></a><span class="lineno">  286</span>        HttpDelete delete = <span class="keyword">new</span> HttpDelete(<span class="stringliteral">&quot;http://localhost:&quot;</span> + port + <span class="stringliteral">&quot;/v2/captures/definitions/relp-streams/124124&quot;</span>);</div>
 <div class="line"><a id="l00287" name="l00287"></a><span class="lineno">  287</span> </div>
 <div class="line"><a id="l00288" name="l00288"></a><span class="lineno">  288</span>        <span class="comment">// Header</span></div>
 <div class="line"><a id="l00289" name="l00289"></a><span class="lineno">  289</span>        delete.setHeader(<span class="stringliteral">&quot;Authorization&quot;</span>, <span class="stringliteral">&quot;Bearer &quot;</span> + token);</div>
@@ -405,7 +405,7 @@ $(document).ready(function() { init_codefold(0); });
 <div class="line"><a id="l00311" name="l00311"></a><span class="lineno">  311</span>    @Order(6)</div>
 <div class="foldopen" id="foldopen00312" data-start="{" data-end="}">
 <div class="line"><a id="l00312" name="l00312"></a><span class="lineno"><a class="line" href="classcom_1_1teragrep_1_1cfe18_1_1controllerTests_1_1CaptureRelpControllerTest.html#a38d8ddf0e9aeb88128862a6a07da6226">  312</a></span>    public <span class="keywordtype">void</span> testDeleteCapture() throws Exception {</div>
-<div class="line"><a id="l00313" name="l00313"></a><span class="lineno">  313</span>        HttpDelete delete = <span class="keyword">new</span> HttpDelete(<span class="stringliteral">&quot;http://localhost:&quot;</span> + port + <span class="stringliteral">&quot;/capture/relp/1&quot;</span>);</div>
+<div class="line"><a id="l00313" name="l00313"></a><span class="lineno">  313</span>        HttpDelete delete = <span class="keyword">new</span> HttpDelete(<span class="stringliteral">&quot;http://localhost:&quot;</span> + port + <span class="stringliteral">&quot;/v2/captures/definitions/relp-streams/1&quot;</span>);</div>
 <div class="line"><a id="l00314" name="l00314"></a><span class="lineno">  314</span> </div>
 <div class="line"><a id="l00315" name="l00315"></a><span class="lineno">  315</span>        <span class="comment">// Header</span></div>
 <div class="line"><a id="l00316" name="l00316"></a><span class="lineno">  316</span>        delete.setHeader(<span class="stringliteral">&quot;Authorization&quot;</span>, <span class="stringliteral">&quot;Bearer &quot;</span> + token);</div>

@@ -721,7 +721,7 @@ Private Attributes</h2></td></tr>
 <div class="line"><span class="lineno">  355</span>        StringEntity requestEntity3 = <span class="keyword">new</span> StringEntity(String.valueOf(jsonFile), ContentType.APPLICATION_JSON);</div>
 <div class="line"><span class="lineno">  356</span> </div>
 <div class="line"><span class="lineno">  357</span>        <span class="comment">// Creates the request</span></div>
-<div class="line"><span class="lineno">  358</span>        HttpPut request3 = <span class="keyword">new</span> HttpPut(<span class="stringliteral">&quot;http://localhost:&quot;</span> + <a class="code hl_variable" href="classcom_1_1teragrep_1_1cfe18_1_1controllerTests_1_1StorageControllerTest.html#ad03a4d33efe4e47e864c467c36ecbe19">port</a> + <span class="stringliteral">&quot;/capture/relp&quot;</span>);</div>
+<div class="line"><span class="lineno">  358</span>        HttpPut request3 = <span class="keyword">new</span> HttpPut(<span class="stringliteral">&quot;http://localhost:&quot;</span> + <a class="code hl_variable" href="classcom_1_1teragrep_1_1cfe18_1_1controllerTests_1_1StorageControllerTest.html#ad03a4d33efe4e47e864c467c36ecbe19">port</a> + <span class="stringliteral">&quot;/v2/captures/definitions/relp-streams&quot;</span>);</div>
 <div class="line"><span class="lineno">  359</span>        <span class="comment">// set requestEntity to the put request</span></div>
 <div class="line"><span class="lineno">  360</span>        request3.setEntity(requestEntity3);</div>
 <div class="line"><span class="lineno">  361</span>        <span class="comment">// Header</span></div>
