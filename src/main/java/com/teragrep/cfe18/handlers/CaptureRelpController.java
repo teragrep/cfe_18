@@ -70,7 +70,7 @@ import java.sql.SQLException;
 import java.util.List;
 
 @RestController
-@RequestMapping(path = "/capture/relp")
+@RequestMapping(path = "/v2/captures/definitions/relp-streams")
 @SecurityRequirement(name = "api")
 public class CaptureRelpController {
 

@@ -179,7 +179,7 @@ public class CaptureRelpControllerTest extends TestSpringBootInformation {
         StringEntity requestEntity3 = new StringEntity(String.valueOf(jsonFile), ContentType.APPLICATION_JSON);
 
         // Creates the request
-        HttpPut request3 = new HttpPut("http://localhost:" + port + "/capture/relp");
+        HttpPut request3 = new HttpPut("http://localhost:" + port + "/v2/captures/definitions/relp-streams");
         // set requestEntity to the put request
         request3.setEntity(requestEntity3);
         // Header
@@ -226,7 +226,7 @@ public class CaptureRelpControllerTest extends TestSpringBootInformation {
         String json = gson.toJson(captureRelp2);
 
         // Asserting get request                                            // relp id
-        HttpGet requestGet = new HttpGet("http://localhost:" + port + "/capture/relp/1");
+        HttpGet requestGet = new HttpGet("http://localhost:" + port + "/v2/captures/definitions/relp-streams/1");
 
         requestGet.setHeader("Authorization", "Bearer " + token);
 
@@ -265,7 +265,7 @@ public class CaptureRelpControllerTest extends TestSpringBootInformation {
         // Test Get ALL
 
         // Asserting get request
-        HttpGet requestGet = new HttpGet("http://localhost:" + port + "/capture/relp");
+        HttpGet requestGet = new HttpGet("http://localhost:" + port + "/v2/captures/definitions/relp-streams");
 
         requestGet.setHeader("Authorization", "Bearer " + token);
 
@@ -283,7 +283,7 @@ public class CaptureRelpControllerTest extends TestSpringBootInformation {
     @Test
     @Order(5)
     public void testDeleteNonExistentCapture() throws Exception {
-        HttpDelete delete = new HttpDelete("http://localhost:" + port + "/capture/relp/124124");
+        HttpDelete delete = new HttpDelete("http://localhost:" + port + "/v2/captures/definitions/relp-streams/124124");
 
         // Header
         delete.setHeader("Authorization", "Bearer " + token);
@@ -310,7 +310,7 @@ public class CaptureRelpControllerTest extends TestSpringBootInformation {
     @Test
     @Order(6)
     public void testDeleteCapture() throws Exception {
-        HttpDelete delete = new HttpDelete("http://localhost:" + port + "/capture/relp/1");
+        HttpDelete delete = new HttpDelete("http://localhost:" + port + "/v2/captures/definitions/relp-streams/1");
 
         // Header
         delete.setHeader("Authorization", "Bearer " + token);

@@ -355,7 +355,7 @@ public class StorageControllerTest extends TestSpringBootInformation {
         StringEntity requestEntity3 = new StringEntity(String.valueOf(jsonFile), ContentType.APPLICATION_JSON);
 
         // Creates the request
-        HttpPut request3 = new HttpPut("http://localhost:" + port + "/capture/relp");
+        HttpPut request3 = new HttpPut("http://localhost:" + port + "/v2/captures/definitions/relp-streams");
         // set requestEntity to the put request
         request3.setEntity(requestEntity3);
         // Header

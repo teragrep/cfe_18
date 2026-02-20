@@ -364,7 +364,7 @@ public class FileProcessingTypeControllerTest extends TestSpringBootInformation 
         StringEntity requestEntity3 = new StringEntity(String.valueOf(jsonFile), ContentType.APPLICATION_JSON);
 
         // Creates the request
-        HttpPut request3 = new HttpPut("http://localhost:" + port + "/capture/file");
+        HttpPut request3 = new HttpPut("http://localhost:" + port + "/v2/captures/definitions/files");
         // set requestEntity to the put request
         request3.setEntity(requestEntity3);
         // Header
