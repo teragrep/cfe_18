@@ -5,7 +5,8 @@
 <configuration>
     <mappers>
         <mapper resource="com/teragrep/cfe18/CaptureMapper.xml"/>
-        <mapper resource="com/teragrep/cfe18/CaptureGroupMapper.xml"/>
+        <mapper resource="com/teragrep/cfe18/CaptureGroupsMapper.xml"/>
+        <mapper resource="com/teragrep/cfe18/CaptureGroupLinkageMapper.xml"/>
         <mapper resource="com/teragrep/cfe18/FileCaptureMetaMapper.xml"/>
         <mapper resource="com/teragrep/cfe18/FlowMapper.xml"/>
         <mapper resource="com/teragrep/cfe18/SinkMapper.xml"/>

@@ -43,34 +43,34 @@
  * Teragrep, the applicable Commercial License may apply to this file if you as
  * a licensee so wish it.
  */
-use cfe_18;
+USE cfe_18;
 DELIMITER //
-create trigger if not exists cant_add_existing_tag_into_group
-    before insert
-    on cfe_18.capture_def_group_x_capture_def
-    for each row
-begin
-    declare truthvalue int;
-    select if(count(DISTINCT hgxh.host_id) = count(hgxh.host_id), true, false)
-    into truthvalue
-    from location.host_group_x_host hgxh
-             INNER JOIN (SELECT DISTINCT hgxldg.host_group_id
-                         from host_groups_x_capture_def_group hgxldg
-                                  INNER JOIN (SELECT DISTINCT(ldgxld.capture_def_group_id)
-                                              from capture_def_group_x_capture_def ldgxld
-                                                       INNER JOIN (select tag_id, capture_def_group_id
-                                                                    from capture_def_group_x_capture_def taqs_with_groups) ttdwst
-                                                                  ON ldgxld.capture_def_group_id = ttdwst.capture_def_group_id
-                                              where ldgxld.capture_def_group_id = new.capture_def_group_id
-                                                 or ldgxld.tag_id = new.tag_id) ttdwcg
-                                             ON ttdwcg.capture_def_group_id = hgxldg.capture_group_id) tthwcd
-                        ON hgxh.host_group_id = tthwcd.host_group_id;
-    if truthvalue = 0 then
-        signal sqlstate '17001' set message_text = 'DUPLICATE TAG ERROR';
-    end if;
-end;
+CREATE OR REPLACE PROCEDURE select_captures_in_group(capture_group_id INT, tx_id INT)
+BEGIN
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+        BEGIN
+            ROLLBACK;
+            RESIGNAL;
+        END;
+    START TRANSACTION;
+
+    IF (tx_id) IS NULL THEN
+        SET @time = (SELECT MAX(transaction_id) FROM mysql.transaction_registry);
+    ELSE
+        SET @time = tx_id;
+    END IF;
+
+    IF ((SELECT COUNT(cdgxcd.capture_def_group_id)
+         FROM capture_def_group_x_capture_def FOR SYSTEM_TIME AS OF TRANSACTION @time cdgxcd
+         WHERE cdgxcd.capture_def_group_id = capture_group_id) = 0) THEN
+        SELECT JSON_OBJECT('id', capture_group_id, 'message', 'Capture group not found') INTO @gc;
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = @gc;
+    END IF;
+
+    SELECT cdgxcd.capture_def_id AS capture_definition_id
+        FROM cfe_18.capture_def_group_x_capture_def FOR SYSTEM_TIME AS OF TRANSACTION @time cdgxcd
+    WHERE cdgxcd.capture_def_group_id = capture_group_id;
+    COMMIT;
+END;
 //
 DELIMITER ;
-
-
-
