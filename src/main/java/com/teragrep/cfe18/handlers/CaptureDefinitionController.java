@@ -158,9 +158,9 @@ public class CaptureDefinitionController {
             @RequestParam(
                     name = "filter.metadata.key",
                     required = false
-            ) String key,
+            ) String filterMetadataKey,
             @RequestParam(required = false) Integer version
     ) {
-        return captureDefinitionMapper.getAll(key, version);
+        return captureDefinitionMapper.getAll(filterMetadataKey, version);
     }
 }
