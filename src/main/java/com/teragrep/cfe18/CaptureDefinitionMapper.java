@@ -43,59 +43,18 @@
  * Teragrep, the applicable Commercial License may apply to this file if you as
  * a licensee so wish it.
  */
-package com.teragrep.cfe18.handlers.entities;
+package com.teragrep.cfe18;
 
-public final class CaptureDefinition {
+import com.teragrep.cfe18.handlers.entities.CaptureDefinition;
+import org.apache.ibatis.annotations.Mapper;
 
-    private int id;
-    private String tag;
-    private String sourcetype;
-    private String application;
-    private String captureIndex;
+import java.util.List;
 
-    public int getId() {
-        return id;
-    }
+@Mapper
+public interface CaptureDefinitionMapper {
 
-    public void setId(int id) {
-        this.id = id;
-    }
+    CaptureDefinition get(Integer id, Integer version);
 
-    public String getTag() {
-        return tag;
-    }
+    List<CaptureDefinition> getAll(String key, Integer version);
 
-    public void setTag(String tag) {
-        this.tag = tag;
-    }
-
-    public String getSourcetype() {
-        return sourcetype;
-    }
-
-    public void setSourcetype(String sourcetype) {
-        this.sourcetype = sourcetype;
-    }
-
-    public String getApplication() {
-        return application;
-    }
-
-    public void setApplication(String application) {
-        this.application = application;
-    }
-
-    public String getCaptureIndex() {
-        return captureIndex;
-    }
-
-    public void setCaptureIndex(String captureIndex) {
-        this.captureIndex = captureIndex;
-    }
-
-    @Override
-    public String toString() {
-        return "CaptureDefinition{" + "id=" + id + ", tag='" + tag + '\'' + ", sourcetype='" + sourcetype + '\''
-                + ", application='" + application + '\'' + ", captureIndex='" + captureIndex + '\'' + '}';
-    }
 }

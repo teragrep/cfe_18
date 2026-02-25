@@ -43,59 +43,38 @@
  * Teragrep, the applicable Commercial License may apply to this file if you as
  * a licensee so wish it.
  */
-package com.teragrep.cfe18.handlers.entities;
+USE cfe_18;
+DELIMITER //
+CREATE OR REPLACE PROCEDURE select_capture_definition(id INT, tx_id INT)
+BEGIN
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+        BEGIN
+            ROLLBACK;
+            RESIGNAL;
+        END;
+    IF (tx_id) IS NULL THEN
+        SET @time = (SELECT MAX(transaction_id) FROM mysql.transaction_registry);
+    ELSE
+        SET @time = tx_id;
+    END IF;
 
-public final class CaptureDefinition {
+    if ((select count(*) from cfe_18.capture_definition FOR SYSTEM_TIME AS OF TRANSACTION @time c where c.id = id) = 0) then
+        SELECT JSON_OBJECT('id', id, 'message', 'Capture not found') INTO @c;
+        signal sqlstate '45000' set message_text = @c;
+    end if;
+    SELECT c.id                 AS id,
+           t.tag                AS tag,
+           cs.captureSourceType AS sourcetype,
+           a.app                AS application,
+           ci.captureIndex      AS capture_index
+    FROM cfe_18.capture_definition c
+             INNER JOIN cfe_18.tags FOR SYSTEM_TIME AS OF TRANSACTION @time t ON t.id = c.tag_id
+             INNER JOIN cfe_18.captureSourcetype FOR SYSTEM_TIME AS OF TRANSACTION @time cs
+                        ON c.captureSourcetype_id = cs.id
+             INNER JOIN cfe_18.application FOR SYSTEM_TIME AS OF TRANSACTION @time a ON c.application_id = a.id
+             INNER JOIN cfe_18.captureIndex FOR SYSTEM_TIME AS OF TRANSACTION @time ci ON c.captureIndex_id = ci.id
+    where c.id = id;
 
-    private int id;
-    private String tag;
-    private String sourcetype;
-    private String application;
-    private String captureIndex;
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public String getTag() {
-        return tag;
-    }
-
-    public void setTag(String tag) {
-        this.tag = tag;
-    }
-
-    public String getSourcetype() {
-        return sourcetype;
-    }
-
-    public void setSourcetype(String sourcetype) {
-        this.sourcetype = sourcetype;
-    }
-
-    public String getApplication() {
-        return application;
-    }
-
-    public void setApplication(String application) {
-        this.application = application;
-    }
-
-    public String getCaptureIndex() {
-        return captureIndex;
-    }
-
-    public void setCaptureIndex(String captureIndex) {
-        this.captureIndex = captureIndex;
-    }
-
-    @Override
-    public String toString() {
-        return "CaptureDefinition{" + "id=" + id + ", tag='" + tag + '\'' + ", sourcetype='" + sourcetype + '\''
-                + ", application='" + application + '\'' + ", captureIndex='" + captureIndex + '\'' + '}';
-    }
-}
+END;
+//
+DELIMITER ;
