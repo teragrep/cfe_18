@@ -61,19 +61,19 @@ BEGIN
     select flow_id into @FlowId from cfe_18.capture_definition where id = capture_id;
 
     if (select id
-        from cfe_18.capture_def_x_flow_targets
+        from flow.capture_def_x_flow_storages
         where capture_def_id = capture_id
           and flow_id = @FlowId
-          and flow_target_id = storage_id) is null then
-        insert into cfe_18.capture_def_x_flow_targets(capture_def_id, flow_id, flow_target_id)
+          and flow_storage_id = storage_id) is null then
+        insert into flow.capture_def_x_flow_storages(capture_def_id, flow_id, flow_storage_id)
         VALUES (capture_id, @FlowId, storage_id);
         select last_insert_id() as last;
     else
         select id as last
-        from cfe_18.capture_def_x_flow_targets
+        from flow.capture_def_x_flow_storages
         where capture_def_id = capture_id
           and flow_id = @FlowId
-          and flow_target_id = storage_id;
+          and flow_storage_id = storage_id;
     end if;
     COMMIT;
 END;

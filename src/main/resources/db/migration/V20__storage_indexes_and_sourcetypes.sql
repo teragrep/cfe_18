@@ -1,7 +1,7 @@
-USE cfe_18;
+USE flow;
 
 
-CREATE TABLE cfe_18.storage_indexes
+CREATE TABLE flow.storage_indexes
 (
     storage_id INT,
     index_id   INT,
@@ -11,7 +11,7 @@ CREATE TABLE cfe_18.storage_indexes
 
 );
 
-CREATE TABLE cfe_18.storage_sourcetypes
+CREATE TABLE flow.storage_sourcetypes
 (
     storage_id    INT        NOT NULL,
     sourcetype_id INT        NOT NULL,
