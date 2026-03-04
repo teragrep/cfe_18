@@ -59,15 +59,16 @@ import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.util.EntityUtils;
 import org.json.JSONObject;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Order;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
 
 import java.util.ArrayList;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.equalTo;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -80,12 +81,9 @@ public class FileProcessingTypeControllerTest extends TestSpringBootInformation 
     @LocalServerPort
     private int port;
 
-    // Testing if processing type can be added via endpoint
-
     @Test
     @Order(1)
-    public void testFileProcessingType() throws Exception {
-
+    public void testFileProcessingType() {
         FileProcessing file = new FileProcessing();
         file.setInputtype(InputType.REGEX);
         file.setInputvalue("normalregex");
@@ -99,40 +97,40 @@ public class FileProcessingTypeControllerTest extends TestSpringBootInformation 
         StringEntity requestEntity = new StringEntity(String.valueOf(json), ContentType.APPLICATION_JSON);
 
         // Creates the request
-        HttpPut request = new HttpPut("http://localhost:" + port + "/file/capture/meta/rule");
+        HttpPut request = new HttpPut("http://localhost:" + port + "/v2/captures/definitions/files/types");
         // set requestEntity to the put request
         request.setEntity(requestEntity);
         // Header
         request.setHeader("Authorization", "Bearer " + token);
 
         // Get the response from endpoint
-        HttpResponse httpResponse = HttpClientBuilder.create().build().execute(request);
+        HttpResponse httpResponse = Assertions
+                .assertDoesNotThrow(() -> HttpClientBuilder.create().build().execute(request));
 
         // Get the entity from response
         HttpEntity entity = httpResponse.getEntity();
 
         // Entity response string
-        String responseString = EntityUtils.toString(entity);
+        String responseString = Assertions.assertDoesNotThrow(() -> EntityUtils.toString(entity));
 
-        // Parsin respponse as JSONObject
-        JSONObject responseAsJson = new JSONObject(responseString);
+        // Parsing response as JSONObject
+        JSONObject responseAsJson = Assertions.assertDoesNotThrow(() -> new JSONObject(responseString));
 
         // Creating expected message as JSON Object from the data that was sent towards endpoint
         String expected = "New file processing type created";
 
         // Creating string from Json that was given as a response
-        String actual = responseAsJson.get("message").toString();
+        String actual = Assertions.assertDoesNotThrow(() -> responseAsJson.get("message").toString());
 
         // Assertions
         assertEquals(expected, actual);
-        assertThat(httpResponse.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_CREATED));
+        assertEquals(HttpStatus.SC_CREATED, httpResponse.getStatusLine().getStatusCode());
 
     }
 
-    // When getting the values back it should have ID carried with the object created.
     @Test
     @Order(2)
-    public void testGetFileProcessingTypeByName() throws Exception {
+    public void testGetFileProcessingTypeById() {
 
         FileProcessing file2 = new FileProcessing();
         file2.setInputtype(InputType.REGEX);
@@ -141,19 +139,33 @@ public class FileProcessingTypeControllerTest extends TestSpringBootInformation 
         file2.setName("name1");
         file2.setTemplate("regex.moustache");
 
-        String json2 = gson.toJson(file2);
+        String jsonFirst = gson.toJson(file2);
 
         // forms the json to requestEntity
-        StringEntity requestEntity = new StringEntity(String.valueOf(json2), ContentType.APPLICATION_JSON);
+        StringEntity requestEntity = new StringEntity(String.valueOf(jsonFirst), ContentType.APPLICATION_JSON);
 
         // Creates the request
-        HttpPut request = new HttpPut("http://localhost:" + port + "/file/capture/meta/rule");
+        HttpPut request = new HttpPut("http://localhost:" + port + "/v2/captures/definitions/files/types");
         // set requestEntity to the put request
         request.setEntity(requestEntity);
         // Header
         request.setHeader("Authorization", "Bearer " + token);
 
-        HttpClientBuilder.create().build().execute(request);
+        HttpResponse responseFirst = Assertions
+                .assertDoesNotThrow(() -> HttpClientBuilder.create().build().execute(request));
+
+        HttpEntity firstEntity = responseFirst.getEntity();
+
+        String firstResponse = Assertions.assertDoesNotThrow(() -> EntityUtils.toString(firstEntity, "UTF-8"));
+
+        // Parsing response as JSONObject
+        JSONObject responseAsJson = Assertions.assertDoesNotThrow(() -> new JSONObject(firstResponse));
+
+        // Creating string from Json that was given as a response
+        String actual = Assertions.assertDoesNotThrow(() -> responseAsJson.get("message").toString());
+
+        // Creating expected message as JSON Object from the data that was sent towards endpoint
+        String expected = "New file processing type created";
 
         FileProcessing file = new FileProcessing();
         file.setInputtype(InputType.REGEX);
@@ -163,26 +175,30 @@ public class FileProcessingTypeControllerTest extends TestSpringBootInformation 
         file.setTemplate("regex.moustache");
         file.setId(1);
 
-        String json = gson.toJson(file);
+        String jsonSecond = gson.toJson(file);
 
         // Asserting get request
-        HttpGet requestGet = new HttpGet("http://localhost:" + port + "/file/capture/meta/" + 1);
+        HttpGet requestGet = new HttpGet("http://localhost:" + port + "/v2/captures/definitions/files/types/" + 1);
 
         requestGet.setHeader("Authorization", "Bearer " + token);
 
-        HttpResponse responseGet = HttpClientBuilder.create().build().execute(requestGet);
+        HttpResponse responseSecond = Assertions
+                .assertDoesNotThrow(() -> HttpClientBuilder.create().build().execute(requestGet));
 
-        HttpEntity entityGet = responseGet.getEntity();
+        HttpEntity entitySecond = responseSecond.getEntity();
 
-        String responseStringGet = EntityUtils.toString(entityGet, "UTF-8");
+        String secondResponse = Assertions.assertDoesNotThrow(() -> EntityUtils.toString(entitySecond, "UTF-8"));
 
-        assertEquals(json, responseStringGet);
-        assertThat(responseGet.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_OK));
+        assertEquals(expected, actual);
+        assertEquals(HttpStatus.SC_CREATED, responseFirst.getStatusLine().getStatusCode());
+
+        assertEquals(jsonSecond, secondResponse);
+        assertEquals(HttpStatus.SC_OK, responseSecond.getStatusLine().getStatusCode());
     }
 
     @Test
     @Order(3)
-    public void testGetAllFileProcessingTypesTypes() throws Exception {
+    public void testGetAllFileProcessingTypes() {
         GsonBuilder gson2 = new GsonBuilder().serializeNulls();
         Gson real = gson2.create();
         // Declare list of expected values
@@ -202,14 +218,14 @@ public class FileProcessingTypeControllerTest extends TestSpringBootInformation 
         StringEntity requestEntity = new StringEntity(String.valueOf(json1), ContentType.APPLICATION_JSON);
 
         // Creates the request
-        HttpPut request = new HttpPut("http://localhost:" + port + "/file/capture/meta/rule");
+        HttpPut request = new HttpPut("http://localhost:" + port + "/v2/captures/definitions/files/types");
         // set requestEntity to the put request
         request.setEntity(requestEntity);
         // Header
         request.setHeader("Authorization", "Bearer " + token);
 
         // Get the response from endpoint
-        HttpClientBuilder.create().build().execute(request);
+        Assertions.assertDoesNotThrow(() -> HttpClientBuilder.create().build().execute(request));
 
         FileProcessing file2 = new FileProcessing();
         file2.setId(1);
@@ -224,102 +240,115 @@ public class FileProcessingTypeControllerTest extends TestSpringBootInformation 
         expected.add(file1);
         String expectedJson = real.toJson(expected);
 
-        // Test Get ALL
-
-        // Asserting get request
-        HttpGet requestGet = new HttpGet("http://localhost:" + port + "/file/capture/meta/");
+        HttpGet requestGet = new HttpGet("http://localhost:" + port + "/v2/captures/definitions/files/types");
 
         requestGet.setHeader("Authorization", "Bearer " + token);
 
-        HttpResponse responseGet = HttpClientBuilder.create().build().execute(requestGet);
+        HttpResponse responseGet = Assertions
+                .assertDoesNotThrow(() -> HttpClientBuilder.create().build().execute(requestGet));
 
         HttpEntity entityGet = responseGet.getEntity();
 
-        String responseStringGet = EntityUtils.toString(entityGet, "UTF-8");
+        String responseStringGet = Assertions.assertDoesNotThrow(() -> EntityUtils.toString(entityGet, "UTF-8"));
 
+        // Asserting
         assertEquals(expectedJson, responseStringGet);
-        assertThat(responseGet.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_OK));
+        assertEquals(HttpStatus.SC_OK, responseGet.getStatusLine().getStatusCode());
     }
 
-    // Delete endpoint tests
     @Test
     @Order(4)
-    public void testDeleteProcessingType() throws Exception {
+    public void testDeleteProcessingType() {
 
-        HttpDelete delete = new HttpDelete("http://localhost:" + port + "/file/capture/meta/" + 2);
+        HttpDelete delete = new HttpDelete("http://localhost:" + port + "/v2/captures/definitions/files/types/" + 2);
 
         // Header
         delete.setHeader("Authorization", "Bearer " + token);
 
-        HttpResponse deleteResponse = HttpClientBuilder.create().build().execute(delete);
+        HttpResponse deleteResponse = Assertions
+                .assertDoesNotThrow(() -> HttpClientBuilder.create().build().execute(delete));
 
         HttpEntity entityDelete = deleteResponse.getEntity();
 
-        String responseStringGet = EntityUtils.toString(entityDelete, "UTF-8");
+        String responseStringGet = Assertions.assertDoesNotThrow(() -> EntityUtils.toString(entityDelete, "UTF-8"));
 
-        // Parsin respponse as JSONObject
-        JSONObject responseAsJson = new JSONObject(responseStringGet);
+        // Parsing response as JSONObject
+        JSONObject responseAsJson = Assertions.assertDoesNotThrow(() -> new JSONObject(responseStringGet));
 
         // Creating string from Json that was given as a response
-        String actual = responseAsJson.get("message").toString();
+        String actual = Assertions.assertDoesNotThrow(() -> responseAsJson.get("message").toString());
 
         // Creating expected message as JSON Object from the data that was sent towards endpoint
-        String expected = "File processing type deleted.";
+        String expected = "File processing type deleted";
 
         assertEquals(expected, actual);
-        assertThat(deleteResponse.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_OK));
+        assertEquals(HttpStatus.SC_OK, deleteResponse.getStatusLine().getStatusCode());
 
     }
 
     @Test
     @Order(5)
-    public void testDeleteNonExistentProcessingType() throws Exception {
+    public void testDeleteNonExistentProcessingType() {
 
-        HttpDelete delete = new HttpDelete("http://localhost:" + port + "/file/capture/meta/" + 2222);
+        HttpDelete delete = new HttpDelete("http://localhost:" + port + "/v2/captures/definitions/files/types/" + 2222);
 
         // Header
         delete.setHeader("Authorization", "Bearer " + token);
 
-        HttpResponse deleteResponse = HttpClientBuilder.create().build().execute(delete);
+        HttpResponse deleteResponse = Assertions
+                .assertDoesNotThrow(() -> HttpClientBuilder.create().build().execute(delete));
 
         HttpEntity entityDelete = deleteResponse.getEntity();
 
-        String responseStringGet = EntityUtils.toString(entityDelete, "UTF-8");
+        String responseStringGet = Assertions.assertDoesNotThrow(() -> EntityUtils.toString(entityDelete, "UTF-8"));
 
-        // Parsin respponse as JSONObject
-        JSONObject responseAsJson = new JSONObject(responseStringGet);
+        // Parsing response as JSONObject
+        JSONObject responseAsJson = Assertions.assertDoesNotThrow(() -> new JSONObject(responseStringGet));
 
         // Creating string from Json that was given as a response
-        String actual = responseAsJson.get("message").toString();
+        String actual = Assertions.assertDoesNotThrow(() -> responseAsJson.get("message").toString());
 
         // Creating expected message as JSON Object from the data that was sent towards endpoint
         String expected = "Record does not exist";
 
-        assertThat(deleteResponse.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_BAD_REQUEST));
         assertEquals(expected, actual);
+        assertEquals(HttpStatus.SC_NOT_FOUND, deleteResponse.getStatusLine().getStatusCode());
 
     }
 
     @Test
     @Order(6)
-    public void testDeleteProcessingTypeInUse() throws Exception {
+    public void testDeleteProcessingTypeInUse() {
         // add flow and sink
-
         Flow flow = new Flow();
         flow.setName("capflow");
-        String json2 = gson.toJson(flow);
+        String flowJson = gson.toJson(flow);
 
         // forms the json to requestEntity
-        StringEntity requestEntity2 = new StringEntity(String.valueOf(json2), ContentType.APPLICATION_JSON);
+        StringEntity flowRequest = new StringEntity(String.valueOf(flowJson), ContentType.APPLICATION_JSON);
 
         // Creates the request
-        HttpPut request2 = new HttpPut("http://localhost:" + port + "/flow");
+        HttpPut flowAsRequest = new HttpPut("http://localhost:" + port + "/flow");
         // set requestEntity to the put request
-        request2.setEntity(requestEntity2);
+        flowAsRequest.setEntity(flowRequest);
         // Header
-        request2.setHeader("Authorization", "Bearer " + token);
+        flowAsRequest.setHeader("Authorization", "Bearer " + token);
 
-        HttpClientBuilder.create().build().execute(request2);
+        HttpResponse flowResponse = Assertions
+                .assertDoesNotThrow(() -> HttpClientBuilder.create().build().execute(flowAsRequest));
+
+        HttpEntity flowAsEntity = flowResponse.getEntity();
+
+        String flowAsResponseString = Assertions.assertDoesNotThrow(() -> EntityUtils.toString(flowAsEntity, "UTF-8"));
+
+        // Parsing response as JSONObject
+        JSONObject flowAsJson = Assertions.assertDoesNotThrow(() -> new JSONObject(flowAsResponseString));
+
+        // Creating string from Json that was given as a response
+        String flowActual = Assertions.assertDoesNotThrow(() -> flowAsJson.get("message").toString());
+
+        // Creating expected message as JSON Object from the data that was sent towards endpoint
+        String flowExpected = "New flow created";
 
         // insert sink
 
@@ -329,20 +358,35 @@ public class FileProcessingTypeControllerTest extends TestSpringBootInformation 
         sink.setIpAddress("capsink");
         sink.setProtocol("prot");
 
-        String json1 = gson.toJson(sink);
+        String jsonSink = gson.toJson(sink);
 
         // forms the json to requestEntity
-        StringEntity requestEntity1 = new StringEntity(String.valueOf(json1), ContentType.APPLICATION_JSON);
+        StringEntity sinkRequest = new StringEntity(String.valueOf(jsonSink), ContentType.APPLICATION_JSON);
 
         // Creates the request
-        HttpPut request1 = new HttpPut("http://localhost:" + port + "/sink");
+        HttpPut sinkAsRequest = new HttpPut("http://localhost:" + port + "/sink");
         // set requestEntity to the put request
-        request1.setEntity(requestEntity1);
+        sinkAsRequest.setEntity(sinkRequest);
         // Header
-        request1.setHeader("Authorization", "Bearer " + token);
+        sinkAsRequest.setHeader("Authorization", "Bearer " + token);
 
         // Get the response from endpoint
-        HttpClientBuilder.create().build().execute(request1);
+        HttpResponse sinkResponse = Assertions
+                .assertDoesNotThrow(() -> HttpClientBuilder.create().build().execute(sinkAsRequest));
+
+        HttpEntity sinkAsResponseEntity = sinkResponse.getEntity();
+
+        String sinkAsResponseString = Assertions
+                .assertDoesNotThrow(() -> EntityUtils.toString(sinkAsResponseEntity, "UTF-8"));
+
+        // Parsing response as JSONObject
+        JSONObject sinkASJson = Assertions.assertDoesNotThrow(() -> new JSONObject(sinkAsResponseString));
+
+        // Creating string from Json that was given as a response
+        String sinkActual = Assertions.assertDoesNotThrow(() -> sinkASJson.get("message").toString());
+
+        // Creating expected message as JSON Object from the data that was sent towards endpoint
+        String sinkExpected = "New sink created";
 
         CaptureFile captureFile = new CaptureFile();
         captureFile.setId(1);
@@ -361,40 +405,65 @@ public class FileProcessingTypeControllerTest extends TestSpringBootInformation 
         String jsonFile = gson.toJson(captureFile);
 
         // forms the json to requestEntity
-        StringEntity requestEntity3 = new StringEntity(String.valueOf(jsonFile), ContentType.APPLICATION_JSON);
+        StringEntity captureEntity = new StringEntity(String.valueOf(jsonFile), ContentType.APPLICATION_JSON);
 
         // Creates the request
-        HttpPut request3 = new HttpPut("http://localhost:" + port + "/v2/captures/definitions/files");
+        HttpPut captureAsRequest = new HttpPut("http://localhost:" + port + "/v2/captures/definitions/files");
         // set requestEntity to the put request
-        request3.setEntity(requestEntity3);
+        captureAsRequest.setEntity(captureEntity);
         // Header
-        request3.setHeader("Authorization", "Bearer " + token);
+        captureAsRequest.setHeader("Authorization", "Bearer " + token);
 
         // Get the response from endpoint
-        HttpClientBuilder.create().build().execute(request3);
+        HttpResponse captureResponse = Assertions
+                .assertDoesNotThrow(() -> HttpClientBuilder.create().build().execute(captureAsRequest));
 
-        HttpDelete delete = new HttpDelete("http://localhost:" + port + "/file/capture/meta/" + 1);
+        HttpEntity captureResponseEntity = captureResponse.getEntity();
+
+        String captureResponseAsString = Assertions
+                .assertDoesNotThrow(() -> EntityUtils.toString(captureResponseEntity, "UTF-8"));
+
+        // Parsing response as JSONObject
+        JSONObject captureAsJson = Assertions.assertDoesNotThrow(() -> new JSONObject(captureResponseAsString));
+
+        // Creating string from Json that was given as a response
+        String captureActual = Assertions.assertDoesNotThrow(() -> captureAsJson.get("message").toString());
+
+        // Creating expected message as JSON Object from the data that was sent towards endpoint
+        String captureExpected = "New capture created";
+
+        HttpDelete delete = new HttpDelete("http://localhost:" + port + "/v2/captures/definitions/files/types/" + 1);
 
         // Header
         delete.setHeader("Authorization", "Bearer " + token);
 
-        HttpResponse deleteResponse = HttpClientBuilder.create().build().execute(delete);
+        HttpResponse deleteResponse = Assertions
+                .assertDoesNotThrow(() -> HttpClientBuilder.create().build().execute(delete));
 
         HttpEntity entityDelete = deleteResponse.getEntity();
 
-        String responseStringGet = EntityUtils.toString(entityDelete, "UTF-8");
+        String responseStringGet = Assertions.assertDoesNotThrow(() -> EntityUtils.toString(entityDelete, "UTF-8"));
 
-        // Parsin respponse as JSONObject
-        JSONObject responseAsJson = new JSONObject(responseStringGet);
+        // Parsing response as JSONObject
+        JSONObject responseAsJson = Assertions.assertDoesNotThrow(() -> new JSONObject(responseStringGet));
 
         // Creating string from Json that was given as a response
-        String actual = responseAsJson.get("message").toString();
+        String actual = Assertions.assertDoesNotThrow(() -> responseAsJson.get("message").toString());
 
         // Creating expected message as JSON Object from the data that was sent towards endpoint
         String expected = "Is in use";
 
+        assertEquals(flowExpected, flowActual);
+        assertEquals(HttpStatus.SC_CREATED, flowResponse.getStatusLine().getStatusCode());
+
+        assertEquals(sinkExpected, sinkActual);
+        assertEquals(HttpStatus.SC_CREATED, sinkResponse.getStatusLine().getStatusCode());
+
+        assertEquals(captureExpected, captureActual);
+        assertEquals(HttpStatus.SC_CREATED, captureResponse.getStatusLine().getStatusCode());
+
         assertEquals(expected, actual);
-        assertThat(deleteResponse.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_BAD_REQUEST));
+        assertEquals(HttpStatus.SC_BAD_REQUEST, deleteResponse.getStatusLine().getStatusCode());
 
     }
 
