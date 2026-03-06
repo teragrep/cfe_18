@@ -88,14 +88,14 @@ Collaboration diagram for com.teragrep.cfe18.handlers.FileProcessingTypeControll
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
+<tr class="memitem:a7c0af33a1857cd3a66dff9786a79f11b" id="r_a7c0af33a1857cd3a66dff9786a79f11b"><td class="memItemLeft" align="right" valign="top">ResponseEntity&lt; String &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcom_1_1teragrep_1_1cfe18_1_1handlers_1_1FileProcessingTypeController.html#a7c0af33a1857cd3a66dff9786a79f11b">create</a> (@RequestBody FileProcessing newFileProcessing)</td></tr>
+<tr class="separator:a7c0af33a1857cd3a66dff9786a79f11b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae1052bbd8ee86749b2b19e63f750988c" id="r_ae1052bbd8ee86749b2b19e63f750988c"><td class="memItemLeft" align="right" valign="top">ResponseEntity&lt;?&gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcom_1_1teragrep_1_1cfe18_1_1handlers_1_1FileProcessingTypeController.html#ae1052bbd8ee86749b2b19e63f750988c">get</a> (@PathVariable(&quot;id&quot;) int id, @RequestParam(required=false) Integer version)</td></tr>
 <tr class="separator:ae1052bbd8ee86749b2b19e63f750988c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab5c00056e659e5180b854217e2c54d83" id="r_ab5c00056e659e5180b854217e2c54d83"><td class="memItemLeft" align="right" valign="top">List&lt; FileProcessing &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcom_1_1teragrep_1_1cfe18_1_1handlers_1_1FileProcessingTypeController.html#ab5c00056e659e5180b854217e2c54d83">getAll</a> (@RequestParam(required=false) Integer version)</td></tr>
 <tr class="separator:ab5c00056e659e5180b854217e2c54d83"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7c0af33a1857cd3a66dff9786a79f11b" id="r_a7c0af33a1857cd3a66dff9786a79f11b"><td class="memItemLeft" align="right" valign="top">ResponseEntity&lt; String &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcom_1_1teragrep_1_1cfe18_1_1handlers_1_1FileProcessingTypeController.html#a7c0af33a1857cd3a66dff9786a79f11b">create</a> (@RequestBody FileProcessing newFileProcessing)</td></tr>
-<tr class="separator:a7c0af33a1857cd3a66dff9786a79f11b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a111c3f2ed339507c7ba34701ef6c755f" id="r_a111c3f2ed339507c7ba34701ef6c755f"><td class="memItemLeft" align="right" valign="top">ResponseEntity&lt; String &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcom_1_1teragrep_1_1cfe18_1_1handlers_1_1FileProcessingTypeController.html#a111c3f2ed339507c7ba34701ef6c755f">delete</a> (@PathVariable(&quot;id&quot;) int id)</td></tr>
-<tr class="separator:a111c3f2ed339507c7ba34701ef6c755f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae877be086dd4e45b9b397750bf6cae08" id="r_ae877be086dd4e45b9b397750bf6cae08"><td class="memItemLeft" align="right" valign="top">ResponseEntity&lt; String &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcom_1_1teragrep_1_1cfe18_1_1handlers_1_1FileProcessingTypeController.html#ae877be086dd4e45b9b397750bf6cae08">delete</a> (@PathVariable(&quot;id&quot;) Integer id)</td></tr>
+<tr class="separator:ae877be086dd4e45b9b397750bf6cae08"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pri-static-attribs" name="pri-static-attribs"></a>
 Static Private Attributes</h2></td></tr>
@@ -122,36 +122,37 @@ Static Private Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="FileProcessingTypeController_8java_source.html#l00190">190</a> of file <a class="el" href="FileProcessingTypeController_8java_source.html">FileProcessingTypeController.java</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  190</span>                                                                                        {</div>
-<div class="line"><span class="lineno">  191</span>        <a class="code hl_variable" href="classcom_1_1teragrep_1_1cfe18_1_1handlers_1_1FileProcessingTypeController.html#adb60f8d71c14933c28208c76f22acda7">LOGGER</a>.info(<span class="stringliteral">&quot;About to insert &lt;[{}]&gt;&quot;</span>, newFileProcessing);</div>
-<div class="line"><span class="lineno">  192</span>        <span class="keywordflow">try</span> {</div>
-<div class="line"><span class="lineno">  193</span>            FileProcessing n = fileProcessingTypeMapper</div>
-<div class="line"><span class="lineno">  194</span>                    .<a class="code hl_function" href="interfacecom_1_1teragrep_1_1cfe18_1_1FileProcessingTypeMapper.html#a4c917638a15ea82e467b4859297728c2">create</a>(</div>
-<div class="line"><span class="lineno">  195</span>                            newFileProcessing.getTemplate(), newFileProcessing.getRuleset(),</div>
-<div class="line"><span class="lineno">  196</span>                            newFileProcessing.getName(), newFileProcessing.getInputtype().toString().toUpperCase(),</div>
-<div class="line"><span class="lineno">  197</span>                            newFileProcessing.getInputvalue()</div>
-<div class="line"><span class="lineno">  198</span>                    );</div>
-<div class="line"><span class="lineno">  199</span>            <a class="code hl_variable" href="classcom_1_1teragrep_1_1cfe18_1_1handlers_1_1FileProcessingTypeController.html#adb60f8d71c14933c28208c76f22acda7">LOGGER</a>.debug(<span class="stringliteral">&quot;Values returned &lt;[{}]&gt;&quot;</span>, n);</div>
-<div class="line"><span class="lineno">  200</span>            JSONObject jsonObject = <span class="keyword">new</span> JSONObject();</div>
-<div class="line"><span class="lineno">  201</span>            jsonObject.put(<span class="stringliteral">&quot;id&quot;</span>, n.getId());</div>
-<div class="line"><span class="lineno">  202</span>            jsonObject.put(<span class="stringliteral">&quot;message&quot;</span>, <span class="stringliteral">&quot;New file processing type created&quot;</span>);</div>
-<div class="line"><span class="lineno">  203</span> </div>
-<div class="line"><span class="lineno">  204</span>            <span class="keywordflow">return</span> <span class="keyword">new</span> ResponseEntity&lt;&gt;(jsonObject.toString(), HttpStatus.CREATED);</div>
-<div class="line"><span class="lineno">  205</span>        }</div>
-<div class="line"><span class="lineno">  206</span>        <span class="keywordflow">catch</span> (RuntimeException ex) {</div>
-<div class="line"><span class="lineno">  207</span>            <a class="code hl_variable" href="classcom_1_1teragrep_1_1cfe18_1_1handlers_1_1FileProcessingTypeController.html#adb60f8d71c14933c28208c76f22acda7">LOGGER</a>.error(ex.getMessage());</div>
-<div class="line"><span class="lineno">  208</span>            <span class="keywordflow">return</span> <span class="keyword">new</span> ResponseEntity&lt;&gt;(<span class="stringliteral">&quot;Unexpected error&quot;</span>, HttpStatus.INTERNAL_SERVER_ERROR);</div>
-<div class="line"><span class="lineno">  209</span> </div>
-<div class="line"><span class="lineno">  210</span>        }</div>
-<div class="line"><span class="lineno">  211</span>    }</div>
+<p class="definition">Definition at line <a class="el" href="FileProcessingTypeController_8java_source.html#l00114">114</a> of file <a class="el" href="FileProcessingTypeController_8java_source.html">FileProcessingTypeController.java</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  114</span>                                                                                        {</div>
+<div class="line"><span class="lineno">  115</span>        <a class="code hl_variable" href="classcom_1_1teragrep_1_1cfe18_1_1handlers_1_1FileProcessingTypeController.html#adb60f8d71c14933c28208c76f22acda7">LOGGER</a>.info(<span class="stringliteral">&quot;About to insert &lt;[{}]&gt;&quot;</span>, newFileProcessing);</div>
+<div class="line"><span class="lineno">  116</span>        <span class="keywordflow">try</span> {</div>
+<div class="line"><span class="lineno">  117</span>            FileProcessing n = fileProcessingTypeMapper</div>
+<div class="line"><span class="lineno">  118</span>                    .<a class="code hl_function" href="interfacecom_1_1teragrep_1_1cfe18_1_1FileProcessingTypeMapper.html#ac3ea353173395686aa76a03811505df8">create</a>(</div>
+<div class="line"><span class="lineno">  119</span>                            newFileProcessing.getTemplate(), newFileProcessing.getRuleset(),</div>
+<div class="line"><span class="lineno">  120</span>                            newFileProcessing.getName(), newFileProcessing.getInputtype().toString(),</div>
+<div class="line"><span class="lineno">  121</span>                            newFileProcessing.getInputvalue()</div>
+<div class="line"><span class="lineno">  122</span>                    );</div>
+<div class="line"><span class="lineno">  123</span>            <a class="code hl_variable" href="classcom_1_1teragrep_1_1cfe18_1_1handlers_1_1FileProcessingTypeController.html#adb60f8d71c14933c28208c76f22acda7">LOGGER</a>.debug(<span class="stringliteral">&quot;Values returned &lt;[{}]&gt;&quot;</span>, n);</div>
+<div class="line"><span class="lineno">  124</span>            JSONObject jsonObject = <span class="keyword">new</span> JSONObject();</div>
+<div class="line"><span class="lineno">  125</span>            jsonObject.put(<span class="stringliteral">&quot;id&quot;</span>, n.getId());</div>
+<div class="line"><span class="lineno">  126</span>            jsonObject.put(<span class="stringliteral">&quot;message&quot;</span>, <span class="stringliteral">&quot;New file processing type created&quot;</span>);</div>
+<div class="line"><span class="lineno">  127</span>            <span class="keywordflow">return</span> <span class="keyword">new</span> ResponseEntity&lt;&gt;(jsonObject.toString(), HttpStatus.CREATED);</div>
+<div class="line"><span class="lineno">  128</span>        }</div>
+<div class="line"><span class="lineno">  129</span>        <span class="keywordflow">catch</span> (RuntimeException ex) {</div>
+<div class="line"><span class="lineno">  130</span>            <a class="code hl_variable" href="classcom_1_1teragrep_1_1cfe18_1_1handlers_1_1FileProcessingTypeController.html#adb60f8d71c14933c28208c76f22acda7">LOGGER</a>.error(ex.getMessage());</div>
+<div class="line"><span class="lineno">  131</span>            JSONObject jsonErr = <span class="keyword">new</span> JSONObject();</div>
+<div class="line"><span class="lineno">  132</span>            jsonErr.put(<span class="stringliteral">&quot;id&quot;</span>, newFileProcessing.getId());</div>
+<div class="line"><span class="lineno">  133</span>            jsonErr.put(<span class="stringliteral">&quot;message&quot;</span>, ex.getCause().getMessage());</div>
+<div class="line"><span class="lineno">  134</span>            <span class="keywordflow">return</span> <span class="keyword">new</span> ResponseEntity&lt;&gt;(jsonErr.toString(), HttpStatus.BAD_REQUEST);</div>
+<div class="line"><span class="lineno">  135</span>        }</div>
+<div class="line"><span class="lineno">  136</span>    }</div>
 <div class="ttc" id="aclasscom_1_1teragrep_1_1cfe18_1_1handlers_1_1FileProcessingTypeController_html_adb60f8d71c14933c28208c76f22acda7"><div class="ttname"><a href="classcom_1_1teragrep_1_1cfe18_1_1handlers_1_1FileProcessingTypeController.html#adb60f8d71c14933c28208c76f22acda7">com.teragrep.cfe18.handlers.FileProcessingTypeController.LOGGER</a></div><div class="ttdeci">static final Logger LOGGER</div><div class="ttdef"><b>Definition</b> <a href="FileProcessingTypeController_8java_source.html#l00075">FileProcessingTypeController.java:75</a></div></div>
-<div class="ttc" id="ainterfacecom_1_1teragrep_1_1cfe18_1_1FileProcessingTypeMapper_html_a4c917638a15ea82e467b4859297728c2"><div class="ttname"><a href="interfacecom_1_1teragrep_1_1cfe18_1_1FileProcessingTypeMapper.html#a4c917638a15ea82e467b4859297728c2">com.teragrep.cfe18.FileProcessingTypeMapper.create</a></div><div class="ttdeci">FileProcessing create(String template, String rule, String name, String inputtype, String inputvalue)</div></div>
+<div class="ttc" id="ainterfacecom_1_1teragrep_1_1cfe18_1_1FileProcessingTypeMapper_html_ac3ea353173395686aa76a03811505df8"><div class="ttname"><a href="interfacecom_1_1teragrep_1_1cfe18_1_1FileProcessingTypeMapper.html#ac3ea353173395686aa76a03811505df8">com.teragrep.cfe18.FileProcessingTypeMapper.create</a></div><div class="ttdeci">FileProcessing create(String template, String rule, String name, String inputType, String inputValue)</div></div>
 </div><!-- fragment -->
 </div>
 </div>
-<a id="a111c3f2ed339507c7ba34701ef6c755f" name="a111c3f2ed339507c7ba34701ef6c755f"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a111c3f2ed339507c7ba34701ef6c755f">&#9670;&#160;</a></span>delete()</h2>
+<a id="ae877be086dd4e45b9b397750bf6cae08" name="ae877be086dd4e45b9b397750bf6cae08"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae877be086dd4e45b9b397750bf6cae08">&#9670;&#160;</a></span>delete()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -159,43 +160,45 @@ Static Private Attributes</h2></td></tr>
         <tr>
           <td class="memname">ResponseEntity&lt; String &gt; com.teragrep.cfe18.handlers.FileProcessingTypeController.delete </td>
           <td>(</td>
-          <td class="paramtype">@PathVariable(&quot;id&quot;) int&#160;</td>
+          <td class="paramtype">@PathVariable(&quot;id&quot;) Integer&#160;</td>
           <td class="paramname"><em>id</em></td><td>)</td>
           <td></td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="FileProcessingTypeController_8java_source.html#l00242">242</a> of file <a class="el" href="FileProcessingTypeController_8java_source.html">FileProcessingTypeController.java</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  242</span>                                                                     {</div>
-<div class="line"><span class="lineno">  243</span>        <a class="code hl_variable" href="classcom_1_1teragrep_1_1cfe18_1_1handlers_1_1FileProcessingTypeController.html#adb60f8d71c14933c28208c76f22acda7">LOGGER</a>.info(<span class="stringliteral">&quot;Deleting file processing type  &lt;[{}]&gt;&quot;</span>, <span class="keywordtype">id</span>);</div>
-<div class="line"><span class="lineno">  244</span>        JSONObject jsonErr = <span class="keyword">new</span> JSONObject();</div>
-<div class="line"><span class="lineno">  245</span>        <span class="keywordflow">try</span> {</div>
-<div class="line"><span class="lineno">  246</span>            fileProcessingTypeMapper.<a class="code hl_function" href="interfacecom_1_1teragrep_1_1cfe18_1_1FileProcessingTypeMapper.html#a404670d66031f8b29df20fa35b0f8f44">delete</a>(<span class="keywordtype">id</span>);</div>
-<div class="line"><span class="lineno">  247</span>            JSONObject j = <span class="keyword">new</span> JSONObject();</div>
-<div class="line"><span class="lineno">  248</span>            j.put(<span class="stringliteral">&quot;id&quot;</span>, <span class="keywordtype">id</span>);</div>
-<div class="line"><span class="lineno">  249</span>            j.put(<span class="stringliteral">&quot;message&quot;</span>, <span class="stringliteral">&quot;File processing type deleted.&quot;</span>);</div>
-<div class="line"><span class="lineno">  250</span>            <span class="keywordflow">return</span> <span class="keyword">new</span> ResponseEntity&lt;&gt;(j.toString(), HttpStatus.OK);</div>
-<div class="line"><span class="lineno">  251</span>        }</div>
-<div class="line"><span class="lineno">  252</span>        <span class="keywordflow">catch</span> (Exception ex) {</div>
-<div class="line"><span class="lineno">  253</span>            <span class="keyword">final</span> Throwable cause = ex.getCause();</div>
-<div class="line"><span class="lineno">  254</span>            <span class="keywordflow">if</span> (cause instanceof SQLException) {</div>
-<div class="line"><span class="lineno">  255</span>                <a class="code hl_variable" href="classcom_1_1teragrep_1_1cfe18_1_1handlers_1_1FileProcessingTypeController.html#adb60f8d71c14933c28208c76f22acda7">LOGGER</a>.error((cause).getMessage());</div>
-<div class="line"><span class="lineno">  256</span>                String state = ((SQLException) cause).getSQLState();</div>
-<div class="line"><span class="lineno">  257</span>                <span class="keywordflow">if</span> (state.equals(<span class="stringliteral">&quot;23000&quot;</span>)) {</div>
-<div class="line"><span class="lineno">  258</span>                    jsonErr.put(<span class="stringliteral">&quot;id&quot;</span>, <span class="keywordtype">id</span>);</div>
-<div class="line"><span class="lineno">  259</span>                    jsonErr.put(<span class="stringliteral">&quot;message&quot;</span>, <span class="stringliteral">&quot;Is in use&quot;</span>);</div>
-<div class="line"><span class="lineno">  260</span>                }</div>
-<div class="line"><span class="lineno">  261</span>                <span class="keywordflow">else</span> <span class="keywordflow">if</span> (state.equals(<span class="stringliteral">&quot;45000&quot;</span>)) {</div>
-<div class="line"><span class="lineno">  262</span>                    jsonErr.put(<span class="stringliteral">&quot;id&quot;</span>, <span class="keywordtype">id</span>);</div>
-<div class="line"><span class="lineno">  263</span>                    jsonErr.put(<span class="stringliteral">&quot;message&quot;</span>, <span class="stringliteral">&quot;Record does not exist&quot;</span>);</div>
-<div class="line"><span class="lineno">  264</span>                }</div>
-<div class="line"><span class="lineno">  265</span>                <span class="keywordflow">return</span> <span class="keyword">new</span> ResponseEntity&lt;&gt;(jsonErr.toString(), HttpStatus.BAD_REQUEST);</div>
-<div class="line"><span class="lineno">  266</span>            }</div>
-<div class="line"><span class="lineno">  267</span>            <span class="keywordflow">return</span> <span class="keyword">new</span> ResponseEntity&lt;&gt;(<span class="stringliteral">&quot;Unexpected error&quot;</span>, HttpStatus.INTERNAL_SERVER_ERROR);</div>
-<div class="line"><span class="lineno">  268</span>        }</div>
-<div class="line"><span class="lineno">  269</span>    }</div>
-<div class="ttc" id="ainterfacecom_1_1teragrep_1_1cfe18_1_1FileProcessingTypeMapper_html_a404670d66031f8b29df20fa35b0f8f44"><div class="ttname"><a href="interfacecom_1_1teragrep_1_1cfe18_1_1FileProcessingTypeMapper.html#a404670d66031f8b29df20fa35b0f8f44">com.teragrep.cfe18.FileProcessingTypeMapper.delete</a></div><div class="ttdeci">FileProcessing delete(int id)</div></div>
+<p class="definition">Definition at line <a class="el" href="FileProcessingTypeController_8java_source.html#l00247">247</a> of file <a class="el" href="FileProcessingTypeController_8java_source.html">FileProcessingTypeController.java</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  247</span>                                                                         {</div>
+<div class="line"><span class="lineno">  248</span>        <a class="code hl_variable" href="classcom_1_1teragrep_1_1cfe18_1_1handlers_1_1FileProcessingTypeController.html#adb60f8d71c14933c28208c76f22acda7">LOGGER</a>.info(<span class="stringliteral">&quot;Deleting file processing type  &lt;[{}]&gt;&quot;</span>, <span class="keywordtype">id</span>);</div>
+<div class="line"><span class="lineno">  249</span>        <span class="keywordflow">try</span> {</div>
+<div class="line"><span class="lineno">  250</span>            fileProcessingTypeMapper.<a class="code hl_function" href="interfacecom_1_1teragrep_1_1cfe18_1_1FileProcessingTypeMapper.html#a5c259c5e7da33b015071475e02832dde">delete</a>(<span class="keywordtype">id</span>);</div>
+<div class="line"><span class="lineno">  251</span>            JSONObject j = <span class="keyword">new</span> JSONObject();</div>
+<div class="line"><span class="lineno">  252</span>            j.put(<span class="stringliteral">&quot;id&quot;</span>, <span class="keywordtype">id</span>);</div>
+<div class="line"><span class="lineno">  253</span>            j.put(<span class="stringliteral">&quot;message&quot;</span>, <span class="stringliteral">&quot;File processing type deleted&quot;</span>);</div>
+<div class="line"><span class="lineno">  254</span>            <span class="keywordflow">return</span> <span class="keyword">new</span> ResponseEntity&lt;&gt;(j.toString(), HttpStatus.OK);</div>
+<div class="line"><span class="lineno">  255</span>        }</div>
+<div class="line"><span class="lineno">  256</span>        <span class="keywordflow">catch</span> (RuntimeException ex) {</div>
+<div class="line"><span class="lineno">  257</span>            <a class="code hl_variable" href="classcom_1_1teragrep_1_1cfe18_1_1handlers_1_1FileProcessingTypeController.html#adb60f8d71c14933c28208c76f22acda7">LOGGER</a>.error(ex.getMessage());</div>
+<div class="line"><span class="lineno">  258</span>            JSONObject jsonErr = <span class="keyword">new</span> JSONObject();</div>
+<div class="line"><span class="lineno">  259</span>            jsonErr.put(<span class="stringliteral">&quot;id&quot;</span>, <span class="keywordtype">id</span>);</div>
+<div class="line"><span class="lineno">  260</span>            jsonErr.put(<span class="stringliteral">&quot;message&quot;</span>, ex.getCause().getMessage());</div>
+<div class="line"><span class="lineno">  261</span>            <span class="keyword">final</span> Throwable cause = ex.getCause();</div>
+<div class="line"><span class="lineno">  262</span>            <span class="keywordflow">if</span> (cause instanceof SQLException) {</div>
+<div class="line"><span class="lineno">  263</span>                <a class="code hl_variable" href="classcom_1_1teragrep_1_1cfe18_1_1handlers_1_1FileProcessingTypeController.html#adb60f8d71c14933c28208c76f22acda7">LOGGER</a>.error((cause).getMessage());</div>
+<div class="line"><span class="lineno">  264</span>                String state = ((SQLException) cause).getSQLState();</div>
+<div class="line"><span class="lineno">  265</span>                <span class="keywordflow">if</span> (state.equals(<span class="stringliteral">&quot;23000&quot;</span>)) {</div>
+<div class="line"><span class="lineno">  266</span>                    jsonErr.put(<span class="stringliteral">&quot;message&quot;</span>, <span class="stringliteral">&quot;Is in use&quot;</span>);</div>
+<div class="line"><span class="lineno">  267</span>                    <span class="keywordflow">return</span> <span class="keyword">new</span> ResponseEntity&lt;&gt;(jsonErr.toString(), HttpStatus.BAD_REQUEST);</div>
+<div class="line"><span class="lineno">  268</span>                }</div>
+<div class="line"><span class="lineno">  269</span>                <span class="keywordflow">else</span> <span class="keywordflow">if</span> (state.equals(<span class="stringliteral">&quot;45000&quot;</span>)) {</div>
+<div class="line"><span class="lineno">  270</span>                    jsonErr.put(<span class="stringliteral">&quot;message&quot;</span>, <span class="stringliteral">&quot;Record does not exist&quot;</span>);</div>
+<div class="line"><span class="lineno">  271</span>                    <span class="keywordflow">return</span> <span class="keyword">new</span> ResponseEntity&lt;&gt;(jsonErr.toString(), HttpStatus.NOT_FOUND);</div>
+<div class="line"><span class="lineno">  272</span>                }</div>
+<div class="line"><span class="lineno">  273</span>            }</div>
+<div class="line"><span class="lineno">  274</span>            <span class="keywordflow">return</span> <span class="keyword">new</span> ResponseEntity&lt;&gt;(jsonErr.toString(), HttpStatus.BAD_REQUEST);</div>
+<div class="line"><span class="lineno">  275</span>        }</div>
+<div class="line"><span class="lineno">  276</span>    }</div>
+<div class="ttc" id="ainterfacecom_1_1teragrep_1_1cfe18_1_1FileProcessingTypeMapper_html_a5c259c5e7da33b015071475e02832dde"><div class="ttname"><a href="interfacecom_1_1teragrep_1_1cfe18_1_1FileProcessingTypeMapper.html#a5c259c5e7da33b015071475e02832dde">com.teragrep.cfe18.FileProcessingTypeMapper.delete</a></div><div class="ttdeci">void delete(Integer id)</div></div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -225,35 +228,31 @@ Static Private Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="FileProcessingTypeController_8java_source.html#l00114">114</a> of file <a class="el" href="FileProcessingTypeController_8java_source.html">FileProcessingTypeController.java</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  114</span>                                                                                                              {</div>
-<div class="line"><span class="lineno">  115</span>        <span class="keywordflow">try</span> {</div>
-<div class="line"><span class="lineno">  116</span>            FileProcessing fc = fileProcessingTypeMapper.<a class="code hl_function" href="interfacecom_1_1teragrep_1_1cfe18_1_1FileProcessingTypeMapper.html#a9982c63b131cb8b8bb7f0239e8eee196">get</a>(<span class="keywordtype">id</span>, version);</div>
-<div class="line"><span class="lineno">  117</span>            <span class="keywordflow">return</span> <span class="keyword">new</span> ResponseEntity&lt;&gt;(fc, HttpStatus.OK);</div>
-<div class="line"><span class="lineno">  118</span>        }</div>
-<div class="line"><span class="lineno">  119</span>        <span class="keywordflow">catch</span> (Exception ex) {</div>
-<div class="line"><span class="lineno">  120</span>            JSONObject jsonErr = <span class="keyword">new</span> JSONObject();</div>
-<div class="line"><span class="lineno">  121</span>            <span class="keyword">final</span> Throwable cause = ex.getCause();</div>
-<div class="line"><span class="lineno">  122</span>            <span class="keywordflow">if</span> (cause instanceof SQLException) {</div>
-<div class="line"><span class="lineno">  123</span>                <a class="code hl_variable" href="classcom_1_1teragrep_1_1cfe18_1_1handlers_1_1FileProcessingTypeController.html#adb60f8d71c14933c28208c76f22acda7">LOGGER</a>.error((cause).getMessage());</div>
-<div class="line"><span class="lineno">  124</span>                String state = ((SQLException) cause).getSQLState();</div>
-<div class="line"><span class="lineno">  125</span>                <span class="comment">// fail-safe if SQL error but not 45000 type</span></div>
-<div class="line"><span class="lineno">  126</span>                jsonErr.put(<span class="stringliteral">&quot;id&quot;</span>, <span class="keywordtype">id</span>);</div>
-<div class="line"><span class="lineno">  127</span>                <span class="keywordflow">if</span> (state.equals(<span class="stringliteral">&quot;45000&quot;</span>)) {</div>
-<div class="line"><span class="lineno">  128</span>                    jsonErr.put(<span class="stringliteral">&quot;message&quot;</span>, <span class="stringliteral">&quot;Record does not exist with the given id&quot;</span>);</div>
-<div class="line"><span class="lineno">  129</span>                }</div>
-<div class="line"><span class="lineno">  130</span>                <span class="keywordflow">return</span> <span class="keyword">new</span> ResponseEntity&lt;&gt;(jsonErr.toString(), HttpStatus.BAD_REQUEST);</div>
-<div class="line"><span class="lineno">  131</span>            }</div>
-<div class="line"><span class="lineno">  132</span>            <span class="keywordflow">return</span> <span class="keyword">new</span> ResponseEntity&lt;&gt;(<span class="stringliteral">&quot;Unexpected error&quot;</span>, HttpStatus.INTERNAL_SERVER_ERROR);</div>
-<div class="line"><span class="lineno">  133</span>        }</div>
-<div class="line"><span class="lineno">  134</span>    }</div>
+<p class="definition">Definition at line <a class="el" href="FileProcessingTypeController_8java_source.html#l00166">166</a> of file <a class="el" href="FileProcessingTypeController_8java_source.html">FileProcessingTypeController.java</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  166</span>                                                                                                              {</div>
+<div class="line"><span class="lineno">  167</span>        <span class="keywordflow">try</span> {</div>
+<div class="line"><span class="lineno">  168</span>            FileProcessing fc = fileProcessingTypeMapper.<a class="code hl_function" href="interfacecom_1_1teragrep_1_1cfe18_1_1FileProcessingTypeMapper.html#a9982c63b131cb8b8bb7f0239e8eee196">get</a>(<span class="keywordtype">id</span>, version);</div>
+<div class="line"><span class="lineno">  169</span>            <span class="keywordflow">return</span> <span class="keyword">new</span> ResponseEntity&lt;&gt;(fc, HttpStatus.OK);</div>
+<div class="line"><span class="lineno">  170</span>        }</div>
+<div class="line"><span class="lineno">  171</span>        <span class="keywordflow">catch</span> (RuntimeException ex) {</div>
+<div class="line"><span class="lineno">  172</span>            <a class="code hl_variable" href="classcom_1_1teragrep_1_1cfe18_1_1handlers_1_1FileProcessingTypeController.html#adb60f8d71c14933c28208c76f22acda7">LOGGER</a>.error(ex.getMessage());</div>
+<div class="line"><span class="lineno">  173</span>            JSONObject jsonErr = <span class="keyword">new</span> JSONObject();</div>
+<div class="line"><span class="lineno">  174</span>            jsonErr.put(<span class="stringliteral">&quot;id&quot;</span>, <span class="keywordtype">id</span>);</div>
+<div class="line"><span class="lineno">  175</span>            jsonErr.put(<span class="stringliteral">&quot;message&quot;</span>, ex.getCause().getMessage());</div>
+<div class="line"><span class="lineno">  176</span>            <span class="keyword">final</span> Throwable cause = ex.getCause();</div>
+<div class="line"><span class="lineno">  177</span>            <span class="keywordflow">if</span> (cause instanceof SQLException) {</div>
+<div class="line"><span class="lineno">  178</span>                <a class="code hl_variable" href="classcom_1_1teragrep_1_1cfe18_1_1handlers_1_1FileProcessingTypeController.html#adb60f8d71c14933c28208c76f22acda7">LOGGER</a>.error((cause).getMessage());</div>
+<div class="line"><span class="lineno">  179</span>                String state = ((SQLException) cause).getSQLState();</div>
+<div class="line"><span class="lineno">  180</span>                <span class="keywordflow">if</span> (state.equals(<span class="stringliteral">&quot;45000&quot;</span>)) {</div>
+<div class="line"><span class="lineno">  181</span>                    jsonErr.put(<span class="stringliteral">&quot;message&quot;</span>, <span class="stringliteral">&quot;Record does not exist&quot;</span>);</div>
+<div class="line"><span class="lineno">  182</span>                    <span class="keywordflow">return</span> <span class="keyword">new</span> ResponseEntity&lt;&gt;(jsonErr.toString(), HttpStatus.NOT_FOUND);</div>
+<div class="line"><span class="lineno">  183</span>                }</div>
+<div class="line"><span class="lineno">  184</span>            }</div>
+<div class="line"><span class="lineno">  185</span>            <span class="keywordflow">return</span> <span class="keyword">new</span> ResponseEntity&lt;&gt;(jsonErr.toString(), HttpStatus.BAD_REQUEST);</div>
+<div class="line"><span class="lineno">  186</span>        }</div>
+<div class="line"><span class="lineno">  187</span>    }</div>
 <div class="ttc" id="ainterfacecom_1_1teragrep_1_1cfe18_1_1FileProcessingTypeMapper_html_a9982c63b131cb8b8bb7f0239e8eee196"><div class="ttname"><a href="interfacecom_1_1teragrep_1_1cfe18_1_1FileProcessingTypeMapper.html#a9982c63b131cb8b8bb7f0239e8eee196">com.teragrep.cfe18.FileProcessingTypeMapper.get</a></div><div class="ttdeci">FileProcessing get(int id, Integer version)</div></div>
-</div><!-- fragment --><div class="dynheader">
-Here is the call graph for this function:</div>
-<div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="classcom_1_1teragrep_1_1cfe18_1_1handlers_1_1FileProcessingTypeController_ae1052bbd8ee86749b2b19e63f750988c_cgraph.svg" width="539" height="51"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
-</div>
-
+</div><!-- fragment -->
 </div>
 </div>
 <a id="ab5c00056e659e5180b854217e2c54d83" name="ab5c00056e659e5180b854217e2c54d83"></a>
@@ -272,10 +271,10 @@ Here is the call graph for this function:</div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="FileProcessingTypeController_8java_source.html#l00158">158</a> of file <a class="el" href="FileProcessingTypeController_8java_source.html">FileProcessingTypeController.java</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  158</span>                                                                                        {</div>
-<div class="line"><span class="lineno">  159</span>        <span class="keywordflow">return</span> fileProcessingTypeMapper.<a class="code hl_function" href="interfacecom_1_1teragrep_1_1cfe18_1_1FileProcessingTypeMapper.html#a1dc9898651b9eb1dedca42938510780b">getAll</a>(version);</div>
-<div class="line"><span class="lineno">  160</span>    }</div>
+<p class="definition">Definition at line <a class="el" href="FileProcessingTypeController_8java_source.html#l00210">210</a> of file <a class="el" href="FileProcessingTypeController_8java_source.html">FileProcessingTypeController.java</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  210</span>                                                                                        {</div>
+<div class="line"><span class="lineno">  211</span>        <span class="keywordflow">return</span> fileProcessingTypeMapper.<a class="code hl_function" href="interfacecom_1_1teragrep_1_1cfe18_1_1FileProcessingTypeMapper.html#a1dc9898651b9eb1dedca42938510780b">getAll</a>(version);</div>
+<div class="line"><span class="lineno">  212</span>    }</div>
 <div class="ttc" id="ainterfacecom_1_1teragrep_1_1cfe18_1_1FileProcessingTypeMapper_html_a1dc9898651b9eb1dedca42938510780b"><div class="ttname"><a href="interfacecom_1_1teragrep_1_1cfe18_1_1FileProcessingTypeMapper.html#a1dc9898651b9eb1dedca42938510780b">com.teragrep.cfe18.FileProcessingTypeMapper.getAll</a></div><div class="ttdeci">List&lt; FileProcessing &gt; getAll(Integer version)</div></div>
 </div><!-- fragment -->
 </div>
