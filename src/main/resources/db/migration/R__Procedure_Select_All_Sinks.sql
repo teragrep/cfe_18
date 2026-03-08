@@ -43,7 +43,7 @@
  * Teragrep, the applicable Commercial License may apply to this file if you as
  * a licensee so wish it.
  */
-USE flow;
+USE cfe_18;
 DELIMITER //
 CREATE OR REPLACE PROCEDURE select_all_sinks(tx_id INT)
 BEGIN
@@ -62,7 +62,7 @@ BEGIN
            cs.sink_port   AS port,
            L.app_protocol AS protocol,
            cs.flow_id     AS flow_id
-    FROM flow.capture_sink FOR SYSTEM_TIME AS OF TRANSACTION @time cs
+    FROM cfe_18.capture_sink FOR SYSTEM_TIME AS OF TRANSACTION @time cs
              INNER JOIN L7 FOR SYSTEM_TIME AS OF TRANSACTION @time L ON cs.L7_id = L.id;
 
 END;

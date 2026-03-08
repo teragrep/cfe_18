@@ -43,13 +43,14 @@
  * Teragrep, the applicable Commercial License may apply to this file if you as
  * a licensee so wish it.
  */
-use flow;
-create table storages
+use cfe_18;
+create table cfe_18.storages
 (
     id           int auto_increment primary key,
     storage_name varchar(255) unique not null,
     cfe_type     varchar(6)          not null check (cfe_type in ('cfe_10', 'cfe_11', 'cfe_12', 'cfe_19', 'cfe_23', 'cfe_04')),
     unique KEY (id, cfe_type),
+    unique (storage_name,cfe_type),
     start_trxid BIGINT UNSIGNED GENERATED ALWAYS AS ROW START INVISIBLE,
     end_trxid BIGINT UNSIGNED GENERATED ALWAYS AS ROW END INVISIBLE,
     PERIOD FOR SYSTEM_TIME(start_trxid, end_trxid)
@@ -95,7 +96,7 @@ create table cfe_10
     id       int primary key,
     cfe_type varchar(6) not null check (cfe_type = 'cfe_10'),
     spool    varchar(50),
-    constraint ´storagesToCfe_10´ foreign key (id, cfe_type) references storages (id, cfe_type) on delete cascade,
+    constraint ´storagesToCfe_10´ foreign key (id, cfe_type) references cfe_18.storages (id, cfe_type) on delete cascade,
     start_trxid BIGINT UNSIGNED GENERATED ALWAYS AS ROW START INVISIBLE,
     end_trxid BIGINT UNSIGNED GENERATED ALWAYS AS ROW END INVISIBLE,
     PERIOD FOR SYSTEM_TIME(start_trxid, end_trxid)
@@ -106,7 +107,7 @@ create table cfe_11
     id         int primary key,
     cfe_type   varchar(6) not null check (cfe_type = 'cfe_11'),
     inspection varchar(50),
-    constraint ´storagesToCfe_11´ foreign key (id, cfe_type) references storages (id, cfe_type) on delete cascade,
+    constraint ´storagesToCfe_11´ foreign key (id, cfe_type) references cfe_18.storages (id, cfe_type) on delete cascade,
     start_trxid BIGINT UNSIGNED GENERATED ALWAYS AS ROW START INVISIBLE,
     end_trxid BIGINT UNSIGNED GENERATED ALWAYS AS ROW END INVISIBLE,
     PERIOD FOR SYSTEM_TIME(start_trxid, end_trxid)
@@ -116,7 +117,7 @@ create table cfe_12
 (
     id       int primary key,
     cfe_type varchar(6) not null check (cfe_type = 'cfe_12'),
-    constraint ´storagesToCfe_12´ foreign key (id, cfe_type) references storages (id, cfe_type) on delete cascade,
+    constraint ´storagesToCfe_12´ foreign key (id, cfe_type) references cfe_18.storages (id, cfe_type) on delete cascade,
     start_trxid BIGINT UNSIGNED GENERATED ALWAYS AS ROW START INVISIBLE,
     end_trxid BIGINT UNSIGNED GENERATED ALWAYS AS ROW END INVISIBLE,
     PERIOD FOR SYSTEM_TIME(start_trxid, end_trxid)
@@ -126,7 +127,7 @@ create table cfe_04
 (
     id       int primary key,
     cfe_type varchar(6) not null check (cfe_type = 'cfe_04'),
-    constraint ´storagesToCfe_04´ foreign key (id, cfe_type) references storages (id, cfe_type) on delete cascade,
+    constraint ´storagesToCfe_04´ foreign key (id, cfe_type) references cfe_18.storages (id, cfe_type) on delete cascade,
     start_trxid BIGINT UNSIGNED GENERATED ALWAYS AS ROW START INVISIBLE,
     end_trxid BIGINT UNSIGNED GENERATED ALWAYS AS ROW END INVISIBLE,
     PERIOD FOR SYSTEM_TIME(start_trxid, end_trxid)
@@ -136,7 +137,7 @@ create table cfe_19
 (
     id       int primary key,
     cfe_type varchar(6) not null check (cfe_type = 'cfe_19'),
-    constraint ´storagesToCfe_19´ foreign key (id, cfe_type) references storages (id, cfe_type) on delete cascade,
+    constraint ´storagesToCfe_19´ foreign key (id, cfe_type) references cfe_18.storages (id, cfe_type) on delete cascade,
     start_trxid BIGINT UNSIGNED GENERATED ALWAYS AS ROW START INVISIBLE,
     end_trxid BIGINT UNSIGNED GENERATED ALWAYS AS ROW END INVISIBLE,
     PERIOD FOR SYSTEM_TIME(start_trxid, end_trxid)
@@ -146,7 +147,7 @@ create table cfe_23
 (
     id       int primary key,
     cfe_type varchar(6) not null check (cfe_type = 'cfe_23'),
-    constraint ´storagesToCfe_23´ foreign key (id, cfe_type) references storages (id, cfe_type) on delete cascade,
+    constraint ´storagesToCfe_23´ foreign key (id, cfe_type) references cfe_18.storages (id, cfe_type) on delete cascade,
     start_trxid BIGINT UNSIGNED GENERATED ALWAYS AS ROW START INVISIBLE,
     end_trxid BIGINT UNSIGNED GENERATED ALWAYS AS ROW END INVISIBLE,
     PERIOD FOR SYSTEM_TIME(start_trxid, end_trxid)
@@ -172,8 +173,8 @@ create table flow_targets
     storage_type varchar(6) not null check (storage_type in
                                             ('cfe_10', 'cfe_11', 'cfe_12', 'cfe_19',
                                              'cfe_23', 'cfe_04')),
-    constraint ´flow_idToFlows´ foreign key (flow_id) references flows (id),
-    constraint ´storage_idToStorage´ foreign key (storage_id, storage_type) references storages (id, cfe_type),
+    constraint ´flow_idToFlows´ foreign key (flow_id) references cfe_18.flows (id),
+    constraint ´storage_idToStorage´ foreign key (storage_id, storage_type) references cfe_18.storages (id, cfe_type),
     unique key (flow_id, storage_id),
     start_trxid BIGINT UNSIGNED GENERATED ALWAYS AS ROW START INVISIBLE,
     end_trxid BIGINT UNSIGNED GENERATED ALWAYS AS ROW END INVISIBLE,

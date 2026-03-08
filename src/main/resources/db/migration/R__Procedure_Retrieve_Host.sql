@@ -43,7 +43,7 @@
  * Teragrep, the applicable Commercial License may apply to this file if you as
  * a licensee so wish it.
  */
-USE cfe_00;
+USE cfe_18;
 DELIMITER //
 CREATE OR REPLACE PROCEDURE retrieve_host_details(proc_host_id int,tx_id int)
 BEGIN
@@ -58,18 +58,18 @@ BEGIN
         else
              set @time=tx_id;
         end if;
-    if (select id from location.host for system_time as of transaction @time where id = proc_host_id) is null then
+    if (select id from cfe_18.host for system_time as of transaction @time where id = proc_host_id) is null then
         SELECT JSON_OBJECT('id', proc_host_id, 'message', 'Host does not exist with the given ID') into @hid;
         signal sqlstate '45000' set message_text = @hid;
     end if;
 
     if (select h.id
-        from location.host for system_time as of transaction @time h
+        from cfe_18.host for system_time as of transaction @time h
                  inner join hubs for system_time as of transaction @time h3 on h.id = h3.host_id
         where h.id = proc_host_id) is not null then
         SELECT JSON_OBJECT('id', proc_host_id, 'message', 'Host given is hub') into @hub;
         signal sqlstate '45100' set message_text = @hub;
-    elseif (select id from location.host for system_time as of transaction @time where id = proc_host_id and host_type = 'CFE') then
+    elseif (select id from cfe_18.host for system_time as of transaction @time where id = proc_host_id and host_type = 'CFE') then
 
         select h.id          as host_id,
                h.md5         as host_md5,
@@ -79,20 +79,20 @@ BEGIN
                hm.hostname   as host_name,
                hm.id         as host_meta_id,
                h3.fqhost     as hub_fq
-        from location.host for system_time as of transaction @time h
+        from cfe_18.host for system_time as of transaction @time h
                  inner join host_type_cfe for system_time as of transaction @time htc on h.id = htc.host_id
                  inner join hubs for system_time as of transaction @time h2 on htc.hub_id = h2.id
-                 inner join cfe_03.host_meta for system_time as of transaction @time hm on h.id = hm.host_id
-                 inner join location.host for system_time as of transaction @time h3 on h2.host_id = h3.id
+                 inner join cfe_18.host_meta for system_time as of transaction @time hm on h.id = hm.host_id
+                 inner join cfe_18.host for system_time as of transaction @time h3 on h2.host_id = h3.id
         where h.id = proc_host_id
           and hm.host_id = proc_host_id
           and h3.id = h2.host_id;
-    elseif (select id from location.host for system_time as of transaction @time where id = proc_host_id and host_type = 'RELP') then
+    elseif (select id from cfe_18.host for system_time as of transaction @time where id = proc_host_id and host_type = 'RELP') then
         select id        as host_id,
                md5       as md5,
                fqhost    as fqhost,
                host_type as host_type
-        from location.host for system_time as of transaction @time
+        from cfe_18.host for system_time as of transaction @time
         where id = proc_host_id;
     end if;
     COMMIT;

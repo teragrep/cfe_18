@@ -75,20 +75,20 @@ public class ProcedureSinkTest extends DBUnitbase {
     public void testSinkAccept() throws Exception {
         IDataSet expectedDataSet = new FlatXmlDataSetBuilder()
                 .build(new File("src/test/resources/XMLProcedureSink/procedureSinkExpectedData1.xml"));
-        ITable expectedTable = expectedDataSet.getTable("flow.capture_sink");
-        ITable expectedTable1 = expectedDataSet.getTable("flow.L7");
-        ITable expectedTable2 = expectedDataSet.getTable("flow.flows");
+        ITable expectedTable = expectedDataSet.getTable("cfe_18.capture_sink");
+        ITable expectedTable1 = expectedDataSet.getTable("cfe_18.L7");
+        ITable expectedTable2 = expectedDataSet.getTable("cfe_18.flows");
 
-        CallableStatement stmnt = conn.prepareCall("{CALL flow.insert_sink(?,?,?,?)}");
+        CallableStatement stmnt = conn.prepareCall("{CALL cfe_18.insert_sink(?,?,?,?)}");
         stmnt.setString(1, "prot3");
         stmnt.setString(2, "ip1");
         stmnt.setString(3, "1234");
         stmnt.setInt(4, 2);
         stmnt.execute();
 
-        ITable actualTable = databaseConnection.createQueryTable("result", "select * from flow.capture_sink");
-        ITable actualTable1 = databaseConnection.createQueryTable("result", "select * from flow.L7");
-        ITable actualTable2 = databaseConnection.createQueryTable("result", "select * from flow.flows");
+        ITable actualTable = databaseConnection.createQueryTable("result", "select * from cfe_18.capture_sink");
+        ITable actualTable1 = databaseConnection.createQueryTable("result", "select * from cfe_18.L7");
+        ITable actualTable2 = databaseConnection.createQueryTable("result", "select * from cfe_18.flows");
 
         Assertion.assertEquals(expectedTable, actualTable);
         Assertion.assertEquals(expectedTable1, actualTable1);
@@ -101,7 +101,7 @@ public class ProcedureSinkTest extends DBUnitbase {
     Goal is to receive correct values from retrieve_sink_by_id procedure
      */
     public void testSinkRetrieveById() throws Exception {
-        CallableStatement stmnt = conn.prepareCall("{CALL flow.select_sink(?,?)}");
+        CallableStatement stmnt = conn.prepareCall("{CALL cfe_18.select_sink(?,?)}");
         stmnt.setInt(1, 1);
         stmnt.setString(2, null);
         ResultSet rs = stmnt.executeQuery();

@@ -87,8 +87,8 @@ BEGIN
                  inner join retentionTime for system_time as of transaction @time rT on c.retentionTime_id = rT.id
                  inner join captureSourcetype for system_time as of transaction @time  cS on c.captureSourcetype_id = cS.id
                  inner join category for system_time as of transaction @time c2 on c.category_id = c2.id
-                 inner join flow.flows for system_time as of transaction @time f on c.flow_id = f.id
-                 inner join flow.L7 for system_time as of transaction @time L on c.L7_id = L.id
+                 inner join cfe_18.flows for system_time as of transaction @time f on c.flow_id = f.id
+                 inner join cfe_18.L7 for system_time as of transaction @time L on c.L7_id = L.id
                  inner join capture_type for system_time as of transaction @time ct on c.capture_type_id = ct.id
                  inner join capture_meta_file for system_time as of transaction @time cmf on ct.id = cmf.id
                  inner join file_processing_type for system_time as of transaction @time pt on cmf.processing_type_id = pt.id
@@ -125,8 +125,8 @@ BEGIN
                  inner join retentionTime for system_time as of transaction @time rT on c.retentionTime_id = rT.id
                  inner join captureSourcetype for system_time as of transaction @time cS on c.captureSourcetype_id = cS.id
                  inner join category for system_time as of transaction @time c2 on c.category_id = c2.id
-                 inner join flow.flows for system_time as of transaction @time f on c.flow_id = f.id
-                 inner join flow.L7 for system_time as of transaction @time L on c.L7_id = L.id
+                 inner join cfe_18.flows for system_time as of transaction @time f on c.flow_id = f.id
+                 inner join cfe_18.L7 for system_time as of transaction @time L on c.L7_id = L.id
                  inner join capture_type for system_time as of transaction @time ct on c.capture_type_id = ct.id
         where c.id = proc_id
           and t.id = c.tag_id

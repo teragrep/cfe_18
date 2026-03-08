@@ -43,7 +43,7 @@
  * Teragrep, the applicable Commercial License may apply to this file if you as
  * a licensee so wish it.
  */
-use flow;
+use cfe_18;
 DELIMITER //
 CREATE OR REPLACE PROCEDURE retrieve_all_cfe_04_transforms(tx_id int)
 BEGIN
@@ -67,7 +67,7 @@ BEGIN
                t.destination_key    as destination_key,
                t.regex              as regex,
                t.format             as format
-        from flow.cfe_04_transforms for system_time as of transaction @time t;
+        from cfe_18.cfe_04_transforms for system_time as of transaction @time t;
 
 END;
 //

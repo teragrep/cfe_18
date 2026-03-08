@@ -87,16 +87,16 @@ public class ProcedureHostMetaFileTest extends DBUnitbase {
     public void testProcedureAddIpToHostMeta() throws Exception {
         IDataSet expectedDataSet = new FlatXmlDataSetBuilder()
                 .build(new File("src/test/resources/XMLProcedureHostMeta/procedureHostMetaTestDataExpected1.xml"));
-        ITable expectedTable1 = expectedDataSet.getTable("cfe_03.ip_addresses");
-        ITable expectedTable2 = expectedDataSet.getTable("cfe_03.host_meta_x_ip");
+        ITable expectedTable1 = expectedDataSet.getTable("cfe_18.ip_addresses");
+        ITable expectedTable2 = expectedDataSet.getTable("cfe_18.host_meta_x_ip");
 
-        CallableStatement stmnt = conn.prepareCall("{CALL cfe_03.add_ip_address(?,?)}");
+        CallableStatement stmnt = conn.prepareCall("{CALL cfe_18.add_ip_address(?,?)}");
         stmnt.setInt(1, 1);
         stmnt.setString(2, "ipaddress1");
         stmnt.execute();
 
-        ITable actualTable1 = databaseConnection.createQueryTable("result", "select * from cfe_03.ip_addresses");
-        ITable actualTable2 = databaseConnection.createQueryTable("result", "select * from cfe_03.host_meta_x_ip");
+        ITable actualTable1 = databaseConnection.createQueryTable("result", "select * from cfe_18.ip_addresses");
+        ITable actualTable2 = databaseConnection.createQueryTable("result", "select * from cfe_18.host_meta_x_ip");
 
         Assertion.assertEquals(expectedTable1, actualTable1);
         Assertion.assertEquals(expectedTable2, actualTable2);
@@ -108,7 +108,7 @@ public class ProcedureHostMetaFileTest extends DBUnitbase {
      */
     public void testHostMetaValidityOnIp() throws Exception {
         SQLException state = Assertions.assertThrows(SQLException.class, () -> {
-            CallableStatement stmnt = conn.prepareCall("{CALL cfe_03.add_ip_address(?,?)}");
+            CallableStatement stmnt = conn.prepareCall("{CALL cfe_18.add_ip_address(?,?)}");
             stmnt.setInt(1, 1000);
             stmnt.setString(2, "ip1");
             stmnt.execute();
@@ -122,7 +122,7 @@ public class ProcedureHostMetaFileTest extends DBUnitbase {
     */
     public void testHostMetaValidityOnInterface() throws Exception {
         SQLException state = Assertions.assertThrows(SQLException.class, () -> {
-            CallableStatement stmnt = conn.prepareCall("{CALL cfe_03.add_interface(?,?)}");
+            CallableStatement stmnt = conn.prepareCall("{CALL cfe_18.add_interface(?,?)}");
             stmnt.setInt(2, 1000);
             stmnt.setString(1, "ens192");
             stmnt.execute();
@@ -136,17 +136,17 @@ public class ProcedureHostMetaFileTest extends DBUnitbase {
     public void testProcedureAddInterfaceToHostMeta() throws Exception {
         IDataSet expectedDataSet = new FlatXmlDataSetBuilder()
                 .build(new File("src/test/resources/XMLProcedureHostMeta/procedureHostMetaTestDataExpected2.xml"));
-        ITable expectedTable1 = expectedDataSet.getTable("cfe_03.interfaces");
-        ITable expectedTable2 = expectedDataSet.getTable("cfe_03.host_meta_x_interface");
+        ITable expectedTable1 = expectedDataSet.getTable("cfe_18.interfaces");
+        ITable expectedTable2 = expectedDataSet.getTable("cfe_18.host_meta_x_interface");
 
-        CallableStatement stmnt = conn.prepareCall("{CALL cfe_03.add_interface(?,?)}");
+        CallableStatement stmnt = conn.prepareCall("{CALL cfe_18.add_interface(?,?)}");
         stmnt.setString(1, "interface1");
         stmnt.setInt(2, 1);
         stmnt.execute();
 
-        ITable actualTable1 = databaseConnection.createQueryTable("result", "select * from cfe_03.interfaces");
+        ITable actualTable1 = databaseConnection.createQueryTable("result", "select * from cfe_18.interfaces");
         ITable actualTable2 = databaseConnection
-                .createQueryTable("result", "select * from cfe_03.host_meta_x_interface");
+                .createQueryTable("result", "select * from cfe_18.host_meta_x_interface");
 
         Assertion.assertEquals(expectedTable1, actualTable1);
         Assertion.assertEquals(expectedTable2, actualTable2);
@@ -158,9 +158,9 @@ public class ProcedureHostMetaFileTest extends DBUnitbase {
     public void testHostMetaWithHost() throws Exception {
         IDataSet expectedDataSet = new FlatXmlDataSetBuilder()
                 .build(new File("src/test/resources/XMLProcedureHostMeta/procedureHostMetaTestDataExpected3.xml"));
-        ITable expectedTable2 = expectedDataSet.getTable("cfe_03.host_meta");
+        ITable expectedTable2 = expectedDataSet.getTable("cfe_18.host_meta");
         // käytetään aiempia arvoja mitä on jo testidatassa. Halutaan vain nähdä syntyykö uusi host meta hostille jolla ei ole host metaa vielä.
-        CallableStatement stmnt = conn.prepareCall("{CALL cfe_03.add_host_meta_data(?,?,?,?,?,?)}");
+        CallableStatement stmnt = conn.prepareCall("{CALL cfe_18.add_host_meta_data(?,?,?,?,?,?)}");
         stmnt.setString(1, "arch1");
         stmnt.setString(2, "flavor1");
         stmnt.setString(3, "host3");
@@ -169,7 +169,7 @@ public class ProcedureHostMetaFileTest extends DBUnitbase {
         stmnt.setString(6, "release_version2");
         stmnt.execute();
 
-        ITable actualTable2 = databaseConnection.createQueryTable("result", "select * from cfe_03.host_meta");
+        ITable actualTable2 = databaseConnection.createQueryTable("result", "select * from cfe_18.host_meta");
 
         Assertion.assertEquals(expectedTable2, actualTable2);
 
@@ -181,7 +181,7 @@ public class ProcedureHostMetaFileTest extends DBUnitbase {
      */
     public void testHostExistenceOnHostMeta() throws Exception {
         SQLException state = Assertions.assertThrows(SQLException.class, () -> {
-            CallableStatement stmnt = conn.prepareCall("{CALL cfe_03.add_host_meta_data(?,?,?,?,?,?)}");
+            CallableStatement stmnt = conn.prepareCall("{CALL cfe_18.add_host_meta_data(?,?,?,?,?,?)}");
             stmnt.setString(1, "arch1");
             stmnt.setString(2, "flavor1");
             stmnt.setString(3, "host1");
@@ -200,7 +200,7 @@ public class ProcedureHostMetaFileTest extends DBUnitbase {
     public void testHostMetaRetrieve() throws Exception {
         List<String> IpList = new ArrayList<>();
         List<String> InterfaceList = new ArrayList<>();
-        CallableStatement stmnt = conn.prepareCall("{CALL cfe_03.retrieve_host_meta(?,?)}");
+        CallableStatement stmnt = conn.prepareCall("{CALL cfe_18.retrieve_host_meta(?,?)}");
         stmnt.setInt(1, 1);
         stmnt.setString(2, null);
         ResultSet rs = stmnt.executeQuery();
@@ -223,7 +223,7 @@ public class ProcedureHostMetaFileTest extends DBUnitbase {
     Testi millä tarkastetaan cfe hostin palautus missä host_meta_id tulee mukana. Testidatan vuoksi hostin testi täälä.
     */
     public void testProcedureRetrieveCfeHost() throws Exception {
-        CallableStatement stmnt = conn.prepareCall("{CALL cfe_00.retrieve_host_details(?,?)}");
+        CallableStatement stmnt = conn.prepareCall("{CALL cfe_18.retrieve_host_details(?,?)}");
         stmnt.setInt(1, 2);
         stmnt.setString(2, null);
         ResultSet rs = stmnt.executeQuery();

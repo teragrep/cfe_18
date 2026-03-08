@@ -43,7 +43,7 @@
  * Teragrep, the applicable Commercial License may apply to this file if you as
  * a licensee so wish it.
  */
-use location;
+use cfe_18;
 DELIMITER //
 CREATE OR REPLACE PROCEDURE retrieve_cfe_hub_details(proc_hub_id int,tx_id int)
 BEGIN
@@ -58,7 +58,7 @@ BEGIN
         else
              set @time=tx_id;
         end if;
-    if (select id from cfe_00.hubs for system_time as of transaction @time where id = proc_hub_id) is null then
+    if (select id from cfe_18.hubs for system_time as of transaction @time where id = proc_hub_id) is null then
         SELECT JSON_OBJECT('id', proc_hub_id, 'message', 'Hub does not exist with given ID') into @hub;
         signal sqlstate '45000' set message_text = @hub;
     end if;
@@ -67,8 +67,8 @@ BEGIN
            h.fqhost   as hub_fq_host,
            hu.ip      as ip,
            h.md5      as md5
-    from cfe_00.hubs for system_time as of transaction @time hu
-             inner join location.host for system_time as of transaction @time h on hu.host_id = h.id
+    from cfe_18.hubs for system_time as of transaction @time hu
+             inner join cfe_18.host for system_time as of transaction @time h on hu.host_id = h.id
     where hu.id = proc_hub_id;
     COMMIT;
 END;

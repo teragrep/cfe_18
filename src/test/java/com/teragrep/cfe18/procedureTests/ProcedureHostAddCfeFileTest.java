@@ -75,7 +75,7 @@ public class ProcedureHostAddCfeFileTest extends DBUnitbase {
      */
     public void testProcedureCfeHostNoHub() throws Exception {
         SQLException state = Assertions.assertThrows(SQLException.class, () -> {
-            CallableStatement stmnt = conn.prepareCall("{CALL location.insert_file_host(?,?,?)}");
+            CallableStatement stmnt = conn.prepareCall("{CALL cfe_18.insert_file_host(?,?,?)}");
             stmnt.setString(1, "someMd5Test");
             stmnt.setString(2, "someFullyQualifiedHost");
             stmnt.setString(3, "someFullyQualifiedHostForHub");
@@ -94,16 +94,16 @@ public class ProcedureHostAddCfeFileTest extends DBUnitbase {
         // Gets the expected dataset
         IDataSet expectedDataSet = new FlatXmlDataSetBuilder()
                 .build(new File("src/test/resources/XMLProcedureHost/procedureHostExpectedTestData1.xml"));
-        ITable expectedTable = expectedDataSet.getTable("cfe_00.host_type_cfe");
+        ITable expectedTable = expectedDataSet.getTable("cfe_18.host_type_cfe");
 
-        CallableStatement stmnt = conn.prepareCall("{call location.host_add_cfe_hub(?, ?, ?)}");
+        CallableStatement stmnt = conn.prepareCall("{call cfe_18.host_add_cfe_hub(?, ?, ?)}");
         stmnt.setString(1, "hosit1");
         stmnt.setString(2, "Md5jokaeiosu");
         stmnt.setString(3, "jokuip");
         stmnt.execute();
 
         // Retrieves the dataset which happened after the execution
-        ITable actualTable = databaseConnection.createQueryTable("result", "select * from cfe_00.host_type_cfe");
+        ITable actualTable = databaseConnection.createQueryTable("result", "select * from cfe_18.host_type_cfe");
 
         // Assert actual database table match expected table
         Assertion.assertEqualsIgnoreCols(expectedTable, actualTable, new String[] {
@@ -117,14 +117,14 @@ public class ProcedureHostAddCfeFileTest extends DBUnitbase {
     public void testProcedureCfeHostAccept() throws Exception {
         IDataSet expectedDataSet = new FlatXmlDataSetBuilder()
                 .build(new File("src/test/resources/XMLProcedureHost/procedureHostExpectedTestData2.xml"));
-        ITable expectedTable = expectedDataSet.getTable("location.host");
+        ITable expectedTable = expectedDataSet.getTable("cfe_18.host");
 
-        CallableStatement stmnt = conn.prepareCall("{call location.insert_file_host( ?, ?, ?)}");
+        CallableStatement stmnt = conn.prepareCall("{call cfe_18.insert_file_host( ?, ?, ?)}");
         stmnt.setString(1, "51232445674");
         stmnt.setString(2, "534209325");
         stmnt.setString(3, "1");
         stmnt.execute();
-        ITable actualTable = databaseConnection.createQueryTable("result", "select * from location.host");
+        ITable actualTable = databaseConnection.createQueryTable("result", "select * from cfe_18.host");
 
         // Assert actual database table match expected table
         Assertion.assertEqualsIgnoreCols(expectedTable, actualTable, new String[] {
@@ -136,7 +136,7 @@ public class ProcedureHostAddCfeFileTest extends DBUnitbase {
     This test is retrieving relp based host
     */
     public void testProcedureRetrieveRelpHost() throws Exception {
-        CallableStatement stmnt = conn.prepareCall("{CALL cfe_00.select_relp_host(?,?)}");
+        CallableStatement stmnt = conn.prepareCall("{CALL cfe_18.select_relp_host(?,?)}");
         stmnt.setInt(1, 25);
         stmnt.setString(2, null);
         ResultSet rs = stmnt.executeQuery();
@@ -150,7 +150,7 @@ public class ProcedureHostAddCfeFileTest extends DBUnitbase {
     This test is retrieving cfe hub
     */
     public void testProcedureRetrieveHub() throws Exception {
-        CallableStatement stmnt = conn.prepareCall("{CALL location.retrieve_cfe_hub_details(?,?)}");
+        CallableStatement stmnt = conn.prepareCall("{CALL cfe_18.retrieve_cfe_hub_details(?,?)}");
         stmnt.setInt(1, 1);
         stmnt.setString(2, null);
         ResultSet rs = stmnt.executeQuery();
@@ -168,14 +168,14 @@ public class ProcedureHostAddCfeFileTest extends DBUnitbase {
     public void testProcedureAddRelpHost() throws Exception {
         IDataSet expectedDataSet = new FlatXmlDataSetBuilder()
                 .build(new File("src/test/resources/XMLProcedureHost/procedureHostExpectedTestData3.xml"));
-        ITable expectedTable = expectedDataSet.getTable("location.host");
+        ITable expectedTable = expectedDataSet.getTable("cfe_18.host");
 
-        CallableStatement stmnt = conn.prepareCall("{call location.insert_relp_host(?, ?)}");
+        CallableStatement stmnt = conn.prepareCall("{call cfe_18.insert_relp_host(?, ?)}");
         stmnt.setString(1, "ReliantMD5");
         stmnt.setString(2, "ReliantFqHost");
         stmnt.execute();
 
-        ITable actualTable = databaseConnection.createQueryTable("result", "select * from location.host");
+        ITable actualTable = databaseConnection.createQueryTable("result", "select * from cfe_18.host");
 
         // Assert actual database table match expected table
         Assertion.assertEqualsIgnoreCols(expectedTable, actualTable, new String[] {

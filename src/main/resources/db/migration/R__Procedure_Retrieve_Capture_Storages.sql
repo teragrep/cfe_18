@@ -66,8 +66,8 @@ BEGIN
     else
         select s.storage_name as storage_name, cdxft.flow_target_id as storage_id, cdxft.capture_def_id as capture_id
         from capture_def_x_flow_targets for system_time as of transaction @time cdxft
-                 inner join flow.flow_targets for system_time as of transaction @time ft on cdxft.flow_target_id = ft.storage_id
-                 inner join flow.storages for system_time as of transaction @time s on ft.storage_id = s.id
+                 inner join cfe_18.flow_targets for system_time as of transaction @time ft on cdxft.flow_target_id = ft.storage_id
+                 inner join cfe_18.storages for system_time as of transaction @time s on ft.storage_id = s.id
         where cdxft.capture_def_id = capture_id;
     end if;
     COMMIT;

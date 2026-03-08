@@ -43,7 +43,7 @@
  * Teragrep, the applicable Commercial License may apply to this file if you as
  * a licensee so wish it.
  */
-use cfe_00;
+use cfe_18;
 
 
 create table hubs
@@ -52,7 +52,7 @@ create table hubs
     host_id   int unique   not null,
     ip        varchar(255) not null,
     host_type varchar(20)  not null check (host_type = 'cfe'),
-    constraint ´HubIdToHost´ foreign key (host_id, host_type) references location.host (id, host_type),
+    constraint ´HubIdToHost´ foreign key (host_id, host_type) references cfe_18.host (id, host_type),
     start_trxid BIGINT UNSIGNED GENERATED ALWAYS AS ROW START INVISIBLE,
     end_trxid BIGINT UNSIGNED GENERATED ALWAYS AS ROW END INVISIBLE,
     PERIOD FOR SYSTEM_TIME(start_trxid, end_trxid)
@@ -95,7 +95,7 @@ create table host_type_cfe
     host_id   int         not null,
     host_type varchar(20) not null check (host_type = 'cfe'),
     hub_id    int         not null,
-    constraint hostTypeCfe foreign key (host_id, host_type) references location.host (id, host_type) on delete cascade,
+    constraint hostTypeCfe foreign key (host_id, host_type) references cfe_18.host (id, host_type) on delete cascade,
     constraint hub_id_TO_hubs foreign key (hub_id) references hubs (id),
     unique key (host_id, hub_id),
     start_trxid BIGINT UNSIGNED GENERATED ALWAYS AS ROW START INVISIBLE,

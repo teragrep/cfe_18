@@ -43,7 +43,7 @@
  * Teragrep, the applicable Commercial License may apply to this file if you as
  * a licensee so wish it.
  */
-USE location;
+USE cfe_18;
 DELIMITER //
 CREATE OR REPLACE PROCEDURE select_all_relp_hosts(tx_id INT)
 BEGIN
@@ -60,7 +60,7 @@ BEGIN
     SELECT h.id     AS id,
            h.md5    AS host_md5,
            h.fqhost AS host_fq
-    FROM location.host FOR SYSTEM_TIME AS OF TRANSACTION @time h
+    FROM cfe_18.host FOR SYSTEM_TIME AS OF TRANSACTION @time h
     WHERE h.host_type = 'RELP';
 END;
 //

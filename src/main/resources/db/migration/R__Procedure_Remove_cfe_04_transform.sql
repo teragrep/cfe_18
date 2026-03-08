@@ -43,7 +43,7 @@
  * Teragrep, the applicable Commercial License may apply to this file if you as
  * a licensee so wish it.
  */
-use flow;
+use cfe_18;
 DELIMITER //
 CREATE OR REPLACE PROCEDURE delete_cfe_04_transform(transforms_id int)
 BEGIN
@@ -54,13 +54,13 @@ BEGIN
         END;
     START TRANSACTION;
     if (select id
-        from flow.cfe_04_transforms
+        from cfe_18.cfe_04_transforms
         where id = transforms_id) is null then
         SELECT JSON_OBJECT('id', null, 'message', 'Transform record does not exist') into @c4t;
         signal sqlstate '45000' set message_text = @c4t;
     end if;
     delete
-    from flow.cfe_04_transforms
+    from cfe_18.cfe_04_transforms
     where id = transforms_id;
     -- Return the ID of deleted row as signal
     select transforms_id as id;

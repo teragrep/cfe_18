@@ -77,9 +77,9 @@ public class TriggerDataTest extends DBInformation {
         // partial database export
         QueryDataSet partialDataSet = new QueryDataSet(connection);
         // Flow data
-        partialDataSet.addTable("flow.flows");
-        partialDataSet.addTable("flow.L7");
-        partialDataSet.addTable("flow.capture_sink");
+        partialDataSet.addTable("cfe_18.flows");
+        partialDataSet.addTable("cfe_18.L7");
+        partialDataSet.addTable("cfe_18.capture_sink");
 
         partialDataSet.addTable("cfe_18.ruleset");
         partialDataSet.addTable("cfe_18.templates");
@@ -93,9 +93,9 @@ public class TriggerDataTest extends DBInformation {
         partialDataSet.addTable("cfe_18.capture_definition");
         partialDataSet.addTable("cfe_18.capture_def_group");
         partialDataSet.addTable("cfe_18.capture_def_group_x_capture_def");
-        partialDataSet.addTable("location.host");
-        partialDataSet.addTable("location.host_group");
-        partialDataSet.addTable("location.host_group_x_host");
+        partialDataSet.addTable("cfe_18.host");
+        partialDataSet.addTable("cfe_18.host_group");
+        partialDataSet.addTable("cfe_18.host_group_x_host");
         partialDataSet.addTable("cfe_18.host_groups_x_capture_def_group");
 
         FlatXmlDataSet
@@ -113,9 +113,9 @@ public class TriggerDataTest extends DBInformation {
 
         Statement deleteStatement = conn.createStatement();
         deleteStatement.addBatch("delete from cfe_18.host_groups_x_capture_def_group");
-        deleteStatement.addBatch("delete from location.host_group_x_host");
-        deleteStatement.addBatch("delete from location.host_group");
-        deleteStatement.addBatch("delete from location.host");
+        deleteStatement.addBatch("delete from cfe_18.host_group_x_host");
+        deleteStatement.addBatch("delete from cfe_18.host_group");
+        deleteStatement.addBatch("delete from cfe_18.host");
         deleteStatement.addBatch("delete from cfe_18.capture_def_group_x_capture_def");
         deleteStatement.addBatch("delete from cfe_18.capture_def_group");
         deleteStatement.addBatch("delete from cfe_18.capture_definition");
@@ -128,9 +128,9 @@ public class TriggerDataTest extends DBInformation {
         deleteStatement.addBatch("delete from cfe_18.regex");
         deleteStatement.addBatch("delete from cfe_18.newline");
         deleteStatement.addBatch("delete from cfe_18.inputtype");
-        deleteStatement.addBatch("delete from flow.capture_sink");
-        deleteStatement.addBatch("delete from flow.flows");
-        deleteStatement.addBatch("delete from flow.L7");
+        deleteStatement.addBatch("delete from cfe_18.capture_sink");
+        deleteStatement.addBatch("delete from cfe_18.flows");
+        deleteStatement.addBatch("delete from cfe_18.L7");
         deleteStatement.executeBatch();
     }
 
@@ -138,13 +138,13 @@ public class TriggerDataTest extends DBInformation {
 
         Statement insertTestData = conn.createStatement();
 
-        insertTestData.addBatch("insert into flow.L7(id, app_protocol) values (1, 'prot1');");
+        insertTestData.addBatch("insert into cfe_18.L7(id, app_protocol) values (1, 'prot1');");
 
-        insertTestData.addBatch("insert into flow.flows(id, flowname) values (1, 'flow1');");
+        insertTestData.addBatch("insert into cfe_18.flows(id, flowname) values (1, 'flow1');");
 
         insertTestData
                 .addBatch(
-                        "insert into flow.capture_sink(id, L7_id, flow_id, ip_address,sink_port) values (1,1,1,'ip1','601');"
+                        "insert into cfe_18.capture_sink(id, L7_id, flow_id, ip_address,sink_port) values (1,1,1,'ip1','601');"
                 );
 
         insertTestData.addBatch("insert into cfe_18.inputtype(id, inputtype) values (1, 'regex'),(2, 'newline');");
@@ -182,17 +182,17 @@ public class TriggerDataTest extends DBInformation {
 
         insertTestData
                 .addBatch(
-                        "insert into location.host(id,MD5,host_type) values (1,'12365','cfe'), (2,'12322','cfe'), (3,'1323','cfe'), (4,'4123','cfe'), (5,'5123','cfe'), (6,'6123','cfe'), (7,'7123','cfe'), (16,'712','cfe'), (9,'723','cfe'), (8,'71233','cfe'), (10,'712362','cfe'), (12,'712653','cfe'), (17,'71211233','cfe'), (11,'712213123','cfe'), (21,'7142213123','cfe'), (22,'7125213123','cfe'), (23,'7122613123','cfe'), (24,'7122173123','cfe'), (15,'75757122173123','cfe');"
+                        "insert into cfe_18.host(id,MD5,host_type) values (1,'12365','cfe'), (2,'12322','cfe'), (3,'1323','cfe'), (4,'4123','cfe'), (5,'5123','cfe'), (6,'6123','cfe'), (7,'7123','cfe'), (16,'712','cfe'), (9,'723','cfe'), (8,'71233','cfe'), (10,'712362','cfe'), (12,'712653','cfe'), (17,'71211233','cfe'), (11,'712213123','cfe'), (21,'7142213123','cfe'), (22,'7125213123','cfe'), (23,'7122613123','cfe'), (24,'7122173123','cfe'), (15,'75757122173123','cfe');"
                 );
 
         insertTestData
                 .addBatch(
-                        "insert into location.host_group (id, groupName) values (1, 'host_group_1'), (2, 'host_group_2'), (3, 'host_group_3'), (4, 'host_group_4'), (5, 'host_group_5'), (6, 'host_group_6');"
+                        "insert into cfe_18.host_group (id, groupName) values (1, 'host_group_1'), (2, 'host_group_2'), (3, 'host_group_3'), (4, 'host_group_4'), (5, 'host_group_5'), (6, 'host_group_6');"
                 );
 
         insertTestData
                 .addBatch(
-                        "insert into location.host_group_x_host(id,host_group_id, host_id,host_type) values (1,1, 1,'cfe'), (2,1, 2,'cfe'), (3,1, 3,'cfe'), (4,1, 4,'cfe'), (5,2, 5,'cfe'), (6,2, 6,'cfe'), (7,2, 7,'cfe'), (8,2, 16,'cfe'), (9,3, 9,'cfe'), (10,3, 8,'cfe'), (11,3, 10,'cfe'), (12,3, 12,'cfe'), (13,4, 17,'cfe'), (14,4, 11,'cfe'), (15,5, 21,'cfe'), (16,5, 22,'cfe'), (17,6, 23,'cfe'), (18,6, 24,'cfe');"
+                        "insert into cfe_18.host_group_x_host(id,host_group_id, host_id,host_type) values (1,1, 1,'cfe'), (2,1, 2,'cfe'), (3,1, 3,'cfe'), (4,1, 4,'cfe'), (5,2, 5,'cfe'), (6,2, 6,'cfe'), (7,2, 7,'cfe'), (8,2, 16,'cfe'), (9,3, 9,'cfe'), (10,3, 8,'cfe'), (11,3, 10,'cfe'), (12,3, 12,'cfe'), (13,4, 17,'cfe'), (14,4, 11,'cfe'), (15,5, 21,'cfe'), (16,5, 22,'cfe'), (17,6, 23,'cfe'), (18,6, 24,'cfe');"
                 );
 
         insertTestData

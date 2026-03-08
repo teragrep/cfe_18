@@ -6,13 +6,13 @@
 
     <!-- insert             ( flowname VARCHAR(255) ) -->
     <select id="create" resultMap="insertedID" statementType="CALLABLE">
-        {CALL flow.insert_flow(#{param1})}
+        {CALL cfe_18.insert_flow(#{param1})}
     </select>
 
 
     <!-- Get ALL            ( tx_id INT ) -->
     <select id="getAll" resultMap="all" statementType="CALLABLE">
-        {CALL flow.select_all_flows(#{param1})}
+        {CALL cfe_18.select_all_flows(#{param1})}
     </select>
     <resultMap id="all" type="com.teragrep.cfe18.handlers.entities.Flow">
         <result property="id"       column="id"/>
@@ -22,7 +22,7 @@
 
     <!-- Delete             ( flow_id INT )  -->
     <select id="delete" statementType="CALLABLE">
-        {CALL flow.delete_flow(#{param1})}
+        {CALL cfe_18.delete_flow(#{param1})}
     </select>
 
 

@@ -43,7 +43,7 @@
  * Teragrep, the applicable Commercial License may apply to this file if you as
  * a licensee so wish it.
  */
-USE flow;
+USE cfe_18;
 DELIMITER //
 CREATE OR REPLACE PROCEDURE insert_sink(protocol VARCHAR(20), ip_address VARCHAR(16), sink_port VARCHAR(5),
                                         flow_id INT)
@@ -55,26 +55,26 @@ BEGIN
         END;
     START TRANSACTION;
 
-    IF ((SELECT COUNT(id) FROM flow.L7 WHERE app_protocol = protocol) = 0) THEN
-        INSERT INTO flow.L7(app_protocol)
+    IF ((SELECT COUNT(id) FROM cfe_18.L7 WHERE app_protocol = protocol) = 0) THEN
+        INSERT INTO cfe_18.L7(app_protocol)
         VALUES (protocol);
         SELECT LAST_INSERT_ID() INTO @ProtocolId;
     ELSE
-        SELECT id INTO @ProtocolId FROM flow.L7 WHERE app_protocol = protocol;
+        SELECT id INTO @ProtocolId FROM cfe_18.L7 WHERE app_protocol = protocol;
     END IF;
 
     IF ((SELECT COUNT(id)
-         FROM flow.capture_sink cs
+         FROM cfe_18.capture_sink cs
          WHERE cs.L7_id = @ProtocolId
            AND cs.flow_id = flow_id
            AND cs.ip_address = ip_address
            AND cs.sink_port = sink_port) = 0) THEN
-        INSERT INTO flow.capture_sink(L7_id, flow_id, ip_address, sink_port)
+        INSERT INTO cfe_18.capture_sink(L7_id, flow_id, ip_address, sink_port)
         VALUES (@ProtocolId, flow_id, ip_address, sink_port);
         SELECT LAST_INSERT_ID() AS id;
     ELSE
         SELECT id AS id
-        FROM flow.capture_sink cs
+        FROM cfe_18.capture_sink cs
         WHERE cs.L7_id = @ProtocolId
           AND cs.flow_id = flow_id
           AND cs.ip_address = ip_address

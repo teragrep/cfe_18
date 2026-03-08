@@ -43,7 +43,7 @@
  * Teragrep, the applicable Commercial License may apply to this file if you as
  * a licensee so wish it.
  */
-use cfe_03;
+use cfe_18;
 DELIMITER //
 CREATE OR REPLACE PROCEDURE retrieve_host_meta(proc_host_meta_id int,tx_id int)
 BEGIN
@@ -66,8 +66,8 @@ BEGIN
         signal sqlstate '45000' set message_text = @hmd;
     end if;
 
-    if (((select count(*) from cfe_03.host_meta_x_ip for system_time as of transaction @time where host_meta_id = proc_host_meta_id) and
-         (select count(*) from cfe_03.host_meta_x_interface for system_time as of transaction @time where host_meta_id = proc_host_meta_id)) = 0) then
+    if (((select count(*) from cfe_18.host_meta_x_ip for system_time as of transaction @time where host_meta_id = proc_host_meta_id) and
+         (select count(*) from cfe_18.host_meta_x_interface for system_time as of transaction @time where host_meta_id = proc_host_meta_id)) = 0) then
         SELECT JSON_OBJECT('id', proc_host_meta_id, 'message', 'IP and/or INTERFACE is missing for given host_meta_id')
         into @ipihm;
         signal sqlstate '45100' set message_text = @ipihm;

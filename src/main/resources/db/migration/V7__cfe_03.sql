@@ -43,7 +43,7 @@
  * Teragrep, the applicable Commercial License may apply to this file if you as
  * a licensee so wish it.
  */
-use cfe_03;
+use cfe_18;
 
 create table interfaces
 (
@@ -113,7 +113,7 @@ create table host_meta
     constraint flavor foreign key (flavor_id) references flavor_type (id),
     constraint arch foreign key (arch_id) references arch_type (id),
     constraint os foreign key (os_id) references os_type (id),
-    constraint ´MD5ToLocationHost´ foreign key (host_id) references location.host (id) on delete cascade,
+    constraint ´MD5ToLocationHost´ foreign key (host_id) references cfe_18.host (id) on delete cascade,
     start_trxid BIGINT UNSIGNED GENERATED ALWAYS AS ROW START INVISIBLE,
     end_trxid BIGINT UNSIGNED GENERATED ALWAYS AS ROW END INVISIBLE,
     PERIOD FOR SYSTEM_TIME(start_trxid, end_trxid)

@@ -43,7 +43,7 @@
  * Teragrep, the applicable Commercial License may apply to this file if you as
  * a licensee so wish it.
  */
-USE flow;
+USE cfe_18;
 DELIMITER //
 CREATE OR REPLACE PROCEDURE select_sink(sink_id INT, tx_id INT)
 BEGIN
@@ -60,7 +60,7 @@ BEGIN
         SET @time = tx_id;
     END IF;
 
-    IF ((SELECT COUNT(id) FROM capture_sink FOR SYSTEM_TIME AS OF TRANSACTION @time WHERE id = sink_id) = 0) THEN
+    IF ((SELECT COUNT(id) FROM cfe_18.capture_sink FOR SYSTEM_TIME AS OF TRANSACTION @time WHERE id = sink_id) = 0) THEN
         SELECT JSON_OBJECT('id', sink_id, 'message', 'Sink does not exist') INTO @sink;
         SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = @sink;
     END IF;
@@ -70,7 +70,7 @@ BEGIN
            cs.sink_port   AS port,
            L.app_protocol AS protocol,
            cs.flow_id     AS flow_id
-    FROM capture_sink FOR SYSTEM_TIME AS OF TRANSACTION @time cs
+    FROM cfe_18.capture_sink FOR SYSTEM_TIME AS OF TRANSACTION @time cs
              INNER JOIN L7 FOR SYSTEM_TIME AS OF TRANSACTION @time L ON cs.L7_id = L.id
     WHERE cs.id = sink_id
       AND L.id = cs.L7_id;

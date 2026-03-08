@@ -43,7 +43,7 @@
  * Teragrep, the applicable Commercial License may apply to this file if you as
  * a licensee so wish it.
  */
-USE flow;
+USE cfe_18;
 DELIMITER //
 CREATE OR REPLACE PROCEDURE delete_storage(proc_storage_id INT)
 BEGIN
@@ -53,11 +53,11 @@ BEGIN
             RESIGNAL;
         END;
     START TRANSACTION;
-    IF ((SELECT COUNT(id) FROM flow.storages WHERE id = proc_storage_id) = 0) THEN
+    IF ((SELECT COUNT(id) FROM cfe_18.storages WHERE id = proc_storage_id) = 0) THEN
         SELECT JSON_OBJECT('id', proc_storage_id, 'message', 'Storage does not exist') INTO @s;
         SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = @s;
     END IF;
-    DELETE FROM flow.storages WHERE id = proc_storage_id;
+    DELETE FROM cfe_18.storages WHERE id = proc_storage_id;
     COMMIT;
 
 END;

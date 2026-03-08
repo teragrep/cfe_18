@@ -43,7 +43,7 @@
  * Teragrep, the applicable Commercial License may apply to this file if you as
  * a licensee so wish it.
  */
-USE cfe_00;
+USE cfe_18;
 DELIMITER //
 CREATE OR REPLACE PROCEDURE select_relp_host(proc_host_id INT, tx_id INT)
 BEGIN
@@ -58,7 +58,7 @@ BEGIN
     ELSE
         SET @time = tx_id;
     END IF;
-    IF ((SELECT COUNT(id) FROM location.host FOR SYSTEM_TIME AS OF TRANSACTION @time WHERE id = proc_host_id) = 0) THEN
+    IF ((SELECT COUNT(id) FROM cfe_18.host FOR SYSTEM_TIME AS OF TRANSACTION @time WHERE id = proc_host_id) = 0) THEN
         SELECT JSON_OBJECT('id', proc_host_id, 'message', 'Host does not exist') INTO @hid;
         SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = @hid;
     END IF;
@@ -66,7 +66,7 @@ BEGIN
     SELECT h.id        AS id,
            h.md5       AS host_md5,
            h.fqhost    AS host_fq
-    FROM location.host FOR SYSTEM_TIME AS OF TRANSACTION @time h
+    FROM cfe_18.host FOR SYSTEM_TIME AS OF TRANSACTION @time h
     WHERE h.id = proc_host_id;
     COMMIT;
 END;

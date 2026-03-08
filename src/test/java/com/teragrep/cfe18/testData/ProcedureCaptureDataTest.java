@@ -144,13 +144,13 @@ public class ProcedureCaptureDataTest extends DBInformation {
 
         Statement insertTestData = conn.createStatement();
 
-        insertTestData.addBatch("insert into flow.L7(id, app_protocol) values (1, 'tcp-plain');");
+        insertTestData.addBatch("insert into cfe_18.L7(id, app_protocol) values (1, 'tcp-plain');");
 
-        insertTestData.addBatch("insert into flow.flows(id, flowname) values (1, 'flow1');");
+        insertTestData.addBatch("insert into cfe_18.flows(id, flowname) values (1, 'flow1');");
 
         insertTestData
                 .addBatch(
-                        "insert into flow.capture_sink(id, L7_id, flow_id, ip_address,sink_port) values (1,1,1,'ip1','601');"
+                        "insert into cfe_18.capture_sink(id, L7_id, flow_id, ip_address,sink_port) values (1,1,1,'ip1','601');"
                 );
 
         insertTestData.addBatch("insert into cfe_18.inputtype(id, inputtype) values (1, 'regex'),(2, 'newline');");

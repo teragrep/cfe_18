@@ -43,7 +43,7 @@
  * Teragrep, the applicable Commercial License may apply to this file if you as
  * a licensee so wish it.
  */
-USE flow;
+USE cfe_18;
 DELIMITER //
 CREATE OR REPLACE PROCEDURE insert_flow(flowname VARCHAR(255))
 BEGIN
@@ -53,11 +53,11 @@ BEGIN
             RESIGNAL;
         END;
     START TRANSACTION;
-    IF ((SELECT COUNT(id) FROM flow.flows WHERE name = flowname) = 0) THEN
-        INSERT INTO flow.flows(name) VALUES (flowname);
+    IF ((SELECT COUNT(id) FROM cfe_18.flows WHERE name = flowname) = 0) THEN
+        INSERT INTO cfe_18.flows(name) VALUES (flowname);
         SELECT LAST_INSERT_ID() AS id;
     ELSE
-        SELECT id AS id FROM flow.flows WHERE flowname = name;
+        SELECT id AS id FROM cfe_18.flows WHERE flowname = name;
     END IF;
     COMMIT;
 END;

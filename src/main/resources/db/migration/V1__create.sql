@@ -44,12 +44,6 @@
  * a licensee so wish it.
  */
 create database if not exists cfe_18 CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-create database if not exists cfe_03 CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-create database if not exists cfe_01 CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-create database if not exists cfe_07 CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-create database if not exists cfe_00 CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-create database if not exists flow CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-create database if not exists location CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 
 

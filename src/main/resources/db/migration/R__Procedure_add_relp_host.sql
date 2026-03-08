@@ -43,7 +43,7 @@
  * Teragrep, the applicable Commercial License may apply to this file if you as
  * a licensee so wish it.
  */
-use location;
+use cfe_18;
 DELIMITER //
 CREATE OR REPLACE PROCEDURE host_add_relp(proc_MD5 varchar(32), proc_fqhost varchar(128))
 BEGIN
@@ -55,24 +55,24 @@ BEGIN
     START TRANSACTION;
     -- check if host exists with same values but on different type
     if (select id
-        from location.host
+        from cfe_18.host
         where MD5 = proc_MD5
           and fqhost = proc_fqhost
           and host_type != 'RELP') is not null then
-        select id into @id from location.host where MD5 = proc_MD5 and fqhost = proc_fqhost;
+        select id into @id from cfe_18.host where MD5 = proc_MD5 and fqhost = proc_fqhost;
         SELECT JSON_OBJECT('id', @id, 'message', 'Host exists with different host type') into @host;
         signal sqlstate '45000' set message_text = @host;
     end if;
     if (select id
-        from location.host
+        from cfe_18.host
         where MD5 = proc_MD5
           and fqhost = proc_fqhost
           and host_type = 'RELP') is null then
-        insert into location.host(MD5, fqhost, host_type)
+        insert into cfe_18.host(MD5, fqhost, host_type)
         values (proc_MD5, proc_fqhost, 'RELP');
         select last_insert_id() into @id;
     else
-        select id into @id from location.host where MD5 = proc_MD5 and fqhost = proc_fqhost and host_type = 'RELP';
+        select id into @id from cfe_18.host where MD5 = proc_MD5 and fqhost = proc_fqhost and host_type = 'RELP';
     end if;
     COMMIT;
     select @id as last;

@@ -16,7 +16,7 @@ use cfe_18;
 -- Check all the hosts that are inserted with the new.host_group
 CREATE OR REPLACE TEMPORARY TABLE __hosts_inside_new_group AS
 select hgxh.host_id, hgxh.host_group_id
-from location.host_group_x_host hgxh
+from cfe_18.host_group_x_host hgxh
 where hgxh.host_group_id = 4;
 
 -- debug
@@ -26,7 +26,7 @@ from __hosts_inside_new_group;
 -- Check which host_groups have the existing hosts
 CREATE OR REPLACE TEMPORARY TABLE __host_groups_from_gathered_hosts AS
 select distinct hgxh.host_group_id
-from location.host_group_x_host hgxh
+from cfe_18.host_group_x_host hgxh
          INNER JOIN __hosts_inside_new_group hing on hgxh.host_id = hing.host_id;
 
 
@@ -72,9 +72,9 @@ from cfe_18.capture_def_group_x_capture_def ldgxld
          INNER JOIN (select distinct hgxldg.capture_group_id
                      from cfe_18.host_groups_x_capture_def_group hgxldg
                               INNER JOIN (select distinct hgxh.host_group_id
-                                          from location.host_group_x_host hgxh
+                                          from cfe_18.host_group_x_host hgxh
                                                    INNER JOIN (select hgxh.host_id, hgxh.host_group_id
-                                                               from location.host_group_x_host hgxh
+                                                               from cfe_18.host_group_x_host hgxh
                                                                where hgxh.host_group_id = 4) hing
                                                               on hgxh.host_id = hing.host_id) hgtai
                                          on hgxldg.host_group_id = hgtai.host_group_id) lgathg

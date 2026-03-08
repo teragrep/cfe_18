@@ -91,15 +91,15 @@ public class ProcedureHostGroupFileTest extends DBUnitbase {
     public void testProcedureAddHostGroupSuccess() throws Exception {
         IDataSet expectedDataSet = new FlatXmlDataSetBuilder()
                 .build(new File("src/test/resources/XMLProcedureHostGroup/procedureHostGroupTestDataExpected1.xml"));
-        ITable expectedTable2 = expectedDataSet.getTable("location.host");
-        ITable expectedTable3 = expectedDataSet.getTable("location.host_group");
+        ITable expectedTable2 = expectedDataSet.getTable("cfe_18.host");
+        ITable expectedTable3 = expectedDataSet.getTable("cfe_18.host_group");
 
-        CallableStatement stmnt = conn.prepareCall("{call location.add_host_group_with_host(?,?)}");
+        CallableStatement stmnt = conn.prepareCall("{call cfe_18.add_host_group_with_host(?,?)}");
         stmnt.setInt(1, 1); // host id
         stmnt.setString(2, "host_group_6");
         stmnt.execute();
-        ITable actualTable2 = databaseConnection.createQueryTable("result", "select * from location.host");
-        ITable actualTable3 = databaseConnection.createQueryTable("result", "select * from location.host_group");
+        ITable actualTable2 = databaseConnection.createQueryTable("result", "select * from cfe_18.host");
+        ITable actualTable3 = databaseConnection.createQueryTable("result", "select * from cfe_18.host_group");
 
         //Assertion.assertEquals(expectedTable1, actualTable1); Currently under work. Host_group_x_host does not include host_group_id when adding new row?
         Assertion.assertEquals(expectedTable2, actualTable2);
@@ -113,18 +113,18 @@ public class ProcedureHostGroupFileTest extends DBUnitbase {
     public void testProcedureAddHostWithNewGroup() throws Exception {
         IDataSet expectedDataSet = new FlatXmlDataSetBuilder()
                 .build(new File("src/test/resources/XMLProcedureHostGroup/procedureHostGroupTestDataExpected2.xml"));
-        ITable expectedTable1 = expectedDataSet.getTable("location.host_group_x_host");
-        ITable expectedTable2 = expectedDataSet.getTable("location.host");
-        ITable expectedTable3 = expectedDataSet.getTable("location.host_group");
+        ITable expectedTable1 = expectedDataSet.getTable("cfe_18.host_group_x_host");
+        ITable expectedTable2 = expectedDataSet.getTable("cfe_18.host");
+        ITable expectedTable3 = expectedDataSet.getTable("cfe_18.host_group");
 
-        CallableStatement stmnt = conn.prepareCall("{call location.add_host_group_with_host(?,?)}");
+        CallableStatement stmnt = conn.prepareCall("{call cfe_18.add_host_group_with_host(?,?)}");
         stmnt.setInt(1, 1); // host id
         stmnt.setString(2, "new_host_group");
         stmnt.execute();
 
-        ITable actualTable1 = databaseConnection.createQueryTable("result", "select * from location.host_group_x_host");
-        ITable actualTable2 = databaseConnection.createQueryTable("result", "select * from location.host");
-        ITable actualTable3 = databaseConnection.createQueryTable("result", "select * from location.host_group");
+        ITable actualTable1 = databaseConnection.createQueryTable("result", "select * from cfe_18.host_group_x_host");
+        ITable actualTable2 = databaseConnection.createQueryTable("result", "select * from cfe_18.host");
+        ITable actualTable3 = databaseConnection.createQueryTable("result", "select * from cfe_18.host_group");
 
         Assertion.assertEqualsIgnoreCols(expectedTable1, actualTable1, new String[] {
                 "id"
@@ -139,7 +139,7 @@ public class ProcedureHostGroupFileTest extends DBUnitbase {
      */
     public void testHostValidityWithHostGroup() throws Exception {
         SQLException state = Assertions.assertThrows(SQLException.class, () -> {
-            CallableStatement stmnt = conn.prepareCall("{CALL location.add_host_group_with_host(?,?)}");
+            CallableStatement stmnt = conn.prepareCall("{CALL cfe_18.add_host_group_with_host(?,?)}");
             stmnt.setInt(1, 1000);
             stmnt.setString(2, "host_group_1");
             stmnt.execute();
@@ -153,7 +153,7 @@ public class ProcedureHostGroupFileTest extends DBUnitbase {
     public void testRetrieveHostGroupDetails() throws Exception {
         List<Integer> host_id = new ArrayList<>();
         List<String> md5 = new ArrayList<>();
-        CallableStatement stmnt = conn.prepareCall("{CALL location.retrieve_host_group_details(?,?)}");
+        CallableStatement stmnt = conn.prepareCall("{CALL cfe_18.retrieve_host_group_details(?,?)}");
         stmnt.setString(1, "host_group_1");
         stmnt.setString(2, null);
         ResultSet rs = stmnt.executeQuery();

@@ -74,19 +74,19 @@ public class ProcedureHostMetaDataFileTest extends DBInformation {
         // partial database export
         QueryDataSet partialDataSet = new QueryDataSet(connection);
 
-        partialDataSet.addTable("location.host");
-        partialDataSet.addTable("cfe_00.hubs");
-        partialDataSet.addTable("cfe_00.host_type_cfe");
-        partialDataSet.addTable("cfe_03.os_type");
-        partialDataSet.addTable("cfe_03.flavor_type");
-        partialDataSet.addTable("cfe_03.arch_type");
-        partialDataSet.addTable("cfe_03.release_version");
-        partialDataSet.addTable("cfe_03.host_meta");
-        partialDataSet.addTable("cfe_03.cmbd");
-        partialDataSet.addTable("cfe_03.interfaces");
-        partialDataSet.addTable("cfe_03.ip_addresses");
-        partialDataSet.addTable("cfe_03.host_meta_x_ip");
-        partialDataSet.addTable("cfe_03.host_meta_x_interface");
+        partialDataSet.addTable("cfe_18.host");
+        partialDataSet.addTable("cfe_18.hubs");
+        partialDataSet.addTable("cfe_18.host_type_cfe");
+        partialDataSet.addTable("cfe_18.os_type");
+        partialDataSet.addTable("cfe_18.flavor_type");
+        partialDataSet.addTable("cfe_18.arch_type");
+        partialDataSet.addTable("cfe_18.release_version");
+        partialDataSet.addTable("cfe_18.host_meta");
+        partialDataSet.addTable("cfe_18.cmbd");
+        partialDataSet.addTable("cfe_18.interfaces");
+        partialDataSet.addTable("cfe_18.ip_addresses");
+        partialDataSet.addTable("cfe_18.host_meta_x_ip");
+        partialDataSet.addTable("cfe_18.host_meta_x_interface");
         FlatXmlDataSet
                 .write(
                         partialDataSet,
@@ -103,19 +103,19 @@ public class ProcedureHostMetaDataFileTest extends DBInformation {
     private void cleanup(Connection conn) throws SQLException {
 
         Statement deleteStatement = conn.createStatement();
-        deleteStatement.addBatch("delete from cfe_03.ip_addresses");
-        deleteStatement.addBatch("delete from cfe_03.interfaces");
-        deleteStatement.addBatch("delete from cfe_03.host_meta_x_interface");
-        deleteStatement.addBatch("delete from cfe_03.host_meta_x_ip");
-        deleteStatement.addBatch("delete from cfe_03.host_meta");
-        deleteStatement.addBatch("delete from cfe_03.release_version");
-        deleteStatement.addBatch("delete from cfe_03.arch_type");
-        deleteStatement.addBatch("delete from cfe_03.flavor_type");
-        deleteStatement.addBatch("delete from cfe_03.os_type");
-        deleteStatement.addBatch("delete from cfe_03.cmbd");
-        deleteStatement.addBatch("delete from cfe_00.host_type_cfe");
-        deleteStatement.addBatch("delete from cfe_00.hubs");
-        deleteStatement.addBatch("delete from location.host");
+        deleteStatement.addBatch("delete from cfe_18.ip_addresses");
+        deleteStatement.addBatch("delete from cfe_18.interfaces");
+        deleteStatement.addBatch("delete from cfe_18.host_meta_x_interface");
+        deleteStatement.addBatch("delete from cfe_18.host_meta_x_ip");
+        deleteStatement.addBatch("delete from cfe_18.host_meta");
+        deleteStatement.addBatch("delete from cfe_18.release_version");
+        deleteStatement.addBatch("delete from cfe_18.arch_type");
+        deleteStatement.addBatch("delete from cfe_18.flavor_type");
+        deleteStatement.addBatch("delete from cfe_18.os_type");
+        deleteStatement.addBatch("delete from cfe_18.cmbd");
+        deleteStatement.addBatch("delete from cfe_18.host_type_cfe");
+        deleteStatement.addBatch("delete from cfe_18.hubs");
+        deleteStatement.addBatch("delete from cfe_18.host");
 
         deleteStatement.executeBatch();
     }
@@ -125,26 +125,26 @@ public class ProcedureHostMetaDataFileTest extends DBInformation {
         Statement insertTestData = conn.createStatement();
         insertTestData
                 .addBatch(
-                        "insert into location.host(id,MD5,fqhost,host_type) values (1,'12365','1','cfe'), (2,'12322','2','cfe'), (3,'1323','3','cfe'), (4,'4123','4','cfe'), (5,'5123','6','cfe'), (6,'6123','7','cfe');"
+                        "insert into cfe_18.host(id,MD5,fqhost,host_type) values (1,'12365','1','cfe'), (2,'12322','2','cfe'), (3,'1323','3','cfe'), (4,'4123','4','cfe'), (5,'5123','6','cfe'), (6,'6123','7','cfe');"
                 );
-        insertTestData.addBatch("insert into cfe_00.hubs(id,host_id, ip, host_type) values (1,1,'ip?' ,'cfe');");
-        insertTestData.addBatch("insert into cfe_00.host_type_cfe(host_id, host_type, hub_id) values (1,'cfe',1);");
-        insertTestData.addBatch("insert into cfe_03.os_type(id,os) values(1,'Linux1'),(2,'Linux2')");
-        insertTestData.addBatch("insert into cfe_03.flavor_type(id,flavor) values(1,'flavor1'),(2,'flavor2')");
-        insertTestData.addBatch("insert into cfe_03.arch_type(id,arch) values(1,'arch1'),(2,'arch2')");
+        insertTestData.addBatch("insert into cfe_18.hubs(id,host_id, ip, host_type) values (1,1,'ip?' ,'cfe');");
+        insertTestData.addBatch("insert into cfe_18.host_type_cfe(host_id, host_type, hub_id) values (1,'cfe',1);");
+        insertTestData.addBatch("insert into cfe_18.os_type(id,os) values(1,'Linux1'),(2,'Linux2')");
+        insertTestData.addBatch("insert into cfe_18.flavor_type(id,flavor) values(1,'flavor1'),(2,'flavor2')");
+        insertTestData.addBatch("insert into cfe_18.arch_type(id,arch) values(1,'arch1'),(2,'arch2')");
         insertTestData
                 .addBatch(
-                        "insert into cfe_03.release_version(id,rel_ver) values(1,'release_version1'),(2,'release_version2')"
+                        "insert into cfe_18.release_version(id,rel_ver) values(1,'release_version1'),(2,'release_version2')"
                 );
         insertTestData
-                .addBatch("insert into cfe_03.host_meta(id,release_ver_id,flavor_id,arch_id,os_id) values(1,1,1,1,1)");
-        insertTestData.addBatch("insert into cfe_03.cmbd(hostname,host_id,host_meta_id) values('host1',1,1)");
-        insertTestData.addBatch("insert into cfe_03.interfaces(id,interface) values(1,'ens192'),(2,'ens256')");
-        insertTestData.addBatch("insert into cfe_03.ip_addresses(id,ip_address) values(1,'ip1'),(2,'ip2'),(3,'ip3')");
+                .addBatch("insert into cfe_18.host_meta(id,release_ver_id,flavor_id,arch_id,os_id) values(1,1,1,1,1)");
+        insertTestData.addBatch("insert into cfe_18.cmbd(hostname,host_id,host_meta_id) values('host1',1,1)");
+        insertTestData.addBatch("insert into cfe_18.interfaces(id,interface) values(1,'ens192'),(2,'ens256')");
+        insertTestData.addBatch("insert into cfe_18.ip_addresses(id,ip_address) values(1,'ip1'),(2,'ip2'),(3,'ip3')");
         insertTestData
-                .addBatch("insert into cfe_03.host_meta_x_ip(id,host_meta_id,ip_id) values(1,1,1),(2,1,2),(3,1,3)");
+                .addBatch("insert into cfe_18.host_meta_x_ip(id,host_meta_id,ip_id) values(1,1,1),(2,1,2),(3,1,3)");
         insertTestData
-                .addBatch("insert into cfe_03.host_meta_x_interface(id,host_meta_id,interface_id) values(1,1,1),(2,1,2)");
+                .addBatch("insert into cfe_18.host_meta_x_interface(id,host_meta_id,interface_id) values(1,1,1),(2,1,2)");
         insertTestData.executeBatch();
     }
 }

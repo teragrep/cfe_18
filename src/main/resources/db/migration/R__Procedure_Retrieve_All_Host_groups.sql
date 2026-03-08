@@ -43,7 +43,7 @@
  * Teragrep, the applicable Commercial License may apply to this file if you as
  * a licensee so wish it.
  */
-use location;
+use cfe_18;
 DELIMITER //
 CREATE OR REPLACE PROCEDURE retrieve_all_host_groups(tx_id int)
 BEGIN
@@ -62,9 +62,9 @@ BEGIN
            hg.host_type as host_group_type,
            h.id         as host_id,
            h.MD5        as host_md5
-    from location.host_group for system_time as of transaction @time hg
-             inner join location.host_group_x_host for system_time as of transaction @time hgxh on hg.id = hgxh.host_group_id
-             inner join location.host for system_time as of transaction @time h on hgxh.host_id = h.id;
+    from cfe_18.host_group for system_time as of transaction @time hg
+             inner join cfe_18.host_group_x_host for system_time as of transaction @time hgxh on hg.id = hgxh.host_group_id
+             inner join cfe_18.host for system_time as of transaction @time h on hgxh.host_id = h.id;
 end;
 //
 DELIMITER ;

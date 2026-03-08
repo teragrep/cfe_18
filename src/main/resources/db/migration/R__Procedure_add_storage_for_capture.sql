@@ -43,7 +43,7 @@
  * Teragrep, the applicable Commercial License may apply to this file if you as
  * a licensee so wish it.
  */
-use flow;
+use cfe_18;
 DELIMITER //
 CREATE OR REPLACE PROCEDURE add_storage_for_capture(capture_id int, storage_id int)
 BEGIN
