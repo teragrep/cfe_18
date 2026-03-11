@@ -164,7 +164,7 @@ $(document).ready(function() { init_codefold(0); });
 <div class="foldopen" id="foldopen00076" data-start="{" data-end="}">
 <div class="line"><a id="l00076" name="l00076"></a><span class="lineno"><a class="line" href="classcom_1_1teragrep_1_1cfe18_1_1procedureTests_1_1ProcedureHostAddCfeFileTest.html#a5711adb8f482860fd52daf224da90de1">   76</a></span>    <span class="keyword">public</span> <span class="keywordtype">void</span> <a class="code hl_function" href="classcom_1_1teragrep_1_1cfe18_1_1procedureTests_1_1ProcedureHostAddCfeFileTest.html#a5711adb8f482860fd52daf224da90de1">testProcedureCfeHostNoHub</a>() throws Exception {</div>
 <div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span>        SQLException state = Assertions.assertThrows(SQLException.class, () -&gt; {</div>
-<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span>            CallableStatement stmnt = conn.prepareCall(<span class="stringliteral">&quot;{CALL location.insert_file_host(?,?,?)}&quot;</span>);</div>
+<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span>            CallableStatement stmnt = conn.prepareCall(<span class="stringliteral">&quot;{CALL cfe_18.insert_file_host(?,?,?)}&quot;</span>);</div>
 <div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span>            stmnt.setString(1, <span class="stringliteral">&quot;someMd5Test&quot;</span>);</div>
 <div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span>            stmnt.setString(2, <span class="stringliteral">&quot;someFullyQualifiedHost&quot;</span>);</div>
 <div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span>            stmnt.setString(3, <span class="stringliteral">&quot;someFullyQualifiedHostForHub&quot;</span>);</div>
@@ -185,16 +185,16 @@ $(document).ready(function() { init_codefold(0); });
 <div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span>        <span class="comment">// Gets the expected dataset</span></div>
 <div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span>        IDataSet expectedDataSet = <span class="keyword">new</span> FlatXmlDataSetBuilder()</div>
 <div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span>                .build(<span class="keyword">new</span> File(<span class="stringliteral">&quot;src/test/resources/XMLProcedureHost/procedureHostExpectedTestData1.xml&quot;</span>));</div>
-<div class="line"><a id="l00097" name="l00097"></a><span class="lineno">   97</span>        ITable expectedTable = expectedDataSet.getTable(<span class="stringliteral">&quot;cfe_00.host_type_cfe&quot;</span>);</div>
+<div class="line"><a id="l00097" name="l00097"></a><span class="lineno">   97</span>        ITable expectedTable = expectedDataSet.getTable(<span class="stringliteral">&quot;cfe_18.host_type_cfe&quot;</span>);</div>
 <div class="line"><a id="l00098" name="l00098"></a><span class="lineno">   98</span> </div>
-<div class="line"><a id="l00099" name="l00099"></a><span class="lineno">   99</span>        CallableStatement stmnt = conn.prepareCall(<span class="stringliteral">&quot;{call location.host_add_cfe_hub(?, ?, ?)}&quot;</span>);</div>
+<div class="line"><a id="l00099" name="l00099"></a><span class="lineno">   99</span>        CallableStatement stmnt = conn.prepareCall(<span class="stringliteral">&quot;{call cfe_18.host_add_cfe_hub(?, ?, ?)}&quot;</span>);</div>
 <div class="line"><a id="l00100" name="l00100"></a><span class="lineno">  100</span>        stmnt.setString(1, <span class="stringliteral">&quot;hosit1&quot;</span>);</div>
 <div class="line"><a id="l00101" name="l00101"></a><span class="lineno">  101</span>        stmnt.setString(2, <span class="stringliteral">&quot;Md5jokaeiosu&quot;</span>);</div>
 <div class="line"><a id="l00102" name="l00102"></a><span class="lineno">  102</span>        stmnt.setString(3, <span class="stringliteral">&quot;jokuip&quot;</span>);</div>
 <div class="line"><a id="l00103" name="l00103"></a><span class="lineno">  103</span>        stmnt.execute();</div>
 <div class="line"><a id="l00104" name="l00104"></a><span class="lineno">  104</span> </div>
 <div class="line"><a id="l00105" name="l00105"></a><span class="lineno">  105</span>        <span class="comment">// Retrieves the dataset which happened after the execution</span></div>
-<div class="line"><a id="l00106" name="l00106"></a><span class="lineno">  106</span>        ITable actualTable = databaseConnection.createQueryTable(<span class="stringliteral">&quot;result&quot;</span>, <span class="stringliteral">&quot;select * from cfe_00.host_type_cfe&quot;</span>);</div>
+<div class="line"><a id="l00106" name="l00106"></a><span class="lineno">  106</span>        ITable actualTable = databaseConnection.createQueryTable(<span class="stringliteral">&quot;result&quot;</span>, <span class="stringliteral">&quot;select * from cfe_18.host_type_cfe&quot;</span>);</div>
 <div class="line"><a id="l00107" name="l00107"></a><span class="lineno">  107</span> </div>
 <div class="line"><a id="l00108" name="l00108"></a><span class="lineno">  108</span>        <span class="comment">// Assert actual database table match expected table</span></div>
 <div class="line"><a id="l00109" name="l00109"></a><span class="lineno">  109</span>        Assertion.assertEqualsIgnoreCols(expectedTable, actualTable, <span class="keyword">new</span> String[] {</div>
@@ -210,14 +210,14 @@ $(document).ready(function() { init_codefold(0); });
 <div class="line"><a id="l00117" name="l00117"></a><span class="lineno"><a class="line" href="classcom_1_1teragrep_1_1cfe18_1_1procedureTests_1_1ProcedureHostAddCfeFileTest.html#ae392c6fa473005041dcf9515da55b219">  117</a></span>    <span class="keyword">public</span> <span class="keywordtype">void</span> <a class="code hl_function" href="classcom_1_1teragrep_1_1cfe18_1_1procedureTests_1_1ProcedureHostAddCfeFileTest.html#ae392c6fa473005041dcf9515da55b219">testProcedureCfeHostAccept</a>() throws Exception {</div>
 <div class="line"><a id="l00118" name="l00118"></a><span class="lineno">  118</span>        IDataSet expectedDataSet = <span class="keyword">new</span> FlatXmlDataSetBuilder()</div>
 <div class="line"><a id="l00119" name="l00119"></a><span class="lineno">  119</span>                .build(<span class="keyword">new</span> File(<span class="stringliteral">&quot;src/test/resources/XMLProcedureHost/procedureHostExpectedTestData2.xml&quot;</span>));</div>
-<div class="line"><a id="l00120" name="l00120"></a><span class="lineno">  120</span>        ITable expectedTable = expectedDataSet.getTable(<span class="stringliteral">&quot;location.host&quot;</span>);</div>
+<div class="line"><a id="l00120" name="l00120"></a><span class="lineno">  120</span>        ITable expectedTable = expectedDataSet.getTable(<span class="stringliteral">&quot;cfe_18.host&quot;</span>);</div>
 <div class="line"><a id="l00121" name="l00121"></a><span class="lineno">  121</span> </div>
-<div class="line"><a id="l00122" name="l00122"></a><span class="lineno">  122</span>        CallableStatement stmnt = conn.prepareCall(<span class="stringliteral">&quot;{call location.insert_file_host( ?, ?, ?)}&quot;</span>);</div>
+<div class="line"><a id="l00122" name="l00122"></a><span class="lineno">  122</span>        CallableStatement stmnt = conn.prepareCall(<span class="stringliteral">&quot;{call cfe_18.insert_file_host( ?, ?, ?)}&quot;</span>);</div>
 <div class="line"><a id="l00123" name="l00123"></a><span class="lineno">  123</span>        stmnt.setString(1, <span class="stringliteral">&quot;51232445674&quot;</span>);</div>
 <div class="line"><a id="l00124" name="l00124"></a><span class="lineno">  124</span>        stmnt.setString(2, <span class="stringliteral">&quot;534209325&quot;</span>);</div>
 <div class="line"><a id="l00125" name="l00125"></a><span class="lineno">  125</span>        stmnt.setString(3, <span class="stringliteral">&quot;1&quot;</span>);</div>
 <div class="line"><a id="l00126" name="l00126"></a><span class="lineno">  126</span>        stmnt.execute();</div>
-<div class="line"><a id="l00127" name="l00127"></a><span class="lineno">  127</span>        ITable actualTable = databaseConnection.createQueryTable(<span class="stringliteral">&quot;result&quot;</span>, <span class="stringliteral">&quot;select * from location.host&quot;</span>);</div>
+<div class="line"><a id="l00127" name="l00127"></a><span class="lineno">  127</span>        ITable actualTable = databaseConnection.createQueryTable(<span class="stringliteral">&quot;result&quot;</span>, <span class="stringliteral">&quot;select * from cfe_18.host&quot;</span>);</div>
 <div class="line"><a id="l00128" name="l00128"></a><span class="lineno">  128</span> </div>
 <div class="line"><a id="l00129" name="l00129"></a><span class="lineno">  129</span>        <span class="comment">// Assert actual database table match expected table</span></div>
 <div class="line"><a id="l00130" name="l00130"></a><span class="lineno">  130</span>        Assertion.assertEqualsIgnoreCols(expectedTable, actualTable, <span class="keyword">new</span> String[] {</div>
@@ -231,7 +231,7 @@ $(document).ready(function() { init_codefold(0); });
 <div class="line"><a id="l00137" name="l00137"></a><span class="lineno">  137</span><span class="comment">    */</span></div>
 <div class="foldopen" id="foldopen00138" data-start="{" data-end="}">
 <div class="line"><a id="l00138" name="l00138"></a><span class="lineno"><a class="line" href="classcom_1_1teragrep_1_1cfe18_1_1procedureTests_1_1ProcedureHostAddCfeFileTest.html#a60aac01d340bbb7c7eb543df55242e97">  138</a></span>    <span class="keyword">public</span> <span class="keywordtype">void</span> <a class="code hl_function" href="classcom_1_1teragrep_1_1cfe18_1_1procedureTests_1_1ProcedureHostAddCfeFileTest.html#a60aac01d340bbb7c7eb543df55242e97">testProcedureRetrieveRelpHost</a>() throws Exception {</div>
-<div class="line"><a id="l00139" name="l00139"></a><span class="lineno">  139</span>        CallableStatement stmnt = conn.prepareCall(<span class="stringliteral">&quot;{CALL cfe_00.select_relp_host(?,?)}&quot;</span>);</div>
+<div class="line"><a id="l00139" name="l00139"></a><span class="lineno">  139</span>        CallableStatement stmnt = conn.prepareCall(<span class="stringliteral">&quot;{CALL cfe_18.select_relp_host(?,?)}&quot;</span>);</div>
 <div class="line"><a id="l00140" name="l00140"></a><span class="lineno">  140</span>        stmnt.setInt(1, 25);</div>
 <div class="line"><a id="l00141" name="l00141"></a><span class="lineno">  141</span>        stmnt.setString(2, <span class="keyword">null</span>);</div>
 <div class="line"><a id="l00142" name="l00142"></a><span class="lineno">  142</span>        ResultSet rs = stmnt.executeQuery();</div>
@@ -247,7 +247,7 @@ $(document).ready(function() { init_codefold(0); });
 <div class="line"><a id="l00151" name="l00151"></a><span class="lineno">  151</span><span class="comment">    */</span></div>
 <div class="foldopen" id="foldopen00152" data-start="{" data-end="}">
 <div class="line"><a id="l00152" name="l00152"></a><span class="lineno"><a class="line" href="classcom_1_1teragrep_1_1cfe18_1_1procedureTests_1_1ProcedureHostAddCfeFileTest.html#ac7c867ba87bb69aaf8532f15a180583b">  152</a></span>    <span class="keyword">public</span> <span class="keywordtype">void</span> <a class="code hl_function" href="classcom_1_1teragrep_1_1cfe18_1_1procedureTests_1_1ProcedureHostAddCfeFileTest.html#ac7c867ba87bb69aaf8532f15a180583b">testProcedureRetrieveHub</a>() throws Exception {</div>
-<div class="line"><a id="l00153" name="l00153"></a><span class="lineno">  153</span>        CallableStatement stmnt = conn.prepareCall(<span class="stringliteral">&quot;{CALL location.retrieve_cfe_hub_details(?,?)}&quot;</span>);</div>
+<div class="line"><a id="l00153" name="l00153"></a><span class="lineno">  153</span>        CallableStatement stmnt = conn.prepareCall(<span class="stringliteral">&quot;{CALL cfe_18.retrieve_cfe_hub_details(?,?)}&quot;</span>);</div>
 <div class="line"><a id="l00154" name="l00154"></a><span class="lineno">  154</span>        stmnt.setInt(1, 1);</div>
 <div class="line"><a id="l00155" name="l00155"></a><span class="lineno">  155</span>        stmnt.setString(2, <span class="keyword">null</span>);</div>
 <div class="line"><a id="l00156" name="l00156"></a><span class="lineno">  156</span>        ResultSet rs = stmnt.executeQuery();</div>
@@ -267,14 +267,14 @@ $(document).ready(function() { init_codefold(0); });
 <div class="line"><a id="l00168" name="l00168"></a><span class="lineno"><a class="line" href="classcom_1_1teragrep_1_1cfe18_1_1procedureTests_1_1ProcedureHostAddCfeFileTest.html#abdbf74b4343274b57f08712c5b85c470">  168</a></span>    <span class="keyword">public</span> <span class="keywordtype">void</span> <a class="code hl_function" href="classcom_1_1teragrep_1_1cfe18_1_1procedureTests_1_1ProcedureHostAddCfeFileTest.html#abdbf74b4343274b57f08712c5b85c470">testProcedureAddRelpHost</a>() throws Exception {</div>
 <div class="line"><a id="l00169" name="l00169"></a><span class="lineno">  169</span>        IDataSet expectedDataSet = <span class="keyword">new</span> FlatXmlDataSetBuilder()</div>
 <div class="line"><a id="l00170" name="l00170"></a><span class="lineno">  170</span>                .build(<span class="keyword">new</span> File(<span class="stringliteral">&quot;src/test/resources/XMLProcedureHost/procedureHostExpectedTestData3.xml&quot;</span>));</div>
-<div class="line"><a id="l00171" name="l00171"></a><span class="lineno">  171</span>        ITable expectedTable = expectedDataSet.getTable(<span class="stringliteral">&quot;location.host&quot;</span>);</div>
+<div class="line"><a id="l00171" name="l00171"></a><span class="lineno">  171</span>        ITable expectedTable = expectedDataSet.getTable(<span class="stringliteral">&quot;cfe_18.host&quot;</span>);</div>
 <div class="line"><a id="l00172" name="l00172"></a><span class="lineno">  172</span> </div>
-<div class="line"><a id="l00173" name="l00173"></a><span class="lineno">  173</span>        CallableStatement stmnt = conn.prepareCall(<span class="stringliteral">&quot;{call location.insert_relp_host(?, ?)}&quot;</span>);</div>
+<div class="line"><a id="l00173" name="l00173"></a><span class="lineno">  173</span>        CallableStatement stmnt = conn.prepareCall(<span class="stringliteral">&quot;{call cfe_18.insert_relp_host(?, ?)}&quot;</span>);</div>
 <div class="line"><a id="l00174" name="l00174"></a><span class="lineno">  174</span>        stmnt.setString(1, <span class="stringliteral">&quot;ReliantMD5&quot;</span>);</div>
 <div class="line"><a id="l00175" name="l00175"></a><span class="lineno">  175</span>        stmnt.setString(2, <span class="stringliteral">&quot;ReliantFqHost&quot;</span>);</div>
 <div class="line"><a id="l00176" name="l00176"></a><span class="lineno">  176</span>        stmnt.execute();</div>
 <div class="line"><a id="l00177" name="l00177"></a><span class="lineno">  177</span> </div>
-<div class="line"><a id="l00178" name="l00178"></a><span class="lineno">  178</span>        ITable actualTable = databaseConnection.createQueryTable(<span class="stringliteral">&quot;result&quot;</span>, <span class="stringliteral">&quot;select * from location.host&quot;</span>);</div>
+<div class="line"><a id="l00178" name="l00178"></a><span class="lineno">  178</span>        ITable actualTable = databaseConnection.createQueryTable(<span class="stringliteral">&quot;result&quot;</span>, <span class="stringliteral">&quot;select * from cfe_18.host&quot;</span>);</div>
 <div class="line"><a id="l00179" name="l00179"></a><span class="lineno">  179</span> </div>
 <div class="line"><a id="l00180" name="l00180"></a><span class="lineno">  180</span>        <span class="comment">// Assert actual database table match expected table</span></div>
 <div class="line"><a id="l00181" name="l00181"></a><span class="lineno">  181</span>        Assertion.assertEqualsIgnoreCols(expectedTable, actualTable, <span class="keyword">new</span> String[] {</div>

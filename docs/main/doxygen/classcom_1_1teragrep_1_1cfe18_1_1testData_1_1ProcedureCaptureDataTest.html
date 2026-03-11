@@ -254,13 +254,13 @@ Private Member Functions</h2></td></tr>
 <div class="line"><span class="lineno">  144</span> </div>
 <div class="line"><span class="lineno">  145</span>        Statement insertTestData = conn.createStatement();</div>
 <div class="line"><span class="lineno">  146</span> </div>
-<div class="line"><span class="lineno">  147</span>        insertTestData.addBatch(<span class="stringliteral">&quot;insert into flow.L7(id, app_protocol) values (1, &#39;tcp-plain&#39;);&quot;</span>);</div>
+<div class="line"><span class="lineno">  147</span>        insertTestData.addBatch(<span class="stringliteral">&quot;insert into cfe_18.L7(id, app_protocol) values (1, &#39;tcp-plain&#39;);&quot;</span>);</div>
 <div class="line"><span class="lineno">  148</span> </div>
-<div class="line"><span class="lineno">  149</span>        insertTestData.addBatch(<span class="stringliteral">&quot;insert into flow.flows(id, flowname) values (1, &#39;flow1&#39;);&quot;</span>);</div>
+<div class="line"><span class="lineno">  149</span>        insertTestData.addBatch(<span class="stringliteral">&quot;insert into cfe_18.flows(id, flowname) values (1, &#39;flow1&#39;);&quot;</span>);</div>
 <div class="line"><span class="lineno">  150</span> </div>
 <div class="line"><span class="lineno">  151</span>        insertTestData</div>
 <div class="line"><span class="lineno">  152</span>                .addBatch(</div>
-<div class="line"><span class="lineno">  153</span>                        <span class="stringliteral">&quot;insert into flow.capture_sink(id, L7_id, flow_id, ip_address,sink_port) values (1,1,1,&#39;ip1&#39;,&#39;601&#39;);&quot;</span></div>
+<div class="line"><span class="lineno">  153</span>                        <span class="stringliteral">&quot;insert into cfe_18.capture_sink(id, L7_id, flow_id, ip_address,sink_port) values (1,1,1,&#39;ip1&#39;,&#39;601&#39;);&quot;</span></div>
 <div class="line"><span class="lineno">  154</span>                );</div>
 <div class="line"><span class="lineno">  155</span> </div>
 <div class="line"><span class="lineno">  156</span>        insertTestData.addBatch(<span class="stringliteral">&quot;insert into cfe_18.inputtype(id, inputtype) values (1, &#39;regex&#39;),(2, &#39;newline&#39;);&quot;</span>);</div>

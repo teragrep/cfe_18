@@ -208,16 +208,16 @@ Additional Inherited Members</h2></td></tr>
 <div class="fragment"><div class="line"><span class="lineno">   87</span>                                                         {</div>
 <div class="line"><span class="lineno">   88</span>        IDataSet expectedDataSet = <span class="keyword">new</span> FlatXmlDataSetBuilder()</div>
 <div class="line"><span class="lineno">   89</span>                .build(<span class="keyword">new</span> File(<span class="stringliteral">&quot;src/test/resources/XMLTriggersHostXCapture/triggerHostExpectedData1.xml&quot;</span>));</div>
-<div class="line"><span class="lineno">   90</span>        ITable expectedTable = expectedDataSet.getTable(<span class="stringliteral">&quot;location.host_group_x_host&quot;</span>);</div>
+<div class="line"><span class="lineno">   90</span>        ITable expectedTable = expectedDataSet.getTable(<span class="stringliteral">&quot;cfe_18.host_group_x_host&quot;</span>);</div>
 <div class="line"><span class="lineno">   91</span> </div>
 <div class="line"><span class="lineno">   92</span>        <span class="comment">// Execute the tested code that modify the database here</span></div>
 <div class="line"><span class="lineno">   93</span>        <span class="comment">// execute statement here</span></div>
 <div class="line"><span class="lineno">   94</span>        Statement stmnt = conn.createStatement();</div>
-<div class="line"><span class="lineno">   95</span>        stmnt.addBatch(<span class="stringliteral">&quot;insert into location.host_group_x_host values(19,6,2,&#39;cfe&#39;)&quot;</span>);</div>
+<div class="line"><span class="lineno">   95</span>        stmnt.addBatch(<span class="stringliteral">&quot;insert into cfe_18.host_group_x_host values(19,6,2,&#39;cfe&#39;)&quot;</span>);</div>
 <div class="line"><span class="lineno">   96</span>        stmnt.executeBatch();</div>
 <div class="line"><span class="lineno">   97</span> </div>
 <div class="line"><span class="lineno">   98</span>        <span class="comment">// Fetch database data after executing your code</span></div>
-<div class="line"><span class="lineno">   99</span>        ITable actualTable = databaseConnection.createQueryTable(<span class="stringliteral">&quot;result&quot;</span>, <span class="stringliteral">&quot;select * from location.host_group_x_host&quot;</span>);</div>
+<div class="line"><span class="lineno">   99</span>        ITable actualTable = databaseConnection.createQueryTable(<span class="stringliteral">&quot;result&quot;</span>, <span class="stringliteral">&quot;select * from cfe_18.host_group_x_host&quot;</span>);</div>
 <div class="line"><span class="lineno">  100</span> </div>
 <div class="line"><span class="lineno">  101</span>        <span class="comment">// Load expected data from an XML dataset</span></div>
 <div class="line"><span class="lineno">  102</span>        <span class="comment">// Assert actual database table match expected table</span></div>
@@ -245,8 +245,8 @@ Additional Inherited Members</h2></td></tr>
 <div class="fragment"><div class="line"><span class="lineno">   76</span>                                                         {</div>
 <div class="line"><span class="lineno">   77</span>        SQLException state = Assertions.assertThrows(SQLException.class, () -&gt; {</div>
 <div class="line"><span class="lineno">   78</span>            Statement stmnt = conn.createStatement();</div>
-<div class="line"><span class="lineno">   79</span>            stmnt.addBatch(<span class="stringliteral">&quot;insert into location.host_group_x_host values(60,2,11,&#39;cfe&#39;)&quot;</span>);</div>
-<div class="line"><span class="lineno">   80</span>            stmnt.addBatch(<span class="stringliteral">&quot;insert into location.host_group_x_host values(60,1,11,&#39;cfe&#39;)&quot;</span>);</div>
+<div class="line"><span class="lineno">   79</span>            stmnt.addBatch(<span class="stringliteral">&quot;insert into cfe_18.host_group_x_host values(60,2,11,&#39;cfe&#39;)&quot;</span>);</div>
+<div class="line"><span class="lineno">   80</span>            stmnt.addBatch(<span class="stringliteral">&quot;insert into cfe_18.host_group_x_host values(60,1,11,&#39;cfe&#39;)&quot;</span>);</div>
 <div class="line"><span class="lineno">   81</span>            stmnt.executeBatch();</div>
 <div class="line"><span class="lineno">   82</span>        });</div>
 <div class="line"><span class="lineno">   83</span>        Assertions.assertEquals(<span class="stringliteral">&quot;17002&quot;</span>, state.getSQLState());</div>

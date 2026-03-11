@@ -218,7 +218,7 @@ Additional Inherited Members</h2></td></tr>
 <p class="definition">Definition at line <a class="el" href="ProcedureHostGroupFileTest_8java_source.html#l00140">140</a> of file <a class="el" href="ProcedureHostGroupFileTest_8java_source.html">ProcedureHostGroupFileTest.java</a>.</p>
 <div class="fragment"><div class="line"><span class="lineno">  140</span>                                                                 {</div>
 <div class="line"><span class="lineno">  141</span>        SQLException state = Assertions.assertThrows(SQLException.class, () -&gt; {</div>
-<div class="line"><span class="lineno">  142</span>            CallableStatement stmnt = conn.prepareCall(<span class="stringliteral">&quot;{CALL location.add_host_group_with_host(?,?)}&quot;</span>);</div>
+<div class="line"><span class="lineno">  142</span>            CallableStatement stmnt = conn.prepareCall(<span class="stringliteral">&quot;{CALL cfe_18.add_host_group_with_host(?,?)}&quot;</span>);</div>
 <div class="line"><span class="lineno">  143</span>            stmnt.setInt(1, 1000);</div>
 <div class="line"><span class="lineno">  144</span>            stmnt.setString(2, <span class="stringliteral">&quot;host_group_1&quot;</span>);</div>
 <div class="line"><span class="lineno">  145</span>            stmnt.execute();</div>
@@ -247,15 +247,15 @@ Additional Inherited Members</h2></td></tr>
 <div class="fragment"><div class="line"><span class="lineno">   91</span>                                                                    {</div>
 <div class="line"><span class="lineno">   92</span>        IDataSet expectedDataSet = <span class="keyword">new</span> FlatXmlDataSetBuilder()</div>
 <div class="line"><span class="lineno">   93</span>                .build(<span class="keyword">new</span> File(<span class="stringliteral">&quot;src/test/resources/XMLProcedureHostGroup/procedureHostGroupTestDataExpected1.xml&quot;</span>));</div>
-<div class="line"><span class="lineno">   94</span>        ITable expectedTable2 = expectedDataSet.getTable(<span class="stringliteral">&quot;location.host&quot;</span>);</div>
-<div class="line"><span class="lineno">   95</span>        ITable expectedTable3 = expectedDataSet.getTable(<span class="stringliteral">&quot;location.host_group&quot;</span>);</div>
+<div class="line"><span class="lineno">   94</span>        ITable expectedTable2 = expectedDataSet.getTable(<span class="stringliteral">&quot;cfe_18.host&quot;</span>);</div>
+<div class="line"><span class="lineno">   95</span>        ITable expectedTable3 = expectedDataSet.getTable(<span class="stringliteral">&quot;cfe_18.host_group&quot;</span>);</div>
 <div class="line"><span class="lineno">   96</span> </div>
-<div class="line"><span class="lineno">   97</span>        CallableStatement stmnt = conn.prepareCall(<span class="stringliteral">&quot;{call location.add_host_group_with_host(?,?)}&quot;</span>);</div>
+<div class="line"><span class="lineno">   97</span>        CallableStatement stmnt = conn.prepareCall(<span class="stringliteral">&quot;{call cfe_18.add_host_group_with_host(?,?)}&quot;</span>);</div>
 <div class="line"><span class="lineno">   98</span>        stmnt.setInt(1, 1); <span class="comment">// host id</span></div>
 <div class="line"><span class="lineno">   99</span>        stmnt.setString(2, <span class="stringliteral">&quot;host_group_6&quot;</span>);</div>
 <div class="line"><span class="lineno">  100</span>        stmnt.execute();</div>
-<div class="line"><span class="lineno">  101</span>        ITable actualTable2 = databaseConnection.createQueryTable(<span class="stringliteral">&quot;result&quot;</span>, <span class="stringliteral">&quot;select * from location.host&quot;</span>);</div>
-<div class="line"><span class="lineno">  102</span>        ITable actualTable3 = databaseConnection.createQueryTable(<span class="stringliteral">&quot;result&quot;</span>, <span class="stringliteral">&quot;select * from location.host_group&quot;</span>);</div>
+<div class="line"><span class="lineno">  101</span>        ITable actualTable2 = databaseConnection.createQueryTable(<span class="stringliteral">&quot;result&quot;</span>, <span class="stringliteral">&quot;select * from cfe_18.host&quot;</span>);</div>
+<div class="line"><span class="lineno">  102</span>        ITable actualTable3 = databaseConnection.createQueryTable(<span class="stringliteral">&quot;result&quot;</span>, <span class="stringliteral">&quot;select * from cfe_18.host_group&quot;</span>);</div>
 <div class="line"><span class="lineno">  103</span> </div>
 <div class="line"><span class="lineno">  104</span>        <span class="comment">//Assertion.assertEquals(expectedTable1, actualTable1); Currently under work. Host_group_x_host does not include host_group_id when adding new row?</span></div>
 <div class="line"><span class="lineno">  105</span>        Assertion.assertEquals(expectedTable2, actualTable2);</div>
@@ -284,18 +284,18 @@ Additional Inherited Members</h2></td></tr>
 <div class="fragment"><div class="line"><span class="lineno">  113</span>                                                                    {</div>
 <div class="line"><span class="lineno">  114</span>        IDataSet expectedDataSet = <span class="keyword">new</span> FlatXmlDataSetBuilder()</div>
 <div class="line"><span class="lineno">  115</span>                .build(<span class="keyword">new</span> File(<span class="stringliteral">&quot;src/test/resources/XMLProcedureHostGroup/procedureHostGroupTestDataExpected2.xml&quot;</span>));</div>
-<div class="line"><span class="lineno">  116</span>        ITable expectedTable1 = expectedDataSet.getTable(<span class="stringliteral">&quot;location.host_group_x_host&quot;</span>);</div>
-<div class="line"><span class="lineno">  117</span>        ITable expectedTable2 = expectedDataSet.getTable(<span class="stringliteral">&quot;location.host&quot;</span>);</div>
-<div class="line"><span class="lineno">  118</span>        ITable expectedTable3 = expectedDataSet.getTable(<span class="stringliteral">&quot;location.host_group&quot;</span>);</div>
+<div class="line"><span class="lineno">  116</span>        ITable expectedTable1 = expectedDataSet.getTable(<span class="stringliteral">&quot;cfe_18.host_group_x_host&quot;</span>);</div>
+<div class="line"><span class="lineno">  117</span>        ITable expectedTable2 = expectedDataSet.getTable(<span class="stringliteral">&quot;cfe_18.host&quot;</span>);</div>
+<div class="line"><span class="lineno">  118</span>        ITable expectedTable3 = expectedDataSet.getTable(<span class="stringliteral">&quot;cfe_18.host_group&quot;</span>);</div>
 <div class="line"><span class="lineno">  119</span> </div>
-<div class="line"><span class="lineno">  120</span>        CallableStatement stmnt = conn.prepareCall(<span class="stringliteral">&quot;{call location.add_host_group_with_host(?,?)}&quot;</span>);</div>
+<div class="line"><span class="lineno">  120</span>        CallableStatement stmnt = conn.prepareCall(<span class="stringliteral">&quot;{call cfe_18.add_host_group_with_host(?,?)}&quot;</span>);</div>
 <div class="line"><span class="lineno">  121</span>        stmnt.setInt(1, 1); <span class="comment">// host id</span></div>
 <div class="line"><span class="lineno">  122</span>        stmnt.setString(2, <span class="stringliteral">&quot;new_host_group&quot;</span>);</div>
 <div class="line"><span class="lineno">  123</span>        stmnt.execute();</div>
 <div class="line"><span class="lineno">  124</span> </div>
-<div class="line"><span class="lineno">  125</span>        ITable actualTable1 = databaseConnection.createQueryTable(<span class="stringliteral">&quot;result&quot;</span>, <span class="stringliteral">&quot;select * from location.host_group_x_host&quot;</span>);</div>
-<div class="line"><span class="lineno">  126</span>        ITable actualTable2 = databaseConnection.createQueryTable(<span class="stringliteral">&quot;result&quot;</span>, <span class="stringliteral">&quot;select * from location.host&quot;</span>);</div>
-<div class="line"><span class="lineno">  127</span>        ITable actualTable3 = databaseConnection.createQueryTable(<span class="stringliteral">&quot;result&quot;</span>, <span class="stringliteral">&quot;select * from location.host_group&quot;</span>);</div>
+<div class="line"><span class="lineno">  125</span>        ITable actualTable1 = databaseConnection.createQueryTable(<span class="stringliteral">&quot;result&quot;</span>, <span class="stringliteral">&quot;select * from cfe_18.host_group_x_host&quot;</span>);</div>
+<div class="line"><span class="lineno">  126</span>        ITable actualTable2 = databaseConnection.createQueryTable(<span class="stringliteral">&quot;result&quot;</span>, <span class="stringliteral">&quot;select * from cfe_18.host&quot;</span>);</div>
+<div class="line"><span class="lineno">  127</span>        ITable actualTable3 = databaseConnection.createQueryTable(<span class="stringliteral">&quot;result&quot;</span>, <span class="stringliteral">&quot;select * from cfe_18.host_group&quot;</span>);</div>
 <div class="line"><span class="lineno">  128</span> </div>
 <div class="line"><span class="lineno">  129</span>        Assertion.assertEqualsIgnoreCols(expectedTable1, actualTable1, <span class="keyword">new</span> String[] {</div>
 <div class="line"><span class="lineno">  130</span>                <span class="stringliteral">&quot;id&quot;</span></div>
@@ -326,7 +326,7 @@ Additional Inherited Members</h2></td></tr>
 <div class="fragment"><div class="line"><span class="lineno">  153</span>                                                                {</div>
 <div class="line"><span class="lineno">  154</span>        List&lt;Integer&gt; host_id = <span class="keyword">new</span> ArrayList&lt;&gt;();</div>
 <div class="line"><span class="lineno">  155</span>        List&lt;String&gt; md5 = <span class="keyword">new</span> ArrayList&lt;&gt;();</div>
-<div class="line"><span class="lineno">  156</span>        CallableStatement stmnt = conn.prepareCall(<span class="stringliteral">&quot;{CALL location.retrieve_host_group_details(?,?)}&quot;</span>);</div>
+<div class="line"><span class="lineno">  156</span>        CallableStatement stmnt = conn.prepareCall(<span class="stringliteral">&quot;{CALL cfe_18.retrieve_host_group_details(?,?)}&quot;</span>);</div>
 <div class="line"><span class="lineno">  157</span>        stmnt.setString(1, <span class="stringliteral">&quot;host_group_1&quot;</span>);</div>
 <div class="line"><span class="lineno">  158</span>        stmnt.setString(2, <span class="keyword">null</span>);</div>
 <div class="line"><span class="lineno">  159</span>        ResultSet rs = stmnt.executeQuery();</div>

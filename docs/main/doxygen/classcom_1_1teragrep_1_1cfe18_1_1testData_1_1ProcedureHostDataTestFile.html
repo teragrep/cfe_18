@@ -135,9 +135,9 @@ Private Member Functions</h2></td></tr>
 <div class="fragment"><div class="line"><span class="lineno">   91</span>                                                              {</div>
 <div class="line"><span class="lineno">   92</span> </div>
 <div class="line"><span class="lineno">   93</span>        Statement deleteStatement = conn.createStatement();</div>
-<div class="line"><span class="lineno">   94</span>        deleteStatement.addBatch(<span class="stringliteral">&quot;delete from cfe_00.host_type_cfe&quot;</span>);</div>
-<div class="line"><span class="lineno">   95</span>        deleteStatement.addBatch(<span class="stringliteral">&quot;delete from cfe_00.hubs&quot;</span>);</div>
-<div class="line"><span class="lineno">   96</span>        deleteStatement.addBatch(<span class="stringliteral">&quot;delete from location.host&quot;</span>);</div>
+<div class="line"><span class="lineno">   94</span>        deleteStatement.addBatch(<span class="stringliteral">&quot;delete from cfe_18.host_type_cfe&quot;</span>);</div>
+<div class="line"><span class="lineno">   95</span>        deleteStatement.addBatch(<span class="stringliteral">&quot;delete from cfe_18.hubs&quot;</span>);</div>
+<div class="line"><span class="lineno">   96</span>        deleteStatement.addBatch(<span class="stringliteral">&quot;delete from cfe_18.host&quot;</span>);</div>
 <div class="line"><span class="lineno">   97</span>        deleteStatement.executeBatch();</div>
 <div class="line"><span class="lineno">   98</span>    }</div>
 </div><!-- fragment -->
@@ -165,9 +165,9 @@ Private Member Functions</h2></td></tr>
 <div class="line"><span class="lineno">   75</span>        IDatabaseConnection connection = <span class="keyword">new</span> DatabaseConnection(conn);</div>
 <div class="line"><span class="lineno">   76</span>        <span class="comment">// partial database export</span></div>
 <div class="line"><span class="lineno">   77</span>        QueryDataSet partialDataSet = <span class="keyword">new</span> QueryDataSet(connection);</div>
-<div class="line"><span class="lineno">   78</span>        partialDataSet.addTable(<span class="stringliteral">&quot;location.host&quot;</span>);</div>
-<div class="line"><span class="lineno">   79</span>        partialDataSet.addTable(<span class="stringliteral">&quot;cfe_00.hubs&quot;</span>);</div>
-<div class="line"><span class="lineno">   80</span>        partialDataSet.addTable(<span class="stringliteral">&quot;cfe_00.host_type_cfe&quot;</span>);</div>
+<div class="line"><span class="lineno">   78</span>        partialDataSet.addTable(<span class="stringliteral">&quot;cfe_18.host&quot;</span>);</div>
+<div class="line"><span class="lineno">   79</span>        partialDataSet.addTable(<span class="stringliteral">&quot;cfe_18.hubs&quot;</span>);</div>
+<div class="line"><span class="lineno">   80</span>        partialDataSet.addTable(<span class="stringliteral">&quot;cfe_18.host_type_cfe&quot;</span>);</div>
 <div class="line"><span class="lineno">   81</span>        FlatXmlDataSet</div>
 <div class="line"><span class="lineno">   82</span>                .write(</div>
 <div class="line"><span class="lineno">   83</span>                        partialDataSet, Files</div>
@@ -213,10 +213,10 @@ Private Member Functions</h2></td></tr>
 <div class="line"><span class="lineno">  103</span> </div>
 <div class="line"><span class="lineno">  104</span>        insertTestData</div>
 <div class="line"><span class="lineno">  105</span>                .addBatch(</div>
-<div class="line"><span class="lineno">  106</span>                        <span class="stringliteral">&quot;insert into location.host(id,MD5,fqhost,host_type) values (1,&#39;12365&#39;,&#39;1&#39;,&#39;cfe&#39;), (2,&#39;12322&#39;,&#39;2&#39;,&#39;manual&#39;), (3,&#39;1323&#39;,&#39;3&#39;,&#39;manual&#39;), (4,&#39;4123&#39;,&#39;4&#39;,&#39;manual&#39;), (5,&#39;5123&#39;,&#39;6&#39;,&#39;manual&#39;), (6,&#39;6123&#39;,&#39;7&#39;,&#39;manual&#39;), (7,&#39;7123&#39;,&#39;8&#39;,&#39;manual&#39;), (16,&#39;712&#39;,&#39;9&#39;,&#39;manual&#39;), (9,&#39;723&#39;,&#39;10&#39;,&#39;manual&#39;), (8,&#39;71233&#39;,&#39;11&#39;,&#39;manual&#39;), (10,&#39;712362&#39;,&#39;12&#39;,&#39;manual&#39;), (12,&#39;712653&#39;,&#39;13&#39;,&#39;manual&#39;), (17,&#39;71211233&#39;,&#39;14&#39;,&#39;manual&#39;), (11,&#39;712213123&#39;,&#39;15&#39;,&#39;manual&#39;), (21,&#39;7142213123&#39;,&#39;16&#39;,&#39;manual&#39;), (22,&#39;7125213123&#39;,&#39;17&#39;,&#39;manual&#39;), (23,&#39;7122613123&#39;,&#39;18&#39;,&#39;manual&#39;), (24,&#39;7122173123&#39;,&#39;19&#39;,&#39;manual&#39;), (15,&#39;75757122173123&#39;,&#39;20&#39;,&#39;manual&#39;);&quot;</span></div>
+<div class="line"><span class="lineno">  106</span>                        <span class="stringliteral">&quot;insert into cfe_18.host(id,MD5,fqhost,host_type) values (1,&#39;12365&#39;,&#39;1&#39;,&#39;cfe&#39;), (2,&#39;12322&#39;,&#39;2&#39;,&#39;manual&#39;), (3,&#39;1323&#39;,&#39;3&#39;,&#39;manual&#39;), (4,&#39;4123&#39;,&#39;4&#39;,&#39;manual&#39;), (5,&#39;5123&#39;,&#39;6&#39;,&#39;manual&#39;), (6,&#39;6123&#39;,&#39;7&#39;,&#39;manual&#39;), (7,&#39;7123&#39;,&#39;8&#39;,&#39;manual&#39;), (16,&#39;712&#39;,&#39;9&#39;,&#39;manual&#39;), (9,&#39;723&#39;,&#39;10&#39;,&#39;manual&#39;), (8,&#39;71233&#39;,&#39;11&#39;,&#39;manual&#39;), (10,&#39;712362&#39;,&#39;12&#39;,&#39;manual&#39;), (12,&#39;712653&#39;,&#39;13&#39;,&#39;manual&#39;), (17,&#39;71211233&#39;,&#39;14&#39;,&#39;manual&#39;), (11,&#39;712213123&#39;,&#39;15&#39;,&#39;manual&#39;), (21,&#39;7142213123&#39;,&#39;16&#39;,&#39;manual&#39;), (22,&#39;7125213123&#39;,&#39;17&#39;,&#39;manual&#39;), (23,&#39;7122613123&#39;,&#39;18&#39;,&#39;manual&#39;), (24,&#39;7122173123&#39;,&#39;19&#39;,&#39;manual&#39;), (15,&#39;75757122173123&#39;,&#39;20&#39;,&#39;manual&#39;);&quot;</span></div>
 <div class="line"><span class="lineno">  107</span>                );</div>
-<div class="line"><span class="lineno">  108</span>        insertTestData.addBatch(<span class="stringliteral">&quot;insert into cfe_00.hubs(id,host_id, ip, host_type) values (1,1,&#39;ip?&#39; ,&#39;cfe&#39;);&quot;</span>);</div>
-<div class="line"><span class="lineno">  109</span>        insertTestData.addBatch(<span class="stringliteral">&quot;insert into cfe_00.host_type_cfe(host_id, host_type, hub_id) values (1,&#39;cfe&#39;,1);&quot;</span>);</div>
+<div class="line"><span class="lineno">  108</span>        insertTestData.addBatch(<span class="stringliteral">&quot;insert into cfe_18.hubs(id,host_id, ip, host_type) values (1,1,&#39;ip?&#39; ,&#39;cfe&#39;);&quot;</span>);</div>
+<div class="line"><span class="lineno">  109</span>        insertTestData.addBatch(<span class="stringliteral">&quot;insert into cfe_18.host_type_cfe(host_id, host_type, hub_id) values (1,&#39;cfe&#39;,1);&quot;</span>);</div>
 <div class="line"><span class="lineno">  110</span> </div>
 <div class="line"><span class="lineno">  111</span>        insertTestData.executeBatch();</div>
 <div class="line"><span class="lineno">  112</span>    }</div>

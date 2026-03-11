@@ -215,14 +215,14 @@ Additional Inherited Members</h2></td></tr>
 <div class="fragment"><div class="line"><span class="lineno">  168</span>                                                            {</div>
 <div class="line"><span class="lineno">  169</span>        IDataSet expectedDataSet = <span class="keyword">new</span> FlatXmlDataSetBuilder()</div>
 <div class="line"><span class="lineno">  170</span>                .build(<span class="keyword">new</span> File(<span class="stringliteral">&quot;src/test/resources/XMLProcedureHost/procedureHostExpectedTestData3.xml&quot;</span>));</div>
-<div class="line"><span class="lineno">  171</span>        ITable expectedTable = expectedDataSet.getTable(<span class="stringliteral">&quot;location.host&quot;</span>);</div>
+<div class="line"><span class="lineno">  171</span>        ITable expectedTable = expectedDataSet.getTable(<span class="stringliteral">&quot;cfe_18.host&quot;</span>);</div>
 <div class="line"><span class="lineno">  172</span> </div>
-<div class="line"><span class="lineno">  173</span>        CallableStatement stmnt = conn.prepareCall(<span class="stringliteral">&quot;{call location.insert_relp_host(?, ?)}&quot;</span>);</div>
+<div class="line"><span class="lineno">  173</span>        CallableStatement stmnt = conn.prepareCall(<span class="stringliteral">&quot;{call cfe_18.insert_relp_host(?, ?)}&quot;</span>);</div>
 <div class="line"><span class="lineno">  174</span>        stmnt.setString(1, <span class="stringliteral">&quot;ReliantMD5&quot;</span>);</div>
 <div class="line"><span class="lineno">  175</span>        stmnt.setString(2, <span class="stringliteral">&quot;ReliantFqHost&quot;</span>);</div>
 <div class="line"><span class="lineno">  176</span>        stmnt.execute();</div>
 <div class="line"><span class="lineno">  177</span> </div>
-<div class="line"><span class="lineno">  178</span>        ITable actualTable = databaseConnection.createQueryTable(<span class="stringliteral">&quot;result&quot;</span>, <span class="stringliteral">&quot;select * from location.host&quot;</span>);</div>
+<div class="line"><span class="lineno">  178</span>        ITable actualTable = databaseConnection.createQueryTable(<span class="stringliteral">&quot;result&quot;</span>, <span class="stringliteral">&quot;select * from cfe_18.host&quot;</span>);</div>
 <div class="line"><span class="lineno">  179</span> </div>
 <div class="line"><span class="lineno">  180</span>        <span class="comment">// Assert actual database table match expected table</span></div>
 <div class="line"><span class="lineno">  181</span>        Assertion.assertEqualsIgnoreCols(expectedTable, actualTable, <span class="keyword">new</span> String[] {</div>
@@ -251,14 +251,14 @@ Additional Inherited Members</h2></td></tr>
 <div class="fragment"><div class="line"><span class="lineno">  117</span>                                                              {</div>
 <div class="line"><span class="lineno">  118</span>        IDataSet expectedDataSet = <span class="keyword">new</span> FlatXmlDataSetBuilder()</div>
 <div class="line"><span class="lineno">  119</span>                .build(<span class="keyword">new</span> File(<span class="stringliteral">&quot;src/test/resources/XMLProcedureHost/procedureHostExpectedTestData2.xml&quot;</span>));</div>
-<div class="line"><span class="lineno">  120</span>        ITable expectedTable = expectedDataSet.getTable(<span class="stringliteral">&quot;location.host&quot;</span>);</div>
+<div class="line"><span class="lineno">  120</span>        ITable expectedTable = expectedDataSet.getTable(<span class="stringliteral">&quot;cfe_18.host&quot;</span>);</div>
 <div class="line"><span class="lineno">  121</span> </div>
-<div class="line"><span class="lineno">  122</span>        CallableStatement stmnt = conn.prepareCall(<span class="stringliteral">&quot;{call location.insert_file_host( ?, ?, ?)}&quot;</span>);</div>
+<div class="line"><span class="lineno">  122</span>        CallableStatement stmnt = conn.prepareCall(<span class="stringliteral">&quot;{call cfe_18.insert_file_host( ?, ?, ?)}&quot;</span>);</div>
 <div class="line"><span class="lineno">  123</span>        stmnt.setString(1, <span class="stringliteral">&quot;51232445674&quot;</span>);</div>
 <div class="line"><span class="lineno">  124</span>        stmnt.setString(2, <span class="stringliteral">&quot;534209325&quot;</span>);</div>
 <div class="line"><span class="lineno">  125</span>        stmnt.setString(3, <span class="stringliteral">&quot;1&quot;</span>);</div>
 <div class="line"><span class="lineno">  126</span>        stmnt.execute();</div>
-<div class="line"><span class="lineno">  127</span>        ITable actualTable = databaseConnection.createQueryTable(<span class="stringliteral">&quot;result&quot;</span>, <span class="stringliteral">&quot;select * from location.host&quot;</span>);</div>
+<div class="line"><span class="lineno">  127</span>        ITable actualTable = databaseConnection.createQueryTable(<span class="stringliteral">&quot;result&quot;</span>, <span class="stringliteral">&quot;select * from cfe_18.host&quot;</span>);</div>
 <div class="line"><span class="lineno">  128</span> </div>
 <div class="line"><span class="lineno">  129</span>        <span class="comment">// Assert actual database table match expected table</span></div>
 <div class="line"><span class="lineno">  130</span>        Assertion.assertEqualsIgnoreCols(expectedTable, actualTable, <span class="keyword">new</span> String[] {</div>
@@ -286,7 +286,7 @@ Additional Inherited Members</h2></td></tr>
 <p class="definition">Definition at line <a class="el" href="ProcedureHostAddCfeFileTest_8java_source.html#l00076">76</a> of file <a class="el" href="ProcedureHostAddCfeFileTest_8java_source.html">ProcedureHostAddCfeFileTest.java</a>.</p>
 <div class="fragment"><div class="line"><span class="lineno">   76</span>                                                             {</div>
 <div class="line"><span class="lineno">   77</span>        SQLException state = Assertions.assertThrows(SQLException.class, () -&gt; {</div>
-<div class="line"><span class="lineno">   78</span>            CallableStatement stmnt = conn.prepareCall(<span class="stringliteral">&quot;{CALL location.insert_file_host(?,?,?)}&quot;</span>);</div>
+<div class="line"><span class="lineno">   78</span>            CallableStatement stmnt = conn.prepareCall(<span class="stringliteral">&quot;{CALL cfe_18.insert_file_host(?,?,?)}&quot;</span>);</div>
 <div class="line"><span class="lineno">   79</span>            stmnt.setString(1, <span class="stringliteral">&quot;someMd5Test&quot;</span>);</div>
 <div class="line"><span class="lineno">   80</span>            stmnt.setString(2, <span class="stringliteral">&quot;someFullyQualifiedHost&quot;</span>);</div>
 <div class="line"><span class="lineno">   81</span>            stmnt.setString(3, <span class="stringliteral">&quot;someFullyQualifiedHostForHub&quot;</span>);</div>
@@ -317,16 +317,16 @@ Additional Inherited Members</h2></td></tr>
 <div class="line"><span class="lineno">   94</span>        <span class="comment">// Gets the expected dataset</span></div>
 <div class="line"><span class="lineno">   95</span>        IDataSet expectedDataSet = <span class="keyword">new</span> FlatXmlDataSetBuilder()</div>
 <div class="line"><span class="lineno">   96</span>                .build(<span class="keyword">new</span> File(<span class="stringliteral">&quot;src/test/resources/XMLProcedureHost/procedureHostExpectedTestData1.xml&quot;</span>));</div>
-<div class="line"><span class="lineno">   97</span>        ITable expectedTable = expectedDataSet.getTable(<span class="stringliteral">&quot;cfe_00.host_type_cfe&quot;</span>);</div>
+<div class="line"><span class="lineno">   97</span>        ITable expectedTable = expectedDataSet.getTable(<span class="stringliteral">&quot;cfe_18.host_type_cfe&quot;</span>);</div>
 <div class="line"><span class="lineno">   98</span> </div>
-<div class="line"><span class="lineno">   99</span>        CallableStatement stmnt = conn.prepareCall(<span class="stringliteral">&quot;{call location.host_add_cfe_hub(?, ?, ?)}&quot;</span>);</div>
+<div class="line"><span class="lineno">   99</span>        CallableStatement stmnt = conn.prepareCall(<span class="stringliteral">&quot;{call cfe_18.host_add_cfe_hub(?, ?, ?)}&quot;</span>);</div>
 <div class="line"><span class="lineno">  100</span>        stmnt.setString(1, <span class="stringliteral">&quot;hosit1&quot;</span>);</div>
 <div class="line"><span class="lineno">  101</span>        stmnt.setString(2, <span class="stringliteral">&quot;Md5jokaeiosu&quot;</span>);</div>
 <div class="line"><span class="lineno">  102</span>        stmnt.setString(3, <span class="stringliteral">&quot;jokuip&quot;</span>);</div>
 <div class="line"><span class="lineno">  103</span>        stmnt.execute();</div>
 <div class="line"><span class="lineno">  104</span> </div>
 <div class="line"><span class="lineno">  105</span>        <span class="comment">// Retrieves the dataset which happened after the execution</span></div>
-<div class="line"><span class="lineno">  106</span>        ITable actualTable = databaseConnection.createQueryTable(<span class="stringliteral">&quot;result&quot;</span>, <span class="stringliteral">&quot;select * from cfe_00.host_type_cfe&quot;</span>);</div>
+<div class="line"><span class="lineno">  106</span>        ITable actualTable = databaseConnection.createQueryTable(<span class="stringliteral">&quot;result&quot;</span>, <span class="stringliteral">&quot;select * from cfe_18.host_type_cfe&quot;</span>);</div>
 <div class="line"><span class="lineno">  107</span> </div>
 <div class="line"><span class="lineno">  108</span>        <span class="comment">// Assert actual database table match expected table</span></div>
 <div class="line"><span class="lineno">  109</span>        Assertion.assertEqualsIgnoreCols(expectedTable, actualTable, <span class="keyword">new</span> String[] {</div>
@@ -353,7 +353,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p class="definition">Definition at line <a class="el" href="ProcedureHostAddCfeFileTest_8java_source.html#l00152">152</a> of file <a class="el" href="ProcedureHostAddCfeFileTest_8java_source.html">ProcedureHostAddCfeFileTest.java</a>.</p>
 <div class="fragment"><div class="line"><span class="lineno">  152</span>                                                            {</div>
-<div class="line"><span class="lineno">  153</span>        CallableStatement stmnt = conn.prepareCall(<span class="stringliteral">&quot;{CALL location.retrieve_cfe_hub_details(?,?)}&quot;</span>);</div>
+<div class="line"><span class="lineno">  153</span>        CallableStatement stmnt = conn.prepareCall(<span class="stringliteral">&quot;{CALL cfe_18.retrieve_cfe_hub_details(?,?)}&quot;</span>);</div>
 <div class="line"><span class="lineno">  154</span>        stmnt.setInt(1, 1);</div>
 <div class="line"><span class="lineno">  155</span>        stmnt.setString(2, <span class="keyword">null</span>);</div>
 <div class="line"><span class="lineno">  156</span>        ResultSet rs = stmnt.executeQuery();</div>
@@ -384,7 +384,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p class="definition">Definition at line <a class="el" href="ProcedureHostAddCfeFileTest_8java_source.html#l00138">138</a> of file <a class="el" href="ProcedureHostAddCfeFileTest_8java_source.html">ProcedureHostAddCfeFileTest.java</a>.</p>
 <div class="fragment"><div class="line"><span class="lineno">  138</span>                                                                 {</div>
-<div class="line"><span class="lineno">  139</span>        CallableStatement stmnt = conn.prepareCall(<span class="stringliteral">&quot;{CALL cfe_00.select_relp_host(?,?)}&quot;</span>);</div>
+<div class="line"><span class="lineno">  139</span>        CallableStatement stmnt = conn.prepareCall(<span class="stringliteral">&quot;{CALL cfe_18.select_relp_host(?,?)}&quot;</span>);</div>
 <div class="line"><span class="lineno">  140</span>        stmnt.setInt(1, 25);</div>
 <div class="line"><span class="lineno">  141</span>        stmnt.setString(2, <span class="keyword">null</span>);</div>
 <div class="line"><span class="lineno">  142</span>        ResultSet rs = stmnt.executeQuery();</div>
