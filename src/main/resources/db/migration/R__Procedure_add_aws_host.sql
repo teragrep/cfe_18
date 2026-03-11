@@ -53,7 +53,7 @@ BEGIN
             ROLLBACK;
             RESIGNAL;
         END;
-    insert into location.host values (proc_id, proc_MD5, proc_fqhost, proc_host_type);
+    insert into cfe_18.host values (proc_id, proc_MD5, proc_fqhost, proc_host_type);
     if proc_host_type = 'aws' then
         insert into location.host_type_aws values (last_insert_id(), proc_account, 'aws');
     end if;

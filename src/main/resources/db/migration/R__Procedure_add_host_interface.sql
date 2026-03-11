@@ -43,7 +43,7 @@
  * Teragrep, the applicable Commercial License may apply to this file if you as
  * a licensee so wish it.
  */
-use cfe_03;
+use cfe_18;
 DELIMITER //
 CREATE OR REPLACE PROCEDURE add_interface(p_interface varchar(255), p_host_meta_id int)
 BEGIN

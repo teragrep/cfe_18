@@ -105,18 +105,18 @@ BEGIN
         SELECT id INTO @TagId FROM cfe_18.tags WHERE tag = meta_tag;
     END IF;
 
-    IF ((SELECT COUNT(id) FROM flow.L7 WHERE app_protocol = app_protoc) = 0) THEN
+    IF ((SELECT COUNT(id) FROM cfe_18.L7 WHERE app_protocol = app_protoc) = 0) THEN
         SELECT JSON_OBJECT('id', NULL, 'message', 'L7 is missing') INTO @L7;
         SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = @L7;
     ELSE
-        SELECT id INTO @L7Id FROM flow.L7 WHERE app_protocol = app_protoc;
+        SELECT id INTO @L7Id FROM cfe_18.L7 WHERE app_protocol = app_protoc;
     END IF;
 
-    IF ((SELECT COUNT(id) FROM flow.flows WHERE name = flow) = 0) THEN
+    IF ((SELECT COUNT(id) FROM cfe_18.flows WHERE name = flow) = 0) THEN
         SELECT JSON_OBJECT('id', NULL, 'message', 'Flow is missing') INTO @Flow;
         SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = @Flow;
     ELSE
-        SELECT id INTO @FlowId FROM flow.flows WHERE name = flow;
+        SELECT id INTO @FlowId FROM cfe_18.flows WHERE name = flow;
     END IF;
 
     -- if capture exists

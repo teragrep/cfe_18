@@ -43,7 +43,7 @@
  * Teragrep, the applicable Commercial License may apply to this file if you as
  * a licensee so wish it.
  */
-use location;
+use cfe_18;
 
 
 
@@ -132,8 +132,8 @@ create table host_group_x_host
     host_group_id int         not null,
     host_id       int         not null,
     host_type     varchar(64) not null check (host_type in ('aws', 'manual', 'cfe', 'windows', 'hec', 'azure', 'relp')),
-    constraint hostToHostGroupType foreign key (host_id, host_type) references location.host (id, host_type),
-    constraint hostTypeToHostGroup foreign key (host_group_id, host_type) references location.host_group (id, host_type) on delete cascade,
+    constraint hostToHostGroupType foreign key (host_id, host_type) references cfe_18.host (id, host_type),
+    constraint hostTypeToHostGroup foreign key (host_group_id, host_type) references cfe_18.host_group (id, host_type) on delete cascade,
     unique key (host_group_id, host_id),
     index (host_type, host_group_id),
     start_trxid BIGINT UNSIGNED GENERATED ALWAYS AS ROW START INVISIBLE,

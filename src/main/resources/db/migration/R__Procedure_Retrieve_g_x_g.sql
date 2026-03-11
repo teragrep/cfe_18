@@ -64,7 +64,7 @@ BEGIN
          from cfe_18.capture_def_group for system_time as of transaction @time
          where capture_def_group_name = grp_name) and
         (select groupName
-         from location.host_group for system_time as of transaction @time
+         from cfe_18.host_group for system_time as of transaction @time
          where groupName = grp_name)) is null then
         SELECT JSON_OBJECT('id', NULL, 'message', 'group does not exist with the given name') into @gxg;
         signal sqlstate '45000' set message_text = @gxg;
@@ -81,7 +81,7 @@ BEGIN
     from host_groups_x_capture_def_group for system_time as of transaction @time hgxcdg
              inner join capture_def_group for system_time as of transaction @time cdg
                         on hgxcdg.capture_group_id = cdg.id
-             inner join location.host_group for system_time as of transaction @time hg on hgxcdg.host_group_id = hg.id
+             inner join cfe_18.host_group for system_time as of transaction @time hg on hgxcdg.host_group_id = hg.id
     where hg.groupName = grp_name
        or cdg.capture_def_group_name = grp_name;
     COMMIT;

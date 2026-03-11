@@ -43,7 +43,7 @@
  * Teragrep, the applicable Commercial License may apply to this file if you as
  * a licensee so wish it.
  */
-use cfe_03;
+use cfe_18;
 DELIMITER //
 CREATE OR REPLACE PROCEDURE retrieve_all_host_ip_addresses(tx_id int)
 BEGIN
@@ -59,8 +59,8 @@ BEGIN
         end if;
     select distinct ip_address        as ip_address,
                     hmxi.host_meta_id as host_meta_id
-    from cfe_03.ip_addresses for system_time as of transaction @time
-             inner join cfe_03.host_meta_x_ip for system_time as of transaction @time hmxi on ip_addresses.id = hmxi.ip_id;
+    from cfe_18.ip_addresses for system_time as of transaction @time
+             inner join cfe_18.host_meta_x_ip for system_time as of transaction @time hmxi on ip_addresses.id = hmxi.ip_id;
 end;
 //
 DELIMITER ;

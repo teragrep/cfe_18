@@ -43,7 +43,7 @@
  * Teragrep, the applicable Commercial License may apply to this file if you as
  * a licensee so wish it.
  */
-USE flow;
+USE cfe_18;
 DELIMITER //
 CREATE OR REPLACE PROCEDURE select_all_flows(tx_id INT)
 BEGIN
@@ -59,7 +59,7 @@ BEGIN
     END IF;
     SELECT id   AS id,
            name AS name
-    FROM flow.flows FOR SYSTEM_TIME AS OF TRANSACTION @time;
+    FROM cfe_18.flows FOR SYSTEM_TIME AS OF TRANSACTION @time;
 END;
 //
 DELIMITER ;

@@ -43,7 +43,7 @@
  * Teragrep, the applicable Commercial License may apply to this file if you as
  * a licensee so wish it.
  */
-use cfe_00;
+use cfe_18;
 DELIMITER //
 CREATE OR REPLACE PROCEDURE remove_hub(proc_hub_id int)
 BEGIN
@@ -53,7 +53,7 @@ BEGIN
             RESIGNAL;
         END;
     START TRANSACTION;
-    if (select id from cfe_00.hubs where id = proc_hub_id) is null then
+    if (select id from cfe_18.hubs where id = proc_hub_id) is null then
         SELECT JSON_OBJECT('id', null, 'message', 'Hub does not exist') into @h;
         signal sqlstate '45000' set message_text = @h;
     end if;
@@ -61,30 +61,30 @@ BEGIN
 
     select h.id
     into @hostid
-    from location.host h
+    from cfe_18.host h
              inner join hubs h2 on h.id = h2.host_id
     where h2.id = proc_hub_id;
 
 
     select count(htc.host_id)
     into @rowcount
-    from cfe_00.host_type_cfe htc
+    from cfe_18.host_type_cfe htc
     where hub_id = proc_hub_id
       and host_id != @hostid;
 
     if (@rowcount > 0) then
         select count(htc2.host_id)
         into @hamount
-        from cfe_00.host_type_cfe htc2
+        from cfe_18.host_type_cfe htc2
         where hub_id = proc_hub_id;
         SELECT JSON_OBJECT('amount', @hamount, 'message', 'Hosts use the given hub')
         into @ha;
         signal sqlstate '23000' set message_text = @ha;
     end if;
 
-    delete from cfe_00.host_type_cfe where hub_id = proc_hub_id;
-    delete from cfe_00.hubs where id = proc_hub_id;
-    delete from location.host where id = @hostid;
+    delete from cfe_18.host_type_cfe where hub_id = proc_hub_id;
+    delete from cfe_18.hubs where id = proc_hub_id;
+    delete from cfe_18.host where id = @hostid;
     COMMIT;
 END;
 

@@ -7,12 +7,12 @@
     <!-- Insert host  ( proc_MD5 VARCHAR(32), proc_fqhost VARCHAR(128), proc_hub_fq VARCHAR(128) )  -->
     <select id="create" resultMap="insertedID" statementType="CALLABLE">
         {CALL
-        location.insert_file_host(#{param1},#{param2},#{param3})}
+        cfe_18.insert_file_host(#{param1},#{param2},#{param3})}
     </select>
 
     <!-- get    ( proc_host_id INT, tx_id INT ) -->
     <select id="get" resultMap="getFile" statementType="CALLABLE">
-        {CALL cfe_00.select_file_host(#{param1},#{param2})}
+        {CALL cfe_18.select_file_host(#{param1},#{param2})}
     </select>
     <resultMap id="getFile" type="com.teragrep.cfe18.handlers.entities.HostFile">
         <result property="id"               column="id"/>
@@ -25,7 +25,7 @@
 
     <!-- GET ALL Cfe  ( tx_id INT ) -->
     <select id="getAll" resultMap="all" statementType="CALLABLE">
-        {CALL location.select_all_file_hosts(#{param1})}
+        {CALL cfe_18.select_all_file_hosts(#{param1})}
     </select>
     <resultMap id="all" type="com.teragrep.cfe18.handlers.entities.HostFile">
         <result property="id"               column="id"/>
@@ -38,7 +38,7 @@
 
     <!-- Delete Cfe  ( proc_host_id INT ) -->
     <select id="delete" statementType="CALLABLE">
-        {CALL location.delete_file_host(#{param1})}
+        {CALL cfe_18.delete_file_host(#{param1})}
     </select>
 
 

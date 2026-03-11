@@ -7,7 +7,7 @@
     <!-- PUT -->
     <select id="addNewCfe04Transform" resultMap="insertedID" statementType="CALLABLE">
         {CALL
-        flow.add_new_cfe_04_transforms(#{param1},#{param2},#{param3},#{param4},#{param5},#{param6},#{param7},#{param8})}
+        cfe_18.add_new_cfe_04_transforms(#{param1},#{param2},#{param3},#{param4},#{param5},#{param6},#{param7},#{param8})}
     </select>
     <resultMap id="insertedID" type="com.teragrep.cfe18.handlers.entities.Cfe04Transform">
         <result property="id" column="id"/>
@@ -15,7 +15,7 @@
 
     <!-- GET by transforms ID -->
     <select id="getAllTransformsForCfe04Id" resultMap="CFE04TransformsById" statementType="CALLABLE">
-        {CALL flow.retrieve_cfe_04_transforms(#{param1},#{param2})}
+        {CALL cfe_18.retrieve_cfe_04_transforms(#{param1},#{param2})}
     </select>
     <resultMap type="com.teragrep.cfe18.handlers.entities.Cfe04Transform" id="CFE04TransformsById">
         <result column="id" property="id"/>
@@ -31,7 +31,7 @@
 
     <!-- GET ALL -->
     <select id="getAllCfe04Transforms" resultMap="allTransforms" statementType="CALLABLE">
-        {CALL flow.retrieve_all_cfe_04_transforms(#{param1})}
+        {CALL cfe_18.retrieve_all_cfe_04_transforms(#{param1})}
     </select>
     <resultMap type="com.teragrep.cfe18.handlers.entities.Cfe04Transform" id="allTransforms">
         <result column="id" property="id"/>
@@ -47,7 +47,7 @@
 
     <!-- DELETE -->
     <select id="deleteCfe04TransformById" statementType="CALLABLE" resultMap="id">
-        {CALL flow.delete_cfe_04_transform(#{param1})}
+        {CALL cfe_18.delete_cfe_04_transform(#{param1})}
     </select>
     <resultMap type="com.teragrep.cfe18.handlers.entities.Cfe04Transform" id="id">
         <result column="id" property="id"/>

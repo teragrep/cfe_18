@@ -78,7 +78,7 @@ public class ProcedureStorageTest extends DBUnitbase {
     */
     public void testStorageFlowExistence() throws Exception {
         SQLException state = Assertions.assertThrows(SQLException.class, () -> {
-            CallableStatement stmnt = conn.prepareCall("{CALL flow.add_storage(?,?)}");
+            CallableStatement stmnt = conn.prepareCall("{CALL cfe_18.add_storage(?,?)}");
             stmnt.setString(1, "FlowThatDontExist");
             stmnt.setInt(2, 2);
             stmnt.execute();
@@ -97,14 +97,14 @@ public class ProcedureStorageTest extends DBUnitbase {
         IDataSet expectedDataSet = new FlatXmlDataSetBuilder()
                 .build(new File("src/test/resources/XMLProcedureStorage/procedureStorageExpectedTestData1.xml"));
 
-        ITable expectedTable = expectedDataSet.getTable("flow.flow_targets");
+        ITable expectedTable = expectedDataSet.getTable("cfe_18.flow_targets");
 
-        CallableStatement stmnt = conn.prepareCall("CALL flow.add_storage(?,?)");
+        CallableStatement stmnt = conn.prepareCall("CALL cfe_18.add_storage(?,?)");
         stmnt.setString(1, "flow");
         stmnt.setInt(2, 2);
         stmnt.execute();
 
-        ITable actualTable = databaseConnection.createQueryTable("result", "select * from flow.flow_targets");
+        ITable actualTable = databaseConnection.createQueryTable("result", "select * from cfe_18.flow_targets");
 
         Assertion.assertEquals(expectedTable, actualTable);
 
@@ -120,7 +120,7 @@ public class ProcedureStorageTest extends DBUnitbase {
 
         ITable expectedTable = expectedDataSet.getTable("cfe_18.capture_def_x_flow_targets");
 
-        CallableStatement stmnt = conn.prepareCall("CALL flow.add_storage_for_capture(?,?)");
+        CallableStatement stmnt = conn.prepareCall("CALL cfe_18.add_storage_for_capture(?,?)");
         stmnt.setInt(1, 1);
         stmnt.setInt(2, 2);
         stmnt.execute();
@@ -138,7 +138,7 @@ public class ProcedureStorageTest extends DBUnitbase {
      */
     public void testStorageMissingStorageLinkage() throws Exception {
         SQLException state = Assertions.assertThrows(SQLException.class, () -> {
-            CallableStatement stmnt = conn.prepareCall("{CALL flow.add_storage_for_capture(?,?)}");
+            CallableStatement stmnt = conn.prepareCall("{CALL cfe_18.add_storage_for_capture(?,?)}");
             stmnt.setInt(1, 1);
             stmnt.setInt(2, 40);
             stmnt.execute();
@@ -154,7 +154,7 @@ public class ProcedureStorageTest extends DBUnitbase {
     */
     public void testStorageDifferentFlowLinkage() throws Exception {
         SQLException state = Assertions.assertThrows(SQLException.class, () -> {
-            CallableStatement stmnt = conn.prepareCall("{CALL flow.add_storage_for_capture(?,?)}");
+            CallableStatement stmnt = conn.prepareCall("{CALL cfe_18.add_storage_for_capture(?,?)}");
             stmnt.setInt(1, 1);
             stmnt.setInt(2, 7);
             stmnt.execute();
@@ -169,7 +169,7 @@ public class ProcedureStorageTest extends DBUnitbase {
      */
     public void testStorageMissingCaptureLinkage() throws Exception {
         SQLException state = Assertions.assertThrows(SQLException.class, () -> {
-            CallableStatement stmnt = conn.prepareCall("{CALL flow.add_storage_for_capture(?,?)}");
+            CallableStatement stmnt = conn.prepareCall("{CALL cfe_18.add_storage_for_capture(?,?)}");
             stmnt.setInt(1, 500);
             stmnt.setInt(2, 1);
             stmnt.execute();

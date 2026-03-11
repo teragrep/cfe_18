@@ -43,7 +43,7 @@
  * Teragrep, the applicable Commercial License may apply to this file if you as
  * a licensee so wish it.
  */
-use location;
+use cfe_18;
 DELIMITER //
 CREATE OR REPLACE PROCEDURE retrieve_all_hosts(tx_id int)
 BEGIN
@@ -65,11 +65,11 @@ BEGIN
            hm.id       as host_meta_id,
            h3.fqhost   as hub_fq,
            h2.id       as hub_id
-    from location.host for system_time as of transaction @time h
-             left join cfe_03.host_meta for system_time as of transaction @time hm on h.id = hm.host_id
-             left join cfe_00.host_type_cfe for system_time as of transaction @time htc on h.id = htc.host_id
-             left join cfe_00.hubs for system_time as of transaction @time h2 on htc.hub_id = h2.id
-             left join location.host for system_time as of transaction @time h3 on h2.host_id = h3.id;
+    from cfe_18.host for system_time as of transaction @time h
+             left join cfe_18.host_meta for system_time as of transaction @time hm on h.id = hm.host_id
+             left join cfe_18.host_type_cfe for system_time as of transaction @time htc on h.id = htc.host_id
+             left join cfe_18.hubs for system_time as of transaction @time h2 on htc.hub_id = h2.id
+             left join cfe_18.host for system_time as of transaction @time h3 on h2.host_id = h3.id;
 end;
 //
 DELIMITER ;

@@ -66,7 +66,7 @@ BEGIN
            hg.host_type               as host_type
     from cfe_18.host_groups_x_capture_def_group for system_time as of transaction @time hgxcdg
              inner join capture_def_group for system_time as of transaction @time cdg on hgxcdg.capture_group_id = cdg.id
-             inner join location.host_group for system_time as of transaction @time hg on hgxcdg.host_group_id = hg.id;
+             inner join cfe_18.host_group for system_time as of transaction @time hg on hgxcdg.host_group_id = hg.id;
 
 end;
 //

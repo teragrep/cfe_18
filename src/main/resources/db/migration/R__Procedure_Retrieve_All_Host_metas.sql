@@ -43,7 +43,7 @@
  * Teragrep, the applicable Commercial License may apply to this file if you as
  * a licensee so wish it.
  */
-use cfe_03;
+use cfe_18;
 DELIMITER //
 CREATE OR REPLACE PROCEDURE retrieve_all_host_metas(tx_id int)
 BEGIN
@@ -64,11 +64,11 @@ BEGIN
            ft.flavor   as flavor,
            a.arch      as arch,
            rv.rel_ver  as release_version
-    from cfe_03.host_meta for system_time as of transaction @time hm
-             inner join cfe_03.os_type for system_time as of transaction @time ot on hm.os_id = ot.id
-             inner join cfe_03.flavor_type for system_time as of transaction @time  ft on hm.flavor_id = ft.id
-             inner join cfe_03.arch_type for system_time as of transaction @time a on hm.arch_id = a.id
-             inner join cfe_03.release_version for system_time as of transaction @time rv on hm.release_ver_id = rv.id;
+    from cfe_18.host_meta for system_time as of transaction @time hm
+             inner join cfe_18.os_type for system_time as of transaction @time ot on hm.os_id = ot.id
+             inner join cfe_18.flavor_type for system_time as of transaction @time  ft on hm.flavor_id = ft.id
+             inner join cfe_18.arch_type for system_time as of transaction @time a on hm.arch_id = a.id
+             inner join cfe_18.release_version for system_time as of transaction @time rv on hm.release_ver_id = rv.id;
 
 end;
 //

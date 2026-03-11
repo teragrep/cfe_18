@@ -75,9 +75,9 @@ public class ProcedureSinkTest extends DBInformation {
         IDatabaseConnection connection = new DatabaseConnection(conn);
         // partial database export
         QueryDataSet partialDataSet = new QueryDataSet(connection);
-        partialDataSet.addTable("flow.flows");
-        partialDataSet.addTable("flow.L7");
-        partialDataSet.addTable("flow.capture_sink");
+        partialDataSet.addTable("cfe_18.flows");
+        partialDataSet.addTable("cfe_18.L7");
+        partialDataSet.addTable("cfe_18.capture_sink");
 
         FlatXmlDataSet
                 .write(
@@ -90,20 +90,20 @@ public class ProcedureSinkTest extends DBInformation {
     private void cleanup(Connection conn) throws SQLException {
 
         Statement deleteStatement = conn.createStatement();
-        deleteStatement.addBatch("delete from flow.capture_sink");
-        deleteStatement.addBatch("delete from flow.L7");
-        deleteStatement.addBatch("delete from flow.flows");
+        deleteStatement.addBatch("delete from cfe_18.capture_sink");
+        deleteStatement.addBatch("delete from cfe_18.L7");
+        deleteStatement.addBatch("delete from cfe_18.flows");
         deleteStatement.executeBatch();
     }
 
     private void initialize(Connection conn) throws SQLException {
 
         Statement insertTestData = conn.createStatement();
-        insertTestData.addBatch("insert into flow.L7(id,app_protocol) values (1,'prot1'),(2,'prot2');");
-        insertTestData.addBatch("insert into flow.flows(id,flowname) values (1,'flow1'),(2,'flow2');");
+        insertTestData.addBatch("insert into cfe_18.L7(id,app_protocol) values (1,'prot1'),(2,'prot2');");
+        insertTestData.addBatch("insert into cfe_18.flows(id,flowname) values (1,'flow1'),(2,'flow2');");
         insertTestData
                 .addBatch(
-                        "insert into flow.capture_sink(id,L7_id,flow_id,ip_address,sink_port) values (1,1,2,'ip1','601'),(2,1,1,'ip55','601');"
+                        "insert into cfe_18.capture_sink(id,L7_id,flow_id,ip_address,sink_port) values (1,1,2,'ip1','601'),(2,1,1,'ip55','601');"
                 );
         insertTestData.executeBatch();
     }

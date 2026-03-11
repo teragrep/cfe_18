@@ -264,8 +264,8 @@ public class ProcedureCaptureMetaFileTest extends DBUnitbase {
         ITable expectedTable3 = expectedDataSet.getTable("cfe_18.application");
         ITable expectedTable4 = expectedDataSet.getTable("cfe_18.captureIndex");
         ITable expectedTable5 = expectedDataSet.getTable("cfe_18.captureSourcetype");
-        ITable expectedTable6 = expectedDataSet.getTable("flow.L7");
-        ITable expectedTable7 = expectedDataSet.getTable("flow.flows");
+        ITable expectedTable6 = expectedDataSet.getTable("cfe_18.L7");
+        ITable expectedTable7 = expectedDataSet.getTable("cfe_18.flows");
         ITable expectedTable8 = expectedDataSet.getTable("cfe_18.capture_meta_file");
         ITable expectedTable9 = expectedDataSet.getTable("cfe_18.file_processing_type");
 
@@ -289,8 +289,8 @@ public class ProcedureCaptureMetaFileTest extends DBUnitbase {
         ITable actualTable3 = databaseConnection.createQueryTable("result", "select * from cfe_18.application");
         ITable actualTable4 = databaseConnection.createQueryTable("result", "select * from cfe_18.captureIndex");
         ITable actualTable5 = databaseConnection.createQueryTable("result", "select * from cfe_18.captureSourcetype");
-        ITable actualTable6 = databaseConnection.createQueryTable("result", "select * from flow.L7");
-        ITable actualTable7 = databaseConnection.createQueryTable("result", "select * from flow.flows");
+        ITable actualTable6 = databaseConnection.createQueryTable("result", "select * from cfe_18.L7");
+        ITable actualTable7 = databaseConnection.createQueryTable("result", "select * from cfe_18.flows");
         ITable actualTable8 = databaseConnection.createQueryTable("result", "select * from cfe_18.capture_meta_file");
         ITable actualTable9 = databaseConnection
                 .createQueryTable("result", "select * from cfe_18.file_processing_type");

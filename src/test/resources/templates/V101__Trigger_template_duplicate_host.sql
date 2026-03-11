@@ -1,4 +1,4 @@
-use location;
+use cfe_18;
 
 /*
  This file is for trigger template "host_cant_have_duplicate_tag"

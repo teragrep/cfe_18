@@ -43,7 +43,7 @@
  * Teragrep, the applicable Commercial License may apply to this file if you as
  * a licensee so wish it.
  */
-USE flow;
+USE cfe_18;
 DELIMITER //
 CREATE OR REPLACE PROCEDURE select_all_storages(tx_id INT)
 BEGIN
@@ -60,7 +60,7 @@ BEGIN
     SELECT s.id           AS id,
            s.storage_name AS storage_name,
            s.cfe_type     AS storage_type
-    FROM flow.storages FOR SYSTEM_TIME AS OF TRANSACTION @time s;
+    FROM cfe_18.storages FOR SYSTEM_TIME AS OF TRANSACTION @time s;
 END;
 
 //

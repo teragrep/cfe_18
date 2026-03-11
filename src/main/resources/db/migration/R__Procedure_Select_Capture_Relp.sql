@@ -85,8 +85,8 @@ BEGIN
              INNER JOIN captureSourcetype FOR SYSTEM_TIME AS OF TRANSACTION @time cS
                         ON c.captureSourcetype_id = cS.id
              INNER JOIN category FOR SYSTEM_TIME AS OF TRANSACTION @time c2 ON c.category_id = c2.id
-             INNER JOIN flow.flows FOR SYSTEM_TIME AS OF TRANSACTION @time f ON c.flow_id = f.id
-             INNER JOIN flow.L7 FOR SYSTEM_TIME AS OF TRANSACTION @time L ON c.L7_id = L.id
+             INNER JOIN cfe_18.flows FOR SYSTEM_TIME AS OF TRANSACTION @time f ON c.flow_id = f.id
+             INNER JOIN cfe_18.L7 FOR SYSTEM_TIME AS OF TRANSACTION @time L ON c.L7_id = L.id
              INNER JOIN capture_type FOR SYSTEM_TIME AS OF TRANSACTION @time ct ON c.capture_type_id = ct.id
     WHERE c.id = capture_id
       AND t.id = c.tag_id

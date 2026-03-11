@@ -43,7 +43,7 @@
  * Teragrep, the applicable Commercial License may apply to this file if you as
  * a licensee so wish it.
  */
-use flow;
+use cfe_18;
 DELIMITER //
 CREATE OR REPLACE PROCEDURE retrieve_flow_storages(flow varchar(255),tx_id int)
 BEGIN
@@ -67,7 +67,7 @@ BEGIN
                ft.storage_type as storage_type,
                ft.id           as last,
                s.id            as storage_id
-        from flow.flow_targets for system_time as of transaction @time ft
+        from cfe_18.flow_targets for system_time as of transaction @time ft
                  inner join flows for system_time as of transaction @time f on ft.flow_id = f.id
                  left join storages for system_time as of transaction @time s on ft.storage_id = s.id
         where flow_id = f.id

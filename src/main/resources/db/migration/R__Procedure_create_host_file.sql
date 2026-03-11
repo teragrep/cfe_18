@@ -43,7 +43,7 @@
  * Teragrep, the applicable Commercial License may apply to this file if you as
  * a licensee so wish it.
  */
-USE location;
+USE cfe_18;
 DELIMITER //
 CREATE OR REPLACE PROCEDURE insert_file_host(proc_MD5 VARCHAR(32), proc_fqhost VARCHAR(128), proc_hub_fq VARCHAR(128))
 BEGIN
@@ -55,39 +55,39 @@ BEGIN
     START TRANSACTION;
 
     -- type check
-    IF ((SELECT COUNT(id) FROM location.host WHERE MD5 = proc_MD5 AND fqhost = proc_fqhost AND host_type != 'CFE') >
+    IF ((SELECT COUNT(id) FROM cfe_18.host WHERE MD5 = proc_MD5 AND fqhost = proc_fqhost AND host_type != 'CFE') >
         0) THEN
-        SELECT JSON_OBJECT('id', (SELECT id FROM location.host WHERE MD5 = proc_MD5 AND fqhost = proc_fqhost),
+        SELECT JSON_OBJECT('id', (SELECT id FROM cfe_18.host WHERE MD5 = proc_MD5 AND fqhost = proc_fqhost),
                            'message', 'Host exists with different type')
         INTO @hid;
         SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = @hid;
     END IF;
 
-    IF ((SELECT COUNT(cfe_00.hubs.id)
-         FROM cfe_00.hubs
-                  INNER JOIN(SELECT id FROM location.host WHERE location.host.fqhost = proc_hub_fq) as hi
+    IF ((SELECT COUNT(cfe_18.hubs.id)
+         FROM cfe_18.hubs
+                  INNER JOIN(SELECT id FROM cfe_18.host WHERE cfe_18.host.fqhost = proc_hub_fq) as hi
          WHERE hubs.host_id = hi.id) = 0) THEN
         SELECT JSON_OBJECT('id', @hubs_id, 'message', 'Hub does not exist') INTO @hub;
         SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = @hub;
     ELSE
         IF ((SELECT COUNT(h.id)
-             FROM location.host h
+             FROM cfe_18.host h
              WHERE h.MD5 = proc_MD5
                AND h.fqhost = proc_fqhost
                AND h.host_type = 'CFE') = 0) THEN
             -- insert base table
-            INSERT INTO location.host(MD5, fqhost, host_type)
+            INSERT INTO cfe_18.host(MD5, fqhost, host_type)
             VALUES (proc_MD5, proc_fqhost, 'CFE');
 
             SELECT LAST_INSERT_ID() into @id;
 
             -- insert type table which links the host to a hub
-            INSERT INTO cfe_00.host_type_cfe(host_id, host_type, hub_id)
-            VALUES (@id, 'CFE', (SELECT cfe_00.hubs.id
-                                 FROM cfe_00.hubs
+            INSERT INTO cfe_18.host_type_cfe(host_id, host_type, hub_id)
+            VALUES (@id, 'CFE', (SELECT cfe_18.hubs.id
+                                 FROM cfe_18.hubs
                                           INNER JOIN(SELECT id
-                                                     FROM location.host
-                                                     WHERE location.host.fqhost = proc_hub_fq) AS hi
+                                                     FROM cfe_18.host
+                                                     WHERE cfe_18.host.fqhost = proc_hub_fq) AS hi
                                  WHERE hubs.host_id = hi.id));
 
             select @id as id;
@@ -95,7 +95,7 @@ BEGIN
             -- return ID
             SELECT h.id
                        AS id
-            FROM location.host h
+            FROM cfe_18.host h
             WHERE h.MD5 = proc_MD5
               AND h.fqhost = proc_fqhost
               AND h.host_type = 'CFE';

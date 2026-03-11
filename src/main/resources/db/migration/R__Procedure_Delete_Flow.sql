@@ -43,7 +43,7 @@
  * Teragrep, the applicable Commercial License may apply to this file if you as
  * a licensee so wish it.
  */
-USE flow;
+USE cfe_18;
 DELIMITER //
 CREATE OR REPLACE PROCEDURE delete_flow(flow_id INT)
 BEGIN
@@ -53,11 +53,11 @@ BEGIN
             RESIGNAL;
         END;
     START TRANSACTION;
-    IF ((SELECT COUNT(id) FROM flow.flows WHERE id = flow_id) = 0) THEN
+    IF ((SELECT COUNT(id) FROM cfe_18.flows WHERE id = flow_id) = 0) THEN
         SELECT JSON_OBJECT('id', flow_id, 'message', 'Flow does not exist') INTO @f;
         SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = @f;
     END IF;
-    DELETE FROM flow.flows WHERE id = flow_id;
+    DELETE FROM cfe_18.flows WHERE id = flow_id;
     COMMIT;
 
 END;

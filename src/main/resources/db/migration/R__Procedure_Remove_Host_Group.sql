@@ -43,7 +43,7 @@
  * Teragrep, the applicable Commercial License may apply to this file if you as
  * a licensee so wish it.
  */
-use location;
+use cfe_18;
 DELIMITER //
 CREATE OR REPLACE PROCEDURE remove_host_group(proc_host_group_name varchar(255))
 BEGIN
@@ -53,12 +53,12 @@ BEGIN
             RESIGNAL;
         END;
     START TRANSACTION;
-    if (select id from location.host_group where groupName = proc_host_group_name) is null then
+    if (select id from cfe_18.host_group where groupName = proc_host_group_name) is null then
         SELECT JSON_OBJECT('id', null, 'message', 'Host group does not exist') into @hg;
         signal sqlstate '45000' set message_text = @hg;
     end if;
 
-    delete from location.host_group where groupName = proc_host_group_name;
+    delete from cfe_18.host_group where groupName = proc_host_group_name;
     COMMIT;
 END;
 //

@@ -73,17 +73,17 @@ public class ProcedureStorageDataTest extends DBInformation {
         initialize(conn);
         IDatabaseConnection connection = new DatabaseConnection(conn);
         QueryDataSet partialDataSet = new QueryDataSet(connection);
-        partialDataSet.addTable("flow.flows");
-        partialDataSet.addTable("flow.storages");
-        partialDataSet.addTable("flow.cfe_23");
-        partialDataSet.addTable("flow.cfe_12");
-        partialDataSet.addTable("flow.cfe_19");
-        partialDataSet.addTable("flow.cfe_11");
-        partialDataSet.addTable("flow.cfe_10");
-        partialDataSet.addTable("flow.cfe_04");
-        partialDataSet.addTable("flow.flow_targets");
-        partialDataSet.addTable("flow.L7");
-        partialDataSet.addTable("flow.capture_sink");
+        partialDataSet.addTable("cfe_18.flows");
+        partialDataSet.addTable("cfe_18.storages");
+        partialDataSet.addTable("cfe_18.cfe_23");
+        partialDataSet.addTable("cfe_18.cfe_12");
+        partialDataSet.addTable("cfe_18.cfe_19");
+        partialDataSet.addTable("cfe_18.cfe_11");
+        partialDataSet.addTable("cfe_18.cfe_10");
+        partialDataSet.addTable("cfe_18.cfe_04");
+        partialDataSet.addTable("cfe_18.flow_targets");
+        partialDataSet.addTable("cfe_18.L7");
+        partialDataSet.addTable("cfe_18.capture_sink");
         // capture_def reqs
 
         // Processing type data
@@ -147,68 +147,68 @@ public class ProcedureStorageDataTest extends DBInformation {
         deleteStatement.addBatch("delete from cfe_18.inputtype");
 
         // sink
-        deleteStatement.addBatch("delete from flow.capture_sink");
-        deleteStatement.addBatch("delete from flow.L7");
-        deleteStatement.addBatch("delete from flow.flow_targets");
+        deleteStatement.addBatch("delete from cfe_18.capture_sink");
+        deleteStatement.addBatch("delete from cfe_18.L7");
+        deleteStatement.addBatch("delete from cfe_18.flow_targets");
 
         // storages
-        deleteStatement.addBatch("delete from flow.cfe_04");
-        deleteStatement.addBatch("delete from flow.cfe_10");
-        deleteStatement.addBatch("delete from flow.cfe_11");
-        deleteStatement.addBatch("delete from flow.cfe_19");
-        deleteStatement.addBatch("delete from flow.cfe_12");
-        deleteStatement.addBatch("delete from flow.cfe_23");
-        deleteStatement.addBatch("delete from flow.storages");
-        deleteStatement.addBatch("delete from flow.flows");
+        deleteStatement.addBatch("delete from cfe_18.cfe_04");
+        deleteStatement.addBatch("delete from cfe_18.cfe_10");
+        deleteStatement.addBatch("delete from cfe_18.cfe_11");
+        deleteStatement.addBatch("delete from cfe_18.cfe_19");
+        deleteStatement.addBatch("delete from cfe_18.cfe_12");
+        deleteStatement.addBatch("delete from cfe_18.cfe_23");
+        deleteStatement.addBatch("delete from cfe_18.storages");
+        deleteStatement.addBatch("delete from cfe_18.flows");
         deleteStatement.executeBatch();
     }
 
     private void initialize(Connection conn) throws SQLException {
         Statement insertTestData = conn.createStatement();
-        insertTestData.addBatch("insert into flow.flows(name) values('flow1'),('flow')");
-        insertTestData.addBatch("insert into flow.storages(id,cfe_type) values(1,'cfe_04')");
-        insertTestData.addBatch("insert into flow.storages(id,cfe_type) values(2,'cfe_10')");
-        insertTestData.addBatch("insert into flow.storages(id,cfe_type) values(3,'cfe_11')");
-        insertTestData.addBatch("insert into flow.storages(id,cfe_type) values(4,'cfe_12')");
-        insertTestData.addBatch("insert into flow.storages(id,cfe_type) values(5,'cfe_19')");
-        insertTestData.addBatch("insert into flow.storages(id,cfe_type) values(6,'cfe_23')");
-        insertTestData.addBatch("insert into flow.cfe_04(id,cfe_type) values(1,'cfe_04')");
-        insertTestData.addBatch("insert into flow.cfe_10(id,cfe_type) values(2,'cfe_10')");
-        insertTestData.addBatch("insert into flow.cfe_11(id,cfe_type) values(3,'cfe_11')");
-        insertTestData.addBatch("insert into flow.cfe_12(id,cfe_type) values(4,'cfe_12')");
-        insertTestData.addBatch("insert into flow.cfe_19(id,cfe_type) values(5,'cfe_19')");
-        insertTestData.addBatch("insert into flow.cfe_23(id,cfe_type) values(6,'cfe_23')");
+        insertTestData.addBatch("insert into cfe_18.flows(name) values('flow1'),('flow')");
+        insertTestData.addBatch("insert into cfe_18.storages(id,cfe_type) values(1,'cfe_04')");
+        insertTestData.addBatch("insert into cfe_18.storages(id,cfe_type) values(2,'cfe_10')");
+        insertTestData.addBatch("insert into cfe_18.storages(id,cfe_type) values(3,'cfe_11')");
+        insertTestData.addBatch("insert into cfe_18.storages(id,cfe_type) values(4,'cfe_12')");
+        insertTestData.addBatch("insert into cfe_18.storages(id,cfe_type) values(5,'cfe_19')");
+        insertTestData.addBatch("insert into cfe_18.storages(id,cfe_type) values(6,'cfe_23')");
+        insertTestData.addBatch("insert into cfe_18.cfe_04(id,cfe_type) values(1,'cfe_04')");
+        insertTestData.addBatch("insert into cfe_18.cfe_10(id,cfe_type) values(2,'cfe_10')");
+        insertTestData.addBatch("insert into cfe_18.cfe_11(id,cfe_type) values(3,'cfe_11')");
+        insertTestData.addBatch("insert into cfe_18.cfe_12(id,cfe_type) values(4,'cfe_12')");
+        insertTestData.addBatch("insert into cfe_18.cfe_19(id,cfe_type) values(5,'cfe_19')");
+        insertTestData.addBatch("insert into cfe_18.cfe_23(id,cfe_type) values(6,'cfe_23')");
         insertTestData
                 .addBatch(
-                        "insert into flow.flow_targets(id,target_name,flow_id,storage_id,storage_type) values(1,'cfe_04',1,1,'cfe_04')"
+                        "insert into cfe_18.flow_targets(id,target_name,flow_id,storage_id,storage_type) values(1,'cfe_04',1,1,'cfe_04')"
                 );
         insertTestData
                 .addBatch(
-                        "insert into flow.flow_targets(id,target_name,flow_id,storage_id,storage_type) values(2,'cfe_10',1,2,'cfe_10')"
+                        "insert into cfe_18.flow_targets(id,target_name,flow_id,storage_id,storage_type) values(2,'cfe_10',1,2,'cfe_10')"
                 );
         insertTestData
                 .addBatch(
-                        "insert into flow.flow_targets(id,target_name,flow_id,storage_id,storage_type) values(3,'cfe_11',1,3,'cfe_11')"
+                        "insert into cfe_18.flow_targets(id,target_name,flow_id,storage_id,storage_type) values(3,'cfe_11',1,3,'cfe_11')"
                 );
         insertTestData
                 .addBatch(
-                        "insert into flow.flow_targets(id,target_name,flow_id,storage_id,storage_type) values(4,'cfe_12',1,4,'cfe_12')"
+                        "insert into cfe_18.flow_targets(id,target_name,flow_id,storage_id,storage_type) values(4,'cfe_12',1,4,'cfe_12')"
                 );
         insertTestData
                 .addBatch(
-                        "insert into flow.flow_targets(id,target_name,flow_id,storage_id,storage_type) values(5,'cfe_19',1,5,'cfe_19')"
+                        "insert into cfe_18.flow_targets(id,target_name,flow_id,storage_id,storage_type) values(5,'cfe_19',1,5,'cfe_19')"
                 );
         insertTestData
                 .addBatch(
-                        "insert into flow.flow_targets(id,target_name,flow_id,storage_id,storage_type) values(6,'cfe_23',1,6,'cfe_23')"
+                        "insert into cfe_18.flow_targets(id,target_name,flow_id,storage_id,storage_type) values(6,'cfe_23',1,6,'cfe_23')"
                 );
         insertTestData
                 .addBatch(
-                        "insert into flow.flow_targets(id,target_name,flow_id,storage_id,storage_type) values(7,'cfe_01',2,1,'cfe_04')"
+                        "insert into cfe_18.flow_targets(id,target_name,flow_id,storage_id,storage_type) values(7,'cfe_01',2,1,'cfe_04')"
                 );
-        insertTestData.addBatch("insert into flow.L7(id,app_protocol) values(1,'plain')");
+        insertTestData.addBatch("insert into cfe_18.L7(id,app_protocol) values(1,'plain')");
         insertTestData
-                .addBatch("insert into flow.capture_sink(L7_id, flow_id,ip_address,sink_port)values(1,1,'ip1','652')");
+                .addBatch("insert into cfe_18.capture_sink(L7_id, flow_id,ip_address,sink_port)values(1,1,'ip1','652')");
 
         // cap def
 

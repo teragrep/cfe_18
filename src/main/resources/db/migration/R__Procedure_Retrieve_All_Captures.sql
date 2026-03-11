@@ -78,9 +78,9 @@ BEGIN
              inner join captureIndex for system_time as of transaction @time cI on cd.captureIndex_id = cI.id
              inner join retentionTime for system_time as of transaction @time rT on cd.retentionTime_id = rT.id
              inner join tags for system_time as of transaction @time t on cd.tag_id = t.id
-             inner join flow.flows for system_time as of transaction @time f on cd.flow_id = f.id
-             inner join flow.capture_sink for system_time as of transaction @time cas on cd.flow_id = cas.flow_id and cd.L7_id = cas.L7_id
-             inner join flow.L7 for system_time as of transaction @time L7 on cd.L7_id = L7.id
+             inner join cfe_18.flows for system_time as of transaction @time f on cd.flow_id = f.id
+             inner join cfe_18.capture_sink for system_time as of transaction @time cas on cd.flow_id = cas.flow_id and cd.L7_id = cas.L7_id
+             inner join cfe_18.L7 for system_time as of transaction @time L7 on cd.L7_id = L7.id
              left join capture_type for system_time as of transaction @time ct on cd.capture_type_id = ct.id
              left join capture_def_group_x_capture_def for system_time as of transaction @time cdgxcd
                        on cd.id = cdgxcd.capture_def_id and cd.capture_type = cdgxcd.capture_type and

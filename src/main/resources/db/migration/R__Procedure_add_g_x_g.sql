@@ -56,13 +56,13 @@ BEGIN
     if ((select distinct capture_type
          from cfe_18.capture_def_group
          where id = proc_capture_group_id) !=
-        (select distinct host_type from location.host_group_x_host where host_group_id = proc_host_group_id)) then
+        (select distinct host_type from cfe_18.host_group_x_host where host_group_id = proc_host_group_id)) then
         SELECT JSON_OBJECT('id', NULL, 'message', ' type mismatch between host group and capture group') into @gxg;
         signal sqlstate '45000' set message_text = @gxg;
     end if;
     --  Check if host group exists before junction
     IF (select distinct host_group_id
-        from location.host_group_x_host
+        from cfe_18.host_group_x_host
         where host_group_id = proc_host_group_id) IS NULL THEN
         SELECT JSON_OBJECT('id', NULL, 'message', ' HOST group does not exist') into @gxgh;
         SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = @gxgh;
@@ -87,7 +87,7 @@ BEGIN
                last_insert_id()         as last
         from cfe_18.host_groups_x_capture_def_group hgxcdg
                  inner join capture_def_group c on hgxcdg.capture_group_id = c.id
-                 inner join location.host_group hg on hgxcdg.host_group_id = hg.id
+                 inner join cfe_18.host_group hg on hgxcdg.host_group_id = hg.id
         where hgxcdg.capture_group_id = c.id
           and hgxcdg.host_group_id = hg.id
           and hgxcdg.id = (select id
@@ -101,7 +101,7 @@ BEGIN
                hgxcdg.id                as last
         from cfe_18.host_groups_x_capture_def_group hgxcdg
                  inner join capture_def_group c on hgxcdg.capture_group_id = c.id
-                 inner join location.host_group hg on hgxcdg.host_group_id = hg.id
+                 inner join cfe_18.host_group hg on hgxcdg.host_group_id = hg.id
         where hgxcdg.capture_group_id = c.id
           and hgxcdg.host_group_id = hg.id
           and hgxcdg.id = (select id

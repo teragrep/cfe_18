@@ -53,7 +53,7 @@ begin
     declare truthvalue int;
     select if(count(DISTINCT hgxh.host_id) = count(hgxh.host_id), true, false)
     into truthvalue
-    from location.host_group_x_host hgxh
+    from cfe_18.host_group_x_host hgxh
              INNER JOIN (SELECT DISTINCT hgxldg.host_group_id
                          from host_groups_x_capture_def_group hgxldg
                                   INNER JOIN (SELECT ldgxld.tag_id, ldgxld.capture_def_group_id

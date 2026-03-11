@@ -43,7 +43,7 @@
  * Teragrep, the applicable Commercial License may apply to this file if you as
  * a licensee so wish it.
  */
-USE cfe_03;
+USE cfe_18;
 DELIMITER //
 CREATE OR REPLACE PROCEDURE add_ip_address(p_host_meta_id int, ip_add varchar(255))
 BEGIN
@@ -59,15 +59,15 @@ BEGIN
         signal sqlstate '45000' set message_text = @hmid;
     end if;
     if (select id from ip_addresses where ip_address = ip_add) is null then
-        insert into cfe_03.ip_addresses(ip_address)
+        insert into cfe_18.ip_addresses(ip_address)
         values (ip_add);
         select last_insert_id() into @ip_id;
     else
         select id into @ip_id from ip_addresses where ip_address = ip_add;
     end if;
 
-    if (select id from cfe_03.host_meta_x_ip where host_meta_id = p_host_meta_id and ip_id = @ip_id) is null then
-        insert into cfe_03.host_meta_x_ip(host_meta_id, ip_id)
+    if (select id from cfe_18.host_meta_x_ip where host_meta_id = p_host_meta_id and ip_id = @ip_id) is null then
+        insert into cfe_18.host_meta_x_ip(host_meta_id, ip_id)
         values (p_host_meta_id, @ip_id);
     end if;
     select p_host_meta_id as last;

@@ -53,7 +53,7 @@ BEGIN
             RESIGNAL;
         END;
     START TRANSACTION;
-    if ((select COUNT(id) from flow.flows f where f.id =p_flow_id)=0) then
+    if ((select COUNT(id) from cfe_18.flows f where f.id =p_flow_id)=0) then
         SELECT JSON_OBJECT('id', p_flow_id, 'message', 'Invalid flow_id') INTO @f;
         SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = @f;
     end if;

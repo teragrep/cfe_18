@@ -43,12 +43,12 @@
  * Teragrep, the applicable Commercial License may apply to this file if you as
  * a licensee so wish it.
  */
-use cfe_07;
+use cfe_18;
 
 create table cfe_07_promise
 (
     id int primary key,
-    constraint ´cfe_07_to_promise´ foreign key (id) references cfe_00.promises (id),
+    constraint ´cfe_07_to_promise´ foreign key (id) references cfe_18.promises (id),
     start_trxid BIGINT UNSIGNED GENERATED ALWAYS AS ROW START INVISIBLE,
     end_trxid BIGINT UNSIGNED GENERATED ALWAYS AS ROW END INVISIBLE,
     PERIOD FOR SYSTEM_TIME(start_trxid, end_trxid)
@@ -70,7 +70,7 @@ create table instances
     index (flow_id),
     flow_id   int not null,
     config_id int not null,
-    constraint ´instanceToFlow´ foreign key (flow_id) references flow.flows (id),
+    constraint ´instanceToFlow´ foreign key (flow_id) references cfe_18.flows (id),
     constraint ´instanceToConfig´ foreign key (config_id) references config (id),
     start_trxid BIGINT UNSIGNED GENERATED ALWAYS AS ROW START INVISIBLE,
     end_trxid BIGINT UNSIGNED GENERATED ALWAYS AS ROW END INVISIBLE,
@@ -92,7 +92,7 @@ create table instance_targets
     rebindInterval         int          not null,
     resumerIntervalMax     int          not null,
     userResumerIntervalMax boolean      not null,
-    constraint ´TargetToFlowTargets´ foreign key (flow_id, flow_target_id) references flow.flow_targets (flow_id, id),
+    constraint ´TargetToFlowTargets´ foreign key (flow_id, flow_target_id) references cfe_18.flow_targets (flow_id, id),
     constraint ´TargetToInstanceTargets´ foreign key (flow_id, instance_id) references instances (flow_id, id),
     start_trxid BIGINT UNSIGNED GENERATED ALWAYS AS ROW START INVISIBLE,
     end_trxid BIGINT UNSIGNED GENERATED ALWAYS AS ROW END INVISIBLE,

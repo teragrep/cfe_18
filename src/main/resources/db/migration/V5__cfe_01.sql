@@ -43,7 +43,7 @@
  * Teragrep, the applicable Commercial License may apply to this file if you as
  * a licensee so wish it.
  */
-use cfe_01;
+use cfe_18;
 create table options
 (
     id          int auto_increment primary key,
@@ -61,7 +61,7 @@ create table cfe_01_promise
     id         int primary key,
     options_id int not null,
     metrics_id int not null,
-    constraint ´cfe_01_to_promise´ foreign key (id) references cfe_00.promises (id),
+    constraint ´cfe_01_to_promise´ foreign key (id) references cfe_18.promises (id),
     constraint ´cfe_01_to_options´ foreign key (options_id) references options (id),
     start_trxid BIGINT UNSIGNED GENERATED ALWAYS AS ROW START INVISIBLE,
     end_trxid BIGINT UNSIGNED GENERATED ALWAYS AS ROW END INVISIBLE,

@@ -43,11 +43,11 @@
  * Teragrep, the applicable Commercial License may apply to this file if you as
  * a licensee so wish it.
  */
-use location;
+use cfe_18;
 DELIMITER //
 create trigger if not exists Host_cant_have_duplicate_tag
     before insert
-    on location.host_group_x_host
+    on cfe_18.host_group_x_host
     for each row
 begin
     declare truthvalue int;

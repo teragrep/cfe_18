@@ -7,13 +7,13 @@
     <!-- insert             ( protocol VARCHAR(20), ip_address VARCHAR(16), sink_port VARCHAR(5),
                                         flow_id INT ) -->
     <select id="create" resultMap="insertedID" statementType="CALLABLE">
-        {CALL flow.insert_sink(#{param1},#{param2},#{param3},#{param4})}
+        {CALL cfe_18.insert_sink(#{param1},#{param2},#{param3},#{param4})}
     </select>
 
 
     <!-- get                ( sink_id INT, tx_id INT ) -->
     <select id="get" resultMap="sink" statementType="CALLABLE">
-        {CALL flow.select_sink(#{param1},#{param2})}
+        {CALL cfe_18.select_sink(#{param1},#{param2})}
     </select>
     <resultMap id="sink" type="com.teragrep.cfe18.handlers.entities.Sink">
         <result property="id"           column="id"/>
@@ -26,7 +26,7 @@
 
     <!-- GET ALL Sinks      ( tx_id INT ) -->
     <select id="getAll" resultMap="all" statementType="CALLABLE">
-        {CALL flow.select_all_sinks(#{param1})}
+        {CALL cfe_18.select_all_sinks(#{param1})}
     </select>
     <resultMap id="all" type="com.teragrep.cfe18.handlers.entities.Sink">
         <result property="id"           column="id"/>
@@ -39,7 +39,7 @@
 
     <!-- Delete             ( sink_id INT ) -->
     <select id="delete" statementType="CALLABLE">
-        {CALL flow.delete_sink(#{param1})}
+        {CALL cfe_18.delete_sink(#{param1})}
     </select>
 
 

@@ -77,10 +77,10 @@ BEGIN
              INNER JOIN captureIndex FOR SYSTEM_TIME AS OF TRANSACTION @time cI ON cd.captureIndex_id = cI.id
              INNER JOIN retentionTime FOR SYSTEM_TIME AS OF TRANSACTION @time rT ON cd.retentionTime_id = rT.id
              INNER JOIN tags FOR SYSTEM_TIME AS OF TRANSACTION @time t ON cd.tag_id = t.id
-             INNER JOIN flow.flows FOR SYSTEM_TIME AS OF TRANSACTION @time f ON cd.flow_id = f.id
-             INNER JOIN flow.capture_sink FOR SYSTEM_TIME AS OF TRANSACTION @time cas
+             INNER JOIN cfe_18.flows FOR SYSTEM_TIME AS OF TRANSACTION @time f ON cd.flow_id = f.id
+             INNER JOIN cfe_18.capture_sink FOR SYSTEM_TIME AS OF TRANSACTION @time cas
                         ON cd.flow_id = cas.flow_id AND cd.L7_id = cas.L7_id
-             INNER JOIN flow.L7 FOR SYSTEM_TIME AS OF TRANSACTION @time L7 ON cd.L7_id = L7.id
+             INNER JOIN cfe_18.L7 FOR SYSTEM_TIME AS OF TRANSACTION @time L7 ON cd.L7_id = L7.id
              LEFT JOIN capture_type FOR SYSTEM_TIME AS OF TRANSACTION @time ct ON cd.capture_type_id = ct.id
              LEFT JOIN capture_meta_file FOR SYSTEM_TIME AS OF TRANSACTION @time cmf
                        ON ct.id = cmf.id AND ct.capture_type = cmf.capture_type

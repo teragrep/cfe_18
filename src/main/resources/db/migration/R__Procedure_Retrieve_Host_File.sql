@@ -43,7 +43,7 @@
  * Teragrep, the applicable Commercial License may apply to this file if you as
  * a licensee so wish it.
  */
-USE cfe_00;
+USE cfe_18;
 DELIMITER //
 CREATE OR REPLACE PROCEDURE select_file_host(proc_host_id INT, tx_id INT)
 BEGIN
@@ -58,13 +58,13 @@ BEGIN
     ELSE
         SET @time = tx_id;
     END IF;
-    IF ((SELECT COUNT(id) FROM location.host FOR SYSTEM_TIME AS OF TRANSACTION @time WHERE id = proc_host_id) = 0) THEN
+    IF ((SELECT COUNT(id) FROM cfe_18.host FOR SYSTEM_TIME AS OF TRANSACTION @time WHERE id = proc_host_id) = 0) THEN
         SELECT JSON_OBJECT('id', proc_host_id, 'message', 'Host does not exist') INTO @hid;
         SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = @hid;
     END IF;
 
     IF ((SELECT COUNT(h.id)
-         FROM location.host FOR SYSTEM_TIME AS OF TRANSACTION @time h
+         FROM cfe_18.host FOR SYSTEM_TIME AS OF TRANSACTION @time h
                   INNER JOIN hubs FOR SYSTEM_TIME AS OF TRANSACTION @time h3 ON h.id = h3.host_id
          WHERE h.id = proc_host_id) > 0) THEN
         SELECT JSON_OBJECT('id', proc_host_id, 'message', 'Host is hub') INTO @hub;
@@ -75,10 +75,10 @@ BEGIN
                h.fqhost      AS host_fq,
                h2.id         AS hub_id,
                h3.fqhost     AS hub_fq
-        FROM location.host FOR SYSTEM_TIME AS OF TRANSACTION @time h
+        FROM cfe_18.host FOR SYSTEM_TIME AS OF TRANSACTION @time h
                  INNER JOIN host_type_cfe FOR SYSTEM_TIME AS OF TRANSACTION @time htc ON h.id = htc.host_id
                  INNER JOIN hubs FOR SYSTEM_TIME AS OF TRANSACTION @time h2 ON htc.hub_id = h2.id
-                 INNER JOIN location.host FOR SYSTEM_TIME AS OF TRANSACTION @time h3 ON h2.host_id = h3.id
+                 INNER JOIN cfe_18.host FOR SYSTEM_TIME AS OF TRANSACTION @time h3 ON h2.host_id = h3.id
         WHERE h.id = proc_host_id
           AND h3.id = h2.host_id;
     END IF;

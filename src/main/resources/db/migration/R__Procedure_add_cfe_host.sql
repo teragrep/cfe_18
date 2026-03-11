@@ -43,7 +43,7 @@
  * Teragrep, the applicable Commercial License may apply to this file if you as
  * a licensee so wish it.
  */
-use location;
+use cfe_18;
 DELIMITER //
 CREATE OR REPLACE PROCEDURE host_add_cfe(proc_MD5 varchar(32), proc_fqhost varchar(128),
                                          proc_hub_fq varchar(128))
@@ -56,37 +56,37 @@ BEGIN
         end;
     start transaction;
 
-    select cfe_00.hubs.id
+    select cfe_18.hubs.id
     into @hubs_id
-    from cfe_00.hubs
-             inner join(select id from location.host where location.host.fqhost = proc_hub_fq) as hi
+    from cfe_18.hubs
+             inner join(select id from cfe_18.host where cfe_18.host.fqhost = proc_hub_fq) as hi
     where hubs.host_id = hi.id;
-    if (select cfe_00.hubs.id
-        from cfe_00.hubs
-                 inner join(select id from location.host where location.host.fqhost = proc_hub_fq) as hi
+    if (select cfe_18.hubs.id
+        from cfe_18.hubs
+                 inner join(select id from cfe_18.host where cfe_18.host.fqhost = proc_hub_fq) as hi
         where hubs.host_id = hi.id) is null then
         SELECT JSON_OBJECT('id', @hubs_id, 'message', 'Hub does not exist') into @hub;
         signal sqlstate '45000' set message_text = @hub;
     else
         if (select id
-            from location.host
+            from cfe_18.host
             where MD5 = proc_MD5
               and fqhost = proc_fqhost
               and host_type = 'CFE') is null then
-            insert into location.host(MD5, fqhost, host_type)
+            insert into cfe_18.host(MD5, fqhost, host_type)
             values (proc_MD5, proc_fqhost, 'CFE');
             select last_insert_id() into @id;
         else
-            select id into @id from location.host where MD5 = proc_MD5 and fqhost = proc_fqhost and host_type = 'CFE';
+            select id into @id from cfe_18.host where MD5 = proc_MD5 and fqhost = proc_fqhost and host_type = 'CFE';
         end if;
     end if;
 
     if (select host_id
-        from cfe_00.host_type_cfe
+        from cfe_18.host_type_cfe
         where host_id = @id
           and host_type = 'CFE'
           and hub_id = @hubs_id) is null then
-        insert into cfe_00.host_type_cfe(host_id, host_type, hub_id)
+        insert into cfe_18.host_type_cfe(host_id, host_type, hub_id)
         values (@id, 'CFE', @hubs_id);
     end if;
     commit;

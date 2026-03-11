@@ -43,9 +43,9 @@
  * Teragrep, the applicable Commercial License may apply to this file if you as
  * a licensee so wish it.
  */
-use flow;
+USE cfe_18;
 
-create table flow.cfe_04_transforms (
+create table cfe_18.cfe_04_transforms (
     id int primary key auto_increment,
     cfe_04_id int not null,
     name varchar(255) not null,
@@ -56,7 +56,7 @@ create table flow.cfe_04_transforms (
     regex varchar(255) not null,
     format varchar(255) not null,
     constraint unique(cfe_04_id,name),
-    constraint foreign key (cfe_04_id) references flow.cfe_04(id),
+    constraint foreign key (cfe_04_id) references cfe_18.cfe_04(id),
     start_trxid BIGINT UNSIGNED GENERATED ALWAYS AS ROW START INVISIBLE,
     end_trxid BIGINT UNSIGNED GENERATED ALWAYS AS ROW END INVISIBLE,
     PERIOD FOR SYSTEM_TIME(start_trxid, end_trxid)

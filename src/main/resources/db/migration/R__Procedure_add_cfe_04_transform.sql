@@ -43,7 +43,7 @@
  * Teragrep, the applicable Commercial License may apply to this file if you as
  * a licensee so wish it.
  */
-use flow;
+use cfe_18;
 DELIMITER //
 CREATE OR REPLACE PROCEDURE add_new_cfe_04_transforms(p_cfe_04_id int,
                                                       p_name varchar(255),
@@ -61,7 +61,7 @@ BEGIN
         END;
     START TRANSACTION;
     -- check if row exists before inserting new one, if so then just return that ID
-    IF((select count(id) from flow.cfe_04_transforms t where t.cfe_04_id=p_cfe_04_id
+    IF((select count(id) from cfe_18.cfe_04_transforms t where t.cfe_04_id=p_cfe_04_id
                                             AND t.name=p_name
                                             AND t.write_meta=p_write_meta
                                             AND t.write_default=p_write_default
@@ -70,7 +70,7 @@ BEGIN
                                             AND t.regex=p_regex
                                             AND t.format=p_format)>0) THEN
 
-        select t.id as id from flow.cfe_04_transforms t where t.cfe_04_id=p_cfe_04_id
+        select t.id as id from cfe_18.cfe_04_transforms t where t.cfe_04_id=p_cfe_04_id
                                             AND t.name=p_name
                                             AND t.write_meta=p_write_meta
                                             AND t.write_default=p_write_default
@@ -79,7 +79,7 @@ BEGIN
                                             AND t.regex=p_regex
                                             AND t.format=p_format;
         ELSE
-            insert into flow.cfe_04_transforms(cfe_04_id, name, write_meta, write_default, default_value, destination_key, regex, format)
+            insert into cfe_18.cfe_04_transforms(cfe_04_id, name, write_meta, write_default, default_value, destination_key, regex, format)
             values(p_cfe_04_id,p_name,p_write_meta,p_write_default,p_default_value,p_destination_key,p_regex,p_format);
 
             -- returns ID of new row

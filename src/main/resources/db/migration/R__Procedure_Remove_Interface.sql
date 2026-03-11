@@ -43,7 +43,7 @@
  * Teragrep, the applicable Commercial License may apply to this file if you as
  * a licensee so wish it.
  */
-use cfe_03;
+use cfe_18;
 DELIMITER //
 CREATE OR REPLACE PROCEDURE remove_hostmeta_interface(proc_interface_id int)
 BEGIN
@@ -53,11 +53,11 @@ BEGIN
             RESIGNAL;
         END;
     START TRANSACTION;
-    if (select id from cfe_03.interfaces where id = proc_interface_id) is null then
+    if (select id from cfe_18.interfaces where id = proc_interface_id) is null then
         SELECT JSON_OBJECT('id', null, 'message', 'Interface does not exist') into @i;
         signal sqlstate '45000' set message_text = @i;
     end if;
-    delete from cfe_03.interfaces where id = proc_interface_id;
+    delete from cfe_18.interfaces where id = proc_interface_id;
     COMMIT;
 END;
 //

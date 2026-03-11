@@ -76,8 +76,8 @@ public class TriggerHostFileTest extends DBUnitbase {
     public void testHostTriggerBounce() throws Exception {
         SQLException state = Assertions.assertThrows(SQLException.class, () -> {
             Statement stmnt = conn.createStatement();
-            stmnt.addBatch("insert into location.host_group_x_host values(60,2,11,'cfe')");
-            stmnt.addBatch("insert into location.host_group_x_host values(60,1,11,'cfe')");
+            stmnt.addBatch("insert into cfe_18.host_group_x_host values(60,2,11,'cfe')");
+            stmnt.addBatch("insert into cfe_18.host_group_x_host values(60,1,11,'cfe')");
             stmnt.executeBatch();
         });
         Assertions.assertEquals("17002", state.getSQLState());
@@ -87,16 +87,16 @@ public class TriggerHostFileTest extends DBUnitbase {
     public void testHostTriggerAccept() throws Exception {
         IDataSet expectedDataSet = new FlatXmlDataSetBuilder()
                 .build(new File("src/test/resources/XMLTriggersHostXCapture/triggerHostExpectedData1.xml"));
-        ITable expectedTable = expectedDataSet.getTable("location.host_group_x_host");
+        ITable expectedTable = expectedDataSet.getTable("cfe_18.host_group_x_host");
 
         // Execute the tested code that modify the database here
         // execute statement here
         Statement stmnt = conn.createStatement();
-        stmnt.addBatch("insert into location.host_group_x_host values(19,6,2,'cfe')");
+        stmnt.addBatch("insert into cfe_18.host_group_x_host values(19,6,2,'cfe')");
         stmnt.executeBatch();
 
         // Fetch database data after executing your code
-        ITable actualTable = databaseConnection.createQueryTable("result", "select * from location.host_group_x_host");
+        ITable actualTable = databaseConnection.createQueryTable("result", "select * from cfe_18.host_group_x_host");
 
         // Load expected data from an XML dataset
         // Assert actual database table match expected table

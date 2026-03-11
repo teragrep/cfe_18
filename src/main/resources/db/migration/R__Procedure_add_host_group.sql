@@ -43,7 +43,7 @@
  * Teragrep, the applicable Commercial License may apply to this file if you as
  * a licensee so wish it.
  */
-use location;
+use cfe_18;
 DELIMITER //
 CREATE OR REPLACE PROCEDURE add_host_group_with_host(proc_host_id int, host_group varchar(255))
 
@@ -55,20 +55,20 @@ BEGIN
         END;
     START TRANSACTION;
 
-    if (select id from location.host where id = proc_host_id) is null then
+    if (select id from cfe_18.host where id = proc_host_id) is null then
         SELECT JSON_OBJECT('id', NULL, 'message', 'host does not exist') into @host;
         signal sqlstate '45000' set message_text = @host;
     end if;
 
-    select host_type into @type from location.host where id = proc_host_id;
+    select host_type into @type from cfe_18.host where id = proc_host_id;
 
 
     -- check if the group exists. If not then create said group
-    if (select groupName from location.host_group where groupName = host_group) is null then
-        insert into location.host_group(groupName, host_type) values (host_group, @type);
+    if (select groupName from cfe_18.host_group where groupName = host_group) is null then
+        insert into cfe_18.host_group(groupName, host_type) values (host_group, @type);
         select last_insert_id() into @GroupId;
     else
-        select id into @GroupId from location.host_group where groupName = host_group;
+        select id into @GroupId from cfe_18.host_group where groupName = host_group;
     end if;
 
     if (select id
@@ -76,7 +76,7 @@ BEGIN
         where host_group_id = @GroupId
           and host_id = proc_host_id
           and host_type = @type) is null then
-        insert into location.host_group_x_host(host_group_id, host_id, host_type)
+        insert into cfe_18.host_group_x_host(host_group_id, host_id, host_type)
         values (@GroupId, proc_host_id, @type);
     end if;
     select host_group as name, @GroupId as last;
