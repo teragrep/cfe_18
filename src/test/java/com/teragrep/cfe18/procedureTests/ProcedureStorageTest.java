@@ -97,14 +97,14 @@ public class ProcedureStorageTest extends DBUnitbase {
         IDataSet expectedDataSet = new FlatXmlDataSetBuilder()
                 .build(new File("src/test/resources/XMLProcedureStorage/procedureStorageExpectedTestData1.xml"));
 
-        ITable expectedTable = expectedDataSet.getTable("cfe_18.flow_targets");
+        ITable expectedTable = expectedDataSet.getTable("cfe_18.flow_storages");
 
         CallableStatement stmnt = conn.prepareCall("CALL cfe_18.add_storage(?,?)");
         stmnt.setString(1, "flow");
         stmnt.setInt(2, 2);
         stmnt.execute();
 
-        ITable actualTable = databaseConnection.createQueryTable("result", "select * from cfe_18.flow_targets");
+        ITable actualTable = databaseConnection.createQueryTable("result", "select * from cfe_18.flow_storages");
 
         Assertion.assertEquals(expectedTable, actualTable);
 
@@ -118,15 +118,15 @@ public class ProcedureStorageTest extends DBUnitbase {
         IDataSet expectedDataSet = new FlatXmlDataSetBuilder()
                 .build(new File("src/test/resources/XMLProcedureStorage/procedureStorageExpectedTestData2.xml"));
 
-        ITable expectedTable = expectedDataSet.getTable("cfe_18.capture_def_x_flow_targets");
+        ITable expectedTable = expectedDataSet.getTable("cfe_18.capture_def_x_flow_storages");
 
         CallableStatement stmnt = conn.prepareCall("CALL cfe_18.add_storage_for_capture(?,?)");
-        stmnt.setInt(1, 1);
+        stmnt.setInt(1, 2);
         stmnt.setInt(2, 2);
         stmnt.execute();
 
         ITable actualTable = databaseConnection
-                .createQueryTable("result", "select * from cfe_18.capture_def_x_flow_targets");
+                .createQueryTable("result", "select * from cfe_18.capture_def_x_flow_storages");
 
         Assertion.assertEquals(expectedTable, actualTable);
     }
