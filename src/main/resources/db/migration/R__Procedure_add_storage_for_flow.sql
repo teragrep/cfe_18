@@ -67,17 +67,17 @@ BEGIN
     select cfe_type into @Storage_type from cfe_18.storages where id = proc_storage_id;
 
     if (select id
-        from cfe_18.flow_targets
+        from cfe_18.flow_storages
         where flow_id = @FlowId
           and storage_id = proc_storage_id
           and storage_type = @Storage_type) is null then
 
-        insert into cfe_18.flow_targets(flow_id, storage_id, storage_type)
+        insert into cfe_18.flow_storages(flow_id, storage_id, storage_type)
         values (@FlowId, proc_storage_id, @Storage_type);
         select last_insert_id() as last;
     else
         select id as last
-        from cfe_18.flow_targets
+        from cfe_18.flow_storages
         where flow_id = @FlowId
           and storage_id = proc_storage_id
           and storage_type = @Storage_type;

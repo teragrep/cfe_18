@@ -45,20 +45,21 @@
  */
 USE cfe_18;
 
-create table cfe_18.cfe_04_transforms (
-    id int primary key auto_increment,
-    cfe_04_id int not null,
-    name varchar(255) not null,
-    write_meta boolean not null,
-    write_default boolean not null,
-    default_value varchar(255) not null,
-    destination_key varchar(255) not null,
-    regex varchar(255) not null,
-    format varchar(255) not null,
-    unique key(id, cfe_04_id),
-    constraint unique(cfe_04_id,name),
-    constraint foreign key (cfe_04_id) references cfe_18.cfe_04(id),
-    start_trxid BIGINT UNSIGNED GENERATED ALWAYS AS ROW START INVISIBLE,
-    end_trxid BIGINT UNSIGNED GENERATED ALWAYS AS ROW END INVISIBLE,
+CREATE TABLE cfe_04_transforms
+(
+    id              INT PRIMARY KEY AUTO_INCREMENT,
+    cfe_04_id       INT          NOT NULL,
+    transform_name  VARCHAR(255) NOT NULL,
+    write_meta      BOOLEAN      NOT NULL,
+    write_default   BOOLEAN      NOT NULL,
+    default_value   VARCHAR(255) NOT NULL,
+    destination_key VARCHAR(255) NOT NULL,
+    regex           VARCHAR(255) NOT NULL,
+    format          VARCHAR(255) NOT NULL,
+    CONSTRAINT FOREIGN KEY (cfe_04_id) REFERENCES cfe_04 (id),
+    UNIQUE ( cfe_04_id,id),
+    UNIQUE (cfe_04_id, transform_name),
+    start_trxid     BIGINT UNSIGNED GENERATED ALWAYS AS ROW START INVISIBLE,
+    end_trxid       BIGINT UNSIGNED GENERATED ALWAYS AS ROW END INVISIBLE,
     PERIOD FOR SYSTEM_TIME(start_trxid, end_trxid)
 ) WITH SYSTEM VERSIONING;

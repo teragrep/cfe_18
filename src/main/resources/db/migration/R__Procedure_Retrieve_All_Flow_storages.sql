@@ -63,7 +63,7 @@ BEGIN
            s.cfe_type     as storage_type,
            ft.storage_id  as storage_id
     from cfe_18.flows for system_time as of transaction @time f
-             inner join flow_targets for system_time as of transaction @time ft on f.id = ft.flow_id
+             inner join flow_storages for system_time as of transaction @time ft on f.id = ft.flow_id
              inner join storages for system_time as of transaction @time s on ft.storage_id = s.id;
 end;
 //

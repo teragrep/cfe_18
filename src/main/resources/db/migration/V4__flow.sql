@@ -164,7 +164,7 @@ create table routers
     PERIOD FOR SYSTEM_TIME(start_trxid, end_trxid)
 ) WITH SYSTEM VERSIONING;
 
-create table flow_targets
+create table flow_storages
 (
     id           int auto_increment primary key,
     index (flow_id),

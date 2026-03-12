@@ -81,7 +81,7 @@ public class ProcedureStorageDataTest extends DBInformation {
         partialDataSet.addTable("cfe_18.cfe_11");
         partialDataSet.addTable("cfe_18.cfe_10");
         partialDataSet.addTable("cfe_18.cfe_04");
-        partialDataSet.addTable("cfe_18.flow_targets");
+        partialDataSet.addTable("cfe_18.flow_storages");
         partialDataSet.addTable("cfe_18.L7");
         partialDataSet.addTable("cfe_18.capture_sink");
         // capture_def reqs
@@ -108,7 +108,7 @@ public class ProcedureStorageDataTest extends DBInformation {
 
         // linkage
         partialDataSet.addTable("cfe_18.capture_definition"); // Vain RELP. Ei vaadi tarkistusta eri capture tyypistä
-        partialDataSet.addTable("cfe_18.capture_def_x_flow_targets");
+        partialDataSet.addTable("cfe_18.capture_def_x_flow_storages");
 
         FlatXmlDataSet
                 .write(
@@ -125,7 +125,7 @@ public class ProcedureStorageDataTest extends DBInformation {
 
         Statement deleteStatement = conn.createStatement();
         //linkage
-        deleteStatement.addBatch("delete from cfe_18.capture_def_x_flow_targets");
+        deleteStatement.addBatch("delete from cfe_18.capture_def_x_flow_storages");
 
         // cap def
         deleteStatement.addBatch("delete from cfe_18.capture_definition");
@@ -149,7 +149,7 @@ public class ProcedureStorageDataTest extends DBInformation {
         // sink
         deleteStatement.addBatch("delete from cfe_18.capture_sink");
         deleteStatement.addBatch("delete from cfe_18.L7");
-        deleteStatement.addBatch("delete from cfe_18.flow_targets");
+        deleteStatement.addBatch("delete from cfe_18.flow_storages");
 
         // storages
         deleteStatement.addBatch("delete from cfe_18.cfe_04");
@@ -180,31 +180,31 @@ public class ProcedureStorageDataTest extends DBInformation {
         insertTestData.addBatch("insert into cfe_18.cfe_23(id,cfe_type) values(6,'cfe_23')");
         insertTestData
                 .addBatch(
-                        "insert into cfe_18.flow_targets(id,target_name,flow_id,storage_id,storage_type) values(1,'cfe_04',1,1,'cfe_04')"
+                        "insert into cfe_18.flow_storages(id,target_name,flow_id,storage_id,storage_type) values(1,'cfe_04',1,1,'cfe_04')"
                 );
         insertTestData
                 .addBatch(
-                        "insert into cfe_18.flow_targets(id,target_name,flow_id,storage_id,storage_type) values(2,'cfe_10',1,2,'cfe_10')"
+                        "insert into cfe_18.flow_storages(id,target_name,flow_id,storage_id,storage_type) values(2,'cfe_10',1,2,'cfe_10')"
                 );
         insertTestData
                 .addBatch(
-                        "insert into cfe_18.flow_targets(id,target_name,flow_id,storage_id,storage_type) values(3,'cfe_11',1,3,'cfe_11')"
+                        "insert into cfe_18.flow_storages(id,target_name,flow_id,storage_id,storage_type) values(3,'cfe_11',1,3,'cfe_11')"
                 );
         insertTestData
                 .addBatch(
-                        "insert into cfe_18.flow_targets(id,target_name,flow_id,storage_id,storage_type) values(4,'cfe_12',1,4,'cfe_12')"
+                        "insert into cfe_18.flow_storages(id,target_name,flow_id,storage_id,storage_type) values(4,'cfe_12',1,4,'cfe_12')"
                 );
         insertTestData
                 .addBatch(
-                        "insert into cfe_18.flow_targets(id,target_name,flow_id,storage_id,storage_type) values(5,'cfe_19',1,5,'cfe_19')"
+                        "insert into cfe_18.flow_storages(id,target_name,flow_id,storage_id,storage_type) values(5,'cfe_19',1,5,'cfe_19')"
                 );
         insertTestData
                 .addBatch(
-                        "insert into cfe_18.flow_targets(id,target_name,flow_id,storage_id,storage_type) values(6,'cfe_23',1,6,'cfe_23')"
+                        "insert into cfe_18.flow_storages(id,target_name,flow_id,storage_id,storage_type) values(6,'cfe_23',1,6,'cfe_23')"
                 );
         insertTestData
                 .addBatch(
-                        "insert into cfe_18.flow_targets(id,target_name,flow_id,storage_id,storage_type) values(7,'cfe_01',2,1,'cfe_04')"
+                        "insert into cfe_18.flow_storages(id,target_name,flow_id,storage_id,storage_type) values(7,'cfe_01',2,1,'cfe_04')"
                 );
         insertTestData.addBatch("insert into cfe_18.L7(id,app_protocol) values(1,'plain')");
         insertTestData
@@ -257,7 +257,7 @@ public class ProcedureStorageDataTest extends DBInformation {
 
         insertTestData
                 .addBatch(
-                        "insert into cfe_18.capture_def_x_flow_targets(id,capture_def_id,flow_id,flow_target_id) values(1,1,1,1)"
+                        "insert into cfe_18.capture_def_x_flow_storages(id,capture_def_id,flow_id,flow_storage_id) values(1,1,1,1)"
                 );
         insertTestData.executeBatch();
 
