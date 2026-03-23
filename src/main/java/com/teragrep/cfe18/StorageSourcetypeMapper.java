@@ -43,30 +43,13 @@
  * Teragrep, the applicable Commercial License may apply to this file if you as
  * a licensee so wish it.
  */
-use cfe_18;
-DELIMITER //
-CREATE OR REPLACE PROCEDURE remove_capture_storage(proc_capture_id int, proc_storage_id int)
-BEGIN
-    DECLARE EXIT HANDLER FOR SQLEXCEPTION
-        BEGIN
-            ROLLBACK;
-            RESIGNAL;
-        END;
-    START TRANSACTION;
-    if (select id
-        from cfe_18.capture_def_x_flow_storages
-        where capture_def_id = proc_capture_id
-          and flow_storage_id = proc_storage_id) is null then
-        SELECT JSON_OBJECT('id', null, 'message', 'Capture storage does not exist') into @cs;
-        signal sqlstate '45000' set message_text = @cs;
-    end if;
-    delete
-    from cfe_18.capture_def_x_flow_storages
-    where capture_def_id = proc_capture_id
-      and flow_storage_id = proc_storage_id;
-    COMMIT;
-END;
+package com.teragrep.cfe18;
 
+import org.apache.ibatis.annotations.Mapper;
 
-//
-DELIMITER ;
+@Mapper
+public interface StorageSourcetypeMapper {
+
+    Integer create(final int storageId, final String sourcetype);
+
+}

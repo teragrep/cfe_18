@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.teragrep.cfe18.StorageSourcetypeMapper">
+
+    <!-- p_storage_id INT, sourcetype VARCHAR(255) -->
+    <select id="create" resultMap="storageId" statementType="CALLABLE">
+        {CALL cfe_18.insert_storage_sourcetype(#{param1},#{param2})}
+    </select>
+
+    <resultMap id="storageId" type="java.lang.Integer">
+        <result property="storageId" column="storage_id" javaType="java.lang.Integer"/>
+    </resultMap>
+
+</mapper>

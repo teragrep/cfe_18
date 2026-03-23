@@ -43,9 +43,9 @@
  * Teragrep, the applicable Commercial License may apply to this file if you as
  * a licensee so wish it.
  */
-use cfe_18;
+USE cfe_18;
 DELIMITER //
-CREATE OR REPLACE PROCEDURE remove_capture_storage(proc_capture_id int, proc_storage_id int)
+CREATE OR REPLACE PROCEDURE insert_storage_sourcetype(p_storage_id INT, sourcetype VARCHAR(255))
 BEGIN
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
         BEGIN
@@ -53,20 +53,22 @@ BEGIN
             RESIGNAL;
         END;
     START TRANSACTION;
-    if (select id
-        from cfe_18.capture_def_x_flow_storages
-        where capture_def_id = proc_capture_id
-          and flow_storage_id = proc_storage_id) is null then
-        SELECT JSON_OBJECT('id', null, 'message', 'Capture storage does not exist') into @cs;
-        signal sqlstate '45000' set message_text = @cs;
-    end if;
-    delete
-    from cfe_18.capture_def_x_flow_storages
-    where capture_def_id = proc_capture_id
-      and flow_storage_id = proc_storage_id;
+
+    SELECT id INTO @sourcetypeId FROM cfe_18.captureSourcetype WHERE captureSourceType = sourcetype;
+
+    IF ((SELECT COUNT(*)
+         FROM cfe_18.storage_sourcetypes
+         WHERE storage_id = p_storage_id AND sourcetype_id = @sourcetypeId) =
+        0) THEN
+        INSERT INTO cfe_18.storage_sourcetypes VALUES (p_storage_id, @sourcetypeId);
+        SELECT LAST_INSERT_ID() AS storage_id;
+    ELSE
+        SELECT storage_id AS storage_id
+        FROM cfe_18.storage_sourcetypes
+        WHERE storage_id = p_storage_id
+          AND sourcetype_id = @sourcetypeId;
+    END IF;
     COMMIT;
 END;
-
-
 //
 DELIMITER ;
