@@ -44,25 +44,37 @@
  * a licensee so wish it.
  */
 USE cfe_18;
+DELIMITER //
+CREATE OR REPLACE PROCEDURE insert_cfe_04_storage_sourcetype(p_storage_id INT, p_sourcetype_id INT,
+                                                             p_maxdaysago VARCHAR(255), p_category VARCHAR(255),
+                                                             p_sourcedescription VARCHAR(255), p_truncate VARCHAR(255),
+                                                             p_freeform_indexer_enabled BOOLEAN,
+                                                             p_freeform_indexer_text VARCHAR(255),
+                                                             p_freeform_lb_enabled BOOLEAN,
+                                                             p_freeform_lb_text VARCHAR(255))
+BEGIN
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+        BEGIN
+            ROLLBACK;
+            RESIGNAL;
+        END;
+    START TRANSACTION;
 
-CREATE TABLE cfe_18.storage_indexes
-(
-    storage_id INT,
-    index_id   INT,
-    PRIMARY KEY (storage_id, index_id),
-    CONSTRAINT FOREIGN KEY (index_id) REFERENCES cfe_18.captureIndex (id),
-    CONSTRAINT FOREIGN KEY (storage_id) REFERENCES cfe_18.storages (id)
+    INSERT INTO cfe_18.storage_sourcetypes VALUES (p_storage_id, p_sourcetype_id);
 
-);
+    INSERT INTO cfe_18.cfe_04_sourcetypes(cfe_04_id, capture_sourcetype_id, maxdaysago, category, sourcedescription,
+                                          truncate, freeform_indexer_enabled, freeform_indexer_text,
+                                          freeform_lb_enabled, freeform_lb_text)
+    VALUES (p_storage_id, p_sourcetype_id, p_maxdaysago, p_category, p_sourcedescription, p_truncate,
+            p_freeform_indexer_enabled, p_freeform_indexer_text, p_freeform_lb_enabled, p_freeform_lb_text);
 
-CREATE TABLE cfe_18.storage_sourcetypes
-(
-    storage_id    INT        NOT NULL,
-    sourcetype_id INT        NOT NULL,
-    PRIMARY KEY (storage_id, sourcetype_id),
-    CONSTRAINT FOREIGN KEY (storage_id) REFERENCES cfe_18.storages (id),
-    CONSTRAINT FOREIGN KEY (sourcetype_id) REFERENCES cfe_18.captureSourcetype (id)
-);
+    -- return storage id as signal
+    SELECT storage_id AS storage_id
+    FROM cfe_18.storage_sourcetypes
+    WHERE storage_id = p_storage_id
+      AND sourcetype_id = p_sourcetype_id;
 
-
-
+    COMMIT;
+END;
+//
+DELIMITER ;

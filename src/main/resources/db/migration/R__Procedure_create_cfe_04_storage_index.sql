@@ -43,13 +43,30 @@
  * Teragrep, the applicable Commercial License may apply to this file if you as
  * a licensee so wish it.
  */
-package com.teragrep.cfe18;
+USE cfe_18;
+DELIMITER //
+CREATE OR REPLACE PROCEDURE insert_cfe_04_storage_index(p_storage_id INT, p_index_id INT, p_repFactor VARCHAR(255),
+                                                        p_disabled BOOLEAN, p_homePath VARCHAR(255),
+                                                        p_coldPath VARCHAR(255), p_thawedPath VARCHAR(255))
+BEGIN
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+        BEGIN
+            ROLLBACK;
+            RESIGNAL;
+        END;
+    START TRANSACTION;
 
-import org.apache.ibatis.annotations.Mapper;
+    INSERT INTO cfe_18.storage_indexes VALUES (p_storage_id, p_index_id);
 
-@Mapper
-public interface StorageSourcetypeMapper {
+    INSERT INTO cfe_18.cfe_04_indexes(cfe_04_id, capture_index_id, repFactor, disabled, homePath, coldPath, thawedPath)
+    VALUES (p_storage_id, p_index_id, p_repFactor, p_disabled, p_homePath, p_coldPath, p_thawedPath);
 
-    Integer create(final int storageId, final String sourcetype);
-
-}
+    -- return storage id as signal
+    SELECT storage_id AS storage_id
+    FROM cfe_18.storage_indexes
+    WHERE storage_id = p_storage_id
+      AND index_id = p_index_id;
+    COMMIT;
+END;
+//
+DELIMITER ;
