@@ -59,10 +59,7 @@ import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.util.EntityUtils;
 import org.json.JSONObject;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Order;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
@@ -73,6 +70,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @ExtendWith(MigrateDatabaseExtension.class)
 public class FileProcessingTypeControllerTest extends TestSpringBootInformation {
 
@@ -131,42 +129,6 @@ public class FileProcessingTypeControllerTest extends TestSpringBootInformation 
     @Test
     @Order(2)
     public void testGetFileProcessingTypeById() {
-
-        FileProcessing file2 = new FileProcessing();
-        file2.setInputtype(InputType.REGEX);
-        file2.setInputvalue("normalregex");
-        file2.setRuleset("ruleset1");
-        file2.setName("name1");
-        file2.setTemplate("regex.moustache");
-
-        String jsonFirst = gson.toJson(file2);
-
-        // forms the json to requestEntity
-        StringEntity requestEntity = new StringEntity(String.valueOf(jsonFirst), ContentType.APPLICATION_JSON);
-
-        // Creates the request
-        HttpPut request = new HttpPut("http://localhost:" + port + "/v2/captures/definitions/files/types");
-        // set requestEntity to the put request
-        request.setEntity(requestEntity);
-        // Header
-        request.setHeader("Authorization", "Bearer " + token);
-
-        HttpResponse responseFirst = Assertions
-                .assertDoesNotThrow(() -> HttpClientBuilder.create().build().execute(request));
-
-        HttpEntity firstEntity = responseFirst.getEntity();
-
-        String firstResponse = Assertions.assertDoesNotThrow(() -> EntityUtils.toString(firstEntity, "UTF-8"));
-
-        // Parsing response as JSONObject
-        JSONObject responseAsJson = Assertions.assertDoesNotThrow(() -> new JSONObject(firstResponse));
-
-        // Creating string from Json that was given as a response
-        String actual = Assertions.assertDoesNotThrow(() -> responseAsJson.get("message").toString());
-
-        // Creating expected message as JSON Object from the data that was sent towards endpoint
-        String expected = "New file processing type created";
-
         FileProcessing file = new FileProcessing();
         file.setInputtype(InputType.REGEX);
         file.setInputvalue("normalregex");
@@ -188,9 +150,6 @@ public class FileProcessingTypeControllerTest extends TestSpringBootInformation 
         HttpEntity entitySecond = responseSecond.getEntity();
 
         String secondResponse = Assertions.assertDoesNotThrow(() -> EntityUtils.toString(entitySecond, "UTF-8"));
-
-        assertEquals(expected, actual);
-        assertEquals(HttpStatus.SC_CREATED, responseFirst.getStatusLine().getStatusCode());
 
         assertEquals(jsonSecond, secondResponse);
         assertEquals(HttpStatus.SC_OK, responseSecond.getStatusLine().getStatusCode());
