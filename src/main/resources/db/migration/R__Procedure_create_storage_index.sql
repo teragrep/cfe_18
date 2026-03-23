@@ -43,9 +43,9 @@
  * Teragrep, the applicable Commercial License may apply to this file if you as
  * a licensee so wish it.
  */
-use cfe_18;
+USE cfe_18;
 DELIMITER //
-CREATE OR REPLACE PROCEDURE retrieve_flow_storages(flow varchar(255),tx_id int)
+CREATE OR REPLACE PROCEDURE insert_storage_index(p_storage_id INT, p_index VARCHAR(255))
 BEGIN
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
         BEGIN
@@ -53,26 +53,17 @@ BEGIN
             RESIGNAL;
         END;
     START TRANSACTION;
-            if(tx_id) is null then
-             set @time = (select max(transaction_id) from mysql.transaction_registry);
-        else
-             set @time=tx_id;
-    end if;
-    if (select id from flows for system_time as of transaction @time where name = flow) is null then
-        SELECT JSON_OBJECT('id', NULL, 'message', 'Flow does not exist') into @fs;
-        signal sqlstate '45000' set message_text = @fs;
-    else
-        select s.storage_name  as target,
-               f.name          as flow,
-               ft.storage_type as storage_type,
-               ft.id           as last,
-               s.id            as storage_id
-        from cfe_18.flow_storages for system_time as of transaction @time ft
-                 inner join flows for system_time as of transaction @time f on ft.flow_id = f.id
-                 left join storages for system_time as of transaction @time s on ft.storage_id = s.id
-        where flow_id = f.id
-          and f.name = flow;
-    end if;
+
+    SELECT id INTO @indexId FROM cfe_18.captureIndex WHERE captureIndex = p_index;
+
+    IF ((SELECT COUNT(*) FROM cfe_18.storage_indexes WHERE storage_id = p_storage_id AND index_id = @indexId) = 0) THEN
+        INSERT INTO cfe_18.storage_indexes VALUES (p_storage_id, @indexId);
+        SELECT LAST_INSERT_ID() AS storage_id;
+    ELSE
+        SELECT storage_id AS storage_id
+        FROM cfe_18.storage_indexes
+        WHERE storage_id = p_storage_id AND index_id = @indexId;
+    END IF;
     COMMIT;
 END;
 //

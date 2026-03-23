@@ -60,13 +60,13 @@ BEGIN
         set @time=tx_id;
     end if;
 
-    if ((select count(id) from cfe_18.capture_def_x_flow_targets for system_time as of transaction @time where capture_def_id = capture_id) = 0) then
+    if ((select count(id) from cfe_18.capture_def_x_flow_storages for system_time as of transaction @time where capture_def_id = capture_id) = 0) then
         SELECT JSON_OBJECT('id', capture_id, 'message', 'Capture storage does not exist with given ID') into @cs;
         signal sqlstate '45000' set message_text = @cs;
     else
-        select s.storage_name as storage_name, cdxft.flow_target_id as storage_id, cdxft.capture_def_id as capture_id
-        from capture_def_x_flow_targets for system_time as of transaction @time cdxft
-                 inner join cfe_18.flow_targets for system_time as of transaction @time ft on cdxft.flow_target_id = ft.storage_id
+        select s.storage_name as storage_name, cdxft.flow_storage_id as storage_id, cdxft.capture_def_id as capture_id
+        from capture_def_x_flow_storages for system_time as of transaction @time cdxft
+                 inner join cfe_18.flow_storages for system_time as of transaction @time ft on cdxft.flow_storage_id = ft.storage_id
                  inner join cfe_18.storages for system_time as of transaction @time s on ft.storage_id = s.id
         where cdxft.capture_def_id = capture_id;
     end if;

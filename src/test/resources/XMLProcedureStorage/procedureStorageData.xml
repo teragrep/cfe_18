@@ -14,13 +14,13 @@
     <cfe_18.cfe_11 id="3" cfe_type="cfe_11"/>
     <cfe_18.cfe_10 id="2" cfe_type="cfe_10"/>
     <cfe_18.cfe_04 id="1" cfe_type="cfe_04"/>
-    <cfe_18.flow_targets id="1" flow_id="1" storage_id="1" storage_type="cfe_04"/>
-    <cfe_18.flow_targets id="2" flow_id="1" storage_id="2" storage_type="cfe_10"/>
-    <cfe_18.flow_targets id="3" flow_id="1" storage_id="3" storage_type="cfe_11"/>
-    <cfe_18.flow_targets id="4" flow_id="1" storage_id="4" storage_type="cfe_12"/>
-    <cfe_18.flow_targets id="5" flow_id="1" storage_id="5" storage_type="cfe_19"/>
-    <cfe_18.flow_targets id="6" flow_id="1" storage_id="6" storage_type="cfe_23"/>
-    <cfe_18.flow_targets id="7" flow_id="2" storage_id="1" storage_type="cfe_04"/>
+    <cfe_18.flow_storages id="1" flow_id="1" storage_id="1" storage_type="cfe_04"/>
+    <cfe_18.flow_storages id="2" flow_id="1" storage_id="2" storage_type="cfe_10"/>
+    <cfe_18.flow_storages id="3" flow_id="1" storage_id="3" storage_type="cfe_11"/>
+    <cfe_18.flow_storages id="4" flow_id="1" storage_id="4" storage_type="cfe_12"/>
+    <cfe_18.flow_storages id="5" flow_id="1" storage_id="5" storage_type="cfe_19"/>
+    <cfe_18.flow_storages id="6" flow_id="1" storage_id="6" storage_type="cfe_23"/>
+    <cfe_18.flow_storages id="7" flow_id="2" storage_id="1" storage_type="cfe_04"/>
     <cfe_18.L7 id="1" app_protocol="plain"/>
     <cfe_18.capture_sink id="1" L7_id="1" flow_id="1" ip_address="ip1" sink_port="652"/>
     <cfe_18.file_processing_type id="1" name="usesregex" inputtype="regex" inputvalue="normalRegex" ruleset="ruleset1" template="template1"/>
@@ -40,7 +40,9 @@
     <cfe_18.application id="1" app="app1"/>
     <cfe_18.retentionTime id="1" retention="P30D"/>
     <cfe_18.captureIndex id="1" captureIndex="index1"/>
+    <cfe_18.captureIndex id="2" captureIndex="index2"/>
     <cfe_18.captureSourcetype id="1" captureSourceType="sourcetype1"/>
+    <cfe_18.captureSourcetype id="2" captureSourceType="sourcetype2"/>
     <cfe_18.category id="1" category="audit"/>
     <cfe_18.capture_type id="1" capture_type="cfe"/>
     <cfe_18.capture_type id="2" capture_type="cfe"/>
@@ -51,8 +53,8 @@
     <cfe_18.capture_definition id="1" tag_id="1" application_id="1" captureIndex_id="1" retentionTime_id="1"
                                captureSourcetype_id="1" category_id="1" capture_type="cfe" capture_type_id="1" L7_id="1"
                                flow_id="1"/>
-    <cfe_18.capture_definition id="2" tag_id="2" application_id="1" captureIndex_id="1" retentionTime_id="1"
-                               captureSourcetype_id="1" category_id="1" capture_type="cfe" capture_type_id="1" L7_id="1"
+    <cfe_18.capture_definition id="2" tag_id="2" application_id="1" captureIndex_id="2" retentionTime_id="1"
+                               captureSourcetype_id="2" category_id="1" capture_type="cfe" capture_type_id="1" L7_id="1"
                                flow_id="1"/>
     <cfe_18.capture_definition id="3" tag_id="3" application_id="1" captureIndex_id="1" retentionTime_id="1"
                                captureSourcetype_id="1" category_id="1" capture_type="cfe" capture_type_id="1" L7_id="1"
@@ -84,5 +86,10 @@
     <cfe_18.capture_definition id="12" tag_id="10" application_id="1" captureIndex_id="1" retentionTime_id="1"
                                captureSourcetype_id="1" category_id="1" capture_type="cfe" capture_type_id="1" L7_id="1"
                                flow_id="1"/>
-    <cfe_18.capture_def_x_flow_targets id="1" capture_def_id="1" flow_id="1" flow_target_id="1"/>
+    <cfe_18.storage_indexes storage_id="1" index_id="1"/>
+    <cfe_18.storage_indexes storage_id="2" index_id="2"/>
+    <cfe_18.storage_sourcetypes storage_id="1" sourcetype_id="1"/>
+    <cfe_18.storage_sourcetypes storage_id="2" sourcetype_id="2"/>
+    <cfe_18.capture_def_x_flow_storages id="1" capture_def_id="1" flow_id="1" flow_storage_id="1" sourcetype_id="1" index_id="1"/>
+
 </dataset>

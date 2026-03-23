@@ -43,37 +43,23 @@
  * Teragrep, the applicable Commercial License may apply to this file if you as
  * a licensee so wish it.
  */
-use cfe_18;
-DELIMITER //
-CREATE OR REPLACE PROCEDURE retrieve_flow_storages(flow varchar(255),tx_id int)
-BEGIN
-    DECLARE EXIT HANDLER FOR SQLEXCEPTION
-        BEGIN
-            ROLLBACK;
-            RESIGNAL;
-        END;
-    START TRANSACTION;
-            if(tx_id) is null then
-             set @time = (select max(transaction_id) from mysql.transaction_registry);
-        else
-             set @time=tx_id;
-    end if;
-    if (select id from flows for system_time as of transaction @time where name = flow) is null then
-        SELECT JSON_OBJECT('id', NULL, 'message', 'Flow does not exist') into @fs;
-        signal sqlstate '45000' set message_text = @fs;
-    else
-        select s.storage_name  as target,
-               f.name          as flow,
-               ft.storage_type as storage_type,
-               ft.id           as last,
-               s.id            as storage_id
-        from cfe_18.flow_storages for system_time as of transaction @time ft
-                 inner join flows for system_time as of transaction @time f on ft.flow_id = f.id
-                 left join storages for system_time as of transaction @time s on ft.storage_id = s.id
-        where flow_id = f.id
-          and f.name = flow;
-    end if;
-    COMMIT;
-END;
-//
-DELIMITER ;
+package com.teragrep.cfe18;
+
+import org.apache.ibatis.annotations.Mapper;
+
+@Mapper
+public interface Cfe04StorageIndexMapper {
+
+    Integer create(
+            final int storageId,
+            final int indexId,
+            final String repFactor,
+            final boolean disabled,
+            final String homePath,
+            final String coldPath,
+            final String thawedPath
+    );
+
+    void delete(final int indexId, final int storageId);
+
+}

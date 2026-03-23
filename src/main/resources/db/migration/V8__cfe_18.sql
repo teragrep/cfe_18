@@ -252,19 +252,3 @@ create table host_groups_x_capture_def_group
     PERIOD FOR SYSTEM_TIME(start_trxid, end_trxid)
 ) WITH SYSTEM VERSIONING;
 
-
-
-create table capture_def_x_flow_targets
-(
-    id             int primary key auto_increment,
-    capture_def_id int not null,
-    flow_id        int not null,
-    flow_target_id int not null,
-    constraint ´target_id_TO_flow_targets´ foreign key (flow_id, flow_target_id) references cfe_18.flow_targets (flow_id, storage_id),
-    constraint ´capture_def_id_TO_capture_definition´ foreign key (flow_id, capture_def_id) references cfe_18.capture_definition (flow_id, id) on delete cascade,
-    unique (capture_def_id, flow_id, flow_target_id),
-    start_trxid BIGINT UNSIGNED GENERATED ALWAYS AS ROW START INVISIBLE,
-    end_trxid BIGINT UNSIGNED GENERATED ALWAYS AS ROW END INVISIBLE,
-    PERIOD FOR SYSTEM_TIME(start_trxid, end_trxid)
-) WITH SYSTEM VERSIONING;
-

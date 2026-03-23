@@ -43,37 +43,69 @@
  * Teragrep, the applicable Commercial License may apply to this file if you as
  * a licensee so wish it.
  */
-use cfe_18;
-DELIMITER //
-CREATE OR REPLACE PROCEDURE retrieve_flow_storages(flow varchar(255),tx_id int)
-BEGIN
-    DECLARE EXIT HANDLER FOR SQLEXCEPTION
-        BEGIN
-            ROLLBACK;
-            RESIGNAL;
-        END;
-    START TRANSACTION;
-            if(tx_id) is null then
-             set @time = (select max(transaction_id) from mysql.transaction_registry);
-        else
-             set @time=tx_id;
-    end if;
-    if (select id from flows for system_time as of transaction @time where name = flow) is null then
-        SELECT JSON_OBJECT('id', NULL, 'message', 'Flow does not exist') into @fs;
-        signal sqlstate '45000' set message_text = @fs;
-    else
-        select s.storage_name  as target,
-               f.name          as flow,
-               ft.storage_type as storage_type,
-               ft.id           as last,
-               s.id            as storage_id
-        from cfe_18.flow_storages for system_time as of transaction @time ft
-                 inner join flows for system_time as of transaction @time f on ft.flow_id = f.id
-                 left join storages for system_time as of transaction @time s on ft.storage_id = s.id
-        where flow_id = f.id
-          and f.name = flow;
-    end if;
-    COMMIT;
-END;
-//
-DELIMITER ;
+package com.teragrep.cfe18.handlers.entities;
+
+public class Cfe04StorageIndex {
+
+    private int indexId;
+    private String repFactor;
+    private boolean disabled;
+    private String homePath;
+    private String coldpath;
+    private String thawedPath;
+
+    public int getIndexId() {
+        return indexId;
+    }
+
+    public void setIndexId(int indexId) {
+        this.indexId = indexId;
+    }
+
+    public String getRepFactor() {
+        return repFactor;
+    }
+
+    public void setRepFactor(String repFactor) {
+        this.repFactor = repFactor;
+    }
+
+    public boolean isDisabled() {
+        return disabled;
+    }
+
+    public void setDisabled(boolean disabled) {
+        this.disabled = disabled;
+    }
+
+    public String getHomePath() {
+        return homePath;
+    }
+
+    public void setHomePath(String homePath) {
+        this.homePath = homePath;
+    }
+
+    public String getColdpath() {
+        return coldpath;
+    }
+
+    public void setColdpath(String coldpath) {
+        this.coldpath = coldpath;
+    }
+
+    public String getThawedPath() {
+        return thawedPath;
+    }
+
+    public void setThawedPath(String thawedPath) {
+        this.thawedPath = thawedPath;
+    }
+
+    @Override
+    public String toString() {
+        return "Cfe04StorageIndex{" + "indexId=" + indexId + ", repFactor='" + repFactor + '\'' + ", disabled="
+                + disabled + ", homePath='" + homePath + '\'' + ", coldpath='" + coldpath + '\'' + ", thawedPath='"
+                + thawedPath + '\'' + '}';
+    }
+}
