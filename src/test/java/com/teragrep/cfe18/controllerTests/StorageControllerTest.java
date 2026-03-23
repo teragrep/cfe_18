@@ -364,8 +364,103 @@ public class StorageControllerTest extends TestSpringBootInformation {
         // Get the response from endpoint
         HttpClientBuilder.create().build().execute(request3);
 
-        // link the cfe_04 storage to capture
+        // Link index and sourcetype to storage
+        Cfe04StorageIndex cfe04StorageIndex = new Cfe04StorageIndex();
+        cfe04StorageIndex.setIndexId(1);
+        cfe04StorageIndex.setRepFactor("repFactor");
+        cfe04StorageIndex.setDisabled(true);
+        cfe04StorageIndex.setHomePath("homePath");
+        cfe04StorageIndex.setColdpath("coldPath");
+        cfe04StorageIndex.setThawedPath("thawedPath");
 
+        String cfe04StorageIndexJson = gson.toJson(cfe04StorageIndex);
+
+        // forms the json to requestEntity
+        StringEntity cfe04IndexAsEntity = new StringEntity(
+                String.valueOf(cfe04StorageIndexJson),
+                ContentType.APPLICATION_JSON
+        );
+
+        // Creates the request
+        HttpPut cfe04indexRequest = new HttpPut(
+                "http://localhost:" + port + "/v2/storages/definitions/cfe_04/1/indexes"
+        );
+        // set requestEntity to the put request
+        cfe04indexRequest.setEntity(cfe04IndexAsEntity);
+        // Header
+        cfe04indexRequest.setHeader("Authorization", "Bearer " + token);
+
+        // Get the response from endpoint
+        HttpResponse cfe04indexResponse = Assertions
+                .assertDoesNotThrow(() -> HttpClientBuilder.create().build().execute(cfe04indexRequest));
+
+        // Get the entity from response
+        HttpEntity cfe04IndexEntity = cfe04indexResponse.getEntity();
+
+        // Entity response string
+        String cfe04IndexResponse = Assertions.assertDoesNotThrow(() -> EntityUtils.toString(cfe04IndexEntity));
+
+        // Parsing response as JSONObject
+        JSONObject cfe04IndexAsJsonResponse = Assertions.assertDoesNotThrow(() -> new JSONObject(cfe04IndexResponse));
+
+        // Creating expected message as JSON Object from the data that was sent towards endpoint
+        String expectedCfe04Index = "New index linked to storage";
+
+        // Creating string from Json that was given as a response
+        String actualCfe04Index = Assertions
+                .assertDoesNotThrow(() -> cfe04IndexAsJsonResponse.get("message").toString());
+
+        Cfe04StorageSourcetype cfe04StorageSourcetype = new Cfe04StorageSourcetype();
+        cfe04StorageSourcetype.setSourcetypeId(1);
+        cfe04StorageSourcetype.setCategory("category");
+        cfe04StorageSourcetype.setFreeformIndexerEnabled(true);
+        cfe04StorageSourcetype.setFreeformIndexerText("text");
+        cfe04StorageSourcetype.setTruncate("truncate");
+        cfe04StorageSourcetype.setMaxDaysAgo("maxDaysAgo");
+        cfe04StorageSourcetype.setSourceDescription("sourceDescription");
+        cfe04StorageSourcetype.setFreeformLbText("freeformLbText");
+        cfe04StorageSourcetype.setFreeformLbEnabled(true);
+
+        String cfe04StorageSourcetypeJson = gson.toJson(cfe04StorageSourcetype);
+
+        // forms the json to requestEntity
+        StringEntity cfe04SourcetypeRequestEntity = new StringEntity(
+                String.valueOf(cfe04StorageSourcetypeJson),
+                ContentType.APPLICATION_JSON
+        );
+
+        // Creates the request
+        HttpPut cfe04SourcetypeRequest = new HttpPut(
+                "http://localhost:" + port + "/v2/storages/definitions/cfe_04/1/sourcetypes"
+        );
+        // set requestEntity to the put request
+        cfe04SourcetypeRequest.setEntity(cfe04SourcetypeRequestEntity);
+        // Header
+        cfe04SourcetypeRequest.setHeader("Authorization", "Bearer " + token);
+
+        // Get the response from endpoint
+        HttpResponse cfe04SourcetypeHttpResponse = Assertions
+                .assertDoesNotThrow(() -> HttpClientBuilder.create().build().execute(cfe04SourcetypeRequest));
+
+        // Get the entity from response
+        HttpEntity cfe04SourcetypeHttpResponseEntity = cfe04SourcetypeHttpResponse.getEntity();
+
+        // Entity response string
+        String cfe04SourcetypeEntity = Assertions
+                .assertDoesNotThrow(() -> EntityUtils.toString(cfe04SourcetypeHttpResponseEntity));
+
+        // Parsing response as JSONObject
+        JSONObject cfe04SourcetypeAsJsonResponse = Assertions
+                .assertDoesNotThrow(() -> new JSONObject(cfe04SourcetypeEntity));
+
+        // Creating expected message as JSON Object from the data that was sent towards endpoint
+        String expectedCfe04Sourcetype = "New sourcetype linked to storage";
+
+        // Creating string from Json that was given as a response
+        String actualCfe04Sourcetype = Assertions
+                .assertDoesNotThrow(() -> cfe04SourcetypeAsJsonResponse.get("message").toString());
+
+        // link the cfe_04 storage to capture
         CaptureStorage captureStorage = new CaptureStorage();
         captureStorage.setCapture_id(1);
         captureStorage.setStorage_id(1);
@@ -404,7 +499,10 @@ public class StorageControllerTest extends TestSpringBootInformation {
         String actual = responseAsJson.get("message").toString();
 
         // Assertions
-
+        assertEquals(expectedCfe04Sourcetype, actualCfe04Sourcetype);
+        assertEquals(HttpStatus.SC_CREATED, cfe04SourcetypeHttpResponse.getStatusLine().getStatusCode());
+        assertEquals(expectedCfe04Index, actualCfe04Index);
+        assertEquals(HttpStatus.SC_CREATED, cfe04indexResponse.getStatusLine().getStatusCode());
         assertEquals(expected, actual);
         assertThat(httpResponse.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_CREATED));
 
@@ -652,6 +750,61 @@ public class StorageControllerTest extends TestSpringBootInformation {
     @Test
     @Order(16)
     public void testDeleteStorage() {
+        // Delete sourcetype and index so that storage can be deleted
+        // Creates the request
+        HttpDelete indexDelete = new HttpDelete(
+                "http://localhost:" + port + "/v2/storages/definitions/cfe_04/" + 1 + "/indexes/" + 1
+        );
+        // Header
+        indexDelete.setHeader("Authorization", "Bearer " + token);
+
+        // Get the response from endpoint
+        HttpResponse indexDeleteResponse = Assertions
+                .assertDoesNotThrow(() -> HttpClientBuilder.create().build().execute(indexDelete));
+
+        // Get the entity from response
+        HttpEntity indexDeleteResponseEntity = indexDeleteResponse.getEntity();
+
+        // Entity response string
+        String indexDeleteEntity = Assertions.assertDoesNotThrow(() -> EntityUtils.toString(indexDeleteResponseEntity));
+
+        // Parsing response as JSONObject
+        JSONObject indexDeleteAsJson = Assertions.assertDoesNotThrow(() -> new JSONObject(indexDeleteEntity));
+
+        // Creating expected message as JSON Object from the data that was sent towards endpoint
+        String expectedindex = "Index deleted from cfe_04 storage";
+
+        // Creating string from Json that was given as a response
+        String actualindex = Assertions.assertDoesNotThrow(() -> indexDeleteAsJson.get("message").toString());
+
+        // Creates the request
+        HttpDelete sourcetypeRequest = new HttpDelete(
+                "http://localhost:" + port + "/v2/storages/definitions/cfe_04/" + 1 + "/sourcetypes/" + 1
+        );
+        // Header
+        sourcetypeRequest.setHeader("Authorization", "Bearer " + token);
+
+        // Get the response from endpoint
+        HttpResponse sourcetypeResponse = Assertions
+                .assertDoesNotThrow(() -> HttpClientBuilder.create().build().execute(sourcetypeRequest));
+
+        // Get the entity from response
+        HttpEntity sourcetypeResponseEntity = sourcetypeResponse.getEntity();
+
+        // Entity response string
+        String sourcetypeAsResponse = Assertions
+                .assertDoesNotThrow(() -> EntityUtils.toString(sourcetypeResponseEntity));
+
+        // Parsing response as JSONObject
+        JSONObject sourcetypeAsJsonResponse = Assertions.assertDoesNotThrow(() -> new JSONObject(sourcetypeAsResponse));
+
+        // Creating expected message as JSON Object from the data that was sent towards endpoint
+        String expectedSourcetype = "Sourcetype deleted from cfe_04 storage";
+
+        // Creating string from Json that was given as a response
+        String actualSourcetype = Assertions
+                .assertDoesNotThrow(() -> sourcetypeAsJsonResponse.get("message").toString());
+
         HttpDelete delete = new HttpDelete("http://localhost:" + port + "/storage/" + 1);
         // Header
         delete.setHeader("Authorization", "Bearer " + token);
@@ -672,6 +825,11 @@ public class StorageControllerTest extends TestSpringBootInformation {
         // Creating expected message as JSON Object from the data that was sent towards endpoint
         String expected = "Storage deleted";
 
+        // Assertions
+        assertEquals(expectedindex, actualindex);
+        assertEquals(HttpStatus.SC_OK, indexDeleteResponse.getStatusLine().getStatusCode());
+        assertEquals(expectedSourcetype, actualSourcetype);
+        assertEquals(HttpStatus.SC_OK, sourcetypeResponse.getStatusLine().getStatusCode());
         assertEquals(expected, actual);
         assertThat(deleteResponse.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_OK));
     }
