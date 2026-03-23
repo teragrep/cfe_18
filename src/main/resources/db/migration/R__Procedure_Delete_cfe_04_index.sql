@@ -43,12 +43,19 @@
  * Teragrep, the applicable Commercial License may apply to this file if you as
  * a licensee so wish it.
  */
-package com.teragrep.cfe18;
-
-import org.apache.ibatis.annotations.Mapper;
-
-@Mapper
-public interface StorageIndexMapper {
-
-    Integer create(final int storageId, final String index);
-}
+USE cfe_18;
+DELIMITER //
+CREATE OR REPLACE PROCEDURE delete_cfe_04_storage_index(p_storage_id INT, p_index_id INT)
+BEGIN
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+        BEGIN
+            ROLLBACK;
+            RESIGNAL;
+        END;
+    START TRANSACTION;
+    delete from cfe_18.cfe_04_indexes where cfe_04_id=p_storage_id and capture_index_id=p_index_id;
+    delete from cfe_18.storage_indexes where storage_id=p_storage_id and index_id=p_index_id;
+    COMMIT;
+END;
+//
+DELIMITER ;

@@ -2,15 +2,20 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.teragrep.cfe18.StorageSourcetypeMapper">
+<mapper namespace="com.teragrep.cfe18.Cfe04StorageIndexMapper">
 
-    <!-- p_storage_id INT, sourcetype VARCHAR(255) -->
+    <!-- p_storage_id INT, p_index_id INT-->
     <select id="create" resultMap="storageId" statementType="CALLABLE">
-        {CALL cfe_18.insert_storage_sourcetype(#{param1},#{param2})}
+        {CALL cfe_18.insert_cfe_04_storage_index(#{param1},#{param2},#{param3},#{param4},#{param5},#{param6},#{param7})}
     </select>
 
     <resultMap id="storageId" type="java.lang.Integer">
         <result property="storageId" column="storage_id" javaType="java.lang.Integer"/>
     </resultMap>
+
+    <!-- p_storage_id INT, p_index_id INT -->
+    <select id="delete" statementType="CALLABLE">
+        {CALL cfe_18.delete_cfe_04_storage_index(#{param1},#{param2})}
+    </select>
 
 </mapper>
