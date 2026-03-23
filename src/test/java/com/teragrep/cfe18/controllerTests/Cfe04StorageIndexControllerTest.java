@@ -251,11 +251,11 @@ public class Cfe04StorageIndexControllerTest extends TestSpringBootInformation {
         cfe04StorageIndex.setColdpath("coldPath");
         cfe04StorageIndex.setThawedPath("thawedPath");
 
-        String cfe04StorageSourcetypeJson = gson.toJson(cfe04StorageIndex);
+        String cfe04StorageIndexJson = gson.toJson(cfe04StorageIndex);
 
         // forms the json to requestEntity
         StringEntity requestEntity = new StringEntity(
-                String.valueOf(cfe04StorageSourcetypeJson),
+                String.valueOf(cfe04StorageIndexJson),
                 ContentType.APPLICATION_JSON
         );
 
