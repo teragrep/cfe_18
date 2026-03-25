@@ -45,10 +45,12 @@
  */
 package com.teragrep.cfe18.handlers;
 
-import com.teragrep.cfe18.ApiSessionMapper;
+import com.teragrep.cfe18.ApiUtilityMapper;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -56,9 +58,9 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.sql.DataSource;
 
 @RestController
-@RequestMapping(path = "/version")
+@RequestMapping(path = "/v2/meta")
 @SecurityRequirement(name = "api")
-public class ApiSessionController {
+public class ApiUtilityController {
 
     @Autowired
     DataSource dataSource;
@@ -67,14 +69,23 @@ public class ApiSessionController {
     SqlSessionTemplate sqlSessionTemplate;
 
     @Autowired
-    ApiSessionMapper apiSessionMapper;
+    ApiUtilityMapper apiUtilityMapper;
 
     @RequestMapping(
-            path = "",
+            path = "/data-version",
             method = RequestMethod.GET
     )
     public int version() {
-        return apiSessionMapper.getSession();
+        return apiUtilityMapper.getSession();
+    }
+
+    @RequestMapping(
+            path = "/jwt",
+            method = RequestMethod.GET,
+            produces = "application/json"
+    )
+    public String index(@AuthenticationPrincipal Jwt jwt) throws Exception {
+        return String.format("Hello, %s!", jwt.getSubject());
     }
 
 }
