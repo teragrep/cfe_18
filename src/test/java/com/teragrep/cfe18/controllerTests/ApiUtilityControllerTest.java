@@ -53,73 +53,78 @@ import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.util.EntityUtils;
 
+import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.web.server.LocalServerPort;
 
-import java.io.IOException;
-
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.equalTo;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @ExtendWith(MigrateDatabaseExtension.class)
-public class TokenTest extends TestSpringBootInformation {
+public class ApiUtilityControllerTest extends TestSpringBootInformation {
 
     @LocalServerPort
     private int port;
 
     // Testing if token works
     @Test
-    public void testToken() throws IOException {
+    @Order(1)
+    public void testToken() {
 
         // Given
-        HttpUriRequest request = new HttpGet("http://localhost:" + port + "/v2/captures/definitions/files/jwt");
+        HttpUriRequest request = new HttpGet("http://localhost:" + port + "/v2/meta/jwt");
         request.setHeader("Authorization", "Bearer " + token);
         // When
 
-        HttpResponse httpResponse = HttpClientBuilder.create().build().execute(request);
+        HttpResponse httpResponse = Assertions
+                .assertDoesNotThrow(() -> HttpClientBuilder.create().build().execute(request));
 
         HttpEntity entity = httpResponse.getEntity();
 
-        String responseString = EntityUtils.toString(entity, "UTF-8");
+        String responseString = Assertions.assertDoesNotThrow(() -> EntityUtils.toString(entity, "UTF-8"));
 
         // Then
-        assertThat(httpResponse.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_OK));
-        assertThat(responseString, equalTo("Hello, subject!"));
+        assertEquals(HttpStatus.SC_OK, httpResponse.getStatusLine().getStatusCode());
+        assertEquals("Hello, subject!", responseString);
     }
 
     // Testing that without token there is no access
     @Test
-    public void testInvalidToken() throws IOException {
+    @Order(2)
+    public void testInvalidToken() {
 
         // Given
-        HttpUriRequest request2 = new HttpGet("http://localhost:" + port + "/v2/captures/definitions/files/jwt");
+        HttpUriRequest request2 = new HttpGet("http://localhost:" + port + "/v2/meta/jwt");
         request2.setHeader("Authorization", "Bearer noToken");
 
         // When
 
-        HttpResponse httpResponse2 = HttpClientBuilder.create().build().execute(request2);
+        HttpResponse httpResponse2 = Assertions
+                .assertDoesNotThrow(() -> HttpClientBuilder.create().build().execute(request2));
 
         // Then
-        assertThat(httpResponse2.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_UNAUTHORIZED));
+        assertEquals(HttpStatus.SC_UNAUTHORIZED, httpResponse2.getStatusLine().getStatusCode());
     }
 
     // Tests that giving no token returns 500
     @Test
-    public void testNoToken() throws IOException {
+    @Order(3)
+    public void testNoToken() {
 
         // Given
-        HttpUriRequest request2 = new HttpGet("http://localhost:" + port + "/v2/captures/definitions/files/jwt");
+        HttpUriRequest request2 = new HttpGet("http://localhost:" + port + "/v2/meta/jwt");
 
         // When
 
-        HttpResponse httpResponse2 = HttpClientBuilder.create().build().execute(request2);
+        HttpResponse httpResponse2 = Assertions
+                .assertDoesNotThrow(() -> HttpClientBuilder.create().build().execute(request2));
 
         // Then
-        assertThat(httpResponse2.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_UNAUTHORIZED));
+        assertEquals(HttpStatus.SC_UNAUTHORIZED, httpResponse2.getStatusLine().getStatusCode());
     }
 
 }
