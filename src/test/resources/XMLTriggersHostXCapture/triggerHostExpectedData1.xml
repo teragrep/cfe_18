@@ -79,50 +79,50 @@
     <cfe_18.capture_def_group_x_capture_def  capture_def_id="8" capture_def_group_id="4" tag_id="8" capture_type="cfe" flow_id="1"/>
     <cfe_18.capture_def_group_x_capture_def  capture_def_id="12" capture_def_group_id="5" tag_id="10" capture_type="cfe" flow_id="1"/>
     <cfe_18.capture_def_group_x_capture_def  capture_def_id="8" capture_def_group_id="6" tag_id="8" capture_type="cfe" flow_id="1"/>
-    <location.host id="1" fqhost="1" MD5="12365" host_type="cfe"/>
-    <location.host id="2" fqhost="12" MD5="12322" host_type="cfe"/>
-    <location.host id="3" fqhost="13" MD5="1323" host_type="cfe"/>
-    <location.host id="4" fqhost="14" MD5="4123" host_type="cfe"/>
-    <location.host id="5" fqhost="15" MD5="5123" host_type="cfe"/>
-    <location.host id="6" fqhost="16" MD5="6123" host_type="cfe"/>
-    <location.host id="7" fqhost="17" MD5="7123" host_type="cfe"/>
-    <location.host id="8" fqhost="18" MD5="71233" host_type="cfe"/>
-    <location.host id="9" fqhost="19" MD5="723" host_type="cfe"/>
-    <location.host id="10" fqhost="135" MD5="712362" host_type="cfe"/>
-    <location.host id="11" fqhost="156" MD5="712213123" host_type="cfe"/>
-    <location.host id="12" fqhost="1644" MD5="712653" host_type="cfe"/>
-    <location.host id="15" fqhost="177" MD5="75757122173123" host_type="cfe"/>
-    <location.host id="16" fqhost="188" MD5="712" host_type="cfe"/>
-    <location.host id="17" fqhost="133" MD5="71211233" host_type="cfe"/>
-    <location.host id="21" fqhost="122" MD5="7142213123" host_type="cfe"/>
-    <location.host id="22" fqhost="111" MD5="7125213123" host_type="cfe"/>
-    <location.host id="23" fqhost="1988" MD5="7122613123" host_type="cfe"/>
-    <location.host id="24" fqhost="19999" MD5="7122173123" host_type="cfe"/>
-    <location.host_group id="1" groupName="host_group_1"/>
-    <location.host_group id="2" groupName="host_group_2"/>
-    <location.host_group id="3" groupName="host_group_3"/>
-    <location.host_group id="4" groupName="host_group_4"/>
-    <location.host_group id="5" groupName="host_group_5"/>
-    <location.host_group id="6" groupName="host_group_6"/>
-    <location.host_group_x_host id="1" host_group_id="1" host_id="1" host_type="cfe"/>
-    <location.host_group_x_host id="2" host_group_id="1" host_id="2" host_type="cfe"/>
-    <location.host_group_x_host id="3" host_group_id="1" host_id="3" host_type="cfe"/>
-    <location.host_group_x_host id="4" host_group_id="1" host_id="4" host_type="cfe"/>
-    <location.host_group_x_host id="5" host_group_id="2" host_id="5" host_type="cfe"/>
-    <location.host_group_x_host id="6" host_group_id="2" host_id="6" host_type="cfe"/>
-    <location.host_group_x_host id="7" host_group_id="2" host_id="7" host_type="cfe"/>
-    <location.host_group_x_host id="8" host_group_id="2" host_id="16" host_type="cfe"/>
-    <location.host_group_x_host id="9" host_group_id="3" host_id="9" host_type="cfe"/>
-    <location.host_group_x_host id="10" host_group_id="3" host_id="8" host_type="cfe"/>
-    <location.host_group_x_host id="11" host_group_id="3" host_id="10" host_type="cfe"/>
-    <location.host_group_x_host id="12" host_group_id="3" host_id="12" host_type="cfe"/>
-    <location.host_group_x_host id="13" host_group_id="4" host_id="17" host_type="cfe"/>
-    <location.host_group_x_host id="14" host_group_id="4" host_id="11" host_type="cfe"/>
-    <location.host_group_x_host id="15" host_group_id="5" host_id="21" host_type="cfe"/>
-    <location.host_group_x_host id="16" host_group_id="5" host_id="22" host_type="cfe"/>
-    <location.host_group_x_host id="17" host_group_id="6" host_id="23" host_type="cfe"/>
-    <location.host_group_x_host id="18" host_group_id="6" host_id="24" host_type="cfe"/>
-    <location.host_group_x_host id="19" host_group_id="6" host_id="2" host_type="cfe"/>
+    <cfe_18.host id="1" fqhost="1" MD5="12365" host_type="cfe"/>
+    <cfe_18.host id="2" fqhost="12" MD5="12322" host_type="cfe"/>
+    <cfe_18.host id="3" fqhost="13" MD5="1323" host_type="cfe"/>
+    <cfe_18.host id="4" fqhost="14" MD5="4123" host_type="cfe"/>
+    <cfe_18.host id="5" fqhost="15" MD5="5123" host_type="cfe"/>
+    <cfe_18.host id="6" fqhost="16" MD5="6123" host_type="cfe"/>
+    <cfe_18.host id="7" fqhost="17" MD5="7123" host_type="cfe"/>
+    <cfe_18.host id="8" fqhost="18" MD5="71233" host_type="cfe"/>
+    <cfe_18.host id="9" fqhost="19" MD5="723" host_type="cfe"/>
+    <cfe_18.host id="10" fqhost="135" MD5="712362" host_type="cfe"/>
+    <cfe_18.host id="11" fqhost="156" MD5="712213123" host_type="cfe"/>
+    <cfe_18.host id="12" fqhost="1644" MD5="712653" host_type="cfe"/>
+    <cfe_18.host id="15" fqhost="177" MD5="75757122173123" host_type="cfe"/>
+    <cfe_18.host id="16" fqhost="188" MD5="712" host_type="cfe"/>
+    <cfe_18.host id="17" fqhost="133" MD5="71211233" host_type="cfe"/>
+    <cfe_18.host id="21" fqhost="122" MD5="7142213123" host_type="cfe"/>
+    <cfe_18.host id="22" fqhost="111" MD5="7125213123" host_type="cfe"/>
+    <cfe_18.host id="23" fqhost="1988" MD5="7122613123" host_type="cfe"/>
+    <cfe_18.host id="24" fqhost="19999" MD5="7122173123" host_type="cfe"/>
+    <cfe_18.host_group id="1" groupName="host_group_1"/>
+    <cfe_18.host_group id="2" groupName="host_group_2"/>
+    <cfe_18.host_group id="3" groupName="host_group_3"/>
+    <cfe_18.host_group id="4" groupName="host_group_4"/>
+    <cfe_18.host_group id="5" groupName="host_group_5"/>
+    <cfe_18.host_group id="6" groupName="host_group_6"/>
+    <cfe_18.host_group_x_host id="1" host_group_id="1" host_id="1" host_type="cfe"/>
+    <cfe_18.host_group_x_host id="2" host_group_id="1" host_id="2" host_type="cfe"/>
+    <cfe_18.host_group_x_host id="3" host_group_id="1" host_id="3" host_type="cfe"/>
+    <cfe_18.host_group_x_host id="4" host_group_id="1" host_id="4" host_type="cfe"/>
+    <cfe_18.host_group_x_host id="5" host_group_id="2" host_id="5" host_type="cfe"/>
+    <cfe_18.host_group_x_host id="6" host_group_id="2" host_id="6" host_type="cfe"/>
+    <cfe_18.host_group_x_host id="7" host_group_id="2" host_id="7" host_type="cfe"/>
+    <cfe_18.host_group_x_host id="8" host_group_id="2" host_id="16" host_type="cfe"/>
+    <cfe_18.host_group_x_host id="9" host_group_id="3" host_id="9" host_type="cfe"/>
+    <cfe_18.host_group_x_host id="10" host_group_id="3" host_id="8" host_type="cfe"/>
+    <cfe_18.host_group_x_host id="11" host_group_id="3" host_id="10" host_type="cfe"/>
+    <cfe_18.host_group_x_host id="12" host_group_id="3" host_id="12" host_type="cfe"/>
+    <cfe_18.host_group_x_host id="13" host_group_id="4" host_id="17" host_type="cfe"/>
+    <cfe_18.host_group_x_host id="14" host_group_id="4" host_id="11" host_type="cfe"/>
+    <cfe_18.host_group_x_host id="15" host_group_id="5" host_id="21" host_type="cfe"/>
+    <cfe_18.host_group_x_host id="16" host_group_id="5" host_id="22" host_type="cfe"/>
+    <cfe_18.host_group_x_host id="17" host_group_id="6" host_id="23" host_type="cfe"/>
+    <cfe_18.host_group_x_host id="18" host_group_id="6" host_id="24" host_type="cfe"/>
+    <cfe_18.host_group_x_host id="19" host_group_id="6" host_id="2" host_type="cfe"/>
     <cfe_18.host_groups_x_capture_def_group id="1" host_group_id="1" capture_group_id="1"/>
     <cfe_18.host_groups_x_capture_def_group id="2" host_group_id="2" capture_group_id="2"/>
     <cfe_18.host_groups_x_capture_def_group id="3" host_group_id="3" capture_group_id="3"/>

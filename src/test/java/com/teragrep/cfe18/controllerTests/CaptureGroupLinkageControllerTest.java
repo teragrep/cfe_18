@@ -208,7 +208,7 @@ public class CaptureGroupLinkageControllerTest extends TestSpringBootInformation
         StringEntity captureEntity = new StringEntity(String.valueOf(captureJson), ContentType.APPLICATION_JSON);
 
         // Creates the request
-        HttpPut captureRequest = new HttpPut("http://localhost:" + port + "/capture/relp");
+        HttpPut captureRequest = new HttpPut("http://localhost:" + port + "/v2/captures/definitions/relp-streams");
         // set requestEntity to the put request
         captureRequest.setEntity(captureEntity);
         // Header
@@ -352,7 +352,7 @@ public class CaptureGroupLinkageControllerTest extends TestSpringBootInformation
         StringEntity requestEntity = new StringEntity(String.valueOf(json), ContentType.APPLICATION_JSON);
 
         // Creates the request
-        HttpPut request = new HttpPut("http://localhost:" + port + "/file/capture/meta/rule");
+        HttpPut request = new HttpPut("http://localhost:" + port + "/v2/captures/definitions/files/types");
         // set requestEntity to the put request
         request.setEntity(requestEntity);
         // Header
@@ -397,7 +397,7 @@ public class CaptureGroupLinkageControllerTest extends TestSpringBootInformation
         StringEntity captureEntity = new StringEntity(String.valueOf(jsonCapture), ContentType.APPLICATION_JSON);
 
         // Creates the request
-        HttpPut captureRequest = new HttpPut("http://localhost:" + port + "/capture/file");
+        HttpPut captureRequest = new HttpPut("http://localhost:" + port + "/v2/captures/definitions/files");
         // set requestEntity to the put request
         captureRequest.setEntity(captureEntity);
         // Header
@@ -512,7 +512,7 @@ public class CaptureGroupLinkageControllerTest extends TestSpringBootInformation
         StringEntity captureEntity = new StringEntity(String.valueOf(captureJson), ContentType.APPLICATION_JSON);
 
         // Creates the request
-        HttpPut captureRequest = new HttpPut("http://localhost:" + port + "/capture/relp");
+        HttpPut captureRequest = new HttpPut("http://localhost:" + port + "/v2/captures/definitions/relp-streams");
         // set requestEntity to the put request
         captureRequest.setEntity(captureEntity);
         // Header

@@ -77,7 +77,7 @@ public class TriggerTagTest extends DBUnitbase {
         // execute statement here
         SQLException state = Assertions.assertThrows(SQLException.class, () -> {
             Statement stmnt = conn.createStatement();
-            stmnt.addBatch("insert into location.host_group_x_host values(60,3,2,'cfe')");
+            stmnt.addBatch("insert into cfe_18.host_group_x_host values(60,3,2,'cfe')");
             stmnt.addBatch("insert into cfe_18.capture_def_group_x_capture_def values(1,3,1,'cfe',1)");
             stmnt.executeBatch();
         });

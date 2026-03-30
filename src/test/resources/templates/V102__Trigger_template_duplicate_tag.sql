@@ -20,8 +20,8 @@ use cfe_18;
 
   */
 
-call flow.insert_flow('flow1');
-call flow.insert_sink('1','1','1',1);
+call cfe_18.insert_flow('flow1');
+call cfe_18.insert_sink('1','1','1',1);
 call cfe_18.insert_relp_capture('1','1','1','1','1','1','1','flow1');
 call cfe_18.insert_relp_capture('2','2','2','2','2','2','1','flow1');
 call cfe_18.insert_relp_capture('3','3','3','3','3','3','1','flow1');
@@ -31,24 +31,24 @@ call cfe_18.insert_relp_capture('6','6','6','6','6','6','1','flow1');
 call cfe_18.insert_relp_capture('7','7','7','7','7','7','1','flow1');
 call cfe_18.insert_relp_capture('8','8','8','8','8','8','1','flow1');
 
-insert into location.host (id, MD5, fqhost, host_type) VALUES (1,'1','1','RELP');
-insert into location.host (id, MD5, fqhost, host_type) VALUES (2,'2','2','RELP');
-insert into location.host (id, MD5, fqhost, host_type) VALUES (3,'3','3','RELP');
-insert into location.host (id, MD5, fqhost, host_type) VALUES (4,'4','4','RELP');
-insert into location.host (id, MD5, fqhost, host_type) VALUES (5,'5','5','RELP');
-insert into location.host (id, MD5, fqhost, host_type) VALUES (6,'6','6','RELP');
-insert into location.host (id, MD5, fqhost, host_type) VALUES (7,'7','7','RELP');
-insert into location.host_group(host_type, groupName) VALUES ('relp','group1');
-insert into location.host_group(host_type, groupName) VALUES ('relp','group2');
-insert into location.host_group(host_type, groupName) VALUES ('relp','group3');
-insert into location.host_group_x_host(host_group_id, host_id, host_type) VALUES (1,1,'RELP');
-insert into location.host_group_x_host(host_group_id, host_id, host_type) VALUES (1,2,'RELP');
-insert into location.host_group_x_host(host_group_id, host_id, host_type) VALUES (1,3,'RELP');
-insert into location.host_group_x_host(host_group_id, host_id, host_type) VALUES (2,4,'RELP');
-insert into location.host_group_x_host(host_group_id, host_id, host_type) VALUES (2,3,'RELP');
-insert into location.host_group_x_host(host_group_id, host_id, host_type) VALUES (2,5,'RELP');
-insert into location.host_group_x_host(host_group_id, host_id, host_type) VALUES (2,6,'RELP');
-insert into location.host_group_x_host(host_group_id, host_id, host_type) VALUES (3,7,'RELP');
+insert into cfe_18.host (id, MD5, fqhost, host_type) VALUES (1,'1','1','RELP');
+insert into cfe_18.host (id, MD5, fqhost, host_type) VALUES (2,'2','2','RELP');
+insert into cfe_18.host (id, MD5, fqhost, host_type) VALUES (3,'3','3','RELP');
+insert into cfe_18.host (id, MD5, fqhost, host_type) VALUES (4,'4','4','RELP');
+insert into cfe_18.host (id, MD5, fqhost, host_type) VALUES (5,'5','5','RELP');
+insert into cfe_18.host (id, MD5, fqhost, host_type) VALUES (6,'6','6','RELP');
+insert into cfe_18.host (id, MD5, fqhost, host_type) VALUES (7,'7','7','RELP');
+insert into cfe_18.host_group(host_type, groupName) VALUES ('relp','group1');
+insert into cfe_18.host_group(host_type, groupName) VALUES ('relp','group2');
+insert into cfe_18.host_group(host_type, groupName) VALUES ('relp','group3');
+insert into cfe_18.host_group_x_host(host_group_id, host_id, host_type) VALUES (1,1,'RELP');
+insert into cfe_18.host_group_x_host(host_group_id, host_id, host_type) VALUES (1,2,'RELP');
+insert into cfe_18.host_group_x_host(host_group_id, host_id, host_type) VALUES (1,3,'RELP');
+insert into cfe_18.host_group_x_host(host_group_id, host_id, host_type) VALUES (2,4,'RELP');
+insert into cfe_18.host_group_x_host(host_group_id, host_id, host_type) VALUES (2,3,'RELP');
+insert into cfe_18.host_group_x_host(host_group_id, host_id, host_type) VALUES (2,5,'RELP');
+insert into cfe_18.host_group_x_host(host_group_id, host_id, host_type) VALUES (2,6,'RELP');
+insert into cfe_18.host_group_x_host(host_group_id, host_id, host_type) VALUES (3,7,'RELP');
 
 insert into cfe_18.capture_def_group(capture_def_group_name, capture_type, flow_id) VALUES ('group1','RELP',1);
 insert into cfe_18.capture_def_group(capture_def_group_name, capture_type, flow_id) VALUES ('group2','RELP',1);
@@ -104,7 +104,7 @@ FROM host_groups_linked_to_capture_groups;
 -- Select hosts from host_groups - NOT DISTINCT here. Important for check.
 CREATE OR REPLACE TEMPORARY TABLE hosts AS
 select hgxh.host_id
-from location.host_group_x_host hgxh
+from cfe_18.host_group_x_host hgxh
          INNER JOIN host_groups_linked_to_capture_groups tthwcd
                     ON hgxh.host_group_id = tthwcd.host_group_id;
 
@@ -114,7 +114,7 @@ from hosts;
 
 -- Does if count = distinct to count all. Distinct count is for unique amount and regular count for overall. If regular count is higher then there are duplicates.
 select if(count(DISTINCT hgxh.host_id) = count(hgxh.host_id), true, false)
-from location.host_group_x_host hgxh
+from cfe_18.host_group_x_host hgxh
          INNER JOIN host_groups_linked_to_capture_groups tthwcd
                     ON hgxh.host_group_id = tthwcd.host_group_id;
 
