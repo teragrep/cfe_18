@@ -50,7 +50,7 @@ import org.apache.ibatis.annotations.Mapper;
 import java.util.List;
 
 @Mapper
-public interface CaptureGroupLinkageMapper {
+public interface CaptureGroupMembersMapper {
 
     Integer create(final Integer groupId, final Integer captureId);
 

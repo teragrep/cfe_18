@@ -45,7 +45,7 @@
  */
 package com.teragrep.cfe18.handlers;
 
-import com.teragrep.cfe18.CaptureGroupLinkageMapper;
+import com.teragrep.cfe18.CaptureGroupMembersMapper;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -68,9 +68,9 @@ import java.util.List;
 @RestController
 @RequestMapping(path = "v2/captures/group")
 @SecurityRequirement(name = "api")
-public class CaptureGroupLinkageController {
+public class CaptureGroupMembersController {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(CaptureGroupLinkageController.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(CaptureGroupMembersController.class);
 
     @Autowired
     DataSource dataSource;
@@ -79,7 +79,7 @@ public class CaptureGroupLinkageController {
     SqlSessionTemplate sqlSessionTemplate;
 
     @Autowired
-    CaptureGroupLinkageMapper captureGroupMapper;
+    CaptureGroupMembersMapper captureGroupMapper;
 
     @RequestMapping(
             path = "/{groupId}/members/{captureId}",

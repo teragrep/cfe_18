@@ -71,7 +71,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @ExtendWith(MigrateDatabaseExtension.class)
-public class CaptureGroupLinkageControllerTest extends TestSpringBootInformation {
+public class CaptureGroupMembersControllerTest extends TestSpringBootInformation {
 
     Gson gson = new Gson();
 
