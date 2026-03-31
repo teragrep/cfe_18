@@ -62,8 +62,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.*;
 
 import javax.sql.DataSource;
@@ -85,15 +83,6 @@ public class CaptureFileController {
 
     @Autowired
     CaptureFileMapper captureFileMapper;
-
-    @RequestMapping(
-            path = "/jwt",
-            method = RequestMethod.GET,
-            produces = "application/json"
-    )
-    public String index(@AuthenticationPrincipal Jwt jwt) throws Exception {
-        return String.format("Hello, %s!", jwt.getSubject());
-    }
 
     @RequestMapping(
             path = "",
