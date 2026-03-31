@@ -9,7 +9,7 @@
         {CALL cfe_18.current_txn_id()}
     </select>
 
-    <resultMap id="versionNumber" type="Integer">
+    <resultMap id="versionNumber" type="java.lang.Integer">
         <result property="version" column="tx_id"/>
     </resultMap>
 

@@ -45,27 +45,37 @@
  */
 package com.teragrep.cfe18.controllerTests;
 
+import com.google.gson.Gson;
+import com.teragrep.cfe18.handlers.entities.Flow;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPut;
 import org.apache.http.client.methods.HttpUriRequest;
+import org.apache.http.entity.ContentType;
+import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.util.EntityUtils;
 
+import org.json.JSONObject;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import org.springframework.boot.test.web.server.LocalServerPort;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import java.util.ArrayList;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @ExtendWith(MigrateDatabaseExtension.class)
 public class ApiUtilityControllerTest extends TestSpringBootInformation {
+
+    Gson gson = new Gson();
 
     @LocalServerPort
     private int port;
@@ -125,6 +135,109 @@ public class ApiUtilityControllerTest extends TestSpringBootInformation {
 
         // Then
         assertEquals(HttpStatus.SC_UNAUTHORIZED, httpResponse2.getStatusLine().getStatusCode());
+    }
+
+    @Test
+    @Order(4)
+    public void testVersionIsNumber() {
+
+        Flow flow = new Flow();
+        flow.setName("Testflow");
+
+        String json = gson.toJson(flow);
+
+        // forms the json to requestEntity
+        StringEntity flowEntity = new StringEntity(String.valueOf(json), ContentType.APPLICATION_JSON);
+
+        // Creates the request
+        HttpPut flowRequest = new HttpPut("http://localhost:" + port + "/flow");
+        // set requestEntity to the put request
+        flowRequest.setEntity(flowEntity);
+        // Header
+        flowRequest.setHeader("Authorization", "Bearer " + token);
+
+        // Get the response from endpoint
+        HttpResponse flowResponse = assertDoesNotThrow(() -> HttpClientBuilder.create().build().execute(flowRequest));
+
+        // Get the entity from response
+        HttpEntity flowResponseEntity = flowResponse.getEntity();
+
+        // Entity response string
+        String flowAsResponseString = assertDoesNotThrow(() -> EntityUtils.toString(flowResponseEntity));
+
+        // Parsin respponse as JSONObject
+        JSONObject flowAsResponseJson = assertDoesNotThrow(() -> new JSONObject(flowAsResponseString));
+
+        // Creating expected message as JSON Object from the data that was sent towards endpoint
+        String expectedFlow = "New flow created";
+
+        // Creating string from Json that was given as a response
+        String actualFlow = assertDoesNotThrow(() -> flowAsResponseJson.get("message").toString());
+
+        // Given
+        HttpUriRequest request = new HttpGet("http://localhost:" + port + "/v2/meta/data-version");
+        request.setHeader("Authorization", "Bearer " + token);
+        // When
+
+        HttpResponse httpResponse = Assertions
+                .assertDoesNotThrow(() -> HttpClientBuilder.create().build().execute(request));
+
+        HttpEntity entity = httpResponse.getEntity();
+
+        String responseString = Assertions.assertDoesNotThrow(() -> EntityUtils.toString(entity, "UTF-8"));
+
+        // Validates here that the result is type of Integer
+        Integer result = Integer.valueOf(responseString);
+
+        // Then
+        // Assertions
+        assertEquals(expectedFlow, actualFlow);
+        assertEquals(HttpStatus.SC_OK, httpResponse.getStatusLine().getStatusCode());
+        // Asserts that the return is not null.
+        assertNotNull(result);
+    }
+
+    @Test
+    @Order(5)
+    public void testVersionCanBeFetched() {
+
+        // Asserting get request
+        HttpGet requestGet = new HttpGet("http://localhost:" + port + "/v2/meta/data-version");
+
+        requestGet.setHeader("Authorization", "Bearer " + token);
+
+        HttpResponse responseGet = Assertions
+                .assertDoesNotThrow(() -> HttpClientBuilder.create().build().execute(requestGet));
+
+        HttpEntity entityGet = responseGet.getEntity();
+
+        String responseStringGet = Assertions.assertDoesNotThrow(() -> EntityUtils.toString(entityGet, "UTF-8"));
+
+        Integer version = Integer.valueOf(responseStringGet);
+
+        // Asserting get request
+        HttpGet requestFlow = new HttpGet("http://localhost:" + port + "/flow?version=" + version);
+
+        requestFlow.setHeader("Authorization", "Bearer " + token);
+
+        HttpResponse responseFlow = Assertions
+                .assertDoesNotThrow(() -> HttpClientBuilder.create().build().execute(requestFlow));
+
+        HttpEntity entityFlow = responseFlow.getEntity();
+
+        String flowAsResponseString = Assertions.assertDoesNotThrow(() -> EntityUtils.toString(entityFlow, "UTF-8"));
+
+        ArrayList<Flow> expected = new ArrayList<>();
+        Flow flow = new Flow();
+        flow.setName("Testflow");
+        flow.setId(1);
+        expected.add(flow);
+        String expectedJson = new Gson().toJson(expected);
+
+        // Assertions
+        assertEquals(expectedJson, flowAsResponseString);
+        assertEquals(HttpStatus.SC_OK, responseFlow.getStatusLine().getStatusCode());
+
     }
 
 }
