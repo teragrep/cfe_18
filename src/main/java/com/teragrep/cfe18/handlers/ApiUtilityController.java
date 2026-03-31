@@ -75,7 +75,7 @@ public class ApiUtilityController {
             path = "/data-version",
             method = RequestMethod.GET
     )
-    public int version() {
+    public Integer version() {
         return apiUtilityMapper.getSession();
     }
 
