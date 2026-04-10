@@ -43,30 +43,35 @@
  * Teragrep, the applicable Commercial License may apply to this file if you as
  * a licensee so wish it.
  */
-use cfe_18;
+USE cfe_18;
 DELIMITER //
-CREATE OR REPLACE PROCEDURE retrieve_all_hubs(tx_id int)
+CREATE OR REPLACE PROCEDURE select_cfe_hub(hub_id INT, tx_id INT)
 BEGIN
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
         BEGIN
             ROLLBACK;
             RESIGNAL;
-        end;
-        if(tx_id) is null then
-             set @time = (select max(transaction_id) from mysql.transaction_registry);
-        else
-             set @time=tx_id;
-        end if;
-    select distinct h2.id      as host_id,
-                    h2.fqhost  as hub_fq,
-                    h2.MD5     as hub_md5,
-                    h.ip       as ip,
-                    htc.hub_id as hub_id
-    from cfe_18.hubs for system_time as of transaction @time h
-             inner join cfe_18.host for system_time as of transaction @time h2 on h2.id = h.host_id
-             inner join cfe_18.host_type_cfe for system_time as of transaction @time htc on h.id = htc.hub_id;
+        END;
+    START TRANSACTION;
+    IF (tx_id) IS NULL THEN
+        SET @time = (SELECT MAX(transaction_id) FROM mysql.transaction_registry);
+    ELSE
+        SET @time = tx_id;
+    END IF;
+    IF ((SELECT COUNT(id) FROM cfe_18.hubs FOR SYSTEM_TIME AS OF TRANSACTION @time WHERE id = hub_id) = 0) THEN
+        SELECT JSON_OBJECT('id', hub_id, 'message', 'Hub does not exist with given ID') INTO @hub;
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = @hub;
+    END IF;
 
-
-end;
+    SELECT hu.id      AS id,
+           hu.host_id AS host_id,
+           h.fqhost   AS hub_fq_host,
+           hu.ip      AS ip,
+           h.md5      AS md5
+    FROM cfe_18.hubs FOR SYSTEM_TIME AS OF TRANSACTION @time hu
+             INNER JOIN cfe_18.host FOR SYSTEM_TIME AS OF TRANSACTION @time h ON hu.host_id = h.id
+    WHERE hu.id = hub_id;
+    COMMIT;
+END;
 //
 DELIMITER ;

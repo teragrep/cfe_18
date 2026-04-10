@@ -43,52 +43,42 @@
  * Teragrep, the applicable Commercial License may apply to this file if you as
  * a licensee so wish it.
  */
-use cfe_18;
+USE cfe_18;
 DELIMITER //
-CREATE OR REPLACE PROCEDURE host_add_cfe_hub(proc_fqhost varchar(128), proc_md5 varchar(32),
-                                             proc_ip varchar(255))
+CREATE OR REPLACE PROCEDURE delete_hub(input_hub_id INT)
 BEGIN
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
         BEGIN
             ROLLBACK;
             RESIGNAL;
-        end;
-    start transaction;
-    if (select id
-        from cfe_18.host
-        where MD5 = proc_md5
-          and fqhost = proc_fqhost
-          and host_type = 'CFE') is null then
-        insert into cfe_18.host(MD5, fqhost, host_type)
-        values (proc_md5, proc_fqhost, 'CFE');
-        select last_insert_id() into @hid;
-    else
-        select id into @hid from cfe_18.host where MD5 = proc_md5 and fqhost = proc_fqhost and host_type = 'CFE';
-    end if;
+        END;
+    START TRANSACTION;
+    IF ((SELECT COUNT(id) FROM cfe_18.hubs WHERE id = input_hub_id) = 0) THEN
+        SELECT JSON_OBJECT('id', input_hub_id, 'message', 'Hub does not exist') INTO @h;
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = @h;
+    END IF;
 
-    if (select host_id
-        from cfe_18.hubs
-        where host_id = @hid
-          and ip = proc_ip
-          and host_type = 'CFE') is null then
-        insert into cfe_18.hubs(host_id, ip, host_type)
-        values (@hid, proc_ip, 'CFE');
-        select last_insert_id() into @id;
-    else
-        select id into @id from cfe_18.hubs where host_id = @hid and ip = proc_ip and host_type = 'CFE';
-    end if;
-
-    if (select host_id
-        from cfe_18.host_type_cfe
-        where host_id = @hid
-          and host_type = 'CFE'
-          and hub_id = @id) is null then
-        insert into cfe_18.host_type_cfe(host_id, host_type, hub_id)
-        values (@hid, 'CFE', @id);
-    end if;
+    -- check if there are hosts using the hub before deleting
+    -- Without this check all the hosts connected to hub are deleted. This is due to host_type_cfe delete on cascade hosts.
+    IF ((SELECT COUNT(htc.host_id)
+         FROM cfe_18.host_type_cfe htc
+         WHERE htc.hub_id = input_hub_id
+           AND htc.host_id != (SELECT h.id
+                           FROM cfe_18.host h
+                                    INNER JOIN hubs h2 ON h.id = h2.host_id
+                           WHERE h2.id = input_hub_id)) > 0) THEN
+        SELECT JSON_OBJECT('id', input_hub_id, 'message', 'Hosts use the hub') INTO @ha;
+        -- Signal user error due to user not removing hosts from Hub before deleting.
+        SIGNAL SQLSTATE '23000' SET MESSAGE_TEXT = @ha;
+    END IF;
+    -- select the host id before deleting hub since it's not accessible later
+    SELECT host_id INTO @HostId FROM cfe_18.hubs WHERE id = input_hub_id;
+    DELETE FROM cfe_18.host_type_cfe WHERE hub_id = input_hub_id;
+    DELETE FROM cfe_18.hubs WHERE id = input_hub_id;
+    DELETE FROM cfe_18.host WHERE id = @HostId;
     COMMIT;
-    select @id as last;
 
 END;
+
 //
 DELIMITER ;
