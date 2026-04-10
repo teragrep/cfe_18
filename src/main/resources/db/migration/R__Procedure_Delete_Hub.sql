@@ -43,7 +43,7 @@
  * Teragrep, the applicable Commercial License may apply to this file if you as
  * a licensee so wish it.
  */
-USE cfe_00;
+USE cfe_18;
 DELIMITER //
 CREATE OR REPLACE PROCEDURE delete_hub(input_hub_id INT)
 BEGIN
@@ -53,7 +53,7 @@ BEGIN
             RESIGNAL;
         END;
     START TRANSACTION;
-    IF ((SELECT COUNT(id) FROM cfe_00.hubs WHERE id = input_hub_id) = 0) THEN
+    IF ((SELECT COUNT(id) FROM cfe_18.hubs WHERE id = input_hub_id) = 0) THEN
         SELECT JSON_OBJECT('id', input_hub_id, 'message', 'Hub does not exist') INTO @h;
         SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = @h;
     END IF;
@@ -61,10 +61,10 @@ BEGIN
     -- check if there are hosts using the hub before deleting
     -- Without this check all the hosts connected to hub are deleted. This is due to host_type_cfe delete on cascade hosts.
     IF ((SELECT COUNT(htc.host_id)
-         FROM cfe_00.host_type_cfe htc
+         FROM cfe_18.host_type_cfe htc
          WHERE htc.hub_id = input_hub_id
            AND htc.host_id != (SELECT h.id
-                           FROM location.host h
+                           FROM cfe_18.host h
                                     INNER JOIN hubs h2 ON h.id = h2.host_id
                            WHERE h2.id = input_hub_id)) > 0) THEN
         SELECT JSON_OBJECT('id', input_hub_id, 'message', 'Hosts use the hub') INTO @ha;
@@ -72,10 +72,10 @@ BEGIN
         SIGNAL SQLSTATE '23000' SET MESSAGE_TEXT = @ha;
     END IF;
     -- select the host id before deleting hub since it's not accessible later
-    SELECT host_id INTO @HostId FROM cfe_00.hubs WHERE id = input_hub_id;
-    DELETE FROM cfe_00.host_type_cfe WHERE hub_id = input_hub_id;
-    DELETE FROM cfe_00.hubs WHERE id = input_hub_id;
-    DELETE FROM location.host WHERE id = @HostId;
+    SELECT host_id INTO @HostId FROM cfe_18.hubs WHERE id = input_hub_id;
+    DELETE FROM cfe_18.host_type_cfe WHERE hub_id = input_hub_id;
+    DELETE FROM cfe_18.hubs WHERE id = input_hub_id;
+    DELETE FROM cfe_18.host WHERE id = @HostId;
     COMMIT;
 
 END;
