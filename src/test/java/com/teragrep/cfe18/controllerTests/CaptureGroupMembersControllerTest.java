@@ -248,7 +248,7 @@ public class CaptureGroupMembersControllerTest extends TestSpringBootInformation
     @Order(1)
     public void testSelectEmptyCaptures() {
         // Asserting get request
-        HttpGet requestGet = new HttpGet("http://localhost:" + port + "/v2/captures/group/1/members");
+        HttpGet requestGet = new HttpGet("http://localhost:" + port + "/v2/captures/groups/1/members");
 
         requestGet.setHeader("Authorization", "Bearer " + token);
 
@@ -274,7 +274,7 @@ public class CaptureGroupMembersControllerTest extends TestSpringBootInformation
     public void testCreateLinkInvalidCapture() {
 
         // Creates the request
-        HttpPut requestCaptureGroup = new HttpPut("http://localhost:" + port + "/v2/captures/group/1/members/67");
+        HttpPut requestCaptureGroup = new HttpPut("http://localhost:" + port + "/v2/captures/groups/1/members/67");
         // Header
         requestCaptureGroup.setHeader("Authorization", "Bearer " + token);
 
@@ -307,7 +307,7 @@ public class CaptureGroupMembersControllerTest extends TestSpringBootInformation
     public void testCreateLinkInvalidGroup() {
 
         // Creates the request
-        HttpPut requestCaptureGroup = new HttpPut("http://localhost:" + port + "/v2/captures/group/67/members/1");
+        HttpPut requestCaptureGroup = new HttpPut("http://localhost:" + port + "/v2/captures/groups/67/members/1");
         // Header
         requestCaptureGroup.setHeader("Authorization", "Bearer " + token);
 
@@ -423,7 +423,7 @@ public class CaptureGroupMembersControllerTest extends TestSpringBootInformation
         String captureAsActual = Assertions.assertDoesNotThrow(() -> captureAsJson.get("message").toString());
 
         // Creates the request
-        HttpPut requestCaptureGroup = new HttpPut("http://localhost:" + port + "/v2/captures/group/1/members/2");
+        HttpPut requestCaptureGroup = new HttpPut("http://localhost:" + port + "/v2/captures/groups/1/members/2");
         // Header
         requestCaptureGroup.setHeader("Authorization", "Bearer " + token);
 
@@ -461,7 +461,7 @@ public class CaptureGroupMembersControllerTest extends TestSpringBootInformation
     @Test
     @Order(5)
     public void testInsertValidCaptureToGroup() {
-        HttpPut requestCaptureGroup = new HttpPut("http://localhost:" + port + "/v2/captures/group/1/members/1");
+        HttpPut requestCaptureGroup = new HttpPut("http://localhost:" + port + "/v2/captures/groups/1/members/1");
         // Header
         requestCaptureGroup.setHeader("Authorization", "Bearer " + token);
 
@@ -537,7 +537,7 @@ public class CaptureGroupMembersControllerTest extends TestSpringBootInformation
         // Creating string from Json that was given as a response
         String captureAsActual = Assertions.assertDoesNotThrow(() -> captureAsJson.get("message").toString());
 
-        HttpPut requestCaptureGroup = new HttpPut("http://localhost:" + port + "/v2/captures/group/1/members/3");
+        HttpPut requestCaptureGroup = new HttpPut("http://localhost:" + port + "/v2/captures/groups/1/members/3");
         // Header
         requestCaptureGroup.setHeader("Authorization", "Bearer " + token);
 
@@ -573,7 +573,7 @@ public class CaptureGroupMembersControllerTest extends TestSpringBootInformation
         JsonArrayBuilder expectedBuilder = Json.createArrayBuilder();
         expectedBuilder.add(1);
         // Asserting get request
-        HttpGet requestGet = new HttpGet("http://localhost:" + port + "/v2/captures/group/1/members");
+        HttpGet requestGet = new HttpGet("http://localhost:" + port + "/v2/captures/groups/1/members");
 
         requestGet.setHeader("Authorization", "Bearer " + token);
 
@@ -593,7 +593,7 @@ public class CaptureGroupMembersControllerTest extends TestSpringBootInformation
     @Test
     @Order(8)
     public void testDeleteInvalidGroup() {
-        HttpDelete delete = new HttpDelete("http://localhost:" + port + "/v2/captures/group/67/members/3");
+        HttpDelete delete = new HttpDelete("http://localhost:" + port + "/v2/captures/groups/67/members/3");
 
         // Header
         delete.setHeader("Authorization", "Bearer " + token);
@@ -621,7 +621,7 @@ public class CaptureGroupMembersControllerTest extends TestSpringBootInformation
     @Test
     @Order(9)
     public void testDeleteInvalidCapture() {
-        HttpDelete delete = new HttpDelete("http://localhost:" + port + "/v2/captures/group/1/members/67");
+        HttpDelete delete = new HttpDelete("http://localhost:" + port + "/v2/captures/groups/1/members/67");
 
         // Header
         delete.setHeader("Authorization", "Bearer " + token);
@@ -651,7 +651,7 @@ public class CaptureGroupMembersControllerTest extends TestSpringBootInformation
     @Order(10)
     public void testDeleteValidLinkage() {
 
-        HttpDelete delete = new HttpDelete("http://localhost:" + port + "/v2/captures/group/1/members/1");
+        HttpDelete delete = new HttpDelete("http://localhost:" + port + "/v2/captures/groups/1/members/1");
 
         // Header
         delete.setHeader("Authorization", "Bearer " + token);

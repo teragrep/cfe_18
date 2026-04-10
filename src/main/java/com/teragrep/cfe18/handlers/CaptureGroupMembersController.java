@@ -66,7 +66,7 @@ import java.sql.SQLException;
 import java.util.List;
 
 @RestController
-@RequestMapping(path = "v2/captures/group")
+@RequestMapping(path = "v2/captures/groups")
 @SecurityRequirement(name = "api")
 public class CaptureGroupMembersController {
 
