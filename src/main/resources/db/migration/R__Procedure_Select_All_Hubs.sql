@@ -43,7 +43,7 @@
  * Teragrep, the applicable Commercial License may apply to this file if you as
  * a licensee so wish it.
  */
-USE cfe_00;
+USE cfe_18;
 DELIMITER //
 CREATE OR REPLACE PROCEDURE select_all_hubs(tx_id INT)
 BEGIN
@@ -62,8 +62,8 @@ BEGIN
                     h2.fqhost  AS hub_fq_host,
                     h.ip       AS ip,
                     h2.MD5     AS md5
-    FROM cfe_00.hubs FOR SYSTEM_TIME AS OF TRANSACTION @time h
-             INNER JOIN location.host FOR SYSTEM_TIME AS OF TRANSACTION @time h2 ON h2.id = h.host_id;
+    FROM cfe_18.hubs FOR SYSTEM_TIME AS OF TRANSACTION @time h
+             INNER JOIN cfe_18.host FOR SYSTEM_TIME AS OF TRANSACTION @time h2 ON h2.id = h.host_id;
 
 
 END;
