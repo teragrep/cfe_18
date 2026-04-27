@@ -120,6 +120,7 @@ public class CaptureMetaController {
             jsonErr.put("id", capture_id);
             final Throwable cause = ex.getCause();
             if (cause instanceof SQLException) {
+
                 LOGGER.error((cause).getMessage());
                 String state = ((SQLException) cause).getSQLState();
                 if (state.equals("42000")) {

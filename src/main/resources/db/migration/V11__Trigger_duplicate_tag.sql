@@ -66,7 +66,7 @@ begin
                                              ON ttdwcg.capture_def_group_id = hgxldg.capture_group_id) tthwcd
                         ON hgxh.host_group_id = tthwcd.host_group_id;
     if truthvalue = 0 then
-        signal sqlstate '17001' set message_text = 'DUPLICATE TAG ERROR';
+        signal sqlstate '17001' set message_text = 'DUPLICATE HOST ERROR';
     end if;
 end;
 //

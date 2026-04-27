@@ -66,7 +66,7 @@ begin
                                              on hgxh.capture_group_id = hchdt.host_group_id) ctftlg
                         on ldgxld.capture_def_group_id = ctftlg.capture_group_id;
     if truthvalue = 0 then
-        signal sqlstate '17002' set message_text = 'DUPLICATE HOST ERROR';
+        signal sqlstate '17002' set message_text = 'DUPLICATE TAG ERROR';
     end if;
 end;
 //
