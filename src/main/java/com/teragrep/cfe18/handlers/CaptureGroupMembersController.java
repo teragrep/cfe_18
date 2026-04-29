@@ -152,6 +152,9 @@ public class CaptureGroupMembersController {
                     case "1062-23000":
                         jsonErr.put("message", "Tag already exists within given group");
                         return new ResponseEntity<>(jsonErr.toString(), HttpStatus.CONFLICT);
+                    case "1644-17001":
+                        jsonErr.put("message", "Tag already exists on the same host through different channels");
+                        return new ResponseEntity<>(jsonErr.toString(), HttpStatus.CONFLICT);
                     default:
                         jsonErr.put("message", "Error unrecognized, contact admin");
                         return new ResponseEntity<>(jsonErr.toString(), HttpStatus.BAD_REQUEST);
