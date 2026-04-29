@@ -43,34 +43,40 @@
  * Teragrep, the applicable Commercial License may apply to this file if you as
  * a licensee so wish it.
  */
-package com.teragrep.cfe18.handlers.entities;
+USE cfe_18;
+DELIMITER //
+CREATE OR REPLACE PROCEDURE delete_hostmeta(p_host_id INT, meta_key VARCHAR(1024))
+BEGIN
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+        BEGIN
+            ROLLBACK;
+            RESIGNAL;
+        END;
+    START TRANSACTION;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
+    -- check if host exists for metadata
+    IF ((SELECT COUNT(host_id) FROM cfe_18.host_meta WHERE host_id = p_host_id) = 0) THEN
+        -- standardized JSON error response
+        SELECT JSON_OBJECT('id', p_host_id, 'message', 'Host does not exist with given ID') INTO @noHost;
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = @noHost;
+    END IF;
 
-@JsonInclude(JsonInclude.Include.NON_NULL)
-public class IPAddress {
-
-    private String ipAddress;
-    private int host_meta_id;
-
-    public String getIpAddress() {
-        return ipAddress;
-    }
-
-    public void setIpAddress(String ip_address) {
-        this.ipAddress = ip_address;
-    }
-
-    public int getHost_meta_id() {
-        return host_meta_id;
-    }
-
-    public void setHost_meta_id(int host_meta_id) {
-        this.host_meta_id = host_meta_id;
-    }
-
-    @Override
-    public String toString() {
-        return "Ip_Address{" + "ip_address='" + ipAddress + '\'' + ", host_meta_id=" + host_meta_id + '}';
-    }
-}
+    -- check if key is null. Delete whole hostmeta if null.
+    IF meta_key IS NULL THEN
+        DELETE FROM host_meta WHERE host_id = p_host_id;
+    ELSE
+        -- check if key exists
+        IF ((SELECT COUNT(meta_key_id) FROM host_meta_key WHERE meta_key_name = meta_key) = 0) THEN
+            -- standardized JSON error response
+            SELECT JSON_OBJECT('id', p_host_id, 'message', 'Key does not exist') INTO @noKey;
+            SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = @noKey;
+        ELSE
+            -- else remove key from host meta
+            SELECT meta_key_id INTO @keyId FROM cfe_18.host_meta_key WHERE meta_key_name = meta_key;
+            DELETE FROM cfe_18.host_meta WHERE host_id = p_host_id AND meta_key_id = @keyId;
+        END IF;
+    END IF;
+    COMMIT;
+END;
+//
+DELIMITER ;

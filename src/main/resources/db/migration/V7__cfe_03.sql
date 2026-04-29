@@ -43,108 +43,30 @@
  * Teragrep, the applicable Commercial License may apply to this file if you as
  * a licensee so wish it.
  */
-use cfe_18;
+USE cfe_18;
 
-create table interfaces
+
+CREATE TABLE host_meta_key
 (
-    id        int auto_increment primary key,
-    interface varchar(255) not null unique,
-    start_trxid BIGINT UNSIGNED GENERATED ALWAYS AS ROW START INVISIBLE,
-    end_trxid BIGINT UNSIGNED GENERATED ALWAYS AS ROW END INVISIBLE,
-    PERIOD FOR SYSTEM_TIME(start_trxid, end_trxid)
-) WITH SYSTEM VERSIONING;
-create table ip_addresses
-(
-    id         int auto_increment primary key,
-    ip_address varchar(255) not null unique,
-    start_trxid BIGINT UNSIGNED GENERATED ALWAYS AS ROW START INVISIBLE,
-    end_trxid BIGINT UNSIGNED GENERATED ALWAYS AS ROW END INVISIBLE,
+    meta_key_id   INT AUTO_INCREMENT PRIMARY KEY,
+    meta_key_name VARCHAR(1024),
+    start_trxid   BIGINT UNSIGNED GENERATED ALWAYS AS ROW START INVISIBLE,
+    end_trxid     BIGINT UNSIGNED GENERATED ALWAYS AS ROW END INVISIBLE,
     PERIOD FOR SYSTEM_TIME(start_trxid, end_trxid)
 ) WITH SYSTEM VERSIONING;
 
-create table arch_type
+CREATE TABLE host_meta
 (
-    id   int auto_increment primary key,
-    arch varchar(255) unique not null,
+    host_id     INT NOT NULL,
+    meta_key_id INT NOT NULL,
+    meta_value  VARCHAR(1024),
+    CONSTRAINT ´hostMetaToHost´ FOREIGN KEY (host_id) REFERENCES cfe_18.host (id),
+    CONSTRAINT FOREIGN KEY (meta_key_id) REFERENCES cfe_18.host_meta_key (meta_key_id),
     start_trxid BIGINT UNSIGNED GENERATED ALWAYS AS ROW START INVISIBLE,
-    end_trxid BIGINT UNSIGNED GENERATED ALWAYS AS ROW END INVISIBLE,
+    end_trxid   BIGINT UNSIGNED GENERATED ALWAYS AS ROW END INVISIBLE,
     PERIOD FOR SYSTEM_TIME(start_trxid, end_trxid)
 ) WITH SYSTEM VERSIONING;
 
-create table flavor_type
-(
-    id     int auto_increment primary key,
-    flavor varchar(255) unique not null,
-    start_trxid BIGINT UNSIGNED GENERATED ALWAYS AS ROW START INVISIBLE,
-    end_trxid BIGINT UNSIGNED GENERATED ALWAYS AS ROW END INVISIBLE,
-    PERIOD FOR SYSTEM_TIME(start_trxid, end_trxid)
-) WITH SYSTEM VERSIONING;
-
-create table os_type
-(
-    id int auto_increment primary key,
-    os varchar(255) unique not null,
-    start_trxid BIGINT UNSIGNED GENERATED ALWAYS AS ROW START INVISIBLE,
-    end_trxid BIGINT UNSIGNED GENERATED ALWAYS AS ROW END INVISIBLE,
-    PERIOD FOR SYSTEM_TIME(start_trxid, end_trxid)
-) WITH SYSTEM VERSIONING;
-
-create table release_version
-(
-    id      int auto_increment primary key,
-    rel_ver varchar(255) unique not null,
-    start_trxid BIGINT UNSIGNED GENERATED ALWAYS AS ROW START INVISIBLE,
-    end_trxid BIGINT UNSIGNED GENERATED ALWAYS AS ROW END INVISIBLE,
-    PERIOD FOR SYSTEM_TIME(start_trxid, end_trxid)
-) WITH SYSTEM VERSIONING;
-
-
-create table host_meta
-(
-    id             int primary key auto_increment,
-    release_ver_id int,
-    flavor_id      int,
-    arch_id        int,
-    os_id          int,
-    hostname       varchar(255),
-    host_id        int,
-    unique (id, host_id),
-    constraint relver foreign key (release_ver_id) references release_version (id),
-    constraint flavor foreign key (flavor_id) references flavor_type (id),
-    constraint arch foreign key (arch_id) references arch_type (id),
-    constraint os foreign key (os_id) references os_type (id),
-    constraint ´MD5ToLocationHost´ foreign key (host_id) references cfe_18.host (id) on delete cascade,
-    start_trxid BIGINT UNSIGNED GENERATED ALWAYS AS ROW START INVISIBLE,
-    end_trxid BIGINT UNSIGNED GENERATED ALWAYS AS ROW END INVISIBLE,
-    PERIOD FOR SYSTEM_TIME(start_trxid, end_trxid)
-) WITH SYSTEM VERSIONING;
-
-
-create table host_meta_x_interface
-(
-    id           int auto_increment primary key,
-    host_meta_id int not null,
-    interface_id int not null,
-    constraint manyToInterface foreign key (interface_id) references interfaces (id),
-    constraint interfacesToHostMeta foreign key (host_meta_id) references host_meta (id) on delete cascade,
-    unique key (host_meta_id, interface_id),
-    start_trxid BIGINT UNSIGNED GENERATED ALWAYS AS ROW START INVISIBLE,
-    end_trxid BIGINT UNSIGNED GENERATED ALWAYS AS ROW END INVISIBLE,
-    PERIOD FOR SYSTEM_TIME(start_trxid, end_trxid)
-) WITH SYSTEM VERSIONING;
-
-create table host_meta_x_ip
-(
-    id           int auto_increment primary key,
-    host_meta_id int not null,
-    ip_id        int not null,
-    constraint manyToIp foreign key (ip_id) references ip_addresses (id),
-    constraint ipsToHostMeta foreign key (host_meta_id) references host_meta (id) on delete cascade,
-    unique key (host_meta_id, ip_id),
-    start_trxid BIGINT UNSIGNED GENERATED ALWAYS AS ROW START INVISIBLE,
-    end_trxid BIGINT UNSIGNED GENERATED ALWAYS AS ROW END INVISIBLE,
-    PERIOD FOR SYSTEM_TIME(start_trxid, end_trxid)
-) WITH SYSTEM VERSIONING;
 
 
 

@@ -43,9 +43,10 @@
  * Teragrep, the applicable Commercial License may apply to this file if you as
  * a licensee so wish it.
  */
-use cfe_18;
+USE cfe_18;
 DELIMITER //
-CREATE OR REPLACE PROCEDURE remove_hostmeta(proc_host_meta_id int)
+CREATE OR REPLACE PROCEDURE create_host_meta_data(p_host_id INT, host_meta_key VARCHAR(1024),
+                                                  host_meta_value VARCHAR(1024))
 BEGIN
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
         BEGIN
@@ -53,10 +54,31 @@ BEGIN
             RESIGNAL;
         END;
     START TRANSACTION;
-    if (select id from cfe_18.host_meta where id = proc_host_meta_id) is null then
-        SIGNAL SQLSTATE '45000' set MYSQL_ERRNO = 50000;
-    end if;
-    delete from cfe_18.host_meta where id = proc_host_meta_id;
+
+    -- check if host exists for metadata
+    IF ((SELECT COUNT(id) FROM cfe_18.host WHERE id = p_host_id) = 0) THEN
+        -- standardized JSON error response
+        SELECT JSON_OBJECT('id', p_host_id, 'message', 'Host does not exist with given ID') INTO @noHost;
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = @noHost;
+    END IF;
+
+    -- check if key exists
+    IF ((SELECT COUNT(meta_key_id) FROM host_meta_key WHERE host_meta_key = meta_key_name) = 0) THEN
+        INSERT INTO cfe_18.host_meta_key(meta_key_name) VALUES (host_meta_key);
+    END IF;
+
+    -- select key into variable
+    SELECT meta_key_id INTO @keyId FROM cfe_18.host_meta_key WHERE meta_key_name = host_meta_key;
+
+    IF ((SELECT COUNT(host_id)
+         FROM cfe_18.host_meta
+         WHERE meta_key_id = @keyId
+           AND host_id = p_host_id
+           AND meta_value = host_meta_value) = 0) THEN
+        INSERT INTO cfe_18.host_meta VALUES (p_host_id, @keyId, host_meta_value);
+    END IF;
+    -- return host_id as signal
+    SELECT p_host_id AS host_id;
     COMMIT;
 END;
 //

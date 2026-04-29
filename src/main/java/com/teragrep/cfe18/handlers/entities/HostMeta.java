@@ -52,95 +52,37 @@ import io.swagger.v3.oas.annotations.media.Schema;
 public class HostMeta {
 
     @Schema(accessMode = Schema.AccessMode.READ_ONLY)
-    private int id;
-    private String arch;
-    private String flavor;
-    private String hostname;
-    private Integer host_id;
-    private String os;
-    private String release_version;
-    @Schema(accessMode = Schema.AccessMode.READ_ONLY)
-    private String interface_type;
-    @Schema(accessMode = Schema.AccessMode.READ_ONLY)
-    private String ip_address;
+    private int hostId;
+    private String metaKey;
+    private String metaValue;
 
-    public int getId() {
-        return id;
+    public int getHostId() {
+        return hostId;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public void setHostId(int hostId) {
+        this.hostId = hostId;
     }
 
-    public String getArch() {
-        return arch;
+    public String getMetaKey() {
+        return metaKey;
     }
 
-    public void setArch(String arch) {
-        this.arch = arch;
+    public void setMetaKey(String metaKey) {
+        this.metaKey = metaKey;
     }
 
-    public String getFlavor() {
-        return flavor;
+    public String getMetaValue() {
+        return metaValue;
     }
 
-    public void setFlavor(String flavor) {
-        this.flavor = flavor;
-    }
-
-    public String getHostname() {
-        return hostname;
-    }
-
-    public void setHostname(String hostname) {
-        this.hostname = hostname;
-    }
-
-    public Integer getHost_id() {
-        return host_id;
-    }
-
-    public void setHost_id(Integer host_id) {
-        this.host_id = host_id;
-    }
-
-    public String getOs() {
-        return os;
-    }
-
-    public void setOs(String os) {
-        this.os = os;
-    }
-
-    public String getRelease_version() {
-        return release_version;
-    }
-
-    public void setRelease_version(String release_version) {
-        this.release_version = release_version;
-    }
-
-    public String getInterface_type() {
-        return interface_type;
-    }
-
-    public void setInterface_type(String interface_type) {
-        this.interface_type = interface_type;
-    }
-
-    public String getIp_address() {
-        return ip_address;
-    }
-
-    public void setIp_address(String ip_address) {
-        this.ip_address = ip_address;
+    public void setMetaValue(String metaValue) {
+        this.metaValue = metaValue;
     }
 
     @Override
     public String toString() {
-        return "HostMeta{" + "id=" + id + ", arch='" + arch + '\'' + ", flavor='" + flavor + '\'' + ", hostname='"
-                + hostname + '\'' + ", host_id=" + host_id + ", os='" + os + '\'' + ", release_version='"
-                + release_version + '\'' + ", interface_type='" + interface_type + '\'' + ", ip_address='" + ip_address
-                + '\'' + '}';
+        return "HostMeta{" + "hostId=" + hostId + ", metaKey='" + metaKey + '\'' + ", metaValue='" + metaValue + '\''
+                + '}';
     }
 }
