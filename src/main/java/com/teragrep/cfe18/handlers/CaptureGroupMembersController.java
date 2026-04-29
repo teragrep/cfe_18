@@ -82,7 +82,7 @@ public class CaptureGroupMembersController {
     CaptureGroupMembersMapper captureGroupMapper;
 
     @RequestMapping(
-            path = "/{groupId}/members/{captureId}",
+            path = "/{groupId}/members",
             method = RequestMethod.PUT,
             produces = "application/json"
     )
@@ -118,10 +118,7 @@ public class CaptureGroupMembersController {
                     content = @Content
             )
     })
-    public ResponseEntity<String> create(
-            @PathVariable("groupId") int groupId,
-            @PathVariable("captureId") int captureId
-    ) {
+    public ResponseEntity<String> create(@PathVariable("groupId") int groupId, @RequestBody int captureId) {
         LOGGER.info("About to insert <[{}]>", captureId);
         try {
             Integer returnedCaptureId = captureGroupMapper.create(groupId, captureId);

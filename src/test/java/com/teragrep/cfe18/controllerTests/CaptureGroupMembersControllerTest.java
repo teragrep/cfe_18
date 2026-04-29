@@ -273,8 +273,13 @@ public class CaptureGroupMembersControllerTest extends TestSpringBootInformation
     @Order(2)
     public void testCreateLinkInvalidCapture() {
 
+        final int captureId = 67;
+
         // Creates the request
-        HttpPut requestCaptureGroup = new HttpPut("http://localhost:" + port + "/v2/captures/groups/1/members/67");
+        HttpPut requestCaptureGroup = new HttpPut("http://localhost:" + port + "/v2/captures/groups/1/members");
+
+        requestCaptureGroup.setEntity(new StringEntity(String.valueOf(captureId), ContentType.APPLICATION_JSON));
+
         // Header
         requestCaptureGroup.setHeader("Authorization", "Bearer " + token);
 
@@ -306,8 +311,13 @@ public class CaptureGroupMembersControllerTest extends TestSpringBootInformation
     @Order(3)
     public void testCreateLinkInvalidGroup() {
 
+        final int captureId = 1;
+
         // Creates the request
-        HttpPut requestCaptureGroup = new HttpPut("http://localhost:" + port + "/v2/captures/groups/67/members/1");
+        HttpPut requestCaptureGroup = new HttpPut("http://localhost:" + port + "/v2/captures/groups/67/members");
+
+        requestCaptureGroup.setEntity(new StringEntity(String.valueOf(captureId), ContentType.APPLICATION_JSON));
+
         // Header
         requestCaptureGroup.setHeader("Authorization", "Bearer " + token);
 
@@ -423,7 +433,11 @@ public class CaptureGroupMembersControllerTest extends TestSpringBootInformation
         String captureAsActual = Assertions.assertDoesNotThrow(() -> captureAsJson.get("message").toString());
 
         // Creates the request
-        HttpPut requestCaptureGroup = new HttpPut("http://localhost:" + port + "/v2/captures/groups/1/members/2");
+        HttpPut requestCaptureGroup = new HttpPut("http://localhost:" + port + "/v2/captures/groups/1/members");
+
+        final int captureId = 2;
+        requestCaptureGroup.setEntity(new StringEntity(String.valueOf(captureId), ContentType.APPLICATION_JSON));
+
         // Header
         requestCaptureGroup.setHeader("Authorization", "Bearer " + token);
 
@@ -461,7 +475,11 @@ public class CaptureGroupMembersControllerTest extends TestSpringBootInformation
     @Test
     @Order(5)
     public void testInsertValidCaptureToGroup() {
-        HttpPut requestCaptureGroup = new HttpPut("http://localhost:" + port + "/v2/captures/groups/1/members/1");
+
+        HttpPut requestCaptureGroup = new HttpPut("http://localhost:" + port + "/v2/captures/groups/1/members");
+        final int captureId = 1;
+        requestCaptureGroup.setEntity(new StringEntity(String.valueOf(captureId), ContentType.APPLICATION_JSON));
+
         // Header
         requestCaptureGroup.setHeader("Authorization", "Bearer " + token);
 
@@ -537,7 +555,10 @@ public class CaptureGroupMembersControllerTest extends TestSpringBootInformation
         // Creating string from Json that was given as a response
         String captureAsActual = Assertions.assertDoesNotThrow(() -> captureAsJson.get("message").toString());
 
-        HttpPut requestCaptureGroup = new HttpPut("http://localhost:" + port + "/v2/captures/groups/1/members/3");
+        HttpPut requestCaptureGroup = new HttpPut("http://localhost:" + port + "/v2/captures/groups/1/members");
+
+        final int captureId = 3;
+        requestCaptureGroup.setEntity(new StringEntity(String.valueOf(captureId), ContentType.APPLICATION_JSON));
         // Header
         requestCaptureGroup.setHeader("Authorization", "Bearer " + token);
 
