@@ -77,9 +77,9 @@ public class ProcedureCaptureDataTest extends DBInformation {
         QueryDataSet partialDataSet = new QueryDataSet(connection);
 
         // Flow data
-        partialDataSet.addTable("flow.flows");
-        partialDataSet.addTable("flow.L7");
-        partialDataSet.addTable("flow.capture_sink");
+        partialDataSet.addTable("cfe_18.flows");
+        partialDataSet.addTable("cfe_18.L7");
+        partialDataSet.addTable("cfe_18.capture_sink");
 
         // Processing type data
         partialDataSet.addTable("cfe_18.ruleset");
@@ -134,9 +134,9 @@ public class ProcedureCaptureDataTest extends DBInformation {
         deleteStatement.addBatch("delete from cfe_18.newline");
         deleteStatement.addBatch("delete from cfe_18.inputtype");
 
-        deleteStatement.addBatch("delete from flow.capture_sink");
-        deleteStatement.addBatch("delete from flow.flows");
-        deleteStatement.addBatch("delete from flow.L7");
+        deleteStatement.addBatch("delete from cfe_18.capture_sink");
+        deleteStatement.addBatch("delete from cfe_18.flows");
+        deleteStatement.addBatch("delete from cfe_18.L7");
         deleteStatement.executeBatch();
     }
 

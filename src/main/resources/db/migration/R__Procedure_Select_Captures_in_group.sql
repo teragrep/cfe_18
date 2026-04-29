@@ -43,21 +43,34 @@
  * Teragrep, the applicable Commercial License may apply to this file if you as
  * a licensee so wish it.
  */
+USE cfe_18;
 DELIMITER //
-
-CREATE OR REPLACE PROCEDURE host_add_aws(proc_id int, proc_MD5 varchar(32), proc_fqhost varchar(128),
-                                         proc_host_type varchar(20), proc_account BIGINT)
+CREATE OR REPLACE PROCEDURE select_captures_in_group(capture_group_id INT, tx_id INT)
 BEGIN
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
         BEGIN
             ROLLBACK;
             RESIGNAL;
         END;
-    insert into cfe_18.host values (proc_id, proc_MD5, proc_fqhost, proc_host_type);
-    if proc_host_type = 'aws' then
-        insert into cfe_18.host_type_aws values (last_insert_id(), proc_account, 'aws');
-    end if;
+    START TRANSACTION;
+
+    IF (tx_id) IS NULL THEN
+        SET @time = (SELECT MAX(transaction_id) FROM mysql.transaction_registry);
+    ELSE
+        SET @time = tx_id;
+    END IF;
+
+    IF ((SELECT COUNT(cdgxcd.capture_def_group_id)
+         FROM capture_def_group_x_capture_def FOR SYSTEM_TIME AS OF TRANSACTION @time cdgxcd
+         WHERE cdgxcd.capture_def_group_id = capture_group_id) = 0) THEN
+        SELECT JSON_OBJECT('id', capture_group_id, 'message', 'Capture group not found') INTO @gc;
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = @gc;
+    END IF;
+
+    SELECT cdgxcd.capture_def_id AS capture_definition_id
+        FROM cfe_18.capture_def_group_x_capture_def FOR SYSTEM_TIME AS OF TRANSACTION @time cdgxcd
+    WHERE cdgxcd.capture_def_group_id = capture_group_id;
+    COMMIT;
 END;
 //
 DELIMITER ;
-

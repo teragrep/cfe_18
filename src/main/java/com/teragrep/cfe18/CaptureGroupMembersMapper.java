@@ -43,21 +43,18 @@
  * Teragrep, the applicable Commercial License may apply to this file if you as
  * a licensee so wish it.
  */
-DELIMITER //
+package com.teragrep.cfe18;
 
-CREATE OR REPLACE PROCEDURE host_add_aws(proc_id int, proc_MD5 varchar(32), proc_fqhost varchar(128),
-                                         proc_host_type varchar(20), proc_account BIGINT)
-BEGIN
-    DECLARE EXIT HANDLER FOR SQLEXCEPTION
-        BEGIN
-            ROLLBACK;
-            RESIGNAL;
-        END;
-    insert into cfe_18.host values (proc_id, proc_MD5, proc_fqhost, proc_host_type);
-    if proc_host_type = 'aws' then
-        insert into cfe_18.host_type_aws values (last_insert_id(), proc_account, 'aws');
-    end if;
-END;
-//
-DELIMITER ;
+import org.apache.ibatis.annotations.Mapper;
 
+import java.util.List;
+
+@Mapper
+public interface CaptureGroupMembersMapper {
+
+    Integer create(final Integer groupId, final Integer captureId);
+
+    List<Integer> get(final Integer groupId, final Integer version);
+
+    void delete(final Integer groupId, final Integer CaptureDefinitionId);
+}
