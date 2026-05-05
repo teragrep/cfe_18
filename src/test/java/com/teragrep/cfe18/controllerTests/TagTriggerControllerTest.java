@@ -76,10 +76,92 @@ public class TagTriggerControllerTest extends TestSpringBootInformation {
     private int port;
 
     @Test
-    @BeforeAll
-    public void testData() {
+    public void testTagTriggerOnError() {
+
+        Integer flow = insertFlow("capflow");
+
+        Integer sink = insertSink(flow, "555", "ip", "prot");
+
+        Integer hostId1 = insertRelpHost("relpHostmd51", "relpHostfq1");
+        Integer hostId2 = insertRelpHost("relpHostmd52", "relpHostfq2");
+
+        Integer hostGroup1 = insertHostGroup(hostId1, "hostgroup1");
+        Integer hostGroup2 = insertHostGroup(hostId2, "hostgroup2");
+        Integer hostGroup3 = insertHostGroup(hostId1, "hostgroup2");
+
+        Integer captureGroup1 = insertCaptureGroup("groupRelp1", IntegrationType.RELP, 1);
+        Integer captureGroup2 = insertCaptureGroup("groupRelp2", IntegrationType.RELP, 1);
+
+        Integer linkage1 = insertLinkage(captureGroup1, hostGroup1);
+        Integer linkage2 = insertLinkage(captureGroup1, hostGroup2);
+
+        Integer capture1 = insertCapture(
+                "relpTag1", "P30D", "audit", "relp", "audit_relp", "relpsource1", "prot", "capFlow"
+        );
+        Integer capture2 = insertCapture(
+                "relpTag2", "P30D", "audit", "relp", "audit_relp", "relpsource2", "prot", "capFlow"
+        );
+
+        HttpPut requestCaptureGroupMemberHeader1 = new HttpPut(
+                "http://localhost:" + port + "/v2/captures/groups/1/members"
+        );
+
+        requestCaptureGroupMemberHeader1
+                .setEntity(new StringEntity(String.valueOf(capture1), ContentType.APPLICATION_JSON));
+
+        requestCaptureGroupMemberHeader1.setHeader("Authorization", "Bearer " + token);
+
+        HttpResponse captureGroupMemberResponse1 = Assertions
+                .assertDoesNotThrow(() -> HttpClientBuilder.create().build().execute(requestCaptureGroupMemberHeader1));
+
+        HttpEntity captureGroupMemberResponse1Entity = captureGroupMemberResponse1.getEntity();
+
+        String captureGroupMemberResponseString1 = Assertions
+                .assertDoesNotThrow(() -> EntityUtils.toString(captureGroupMemberResponse1Entity));
+
+        JSONObject captureGroupMemberJsonResponse1 = Assertions
+                .assertDoesNotThrow(() -> new JSONObject(captureGroupMemberResponseString1));
+
+        String captureGroupMemberExpected1 = "Capture linked with group";
+
+        String captureGroupMemberActual1 = Assertions
+                .assertDoesNotThrow(() -> captureGroupMemberJsonResponse1.get("message").toString());
+
+        HttpPut requestCaptureGroupMemberHeader2 = new HttpPut(
+                "http://localhost:" + port + "/v2/captures/groups/1/members"
+        );
+
+        requestCaptureGroupMemberHeader2
+                .setEntity(new StringEntity(String.valueOf(capture2), ContentType.APPLICATION_JSON));
+
+        requestCaptureGroupMemberHeader2.setHeader("Authorization", "Bearer " + token);
+
+        HttpResponse captureGroupMemberResponse2 = Assertions
+                .assertDoesNotThrow(() -> HttpClientBuilder.create().build().execute(requestCaptureGroupMemberHeader2));
+
+        HttpEntity captureGroupMemberResponse2Entity = captureGroupMemberResponse2.getEntity();
+
+        String captureGroupMemberResponseString2 = Assertions
+                .assertDoesNotThrow(() -> EntityUtils.toString(captureGroupMemberResponse2Entity));
+
+        JSONObject captureGroupMemberJsonResponse2 = Assertions
+                .assertDoesNotThrow(() -> new JSONObject(captureGroupMemberResponseString2));
+
+        String captureGroupMemberExpected2 = "Tag already exists on the same host through different channels";
+
+        String captureGroupMemberActual2 = Assertions
+                .assertDoesNotThrow(() -> captureGroupMemberJsonResponse2.get("message").toString());
+
+        assertEquals(captureGroupMemberExpected1, captureGroupMemberActual1);
+        assertEquals(HttpStatus.SC_CREATED, captureGroupMemberResponse1.getStatusLine().getStatusCode());
+        assertEquals(captureGroupMemberExpected2, captureGroupMemberActual2);
+        assertEquals(HttpStatus.SC_CONFLICT, captureGroupMemberResponse2.getStatusLine().getStatusCode());
+
+    }
+
+    private Integer insertFlow(final String name) {
         Flow flow = new Flow();
-        flow.setName("capflow");
+        flow.setName(name);
         String flowJson = gson.toJson(flow);
 
         StringEntity flowRequestEntity = new StringEntity(String.valueOf(flowJson), ContentType.APPLICATION_JSON);
@@ -97,15 +179,15 @@ public class TagTriggerControllerTest extends TestSpringBootInformation {
 
         JSONObject flowAsJson = Assertions.assertDoesNotThrow(() -> new JSONObject(flowAsResponse));
 
-        String flowAsActual = Assertions.assertDoesNotThrow(() -> flowAsJson.get("message").toString());
+        return Assertions.assertDoesNotThrow(() -> flowAsJson.getInt("id"));
+    }
 
-        String flowAsExpected = "New flow created";
-
+    private Integer insertSink(final Integer flowId, final String sinkPort, final String ip, final String protocol) {
         Sink sink = new Sink();
-        sink.setFlowId(1);
-        sink.setPort("555");
-        sink.setIpAddress("ip");
-        sink.setProtocol("prot");
+        sink.setFlowId(flowId);
+        sink.setPort(sinkPort);
+        sink.setIpAddress(ip);
+        sink.setProtocol(protocol);
 
         String sinkJson = gson.toJson(sink);
 
@@ -124,22 +206,14 @@ public class TagTriggerControllerTest extends TestSpringBootInformation {
 
         JSONObject sinkAsJson = Assertions.assertDoesNotThrow(() -> new JSONObject(sinkAsResponse));
 
-        String sinkAsExpected = "New sink created";
+        return Assertions.assertDoesNotThrow(() -> sinkAsJson.getInt("id"));
 
-        String sinkAsActual = Assertions.assertDoesNotThrow(() -> sinkAsJson.get("message").toString());
-
-        assertEquals(flowAsExpected, flowAsActual);
-        assertEquals(HttpStatus.SC_CREATED, flowResponse.getStatusLine().getStatusCode());
-        assertEquals(sinkAsExpected, sinkAsActual);
-        assertEquals(HttpStatus.SC_CREATED, sinkResponse.getStatusLine().getStatusCode());
     }
 
-    @Test
-    public void testTagTriggerOnError() {
-
+    private Integer insertRelpHost(final String md5, final String fq) {
         HostRelp relpHost1 = new HostRelp();
-        relpHost1.setMd5("relpHostmd51");
-        relpHost1.setFqHost("relpHostfq1");
+        relpHost1.setMd5(md5);
+        relpHost1.setFqHost(fq);
 
         String relpHostJson1 = gson.toJson(relpHost1);
 
@@ -163,45 +237,13 @@ public class TagTriggerControllerTest extends TestSpringBootInformation {
         JSONObject relpHostResponseJsonObject1 = Assertions
                 .assertDoesNotThrow(() -> new JSONObject(relpHostResponseString1));
 
-        String relpHost1expected = "New host created with relp type";
+        return Assertions.assertDoesNotThrow(() -> relpHostResponseJsonObject1.getInt("id"));
+    }
 
-        String relpHost1actual = Assertions
-                .assertDoesNotThrow(() -> relpHostResponseJsonObject1.get("message").toString());
-
-        HostRelp relpHost2 = new HostRelp();
-        relpHost2.setMd5("relpHostmd52");
-        relpHost2.setFqHost("relpHostfq2");
-
-        String relpHostJson2 = gson.toJson(relpHost2);
-
-        StringEntity relpHostStringEntity2 = new StringEntity(
-                String.valueOf(relpHostJson2),
-                ContentType.APPLICATION_JSON
-        );
-
-        HttpPut relpHostPutRequest2 = new HttpPut("http://localhost:" + port + "/host/relp");
-        relpHostPutRequest2.setEntity(relpHostStringEntity2);
-        relpHostPutRequest2.setHeader("Authorization", "Bearer " + token);
-
-        HttpResponse relpHostResponse2 = Assertions
-                .assertDoesNotThrow(() -> HttpClientBuilder.create().build().execute(relpHostPutRequest2));
-
-        HttpEntity relpHostResponse2Entity = relpHostResponse2.getEntity();
-
-        String relpHostResponseString2 = Assertions
-                .assertDoesNotThrow(() -> EntityUtils.toString(relpHostResponse2Entity));
-
-        JSONObject relpHostResponseJsonObject2 = Assertions
-                .assertDoesNotThrow(() -> new JSONObject(relpHostResponseString2));
-
-        String relpHost2expected = "New host created with relp type";
-
-        String relpHost2actual = Assertions
-                .assertDoesNotThrow(() -> relpHostResponseJsonObject2.get("message").toString());
-
+    private Integer insertHostGroup(final Integer hostId, final String groupName) {
         HostGroup relpHostGroup1 = new HostGroup();
-        relpHostGroup1.setHost_id(1);
-        relpHostGroup1.setHost_group_name("hostgroup1");
+        relpHostGroup1.setHost_id(hostId);
+        relpHostGroup1.setHost_group_name(groupName);
 
         String hostGroup1 = gson.toJson(relpHostGroup1);
 
@@ -222,68 +264,16 @@ public class TagTriggerControllerTest extends TestSpringBootInformation {
         JSONObject hostGroupResponseJson1 = Assertions
                 .assertDoesNotThrow(() -> new JSONObject(hostGroupResponseString1));
 
-        String hostGroupExpected1 = "New host group created with name = hostgroup1";
+        return Assertions.assertDoesNotThrow(() -> hostGroupResponseJson1.getInt("host_group_id"));
 
-        String hostGroupActual1 = Assertions.assertDoesNotThrow(() -> hostGroupResponseJson1.get("message").toString());
+    }
 
-        HostGroup relpHostGroup2 = new HostGroup();
-        relpHostGroup2.setHost_id(2);
-        relpHostGroup2.setHost_group_name("hostgroup2");
-
-        String hostGroup2 = gson.toJson(relpHostGroup2);
-
-        StringEntity hostGroupEntity2 = new StringEntity(String.valueOf(hostGroup2), ContentType.APPLICATION_JSON);
-
-        HttpPut hostGroupPutRequest2 = new HttpPut("http://localhost:" + port + "/host/group");
-        hostGroupPutRequest2.setEntity(hostGroupEntity2);
-        hostGroupPutRequest2.setHeader("Authorization", "Bearer " + token);
-
-        HttpResponse hostGroupResponse2 = Assertions
-                .assertDoesNotThrow(() -> HttpClientBuilder.create().build().execute(hostGroupPutRequest2));
-
-        HttpEntity hostGroupResponseEntity2 = hostGroupResponse2.getEntity();
-
-        String hostGroupResponseString2 = Assertions
-                .assertDoesNotThrow(() -> EntityUtils.toString(hostGroupResponseEntity2));
-
-        JSONObject hostGroupResponseJson2 = Assertions
-                .assertDoesNotThrow(() -> new JSONObject(hostGroupResponseString2));
-
-        String hostGroupExpected2 = "New host group created with name = hostgroup2";
-
-        String hostGroupActual2 = Assertions.assertDoesNotThrow(() -> hostGroupResponseJson2.get("message").toString());
-
-        HostGroup relpHostGroup3 = new HostGroup();
-        relpHostGroup3.setHost_id(1);
-        relpHostGroup3.setHost_group_name("hostgroup2");
-
-        String hostGroup3 = gson.toJson(relpHostGroup3);
-
-        StringEntity hostGroupEntity3 = new StringEntity(String.valueOf(hostGroup3), ContentType.APPLICATION_JSON);
-
-        HttpPut hostGroupPutRequest3 = new HttpPut("http://localhost:" + port + "/host/group");
-        hostGroupPutRequest3.setEntity(hostGroupEntity3);
-        hostGroupPutRequest3.setHeader("Authorization", "Bearer " + token);
-
-        HttpResponse hostGroupResponse3 = Assertions
-                .assertDoesNotThrow(() -> HttpClientBuilder.create().build().execute(hostGroupPutRequest3));
-
-        HttpEntity hostGroupResponseEntity3 = hostGroupResponse3.getEntity();
-
-        String hostGroupResponseString3 = Assertions
-                .assertDoesNotThrow(() -> EntityUtils.toString(hostGroupResponseEntity3));
-
-        JSONObject hostGroupResponseJson3 = Assertions
-                .assertDoesNotThrow(() -> new JSONObject(hostGroupResponseString3));
-
-        String hostGroupExpected3 = "New host group created with name = hostgroup2";
-
-        String hostGroupActual3 = Assertions.assertDoesNotThrow(() -> hostGroupResponseJson3.get("message").toString());
+    private Integer insertCaptureGroup(final String name, final IntegrationType integrationType, final Integer flowId) {
 
         CaptureGroups captureGroup1 = new CaptureGroups();
-        captureGroup1.setCaptureGroupName("groupRelp1");
-        captureGroup1.setCaptureGroupType(IntegrationType.RELP);
-        captureGroup1.setFlowId(1);
+        captureGroup1.setCaptureGroupName(name);
+        captureGroup1.setCaptureGroupType(integrationType);
+        captureGroup1.setFlowId(flowId);
 
         String relpCaptureGroup1 = gson.toJson(captureGroup1);
 
@@ -305,42 +295,14 @@ public class TagTriggerControllerTest extends TestSpringBootInformation {
 
         JSONObject captureGroupAsJson1 = Assertions.assertDoesNotThrow(() -> new JSONObject(captureGroupAsResponse1));
 
-        String captureGroupExpected1 = "New capture group created";
+        return Assertions.assertDoesNotThrow(() -> captureGroupAsJson1.getInt("id"));
+    }
 
-        String captureGroupActual1 = Assertions.assertDoesNotThrow(() -> captureGroupAsJson1.get("message").toString());
-
-        CaptureGroups captureGroup2 = new CaptureGroups();
-        captureGroup2.setCaptureGroupName("groupRelp2");
-        captureGroup2.setCaptureGroupType(IntegrationType.RELP);
-        captureGroup2.setFlowId(1);
-
-        String relpCaptureGroup2 = gson.toJson(captureGroup2);
-
-        StringEntity captureGroupRequestEntity2 = new StringEntity(
-                String.valueOf(relpCaptureGroup2),
-                ContentType.APPLICATION_JSON
-        );
-
-        HttpPut requestCaptureGroup2 = new HttpPut("http://localhost:" + port + "/v2/captures/group");
-        requestCaptureGroup2.setEntity(captureGroupRequestEntity2);
-        requestCaptureGroup2.setHeader("Authorization", "Bearer " + token);
-
-        HttpResponse captureGroupResponse2 = Assertions
-                .assertDoesNotThrow(() -> HttpClientBuilder.create().build().execute(requestCaptureGroup2));
-
-        HttpEntity captureGroupEntity2 = captureGroupResponse2.getEntity();
-
-        String captureGroupAsResponse2 = Assertions.assertDoesNotThrow(() -> EntityUtils.toString(captureGroupEntity2));
-
-        JSONObject captureGroupAsJson2 = Assertions.assertDoesNotThrow(() -> new JSONObject(captureGroupAsResponse2));
-
-        String captureGroupExpected2 = "New capture group created";
-
-        String captureGroupActual2 = Assertions.assertDoesNotThrow(() -> captureGroupAsJson2.get("message").toString());
+    private Integer insertLinkage(final Integer captureGroupId, final Integer hostGroupId) {
 
         Linkage linkage1 = new Linkage();
-        linkage1.setCapture_group_id(1);
-        linkage1.setHost_group_id(1);
+        linkage1.setCapture_group_id(captureGroupId);
+        linkage1.setHost_group_id(hostGroupId);
 
         String relpLinkage1 = gson.toJson(linkage1);
 
@@ -363,48 +325,29 @@ public class TagTriggerControllerTest extends TestSpringBootInformation {
 
         JSONObject linkageJsonResponse1 = Assertions.assertDoesNotThrow(() -> new JSONObject(linkageResponseString1));
 
-        String linkageExpected1 = "New linkage created for groups = groupRelp1 and hostgroup1";
+        return Assertions.assertDoesNotThrow(() -> linkageJsonResponse1.getInt("id"));
 
-        String linkageActual1 = Assertions.assertDoesNotThrow(() -> linkageJsonResponse1.get("message").toString());
+    }
 
-        Linkage linkage2 = new Linkage();
-        linkage2.setCapture_group_id(1);
-        linkage2.setHost_group_id(2);
-
-        String relpLinkage2 = gson.toJson(linkage2);
-
-        StringEntity linkageRequestEntity2 = new StringEntity(
-                String.valueOf(relpLinkage2),
-                ContentType.APPLICATION_JSON
-        );
-
-        HttpPut requestLinkage2 = new HttpPut("http://localhost:" + port + "/capture/groups/linkage");
-        requestLinkage2.setEntity(linkageRequestEntity2);
-        requestLinkage2.setHeader("Authorization", "Bearer " + token);
-
-        HttpResponse linkageResponse2 = Assertions
-                .assertDoesNotThrow(() -> HttpClientBuilder.create().build().execute(requestLinkage2));
-
-        HttpEntity linkageResponse2Entity = linkageResponse2.getEntity();
-
-        String linkageResponseString2 = Assertions
-                .assertDoesNotThrow(() -> EntityUtils.toString(linkageResponse2Entity));
-
-        JSONObject linkageJsonResponse2 = Assertions.assertDoesNotThrow(() -> new JSONObject(linkageResponseString2));
-
-        String linkageExpected2 = "New linkage created for groups = groupRelp1 and hostgroup2";
-
-        String linkageActual2 = Assertions.assertDoesNotThrow(() -> linkageJsonResponse2.get("message").toString());
-
+    private Integer insertCapture(
+            final String tag,
+            final String retention,
+            final String category,
+            final String application,
+            final String index,
+            final String sourceType,
+            final String protocol,
+            final String flow
+    ) {
         CaptureRelp captureRelp1 = new CaptureRelp();
-        captureRelp1.setTag("relpTag1");
-        captureRelp1.setRetentionTime("P30D");
-        captureRelp1.setCategory("audit");
-        captureRelp1.setApplication("relp");
-        captureRelp1.setIndex("audit_relp");
-        captureRelp1.setSourceType("relpsource1");
-        captureRelp1.setProtocol("prot");
-        captureRelp1.setFlow("capFlow");
+        captureRelp1.setTag(tag);
+        captureRelp1.setRetentionTime(retention);
+        captureRelp1.setCategory(category);
+        captureRelp1.setApplication(application);
+        captureRelp1.setIndex(index);
+        captureRelp1.setSourceType(sourceType);
+        captureRelp1.setProtocol(protocol);
+        captureRelp1.setFlow(flow);
 
         String relpCapture1 = gson.toJson(captureRelp1);
 
@@ -426,126 +369,7 @@ public class TagTriggerControllerTest extends TestSpringBootInformation {
 
         JSONObject captureResponseJson1 = Assertions.assertDoesNotThrow(() -> new JSONObject(captureResponseEntity1));
 
-        String captureExpected1 = "New capture created";
-
-        String captureActual1 = Assertions.assertDoesNotThrow(() -> captureResponseJson1.get("message").toString());
-
-        CaptureRelp captureRelp2 = new CaptureRelp();
-        captureRelp2.setTag("relpTag2");
-        captureRelp2.setRetentionTime("P30D");
-        captureRelp2.setCategory("audit");
-        captureRelp2.setApplication("relp");
-        captureRelp2.setIndex("audit_relp");
-        captureRelp2.setSourceType("relpsource2");
-        captureRelp2.setProtocol("prot");
-        captureRelp2.setFlow("capFlow");
-
-        String relpCapture2 = gson.toJson(captureRelp2);
-
-        StringEntity relpCaptureEntity2 = new StringEntity(String.valueOf(relpCapture2), ContentType.APPLICATION_JSON);
-
-        HttpPut captureRequestEntity2 = new HttpPut(
-                "http://localhost:" + port + "/v2/captures/definitions/relp-streams"
-        );
-        captureRequestEntity2.setEntity(relpCaptureEntity2);
-        captureRequestEntity2.setHeader("Authorization", "Bearer " + token);
-
-        HttpResponse captureResponse2 = Assertions
-                .assertDoesNotThrow(() -> HttpClientBuilder.create().build().execute(captureRequestEntity2));
-
-        HttpEntity captureResponse2Entity = captureResponse2.getEntity();
-
-        String captureResponseEntity2 = Assertions
-                .assertDoesNotThrow(() -> EntityUtils.toString(captureResponse2Entity));
-
-        JSONObject captureResponseJson2 = Assertions.assertDoesNotThrow(() -> new JSONObject(captureResponseEntity2));
-
-        String captureExpected2 = "New capture created";
-
-        String captureActual2 = Assertions.assertDoesNotThrow(() -> captureResponseJson2.get("message").toString());
-
-        // actual testing
-        final int captureId = 1;
-
-        HttpPut requestCaptureGroupMemberHeader1 = new HttpPut(
-                "http://localhost:" + port + "/v2/captures/groups/1/members"
-        );
-
-        requestCaptureGroupMemberHeader1
-                .setEntity(new StringEntity(String.valueOf(captureId), ContentType.APPLICATION_JSON));
-
-        requestCaptureGroupMemberHeader1.setHeader("Authorization", "Bearer " + token);
-
-        HttpResponse captureGroupMemberResponse1 = Assertions
-                .assertDoesNotThrow(() -> HttpClientBuilder.create().build().execute(requestCaptureGroupMemberHeader1));
-
-        HttpEntity captureGroupMemberResponse1Entity = captureGroupMemberResponse1.getEntity();
-
-        String captureGroupMemberResponseString1 = Assertions
-                .assertDoesNotThrow(() -> EntityUtils.toString(captureGroupMemberResponse1Entity));
-
-        JSONObject captureGroupMemberJsonResponse1 = Assertions
-                .assertDoesNotThrow(() -> new JSONObject(captureGroupMemberResponseString1));
-
-        String captureGroupMemberExpected1 = "Capture linked with group";
-
-        String captureGroupMemberActual1 = Assertions
-                .assertDoesNotThrow(() -> captureGroupMemberJsonResponse1.get("message").toString());
-
-        final int captureId2 = 2;
-
-        HttpPut requestCaptureGroupMemberHeader2 = new HttpPut(
-                "http://localhost:" + port + "/v2/captures/groups/1/members"
-        );
-
-        requestCaptureGroupMemberHeader2
-                .setEntity(new StringEntity(String.valueOf(captureId2), ContentType.APPLICATION_JSON));
-
-        requestCaptureGroupMemberHeader2.setHeader("Authorization", "Bearer " + token);
-
-        HttpResponse captureGroupMemberResponse2 = Assertions
-                .assertDoesNotThrow(() -> HttpClientBuilder.create().build().execute(requestCaptureGroupMemberHeader2));
-
-        HttpEntity captureGroupMemberResponse2Entity = captureGroupMemberResponse2.getEntity();
-
-        String captureGroupMemberResponseString2 = Assertions
-                .assertDoesNotThrow(() -> EntityUtils.toString(captureGroupMemberResponse2Entity));
-
-        JSONObject captureGroupMemberJsonResponse2 = Assertions
-                .assertDoesNotThrow(() -> new JSONObject(captureGroupMemberResponseString2));
-
-        String captureGroupMemberExpected2 = "Tag already exists on the same host through different channels";
-
-        String captureGroupMemberActual2 = Assertions
-                .assertDoesNotThrow(() -> captureGroupMemberJsonResponse2.get("message").toString());
-
-        // assertions
-        assertEquals(relpHost1expected, relpHost1actual);
-        assertEquals(HttpStatus.SC_CREATED, relpHostResponse1.getStatusLine().getStatusCode());
-        assertEquals(relpHost2expected, relpHost2actual);
-        assertEquals(HttpStatus.SC_CREATED, relpHostResponse2.getStatusLine().getStatusCode());
-        assertEquals(hostGroupExpected1, hostGroupActual1);
-        assertEquals(HttpStatus.SC_CREATED, hostGroupResponse1.getStatusLine().getStatusCode());
-        assertEquals(hostGroupExpected2, hostGroupActual2);
-        assertEquals(HttpStatus.SC_CREATED, hostGroupResponse2.getStatusLine().getStatusCode());
-        assertEquals(hostGroupExpected3, hostGroupActual3);
-        assertEquals(HttpStatus.SC_CREATED, hostGroupResponse3.getStatusLine().getStatusCode());
-        assertEquals(captureGroupExpected1, captureGroupActual1);
-        assertEquals(HttpStatus.SC_CREATED, captureGroupResponse1.getStatusLine().getStatusCode());
-        assertEquals(captureGroupExpected2, captureGroupActual2);
-        assertEquals(HttpStatus.SC_CREATED, captureGroupResponse2.getStatusLine().getStatusCode());
-        assertEquals(linkageExpected1, linkageActual1);
-        assertEquals(HttpStatus.SC_CREATED, linkageResponse1.getStatusLine().getStatusCode());
-        assertEquals(linkageExpected2, linkageActual2);
-        assertEquals(HttpStatus.SC_CREATED, linkageResponse2.getStatusLine().getStatusCode());
-        assertEquals(captureExpected1, captureActual1);
-        assertEquals(HttpStatus.SC_CREATED, captureResponse1.getStatusLine().getStatusCode());
-        assertEquals(captureExpected2, captureActual2);
-        assertEquals(HttpStatus.SC_CREATED, captureResponse2.getStatusLine().getStatusCode());
-        assertEquals(captureGroupMemberExpected1, captureGroupMemberActual1);
-        assertEquals(HttpStatus.SC_CREATED, captureGroupMemberResponse1.getStatusLine().getStatusCode());
-        assertEquals(captureGroupMemberExpected2, captureGroupMemberActual2);
-        assertEquals(HttpStatus.SC_CONFLICT, captureGroupMemberResponse2.getStatusLine().getStatusCode());
+        return Assertions.assertDoesNotThrow(() -> captureResponseJson1.getInt("id"));
 
     }
 
