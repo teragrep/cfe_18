@@ -167,7 +167,7 @@ $(document).ready(function() { init_codefold(0); });
 <div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span>        SQLException state = Assertions.assertThrows(SQLException.class, () -&gt; {</div>
 <div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span>            Statement stmnt = conn.createStatement();</div>
 <div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span>            stmnt.addBatch(<span class="stringliteral">&quot;insert into cfe_18.host_group_x_host values(60,3,2,&#39;cfe&#39;)&quot;</span>);</div>
-<div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span>            stmnt.addBatch(<span class="stringliteral">&quot;insert into cfe_18.capture_def_group_x_capture_def values(60,1,3,1,&#39;cfe&#39;,1)&quot;</span>);</div>
+<div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span>            stmnt.addBatch(<span class="stringliteral">&quot;insert into cfe_18.capture_def_group_x_capture_def values(1,3,1,&#39;cfe&#39;,1)&quot;</span>);</div>
 <div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span>            stmnt.executeBatch();</div>
 <div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span>        });</div>
 <div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span>        Assertions.assertEquals(<span class="stringliteral">&quot;17001&quot;</span>, state.getSQLState());</div>
@@ -191,19 +191,21 @@ $(document).ready(function() { init_codefold(0); });
 <div class="line"><a id="l00100" name="l00100"></a><span class="lineno">  100</span>                        <span class="stringliteral">&quot;insert into cfe_18.capture_def_group(id,capture_def_group_name,capture_type,flow_id) values(20,&#39;capture_group20&#39;,&#39;cfe&#39;,1)&quot;</span></div>
 <div class="line"><a id="l00101" name="l00101"></a><span class="lineno">  101</span>                );</div>
 <div class="line"><a id="l00102" name="l00102"></a><span class="lineno">  102</span>        stmnt.executeBatch();</div>
-<div class="line"><a id="l00103" name="l00103"></a><span class="lineno">  103</span>        stmnt.addBatch(<span class="stringliteral">&quot;insert into cfe_18.capture_def_group_x_capture_def values(20,5,5,5,&#39;cfe&#39;,1)&quot;</span>);</div>
+<div class="line"><a id="l00103" name="l00103"></a><span class="lineno">  103</span>        stmnt.addBatch(<span class="stringliteral">&quot;insert into cfe_18.capture_def_group_x_capture_def values(5,5,5,&#39;cfe&#39;,1)&quot;</span>);</div>
 <div class="line"><a id="l00104" name="l00104"></a><span class="lineno">  104</span>        stmnt.executeBatch();</div>
 <div class="line"><a id="l00105" name="l00105"></a><span class="lineno">  105</span> </div>
 <div class="line"><a id="l00106" name="l00106"></a><span class="lineno">  106</span>        <span class="comment">// Fetch database data after executing your code</span></div>
 <div class="line"><a id="l00107" name="l00107"></a><span class="lineno">  107</span>        ITable actualTable = databaseConnection</div>
-<div class="line"><a id="l00108" name="l00108"></a><span class="lineno">  108</span>                .createQueryTable(<span class="stringliteral">&quot;result&quot;</span>, <span class="stringliteral">&quot;select * from cfe_18.capture_def_group_x_capture_def&quot;</span>);</div>
-<div class="line"><a id="l00109" name="l00109"></a><span class="lineno">  109</span> </div>
-<div class="line"><a id="l00110" name="l00110"></a><span class="lineno">  110</span>        <span class="comment">// Load expected data from an XML dataset</span></div>
-<div class="line"><a id="l00111" name="l00111"></a><span class="lineno">  111</span>        <span class="comment">// Assert actual database table match expected table</span></div>
-<div class="line"><a id="l00112" name="l00112"></a><span class="lineno">  112</span>        Assertion.assertEquals(expectedTable, actualTable);</div>
-<div class="line"><a id="l00113" name="l00113"></a><span class="lineno">  113</span>    }</div>
+<div class="line"><a id="l00108" name="l00108"></a><span class="lineno">  108</span>                .createQueryTable(</div>
+<div class="line"><a id="l00109" name="l00109"></a><span class="lineno">  109</span>                        <span class="stringliteral">&quot;result&quot;</span>, <span class="stringliteral">&quot;select * from cfe_18.capture_def_group_x_capture_def order by capture_def_id asc&quot;</span></div>
+<div class="line"><a id="l00110" name="l00110"></a><span class="lineno">  110</span>                );</div>
+<div class="line"><a id="l00111" name="l00111"></a><span class="lineno">  111</span> </div>
+<div class="line"><a id="l00112" name="l00112"></a><span class="lineno">  112</span>        <span class="comment">// Load expected data from an XML dataset</span></div>
+<div class="line"><a id="l00113" name="l00113"></a><span class="lineno">  113</span>        <span class="comment">// Assert actual database table match expected table</span></div>
+<div class="line"><a id="l00114" name="l00114"></a><span class="lineno">  114</span>        Assertion.assertEquals(expectedTable, actualTable);</div>
+<div class="line"><a id="l00115" name="l00115"></a><span class="lineno">  115</span>    }</div>
 </div>
-<div class="line"><a id="l00114" name="l00114"></a><span class="lineno">  114</span>}</div>
+<div class="line"><a id="l00116" name="l00116"></a><span class="lineno">  116</span>}</div>
 </div>
 <div class="ttc" id="aclasscom_1_1teragrep_1_1cfe18_1_1procedureTests_1_1DBUnitbase_html"><div class="ttname"><a href="classcom_1_1teragrep_1_1cfe18_1_1procedureTests_1_1DBUnitbase.html">com.teragrep.cfe18.procedureTests.DBUnitbase</a></div><div class="ttdef"><b>Definition</b> <a href="DBUnitbase_8java_source.html#l00063">DBUnitbase.java:63</a></div></div>
 <div class="ttc" id="aclasscom_1_1teragrep_1_1cfe18_1_1procedureTests_1_1TriggerTagTest_html"><div class="ttname"><a href="classcom_1_1teragrep_1_1cfe18_1_1procedureTests_1_1TriggerTagTest.html">com.teragrep.cfe18.procedureTests.TriggerTagTest</a></div><div class="ttdef"><b>Definition</b> <a href="TriggerTagTest_8java_source.html#l00060">TriggerTagTest.java:60</a></div></div>
