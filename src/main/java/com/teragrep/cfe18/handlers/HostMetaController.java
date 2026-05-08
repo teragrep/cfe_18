@@ -106,10 +106,12 @@ public class HostMetaController {
                     content = @Content
             )
     })
-    public ResponseEntity<String> create(@PathVariable("hostId") Integer hostId, @RequestBody HostMeta newHostMeta) {
+    public ResponseEntity<String> create(@PathVariable("hostId") int hostId, @RequestBody HostMeta newHostMeta) {
         LOGGER.info("About to insert <[{}]>", newHostMeta);
         try {
-            HostMeta hm = hostMetaMapper.create(hostId, newHostMeta.getMetaKey(), newHostMeta.getMetaValue());
+            newHostMeta.setHostId(hostId);
+            HostMeta hm = hostMetaMapper
+                    .create(newHostMeta.getHostId(), newHostMeta.getMetaKey(), newHostMeta.getMetaValue());
             LOGGER.debug("Values returned <[{}]>", hm);
             JSONObject jsonObject = new JSONObject();
             jsonObject.put("id", hm.getHostId());
