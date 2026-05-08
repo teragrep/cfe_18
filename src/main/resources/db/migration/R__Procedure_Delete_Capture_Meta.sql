@@ -45,7 +45,7 @@
  */
 USE cfe_18;
 DELIMITER //
-CREATE OR REPLACE PROCEDURE delete_capture_meta(capture_id INT)
+CREATE OR REPLACE PROCEDURE delete_capture_meta(capture_id INT, meta_key VARCHAR(1024))
 BEGIN
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
         BEGIN
@@ -53,19 +53,22 @@ BEGIN
             RESIGNAL;
         END;
     START TRANSACTION;
-    -- check if metadata exists for capture
-    IF ((SELECT COUNT(cm.capture_id) FROM cfe_18.capture_meta cm WHERE cm.capture_id = capture_id) = 0) THEN
-        SELECT JSON_OBJECT('id', capture_id, 'message', 'Meta data does not exist for capture') INTO @nometa;
-        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = @nometa;
+
+    -- remove all capture meta from capture if key is null
+    IF (meta_key) IS NULL THEN
+        DELETE cm.*, cmk.*
+        FROM cfe_18.capture_meta cm
+                 INNER JOIN capture_meta_key cmk ON cm.meta_key_id = cmk.meta_key_id
+        WHERE cm.capture_id = capture_id;
+    ELSE
+        -- delete from capture with the given key
+        DELETE cm.*, cmk.*
+        FROM cfe_18.capture_meta cm
+                 INNER JOIN capture_meta_key cmk ON cm.meta_key_id = cmk.meta_key_id
+        WHERE cm.capture_id = capture_id
+          AND cmk.meta_key_name = meta_key;
     END IF;
-
-    DELETE cm.*, cmk.*
-    FROM cfe_18.capture_meta cm
-             INNER JOIN cfe_18.capture_meta_key
-             CROSS JOIN capture_meta_key cmk ON cm.meta_key_id = cmk.meta_key_id
-    WHERE cm.capture_id = capture_id;
     COMMIT;
-
 END;
 //
 DELIMITER ;

@@ -318,9 +318,9 @@ public class CaptureDefinitionControllerTest extends TestSpringBootInformation {
     @Order(5)
     public void testSelectValidCaptureWithKey() {
         CaptureMeta captureMeta = new CaptureMeta();
-        captureMeta.setCapture_id(1);
-        captureMeta.setCapture_meta_key("relpKey1");
-        captureMeta.setCapture_meta_value("relpValue1");
+        captureMeta.setCaptureId(1);
+        captureMeta.setCaptureMetaKey("relpKey1");
+        captureMeta.setCaptureMetaValue("relpValue1");
 
         String captureMetaJson = gson.toJson(captureMeta);
 
@@ -331,7 +331,7 @@ public class CaptureDefinitionControllerTest extends TestSpringBootInformation {
         );
 
         // Creates the request
-        HttpPut captureMetaRequest = new HttpPut("http://localhost:" + port + "/capture/meta/");
+        HttpPut captureMetaRequest = new HttpPut("http://localhost:" + port + "/v2/captures/definitions/1/metadata");
         // set requestEntity to the put request
         captureMetaRequest.setEntity(requestEntityCaptureMeta);
         // Header
@@ -352,7 +352,7 @@ public class CaptureDefinitionControllerTest extends TestSpringBootInformation {
         // Parsin respponse as JSONObject
         JSONObject captureMetaAsJson = Assertions.assertDoesNotThrow(() -> new JSONObject(captureMetaAsResponse));
         // Creating expected message as JSON Object from the data that was sent towards endpoint
-        String expectedCaptureMeta = "New capture meta created for = 1";
+        String expectedCaptureMeta = "New capture meta created";
 
         // Creating string from Json that was given as a response
         String actualCaptureMeta = Assertions.assertDoesNotThrow(() -> captureMetaAsJson.get("message").toString());

@@ -45,8 +45,11 @@
  */
 package com.teragrep.cfe18.handlers.entities;
 
+import io.swagger.v3.oas.annotations.media.Schema;
+
 public class CaptureMeta {
 
+    @Schema(accessMode = Schema.AccessMode.READ_ONLY)
     public int captureId;
     public String captureMetaKey;
     public String captureMetaValue;
@@ -77,10 +80,7 @@ public class CaptureMeta {
 
     @Override
     public String toString() {
-        return "CaptureMeta{" +
-                "captureId=" + captureId +
-                ", captureMetaKey='" + captureMetaKey + '\'' +
-                ", captureMetaValue='" + captureMetaValue + '\'' +
-                '}';
+        return "CaptureMeta{" + "captureId=" + captureId + ", captureMetaKey='" + captureMetaKey + '\''
+                + ", captureMetaValue='" + captureMetaValue + '\'' + '}';
     }
 }

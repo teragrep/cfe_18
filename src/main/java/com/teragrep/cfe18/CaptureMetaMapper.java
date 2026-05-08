@@ -46,7 +46,6 @@
 package com.teragrep.cfe18;
 
 import com.teragrep.cfe18.handlers.entities.CaptureMeta;
-import com.teragrep.cfe18.handlers.entities.CaptureDefinition;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
@@ -54,16 +53,9 @@ import java.util.List;
 @Mapper
 public interface CaptureMetaMapper {
 
-    CaptureMeta create(
-            int captureId,
-            String captureMetaKey,
-            String captureMetaValue);
+    CaptureMeta create(final Integer captureId, final String key, final String captureMetaValue);
 
-    List<CaptureMeta> get(int captureId, Integer version);
+    List<CaptureMeta> get(final String key, final Integer version);
 
-    List<CaptureMeta> getAll(Integer version);
-
-    void delete(int captureId);
-
-    List<CaptureDefinition> getByKeyValue(String key, String value, Integer version);
+    void delete(final Integer captureId, final String key);
 }
