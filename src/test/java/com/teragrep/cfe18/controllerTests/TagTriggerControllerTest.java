@@ -45,7 +45,6 @@
  */
 package com.teragrep.cfe18.controllerTests;
 
-import com.google.gson.Gson;
 import com.teragrep.cfe18.handlers.entities.*;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -70,37 +69,35 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @ExtendWith(MigrateDatabaseExtension.class)
 public class TagTriggerControllerTest extends TestSpringBootInformation {
 
-    Gson gson = new Gson();
-
     @LocalServerPort
     private int port;
 
     @Test
     public void testTagTriggerOnError() {
 
-        Integer flow = insertFlow("capflow");
+        final TestApiClient testApiClient = new TestApiClient(port, token);
 
-        Integer sink = insertSink(flow, "555", "ip", "prot");
+        Integer flow = testApiClient.insertFlow("capflow");
 
-        Integer hostId1 = insertRelpHost("relpHostmd51", "relpHostfq1");
-        Integer hostId2 = insertRelpHost("relpHostmd52", "relpHostfq2");
+        Integer sink = testApiClient.insertSink(flow, "555", "ip", "prot");
 
-        Integer hostGroup1 = insertHostGroup(hostId1, "hostgroup1");
-        Integer hostGroup2 = insertHostGroup(hostId2, "hostgroup2");
-        Integer hostGroup3 = insertHostGroup(hostId1, "hostgroup2");
+        Integer hostId1 = testApiClient.insertRelpHost("relpHostmd51", "relpHostfq1");
+        Integer hostId2 = testApiClient.insertRelpHost("relpHostmd52", "relpHostfq2");
 
-        Integer captureGroup1 = insertCaptureGroup("groupRelp1", IntegrationType.RELP, 1);
-        Integer captureGroup2 = insertCaptureGroup("groupRelp2", IntegrationType.RELP, 1);
+        Integer hostGroup1 = testApiClient.insertHostGroup(hostId1, "hostgroup1");
+        Integer hostGroup2 = testApiClient.insertHostGroup(hostId2, "hostgroup2");
+        Integer hostGroup3 = testApiClient.insertHostGroup(hostId1, "hostgroup2");
 
-        Integer linkage1 = insertLinkage(captureGroup1, hostGroup1);
-        Integer linkage2 = insertLinkage(captureGroup1, hostGroup2);
+        Integer captureGroup1 = testApiClient.insertCaptureGroup("groupRelp1", IntegrationType.RELP, 1);
+        Integer captureGroup2 = testApiClient.insertCaptureGroup("groupRelp2", IntegrationType.RELP, 1);
 
-        Integer capture1 = insertCapture(
-                "relpTag1", "P30D", "audit", "relp", "audit_relp", "relpsource1", "prot", "capFlow"
-        );
-        Integer capture2 = insertCapture(
-                "relpTag2", "P30D", "audit", "relp", "audit_relp", "relpsource2", "prot", "capFlow"
-        );
+        Integer linkage1 = testApiClient.insertLinkage(captureGroup1, hostGroup1);
+        Integer linkage2 = testApiClient.insertLinkage(captureGroup1, hostGroup2);
+
+        Integer capture1 = testApiClient
+                .insertCapture("relpTag1", "P30D", "audit", "relp", "audit_relp", "relpsource1", "prot", "capFlow");
+        Integer capture2 = testApiClient
+                .insertCapture("relpTag2", "P30D", "audit", "relp", "audit_relp", "relpsource2", "prot", "capFlow");
 
         HttpPut requestCaptureGroupMemberHeader1 = new HttpPut(
                 "http://localhost:" + port + "/v2/captures/groups/1/members"
@@ -156,220 +153,6 @@ public class TagTriggerControllerTest extends TestSpringBootInformation {
         assertEquals(HttpStatus.SC_CREATED, captureGroupMemberResponse1.getStatusLine().getStatusCode());
         assertEquals(captureGroupMemberExpected2, captureGroupMemberActual2);
         assertEquals(HttpStatus.SC_CONFLICT, captureGroupMemberResponse2.getStatusLine().getStatusCode());
-
-    }
-
-    private Integer insertFlow(final String name) {
-        Flow flow = new Flow();
-        flow.setName(name);
-        String flowJson = gson.toJson(flow);
-
-        StringEntity flowRequestEntity = new StringEntity(String.valueOf(flowJson), ContentType.APPLICATION_JSON);
-
-        HttpPut flowRequest = new HttpPut("http://localhost:" + port + "/flow");
-        flowRequest.setEntity(flowRequestEntity);
-        flowRequest.setHeader("Authorization", "Bearer " + token);
-
-        HttpResponse flowResponse = Assertions
-                .assertDoesNotThrow(() -> HttpClientBuilder.create().build().execute(flowRequest));
-
-        HttpEntity flowEntity = flowResponse.getEntity();
-
-        String flowAsResponse = Assertions.assertDoesNotThrow(() -> EntityUtils.toString(flowEntity));
-
-        JSONObject flowAsJson = Assertions.assertDoesNotThrow(() -> new JSONObject(flowAsResponse));
-
-        return Assertions.assertDoesNotThrow(() -> flowAsJson.getInt("id"));
-    }
-
-    private Integer insertSink(final Integer flowId, final String sinkPort, final String ip, final String protocol) {
-        Sink sink = new Sink();
-        sink.setFlowId(flowId);
-        sink.setPort(sinkPort);
-        sink.setIpAddress(ip);
-        sink.setProtocol(protocol);
-
-        String sinkJson = gson.toJson(sink);
-
-        StringEntity sinkEntity = new StringEntity(String.valueOf(sinkJson), ContentType.APPLICATION_JSON);
-
-        HttpPut sinkRequest = new HttpPut("http://localhost:" + port + "/sink");
-        sinkRequest.setEntity(sinkEntity);
-        sinkRequest.setHeader("Authorization", "Bearer " + token);
-
-        HttpResponse sinkResponse = Assertions
-                .assertDoesNotThrow(() -> HttpClientBuilder.create().build().execute(sinkRequest));
-
-        HttpEntity sinkAsEntity = sinkResponse.getEntity();
-
-        String sinkAsResponse = Assertions.assertDoesNotThrow(() -> EntityUtils.toString(sinkAsEntity));
-
-        JSONObject sinkAsJson = Assertions.assertDoesNotThrow(() -> new JSONObject(sinkAsResponse));
-
-        return Assertions.assertDoesNotThrow(() -> sinkAsJson.getInt("id"));
-
-    }
-
-    private Integer insertRelpHost(final String md5, final String fq) {
-        HostRelp relpHost1 = new HostRelp();
-        relpHost1.setMd5(md5);
-        relpHost1.setFqHost(fq);
-
-        String relpHostJson1 = gson.toJson(relpHost1);
-
-        StringEntity relpHostStringEntity1 = new StringEntity(
-                String.valueOf(relpHostJson1),
-                ContentType.APPLICATION_JSON
-        );
-
-        HttpPut relpHostPutRequest1 = new HttpPut("http://localhost:" + port + "/host/relp");
-        relpHostPutRequest1.setEntity(relpHostStringEntity1);
-        relpHostPutRequest1.setHeader("Authorization", "Bearer " + token);
-
-        HttpResponse relpHostResponse1 = Assertions
-                .assertDoesNotThrow(() -> HttpClientBuilder.create().build().execute(relpHostPutRequest1));
-
-        HttpEntity relpHostResponse1Entity = relpHostResponse1.getEntity();
-
-        String relpHostResponseString1 = Assertions
-                .assertDoesNotThrow(() -> EntityUtils.toString(relpHostResponse1Entity));
-
-        JSONObject relpHostResponseJsonObject1 = Assertions
-                .assertDoesNotThrow(() -> new JSONObject(relpHostResponseString1));
-
-        return Assertions.assertDoesNotThrow(() -> relpHostResponseJsonObject1.getInt("id"));
-    }
-
-    private Integer insertHostGroup(final Integer hostId, final String groupName) {
-        HostGroup relpHostGroup1 = new HostGroup();
-        relpHostGroup1.setHost_id(hostId);
-        relpHostGroup1.setHost_group_name(groupName);
-
-        String hostGroup1 = gson.toJson(relpHostGroup1);
-
-        StringEntity hostGroupEntity1 = new StringEntity(String.valueOf(hostGroup1), ContentType.APPLICATION_JSON);
-
-        HttpPut hostGroupPutRequest1 = new HttpPut("http://localhost:" + port + "/host/group");
-        hostGroupPutRequest1.setEntity(hostGroupEntity1);
-        hostGroupPutRequest1.setHeader("Authorization", "Bearer " + token);
-
-        HttpResponse hostGroupResponse1 = Assertions
-                .assertDoesNotThrow(() -> HttpClientBuilder.create().build().execute(hostGroupPutRequest1));
-
-        HttpEntity hostGroupResponseEntity1 = hostGroupResponse1.getEntity();
-
-        String hostGroupResponseString1 = Assertions
-                .assertDoesNotThrow(() -> EntityUtils.toString(hostGroupResponseEntity1));
-
-        JSONObject hostGroupResponseJson1 = Assertions
-                .assertDoesNotThrow(() -> new JSONObject(hostGroupResponseString1));
-
-        return Assertions.assertDoesNotThrow(() -> hostGroupResponseJson1.getInt("host_group_id"));
-
-    }
-
-    private Integer insertCaptureGroup(final String name, final IntegrationType integrationType, final Integer flowId) {
-
-        CaptureGroups captureGroup1 = new CaptureGroups();
-        captureGroup1.setCaptureGroupName(name);
-        captureGroup1.setCaptureGroupType(integrationType);
-        captureGroup1.setFlowId(flowId);
-
-        String relpCaptureGroup1 = gson.toJson(captureGroup1);
-
-        StringEntity captureGroupRequestEntity1 = new StringEntity(
-                String.valueOf(relpCaptureGroup1),
-                ContentType.APPLICATION_JSON
-        );
-
-        HttpPut requestCaptureGroup1 = new HttpPut("http://localhost:" + port + "/v2/captures/group");
-        requestCaptureGroup1.setEntity(captureGroupRequestEntity1);
-        requestCaptureGroup1.setHeader("Authorization", "Bearer " + token);
-
-        HttpResponse captureGroupResponse1 = Assertions
-                .assertDoesNotThrow(() -> HttpClientBuilder.create().build().execute(requestCaptureGroup1));
-
-        HttpEntity captureGroupEntity1 = captureGroupResponse1.getEntity();
-
-        String captureGroupAsResponse1 = Assertions.assertDoesNotThrow(() -> EntityUtils.toString(captureGroupEntity1));
-
-        JSONObject captureGroupAsJson1 = Assertions.assertDoesNotThrow(() -> new JSONObject(captureGroupAsResponse1));
-
-        return Assertions.assertDoesNotThrow(() -> captureGroupAsJson1.getInt("id"));
-    }
-
-    private Integer insertLinkage(final Integer captureGroupId, final Integer hostGroupId) {
-
-        Linkage linkage1 = new Linkage();
-        linkage1.setCapture_group_id(captureGroupId);
-        linkage1.setHost_group_id(hostGroupId);
-
-        String relpLinkage1 = gson.toJson(linkage1);
-
-        StringEntity linkageRequestEntity1 = new StringEntity(
-                String.valueOf(relpLinkage1),
-                ContentType.APPLICATION_JSON
-        );
-
-        HttpPut requestLinkage1 = new HttpPut("http://localhost:" + port + "/capture/groups/linkage");
-        requestLinkage1.setEntity(linkageRequestEntity1);
-        requestLinkage1.setHeader("Authorization", "Bearer " + token);
-
-        HttpResponse linkageResponse1 = Assertions
-                .assertDoesNotThrow(() -> HttpClientBuilder.create().build().execute(requestLinkage1));
-
-        HttpEntity linkageResponse1Entity = linkageResponse1.getEntity();
-
-        String linkageResponseString1 = Assertions
-                .assertDoesNotThrow(() -> EntityUtils.toString(linkageResponse1Entity));
-
-        JSONObject linkageJsonResponse1 = Assertions.assertDoesNotThrow(() -> new JSONObject(linkageResponseString1));
-
-        return Assertions.assertDoesNotThrow(() -> linkageJsonResponse1.getInt("id"));
-
-    }
-
-    private Integer insertCapture(
-            final String tag,
-            final String retention,
-            final String category,
-            final String application,
-            final String index,
-            final String sourceType,
-            final String protocol,
-            final String flow
-    ) {
-        CaptureRelp captureRelp1 = new CaptureRelp();
-        captureRelp1.setTag(tag);
-        captureRelp1.setRetentionTime(retention);
-        captureRelp1.setCategory(category);
-        captureRelp1.setApplication(application);
-        captureRelp1.setIndex(index);
-        captureRelp1.setSourceType(sourceType);
-        captureRelp1.setProtocol(protocol);
-        captureRelp1.setFlow(flow);
-
-        String relpCapture1 = gson.toJson(captureRelp1);
-
-        StringEntity relpCaptureEntity1 = new StringEntity(String.valueOf(relpCapture1), ContentType.APPLICATION_JSON);
-
-        HttpPut captureRequestEntity1 = new HttpPut(
-                "http://localhost:" + port + "/v2/captures/definitions/relp-streams"
-        );
-        captureRequestEntity1.setEntity(relpCaptureEntity1);
-        captureRequestEntity1.setHeader("Authorization", "Bearer " + token);
-
-        HttpResponse captureResponse1 = Assertions
-                .assertDoesNotThrow(() -> HttpClientBuilder.create().build().execute(captureRequestEntity1));
-
-        HttpEntity captureResponse1Entity = captureResponse1.getEntity();
-
-        String captureResponseEntity1 = Assertions
-                .assertDoesNotThrow(() -> EntityUtils.toString(captureResponse1Entity));
-
-        JSONObject captureResponseJson1 = Assertions.assertDoesNotThrow(() -> new JSONObject(captureResponseEntity1));
-
-        return Assertions.assertDoesNotThrow(() -> captureResponseJson1.getInt("id"));
 
     }
 
