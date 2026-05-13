@@ -55,7 +55,7 @@ public interface CaptureMetaMapper {
 
     CaptureMeta create(final Integer captureId, final String key, final String captureMetaValue);
 
-    List<CaptureMeta> get(final String key, final Integer version);
+    List<CaptureMeta> get(final Integer captureId, final String key, final Integer version);
 
     void delete(final Integer captureId, final String key);
 }

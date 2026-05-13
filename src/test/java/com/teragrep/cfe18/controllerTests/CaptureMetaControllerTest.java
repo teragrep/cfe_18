@@ -82,93 +82,10 @@ public class CaptureMetaControllerTest extends TestSpringBootInformation {
     @Test
     @BeforeAll
     public void testData() {
-        Flow flow = new Flow();
-        flow.setName("capflow");
-        String json2 = gson.toJson(flow);
-
-        StringEntity requestEntity2 = new StringEntity(String.valueOf(json2), ContentType.APPLICATION_JSON);
-
-        HttpPut request2 = new HttpPut("http://localhost:" + port + "/flow");
-        request2.setEntity(requestEntity2);
-        request2.setHeader("Authorization", "Bearer " + token);
-
-        HttpResponse httpResponse = Assertions
-                .assertDoesNotThrow(() -> HttpClientBuilder.create().build().execute(request2));
-
-        HttpEntity entity = httpResponse.getEntity();
-
-        String responseString = Assertions.assertDoesNotThrow(() -> EntityUtils.toString(entity));
-
-        JSONObject responseAsJson = Assertions.assertDoesNotThrow(() -> new JSONObject(responseString));
-
-        String expected = "New flow created";
-
-        String actual = Assertions.assertDoesNotThrow(() -> responseAsJson.get("message").toString());
-
-        Sink sink = new Sink();
-        sink.setFlowId(1);
-        sink.setPort("cap");
-        sink.setIpAddress("capsink");
-        sink.setProtocol("prot");
-
-        String json1 = gson.toJson(sink);
-
-        StringEntity requestEntity1 = new StringEntity(String.valueOf(json1), ContentType.APPLICATION_JSON);
-
-        HttpPut request1 = new HttpPut("http://localhost:" + port + "/sink");
-        request1.setEntity(requestEntity1);
-        request1.setHeader("Authorization", "Bearer " + token);
-
-        HttpResponse httpResponse2 = Assertions
-                .assertDoesNotThrow(() -> HttpClientBuilder.create().build().execute(request1));
-
-        HttpEntity entity2 = httpResponse2.getEntity();
-
-        String responseString2 = Assertions.assertDoesNotThrow(() -> EntityUtils.toString(entity2));
-
-        JSONObject responseAsJson2 = Assertions.assertDoesNotThrow(() -> new JSONObject(responseString2));
-
-        String expected2 = "New sink created";
-
-        String actual2 = Assertions.assertDoesNotThrow(() -> responseAsJson2.get("message").toString());
-
-        CaptureRelp captureRelp = new CaptureRelp();
-        captureRelp.setTag("relpTag");
-        captureRelp.setRetentionTime("P30D");
-        captureRelp.setCategory("audit");
-        captureRelp.setApplication("relp");
-        captureRelp.setIndex("audit_relp");
-        captureRelp.setSourceType("relpsource1");
-        captureRelp.setProtocol("prot");
-        captureRelp.setFlow("capFlow");
-
-        String jsonFile = gson.toJson(captureRelp);
-
-        StringEntity requestEntity3 = new StringEntity(String.valueOf(jsonFile), ContentType.APPLICATION_JSON);
-
-        HttpPut request3 = new HttpPut("http://localhost:" + port + "/v2/captures/definitions/relp-streams");
-        request3.setEntity(requestEntity3);
-        request3.setHeader("Authorization", "Bearer " + token);
-
-        HttpResponse httpResponse3 = Assertions
-                .assertDoesNotThrow(() -> HttpClientBuilder.create().build().execute(request3));
-
-        HttpEntity entity3 = httpResponse3.getEntity();
-
-        String responseString3 = Assertions.assertDoesNotThrow(() -> EntityUtils.toString(entity3));
-
-        JSONObject responseAsJson3 = Assertions.assertDoesNotThrow(() -> new JSONObject(responseString3));
-
-        String expected3 = "New capture created";
-
-        String actual3 = Assertions.assertDoesNotThrow(() -> responseAsJson3.get("message").toString());
-
-        assertEquals(expected, actual);
-        assertEquals(HttpStatus.SC_CREATED, httpResponse.getStatusLine().getStatusCode());
-        assertEquals(expected2, actual2);
-        assertEquals(HttpStatus.SC_CREATED, httpResponse2.getStatusLine().getStatusCode());
-        assertEquals(expected3, actual3);
-        assertEquals(HttpStatus.SC_CREATED, httpResponse3.getStatusLine().getStatusCode());
+        TestApiClient testApiClient = new TestApiClient(port, token);
+        final Integer flowId = testApiClient.insertFlow("capflow");
+        testApiClient.insertSink(flowId, "cap", "capsink", "prot");
+        testApiClient.insertCapture("relpTag", "P30D", "audit", "relp", "audit_relp", "relpsource1", "prot", "capflow");
 
     }
 
@@ -219,8 +136,6 @@ public class CaptureMetaControllerTest extends TestSpringBootInformation {
         captureMeta.setCaptureMetaValue("relpValue1");
         expected.add(captureMeta);
 
-        String json = gson.toJson(expected);
-
         // Asserting get request
         HttpGet requestGet = new HttpGet("http://localhost:" + port + "/v2/captures/definitions/1/metadata");
 
@@ -233,7 +148,7 @@ public class CaptureMetaControllerTest extends TestSpringBootInformation {
 
         String responseStringGet = Assertions.assertDoesNotThrow(() -> EntityUtils.toString(entityGet, "UTF-8"));
 
-        assertEquals(json, responseStringGet);
+        assertEquals(expected.toString(), responseStringGet);
         assertEquals(HttpStatus.SC_OK, responseGet.getStatusLine().getStatusCode());
 
     }
@@ -265,7 +180,7 @@ public class CaptureMetaControllerTest extends TestSpringBootInformation {
         String responseString = Assertions.assertDoesNotThrow(() -> EntityUtils.toString(entity));
 
         JSONObject responseAsJson = Assertions.assertDoesNotThrow(() -> new JSONObject(responseString));
-        String expected = "Capture does not exist";
+        String expected = "Record does not exist";
 
         String actual = Assertions.assertDoesNotThrow(() -> responseAsJson.get("message").toString());
 
@@ -312,10 +227,14 @@ public class CaptureMetaControllerTest extends TestSpringBootInformation {
 
         String responseStringGet = Assertions.assertDoesNotThrow(() -> EntityUtils.toString(entityGet, "UTF-8"));
 
-        List<CaptureMeta> expected = new ArrayList<>();
+        JSONObject responseAsJson = Assertions.assertDoesNotThrow(() -> new JSONObject(responseStringGet));
 
-        assertEquals(expected.toString(), responseStringGet);
-        assertEquals(HttpStatus.SC_OK, responseGet.getStatusLine().getStatusCode());
+        String actual = Assertions.assertDoesNotThrow(() -> responseAsJson.get("message").toString());
+
+        String expected = "Record does not exist";
+
+        assertEquals(expected, actual);
+        assertEquals(HttpStatus.SC_NOT_FOUND, responseGet.getStatusLine().getStatusCode());
     }
 
     @Test
@@ -327,7 +246,7 @@ public class CaptureMetaControllerTest extends TestSpringBootInformation {
         captureMeta.setCaptureMetaValue("relpValue1");
 
         HttpGet requestGet = new HttpGet(
-                "http://localhost:" + port + "/v2/captures/definitions/555/metadata?key=relpKey1"
+                "http://localhost:" + port + "/v2/captures/definitions/1/metadata?key=relpKey1"
         );
 
         requestGet.setHeader("Authorization", "Bearer " + token);
@@ -342,9 +261,7 @@ public class CaptureMetaControllerTest extends TestSpringBootInformation {
         List<CaptureMeta> exceptedCaptureMetas = new ArrayList<>();
         exceptedCaptureMetas.add(captureMeta);
 
-        String expected = gson.toJson(exceptedCaptureMetas);
-
-        assertEquals(expected, responseStringGet);
+        assertEquals(exceptedCaptureMetas.toString(), responseStringGet);
         assertEquals(HttpStatus.SC_OK, responseGet.getStatusLine().getStatusCode());
     }
 
@@ -380,8 +297,6 @@ public class CaptureMetaControllerTest extends TestSpringBootInformation {
         expected.add(captureMeta2);
         expected.add(captureMeta);
 
-        String json = gson.toJson(expected);
-
         HttpGet requestGet = new HttpGet("http://localhost:" + port + "/v2/captures/definitions/1/metadata");
 
         requestGet.setHeader("Authorization", "Bearer " + token);
@@ -393,7 +308,7 @@ public class CaptureMetaControllerTest extends TestSpringBootInformation {
 
         String responseStringGet = Assertions.assertDoesNotThrow(() -> EntityUtils.toString(entityGet, "UTF-8"));
 
-        assertEquals(json, responseStringGet);
+        assertEquals(expected.toString(), responseStringGet);
         assertEquals(HttpStatus.SC_OK, responseGet.getStatusLine().getStatusCode());
     }
 

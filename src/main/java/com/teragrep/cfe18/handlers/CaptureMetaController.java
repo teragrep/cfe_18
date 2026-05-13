@@ -115,12 +115,14 @@ public class CaptureMetaController {
             @PathVariable("captureId") Integer captureId,
             @RequestBody CaptureMeta newCaptureMeta
     ) {
+        newCaptureMeta.setCaptureId(captureId);
         LOGGER.info("About to insert <[{}]>", newCaptureMeta);
-        JSONObject jsonErr = new JSONObject();
-        jsonErr.put("id", captureId);
         try {
             CaptureMeta cm = captureMetaMapper
-                    .create(captureId, newCaptureMeta.getCaptureMetaKey(), newCaptureMeta.getCaptureMetaValue());
+                    .create(
+                            newCaptureMeta.getCaptureId(), newCaptureMeta.getCaptureMetaKey(),
+                            newCaptureMeta.getCaptureMetaValue()
+                    );
             LOGGER.debug("Values returned <[{}]>", cm);
             JSONObject jsonObject = new JSONObject();
             jsonObject.put("id", captureId);
@@ -128,12 +130,14 @@ public class CaptureMetaController {
             return new ResponseEntity<>(jsonObject.toString(), HttpStatus.CREATED);
         }
         catch (Exception ex) {
+            JSONObject jsonErr = new JSONObject();
+            jsonErr.put("id", captureId);
             final Throwable cause = ex.getCause();
             if (cause instanceof SQLException) {
                 LOGGER.error((cause).getMessage());
                 String state = ((SQLException) cause).getSQLState();
                 if (state.equals("45000")) {
-                    jsonErr.put("message", "Capture does not exist");
+                    jsonErr.put("message", "Record does not exist");
                     return new ResponseEntity<>(jsonErr.toString(), HttpStatus.NOT_FOUND);
                 }
             }
@@ -162,11 +166,31 @@ public class CaptureMetaController {
                     }
             )
     })
-    public List<CaptureMeta> get(
+    public ResponseEntity<String> get(
+            @PathVariable("captureId") Integer captureId,
             @RequestParam(required = false) String key,
             @RequestParam(required = false) Integer version
     ) {
-        return captureMetaMapper.get(key, version);
+        LOGGER.info("About to fetch <[{},{}]>", captureId, key);
+        try {
+            List<CaptureMeta> cm = captureMetaMapper.get(captureId, key, version);
+            return new ResponseEntity<>(cm.toString(), HttpStatus.OK);
+
+        }
+        catch (Exception ex) {
+            JSONObject jsonErr = new JSONObject();
+            jsonErr.put("id", captureId);
+            final Throwable cause = ex.getCause();
+            if (cause instanceof SQLException) {
+                LOGGER.error((cause).getMessage());
+                String state = ((SQLException) cause).getSQLState();
+                if (state.equals("45000")) {
+                    jsonErr.put("message", "Record does not exist");
+                    return new ResponseEntity<>(jsonErr.toString(), HttpStatus.NOT_FOUND);
+                }
+            }
+            return new ResponseEntity<>("Unexpected error", HttpStatus.BAD_REQUEST);
+        }
     }
 
     // Delete

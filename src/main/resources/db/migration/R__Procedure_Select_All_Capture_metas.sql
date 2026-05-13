@@ -45,7 +45,7 @@
  */
 USE cfe_18;
 DELIMITER //
-CREATE OR REPLACE PROCEDURE select_all_capture_metas(meta_key VARCHAR(1024), tx_id INT)
+CREATE OR REPLACE PROCEDURE select_all_capture_metas(p_capture_id INT, meta_key VARCHAR(1024), tx_id INT)
 BEGIN
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
         BEGIN
@@ -58,14 +58,20 @@ BEGIN
     ELSE
         SET @time = tx_id;
     END IF;
-    
+
+    if((select count(*) from cfe_18.capture_meta where capture_id=p_capture_id)=0) THEN
+        SELECT JSON_OBJECT('id', p_capture_id, 'message', 'Capture does not have metadata') INTO @cm;
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = @cm;
+    END IF;
+
     IF meta_key IS NULL THEN
         SELECT cm.capture_id     AS capture_id,
                cmk.meta_key_name AS capture_meta_key,
                cm.meta_value     AS capture_meta_value
         FROM cfe_18.capture_meta FOR SYSTEM_TIME AS OF TRANSACTION @time cm
                  INNER JOIN cfe_18.capture_meta_key FOR SYSTEM_TIME AS OF TRANSACTION @time cmk
-                            ON cm.meta_key_id = cmk.meta_key_id;
+                            ON cm.meta_key_id = cmk.meta_key_id
+        where capture_id=p_capture_id;
     ELSE
         SELECT cm.capture_id     AS capture_id,
                cmk.meta_key_name AS capture_meta_key,
@@ -73,7 +79,7 @@ BEGIN
         FROM cfe_18.capture_meta FOR SYSTEM_TIME AS OF TRANSACTION @time cm
                  INNER JOIN cfe_18.capture_meta_key FOR SYSTEM_TIME AS OF TRANSACTION @time cmk
                             ON cm.meta_key_id = cmk.meta_key_id
-        WHERE cmk.meta_key_name = meta_key;
+        WHERE cmk.meta_key_name = meta_key and capture_id=p_capture_id;
 
     END IF;
     COMMIT;
