@@ -159,7 +159,6 @@ public class ApiUtilityControllerTest extends TestSpringBootInformation {
     @Test
     @Order(5)
     public void testVersionCanBeFetched() {
-
         HttpGet requestGet = new HttpGet("http://localhost:" + port + "/v2/meta/data-version");
 
         requestGet.setHeader("Authorization", "Bearer " + token);
@@ -172,6 +171,10 @@ public class ApiUtilityControllerTest extends TestSpringBootInformation {
         String responseStringGet = Assertions.assertDoesNotThrow(() -> EntityUtils.toString(entityGet, "UTF-8"));
 
         int version = Integer.parseInt(responseStringGet);
+
+        TestApiClient testApiClient = new TestApiClient(port, token);
+
+        HttpResponse response = testApiClient.deleteFlow(1);
 
         HttpGet requestFlow = new HttpGet("http://localhost:" + port + "/flow?version=" + version);
 
@@ -192,6 +195,7 @@ public class ApiUtilityControllerTest extends TestSpringBootInformation {
         String expectedJson = new Gson().toJson(expected);
 
         assertEquals(expectedJson, flowAsResponseString);
+        assertEquals(HttpStatus.SC_OK, response.getStatusLine().getStatusCode());
         assertEquals(HttpStatus.SC_OK, responseFlow.getStatusLine().getStatusCode());
 
     }

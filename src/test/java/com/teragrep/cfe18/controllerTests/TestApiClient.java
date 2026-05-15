@@ -49,6 +49,7 @@ import com.google.gson.Gson;
 import com.teragrep.cfe18.handlers.entities.*;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
+import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpPut;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
@@ -89,6 +90,13 @@ public class TestApiClient {
         JSONObject flowAsJson = Assertions.assertDoesNotThrow(() -> new JSONObject(flowAsResponse));
 
         return Assertions.assertDoesNotThrow(() -> flowAsJson.getInt("id"));
+    }
+
+    public HttpResponse deleteFlow(final Integer flowId) {
+        HttpDelete flowRequest = new HttpDelete("http://localhost:" + port + "/flow/" + flowId);
+        flowRequest.setHeader("Authorization", "Bearer " + token);
+
+        return Assertions.assertDoesNotThrow(() -> HttpClientBuilder.create().build().execute(flowRequest));
     }
 
     public Integer insertSink(final Integer flowId, final String sinkPort, final String ip, final String protocol) {
