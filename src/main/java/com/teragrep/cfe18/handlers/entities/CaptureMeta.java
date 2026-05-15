@@ -80,7 +80,10 @@ public class CaptureMeta {
 
     @Override
     public String toString() {
-        return "{" + "captureId=" + captureId + ", captureMetaKey='" + captureMetaKey + '\'' + ", captureMetaValue='"
-                + captureMetaValue + '\'' + '}';
+        return "CaptureMeta{" +
+                "captureId=" + captureId +
+                ", captureMetaKey='" + captureMetaKey + '\'' +
+                ", captureMetaValue='" + captureMetaValue + '\'' +
+                '}';
     }
 }
