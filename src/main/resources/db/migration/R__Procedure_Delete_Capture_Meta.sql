@@ -56,13 +56,12 @@ BEGIN
 
     -- remove all capture meta from capture if key is null
     IF (meta_key) IS NULL THEN
-        DELETE cm.*, cmk.*
+        DELETE cm.*
         FROM cfe_18.capture_meta cm
-                 INNER JOIN capture_meta_key cmk ON cm.meta_key_id = cmk.meta_key_id
         WHERE cm.capture_id = capture_id;
     ELSE
         -- delete from capture with the given key
-        DELETE cm.*, cmk.*
+        DELETE cm.*
         FROM cfe_18.capture_meta cm
                  INNER JOIN capture_meta_key cmk ON cm.meta_key_id = cmk.meta_key_id
         WHERE cm.capture_id = capture_id
