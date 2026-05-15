@@ -69,11 +69,10 @@ BEGIN
         SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = @nometa;
     END IF;
 
-    SELECT cd.id             AS capture_id,
+    SELECT cm.capture_id     AS capture_id,
            cmk.meta_key_name AS capture_meta_key,
            cm.meta_value     AS capture_meta_value
     FROM cfe_18.capture_meta FOR SYSTEM_TIME AS OF TRANSACTION @time cm
-             INNER JOIN cfe_18.capture_definition FOR SYSTEM_TIME AS OF TRANSACTION @time cd ON cd.id = cm.capture_id
              INNER JOIN cfe_18.capture_meta_key FOR SYSTEM_TIME AS OF TRANSACTION @time cmk
                         ON cm.meta_key_id = cmk.meta_key_id
     WHERE cm.capture_id = capture_id;
