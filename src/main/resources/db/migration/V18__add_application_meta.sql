@@ -48,6 +48,7 @@ use cfe_18;
 create table capture_meta_key (
     meta_key_id int auto_increment primary key,
     meta_key_name varchar(1024),
+    UNIQUE (meta_key_name),
     start_trxid BIGINT UNSIGNED GENERATED ALWAYS AS ROW START INVISIBLE,
     end_trxid BIGINT UNSIGNED GENERATED ALWAYS AS ROW END INVISIBLE,
     PERIOD FOR SYSTEM_TIME(start_trxid, end_trxid)
