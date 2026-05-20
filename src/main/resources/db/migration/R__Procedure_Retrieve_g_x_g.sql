@@ -63,16 +63,16 @@ BEGIN
     if ((select capture_def_group_name
          from cfe_18.capture_def_group for system_time as of transaction @time
          where capture_def_group_name = grp_name) and
-        (select groupName
+        (select group_name
          from cfe_18.host_group for system_time as of transaction @time
-         where groupName = grp_name)) is null then
+         where group_name = grp_name)) is null then
         SIGNAL SQLSTATE '45000' set MYSQL_ERRNO = 50000;
     end if;
 
     -- return resultset accordingly
     select distinct hgxcdg.id                  as g_x_g_id,
                     cdg.capture_def_group_name as capture_name,
-                    hg.groupName               as host_name,
+                    hg.group_name               as host_name,
                     hg.host_type               as host_type,
                     cdg.capture_type           as capture_type,
                     hg.id                      as host_group_id,
@@ -81,7 +81,7 @@ BEGIN
              inner join capture_def_group for system_time as of transaction @time cdg
                         on hgxcdg.capture_group_id = cdg.id
              inner join cfe_18.host_group for system_time as of transaction @time hg on hgxcdg.host_group_id = hg.id
-    where hg.groupName = grp_name
+    where hg.group_name = grp_name
        or cdg.capture_def_group_name = grp_name;
     COMMIT;
 END;

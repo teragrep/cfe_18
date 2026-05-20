@@ -160,71 +160,10 @@ public class GXGControllerTest extends TestSpringBootInformation {
 
     @Test
     @Order(2)
-    public void testAddHostGroup() throws Exception {
-        // Host
-        HostRelp relpHost = new HostRelp();
-        relpHost.setMd5("relpHostmd5");
-        relpHost.setFqHost("relpHostfq");
-
-        String json = gson.toJson(relpHost);
-
-        // forms the json to requestEntity
-        StringEntity requestEntity = new StringEntity(String.valueOf(json), ContentType.APPLICATION_JSON);
-
-        // Creates the request
-        HttpPut request = new HttpPut("http://localhost:" + port + "/host/relp");
-        // set requestEntity to the put request
-        request.setEntity(requestEntity);
-        // Header
-        request.setHeader("Authorization", "Bearer " + token);
-
-        // Get the response from endpoint
-        HttpClientBuilder.create().build().execute(request);
-
-        // Host Group
-        HostGroup relpHostGroup = new HostGroup();
-        relpHostGroup.setHost_id(1);
-        relpHostGroup.setHost_group_name("hostgroup1");
-
-        String jsonGroup = gson.toJson(relpHostGroup);
-
-        // forms the json to requestEntity
-        StringEntity requestEntityGroup = new StringEntity(String.valueOf(jsonGroup), ContentType.APPLICATION_JSON);
-
-        // Creates the request
-        HttpPut requestGroup = new HttpPut("http://localhost:" + port + "/host/group");
-        // set requestEntity to the put request
-        requestGroup.setEntity(requestEntityGroup);
-        // Header
-        requestGroup.setHeader("Authorization", "Bearer " + token);
-
-        // Get the response from endpoint
-        HttpResponse httpResponse = HttpClientBuilder.create().build().execute(requestGroup);
-
-        // Get the entity from response
-        HttpEntity entity = httpResponse.getEntity();
-
-        // Entity response string
-        String responseString = EntityUtils.toString(entity);
-
-        // Parsin respponse as JSONObject
-        JSONObject responseAsJson = new JSONObject(responseString);
-
-        // Creating expected message as JSON Object from the data that was sent towards endpoint
-        String expected = "New host group created with name = hostgroup1";
-
-        // Creating string from Json that was given as a response
-        String actual = responseAsJson.get("message").toString();
-
-        // Assertions
-        assertEquals(expected, actual);
-        assertThat(httpResponse.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_CREATED));
-
-    }
-
-    @Test
-    @Order(3)
     public void testAddLinkage() throws Exception {
+        TestApiClient testApiClient = new TestApiClient(port, token);
+        testApiClient.insertHostGroup("hostgroup1", IntegrationType.RELP);
+
         // Linkage
         Linkage linkage = new Linkage();
         linkage.setCapture_group_id(1);
@@ -267,38 +206,7 @@ public class GXGControllerTest extends TestSpringBootInformation {
     }
 
     @Test
-    @Order(4)
-    public void testRetrieveHostGroup() throws Exception {
-        ArrayList<HostGroup> expected = new ArrayList<>();
-        HostGroup hostGroup = new HostGroup();
-        hostGroup.setHost_id(1);
-        hostGroup.setHost_group_name("hostgroup1");
-        hostGroup.setMd5("relpHostmd5");
-        hostGroup.setId(1);
-        hostGroup.setHost_group_type(IntegrationType.RELP);
-
-        expected.add(hostGroup);
-
-        String expectedJson = new Gson().toJson(expected);
-
-        // Asserting get request
-        HttpGet requestGet = new HttpGet("http://localhost:" + port + "/host/group/hostgroup1");
-
-        requestGet.setHeader("Authorization", "Bearer " + token);
-
-        HttpResponse responseGet = HttpClientBuilder.create().build().execute(requestGet);
-
-        HttpEntity entityGet = responseGet.getEntity();
-
-        String responseStringGet = EntityUtils.toString(entityGet, "UTF-8");
-
-        assertEquals(expectedJson, responseStringGet);
-        assertThat(responseGet.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_OK));
-
-    }
-
-    @Test
-    @Order(5)
+    @Order(3)
     public void testRetrieveLinkage() throws Exception {
         ArrayList<Linkage> expected = new ArrayList<>();
         Linkage linkage = new Linkage();
@@ -331,38 +239,7 @@ public class GXGControllerTest extends TestSpringBootInformation {
     }
 
     @Test
-    @Order(6)
-    public void testRetrieveAllHostGroups() throws Exception {
-        ArrayList<HostGroup> expected = new ArrayList<>();
-        HostGroup hostGroup = new HostGroup();
-        hostGroup.setHost_id(1);
-        hostGroup.setHost_group_name("hostgroup1");
-        hostGroup.setMd5("relpHostmd5");
-        hostGroup.setId(1);
-        hostGroup.setHost_group_type(IntegrationType.RELP);
-
-        expected.add(hostGroup);
-
-        String expectedJson = new Gson().toJson(expected);
-
-        // Asserting get request
-        HttpGet requestGet = new HttpGet("http://localhost:" + port + "/host/group");
-
-        requestGet.setHeader("Authorization", "Bearer " + token);
-
-        HttpResponse responseGet = HttpClientBuilder.create().build().execute(requestGet);
-
-        HttpEntity entityGet = responseGet.getEntity();
-
-        String responseStringGet = EntityUtils.toString(entityGet, "UTF-8");
-
-        assertEquals(expectedJson, responseStringGet);
-        assertThat(responseGet.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_OK));
-
-    }
-
-    @Test
-    @Order(7)
+    @Order(4)
     public void testRetrieveAllLinkages() throws Exception {
 
         ArrayList<Linkage> expected = new ArrayList<>();
@@ -396,61 +273,7 @@ public class GXGControllerTest extends TestSpringBootInformation {
     }
 
     @Test
-    @Order(8)
-    public void testDeleteHostGroupInUse() throws Exception {
-        // hostgroup1
-        HttpDelete delete = new HttpDelete("http://localhost:" + port + "/host/group/hostgroup1");
-
-        // Header
-        delete.setHeader("Authorization", "Bearer " + token);
-
-        HttpResponse deleteResponse = HttpClientBuilder.create().build().execute(delete);
-
-        HttpEntity entityDelete = deleteResponse.getEntity();
-
-        String responseStringGet = EntityUtils.toString(entityDelete, "UTF-8");
-
-        // Parsin respponse as JSONObject
-        JSONObject responseAsJson = new JSONObject(responseStringGet);
-
-        // Creating string from Json that was given as a response
-        String actual = responseAsJson.get("message").toString();
-        // Creating expected message as JSON Object from the data that was sent towards endpoint
-        String expected = "Is in use";
-
-        assertEquals(expected, actual);
-        assertThat(deleteResponse.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_CONFLICT));
-    }
-
-    @Test
-    @Order(9)
-    public void testDeleteNonExistentHostGroup() throws Exception {
-        HttpDelete delete = new HttpDelete("http://localhost:" + port + "/host/group/124");
-
-        // Header
-        delete.setHeader("Authorization", "Bearer " + token);
-
-        HttpResponse deleteResponse = HttpClientBuilder.create().build().execute(delete);
-
-        HttpEntity entityDelete = deleteResponse.getEntity();
-
-        String responseStringGet = EntityUtils.toString(entityDelete, "UTF-8");
-
-        // Parsin respponse as JSONObject
-        JSONObject responseAsJson = new JSONObject(responseStringGet);
-
-        // Creating string from Json that was given as a response
-        String actual = responseAsJson.get("message").toString();
-
-        // Creating expected message as JSON Object from the data that was sent towards endpoint
-        String expected = "Record does not exist";
-
-        assertThat(deleteResponse.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_NOT_FOUND));
-        assertEquals(expected, actual);
-    }
-
-    @Test
-    @Order(10)
+    @Order(6)
     public void testDeleteNonExistentLinkage() throws Exception {
         HttpDelete delete = new HttpDelete("http://localhost:" + port + "/capture/groups/linkage/125");
 
@@ -477,7 +300,7 @@ public class GXGControllerTest extends TestSpringBootInformation {
     }
 
     @Test
-    @Order(11)
+    @Order(7)
     public void testDeleteLinkage() throws Exception {
         HttpDelete delete = new HttpDelete("http://localhost:" + port + "/capture/groups/linkage/1");
 
@@ -498,34 +321,6 @@ public class GXGControllerTest extends TestSpringBootInformation {
 
         // Creating expected message as JSON Object from the data that was sent towards endpoint
         String expected = "Linkage with id = 1 deleted.";
-
-        assertThat(deleteResponse.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_OK));
-        assertEquals(expected, actual);
-    }
-
-    @Test
-    @Order(12)
-    public void testDeleteHostGroup() throws Exception {
-        //groupRelp
-        HttpDelete delete = new HttpDelete("http://localhost:" + port + "/host/group/hostgroup1");
-
-        // Header
-        delete.setHeader("Authorization", "Bearer " + token);
-
-        HttpResponse deleteResponse = HttpClientBuilder.create().build().execute(delete);
-
-        HttpEntity entityDelete = deleteResponse.getEntity();
-
-        String responseStringGet = EntityUtils.toString(entityDelete, "UTF-8");
-
-        // Parsin respponse as JSONObject
-        JSONObject responseAsJson = new JSONObject(responseStringGet);
-
-        // Creating string from Json that was given as a response
-        String actual = responseAsJson.get("message").toString();
-
-        // Creating expected message as JSON Object from the data that was sent towards endpoint
-        String expected = "Host Group hostgroup1 deleted.";
 
         assertThat(deleteResponse.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_OK));
         assertEquals(expected, actual);
