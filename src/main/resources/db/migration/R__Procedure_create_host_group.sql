@@ -43,9 +43,10 @@
  * Teragrep, the applicable Commercial License may apply to this file if you as
  * a licensee so wish it.
  */
-use cfe_18;
+USE cfe_18;
 DELIMITER //
-CREATE OR REPLACE PROCEDURE remove_host_group(proc_host_group_name varchar(255))
+CREATE OR REPLACE PROCEDURE insert_host_group(p_group_name VARCHAR(255), host_type VARCHAR(64))
+
 BEGIN
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
         BEGIN
@@ -53,11 +54,13 @@ BEGIN
             RESIGNAL;
         END;
     START TRANSACTION;
-    if (select id from cfe_18.host_group where groupName = proc_host_group_name) is null then
-        SIGNAL SQLSTATE '45000' set MYSQL_ERRNO = 50000;
-    end if;
 
-    delete from cfe_18.host_group where groupName = proc_host_group_name;
+    -- check if the group exists. If not then create said group
+    IF ((SELECT COUNT(id) FROM cfe_18.host_group WHERE group_name = p_group_name) = 0) THEN
+        INSERT INTO cfe_18.host_group(group_name, host_type) VALUES (p_group_name, host_type);
+    END IF;
+
+    SELECT id AS id FROM cfe_18.host_group WHERE group_name = p_group_name;
     COMMIT;
 END;
 //

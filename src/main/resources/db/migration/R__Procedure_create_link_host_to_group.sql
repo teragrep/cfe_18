@@ -43,28 +43,51 @@
  * Teragrep, the applicable Commercial License may apply to this file if you as
  * a licensee so wish it.
  */
-use cfe_18;
+USE cfe_18;
 DELIMITER //
-CREATE OR REPLACE PROCEDURE retrieve_all_host_groups(tx_id int)
+CREATE OR REPLACE PROCEDURE insert_host_to_group(p_host_group_id INT, p_host_id INT)
+
 BEGIN
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
         BEGIN
             ROLLBACK;
             RESIGNAL;
-        end;
-        if(tx_id) is null then
-             set @time = (select max(transaction_id) from mysql.transaction_registry);
-        else
-             set @time=tx_id;
-        end if;
-    select hg.id        as host_group_id,
-           hg.groupName as host_group_name,
-           hg.host_type as host_group_type,
-           h.id         as host_id,
-           h.MD5        as host_md5
-    from cfe_18.host_group for system_time as of transaction @time hg
-             inner join cfe_18.host_group_x_host for system_time as of transaction @time hgxh on hg.id = hgxh.host_group_id
-             inner join cfe_18.host for system_time as of transaction @time h on hgxh.host_id = h.id;
-end;
+        END;
+    START TRANSACTION;
+
+    IF ((SELECT COUNT(h.id) FROM cfe_18.host h WHERE h.id = p_host_id) = 0) THEN
+        SIGNAL SQLSTATE '45000' SET MYSQL_ERRNO = 50000;
+    END IF;
+
+    IF ((SELECT COUNT(hg.id) FROM cfe_18.host_group hg WHERE hg.id = p_host_group_id) = 0) THEN
+        SIGNAL SQLSTATE '45000' SET MYSQL_ERRNO = 50000;
+    END IF;
+
+    -- type check
+    IF ((SELECT COUNT(h.id)
+         FROM cfe_18.host h
+         WHERE h.host_type = (SELECT host_type FROM cfe_18.host_group hg WHERE hg.id = p_host_group_id)
+           AND h.id = p_host_id) = 0) THEN
+        SIGNAL SQLSTATE '45000' SET MYSQL_ERRNO = 50010;
+    END IF;
+
+    SELECT host_type INTO @type FROM cfe_18.host_group hg WHERE hg.id = p_host_group_id;
+
+    IF ((SELECT COUNT(host_group_id)
+         FROM cfe_18.host_group_x_host hgxh
+         WHERE hgxh.host_group_id = p_host_group_id
+           AND hgxh.host_id = p_host_id) = 0) THEN
+        INSERT INTO cfe_18.host_group_x_host (host_id, host_group_id, host_type)
+        VALUES (p_host_id, p_host_group_id, @type);
+
+    END IF;
+
+    SELECT hgxh2.host_group_id AS id
+    FROM cfe_18.host_group_x_host hgxh2
+    WHERE hgxh2.host_group_id = p_host_group_id
+      AND hgxh2.host_type = @type
+      AND hgxh2.host_id = p_host_id;
+    COMMIT;
+END;
 //
 DELIMITER ;

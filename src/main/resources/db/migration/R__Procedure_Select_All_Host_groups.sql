@@ -43,32 +43,24 @@
  * Teragrep, the applicable Commercial License may apply to this file if you as
  * a licensee so wish it.
  */
-use cfe_18;
+USE cfe_18;
 DELIMITER //
-create trigger if not exists Host_cant_have_duplicate_tag
-    before insert
-    on cfe_18.host_group_x_host
-    for each row
-begin
-    declare truthvalue int;
-    select if(count(DISTINCT ldgxld.tag_id) = count(ldgxld.tag_id), true, false)
-    into truthvalue
-    from cfe_18.capture_def_group_x_capture_def ldgxld
-             INNER JOIN (select distinct hgxh.capture_group_id, hgxh.host_group_id
-                         from cfe_18.host_groups_x_capture_def_group hgxh
-                                  INNER JOIN (select distinct hgxh.host_group_id, hgxh.host_id
-                                              from host_group_x_host hgxh
-                                                       INNER JOIN (select hid.host_id
-                                                                   from host_group_x_host hid) ch
-                                                                  on hgxh.host_group_id
-                                              where hgxh.host_id = new.host_id
-                                                 or hgxh.host_group_id = new.host_group_id) hchdt
-                                             on hgxh.capture_group_id = hchdt.host_group_id) ctftlg
-                        on ldgxld.capture_def_group_id = ctftlg.capture_group_id;
-    if truthvalue = 0 then
-        signal sqlstate '45000' set MYSQL_ERRNO =50040;
-    end if;
-end;
+CREATE OR REPLACE PROCEDURE select_all_host_groups(tx_id INT)
+BEGIN
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+        BEGIN
+            ROLLBACK;
+            RESIGNAL;
+        END;
+    IF (tx_id) IS NULL THEN
+        SET @time = (SELECT MAX(transaction_id) FROM mysql.transaction_registry);
+    ELSE
+        SET @time = tx_id;
+    END IF;
+    SELECT hg.id         AS host_group_id,
+           hg.group_name AS host_group_name,
+           hg.host_type  AS host_group_type
+    FROM cfe_18.host_group FOR SYSTEM_TIME AS OF TRANSACTION @time hg;
+END;
 //
 DELIMITER ;
-

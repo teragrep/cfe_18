@@ -45,7 +45,7 @@
  */
 package com.teragrep.cfe18.handlers;
 
-import com.teragrep.cfe18.HostGroupMapper;
+import com.teragrep.cfe18.HostGroupsMapper;
 import com.teragrep.cfe18.handlers.entities.HostGroup;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -67,11 +67,11 @@ import javax.sql.DataSource;
 import java.util.List;
 
 @RestController
-@RequestMapping(path = "host")
+@RequestMapping(path = "v2/hosts/groups")
 @SecurityRequirement(name = "api")
-public class HostGroupController {
+public class HostGroupsController {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(HostGroupController.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(HostGroupsController.class);
 
     @Autowired
     DataSource dataSource;
@@ -80,15 +80,49 @@ public class HostGroupController {
     SqlSessionTemplate sqlSessionTemplate;
 
     @Autowired
-    HostGroupMapper hostGroupMapper;
+    HostGroupsMapper hostGroupsMapper;
+
+    @RequestMapping(
+            path = "",
+            method = RequestMethod.PUT,
+            produces = "application/json"
+    )
+    @Operation(summary = "Insert host group")
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "201",
+                    description = "New host group created",
+                    content = {
+                            @Content(
+                                    mediaType = "application/json",
+                                    schema = @Schema(implementation = HostGroup.class)
+                            )
+                    }
+            ),
+            @ApiResponse(
+                    responseCode = "500",
+                    description = "Internal server error, contact admin",
+                    content = @Content
+            )
+    })
+    public ResponseEntity<String> create(@RequestBody HostGroup newHostGroup) {
+        LOGGER.info("About to insert <[{}]>", newHostGroup);
+        HostGroup hg = hostGroupsMapper.create(newHostGroup.getHost_group_name(), newHostGroup.getHost_group_type());
+        LOGGER.debug("Values returned <[{}]>", hg);
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("id", hg.getId());
+        jsonObject.put("message", "New host group created");
+        return new ResponseEntity<>(jsonObject.toString(), HttpStatus.CREATED);
+
+    }
 
     // Get host group details
     @RequestMapping(
-            path = "/group/{name}",
+            path = "/{id}",
             method = RequestMethod.GET,
             produces = "application/json"
     )
-    @Operation(summary = "Fetch host group by name")
+    @Operation(summary = "Fetch host group")
     @ApiResponses(value = {
             @ApiResponse(
                     responseCode = "200",
@@ -102,7 +136,7 @@ public class HostGroupController {
             ),
             @ApiResponse(
                     responseCode = "400",
-                    description = "Host group does not exist with the given host group name",
+                    description = "Host group does not exist",
                     content = @Content
             ),
             @ApiResponse(
@@ -111,17 +145,17 @@ public class HostGroupController {
                     content = @Content
             )
     })
-    public ResponseEntity<?> getResults(
-            @PathVariable("name") String name,
+    public ResponseEntity<?> get(
+            @PathVariable("id") final Integer id,
             @RequestParam(required = false) Integer version
     ) {
-        List<HostGroup> hg = hostGroupMapper.getHostGroupByName(name, version);
+        HostGroup hg = hostGroupsMapper.get(id, version);
         return new ResponseEntity<>(hg, HttpStatus.OK);
 
     }
 
     @RequestMapping(
-            path = "/group",
+            path = "",
             method = RequestMethod.GET,
             produces = "application/json"
     )
@@ -141,53 +175,13 @@ public class HostGroupController {
                     }
             )
     })
-    public List<HostGroup> getAllHostGroup(@RequestParam(required = false) Integer version) {
-        return hostGroupMapper.getAllHostGroup(version);
-    }
-
-    // Insert host group with host
-    @RequestMapping(
-            path = "/group",
-            method = RequestMethod.PUT,
-            produces = "application/json"
-    )
-    @Operation(summary = "Insert host group with host")
-    @ApiResponses(value = {
-            @ApiResponse(
-                    responseCode = "201",
-                    description = "New host group created AND/OR host linked to host group",
-                    content = {
-                            @Content(
-                                    mediaType = "application/json",
-                                    schema = @Schema(implementation = HostGroup.class)
-                            )
-                    }
-            ),
-            @ApiResponse(
-                    responseCode = "400",
-                    description = "Type mismatch between host group and host OR Host does not exist",
-                    content = @Content
-            ),
-            @ApiResponse(
-                    responseCode = "500",
-                    description = "Internal server error, contact admin",
-                    content = @Content
-            )
-    })
-    public ResponseEntity<String> newHostGroup(@RequestBody HostGroup newHostGroup) {
-        LOGGER.info("About to insert <[{}]>", newHostGroup);
-        HostGroup hg = hostGroupMapper.addNewHostGroup(newHostGroup.getHost_id(), newHostGroup.getHost_group_name());
-        LOGGER.debug("Values returned <[{}]>", hg);
-        JSONObject jsonObject = new JSONObject();
-        jsonObject.put("host_group_id", hg.getId());
-        jsonObject.put("message", "New host group created with name = " + hg.getHost_group_name());
-        return new ResponseEntity<>(jsonObject.toString(), HttpStatus.CREATED);
-
+    public List<HostGroup> getAll(@RequestParam(required = false) Integer version) {
+        return hostGroupsMapper.getAll(version);
     }
 
     // Delete
     @RequestMapping(
-            path = "/group/{name}",
+            path = "/{id}",
             method = RequestMethod.DELETE,
             produces = MediaType.APPLICATION_JSON_VALUE
     )
@@ -214,11 +208,11 @@ public class HostGroupController {
                     content = @Content
             )
     })
-    public ResponseEntity<String> removeHost(@PathVariable("name") String name) {
-        LOGGER.info("Deleting Host Group <[{}]>", name);
-        hostGroupMapper.deleteHostGroup(name);
+    public ResponseEntity<String> delete(@PathVariable("id") final Integer id) {
+        LOGGER.info("Deleting Host Group <[{}]>", id);
+        hostGroupsMapper.delete(id);
         JSONObject j = new JSONObject();
-        j.put("message", "Host Group " + name + " deleted.");
+        j.put("message", "Host Group deleted.");
         return new ResponseEntity<>(j.toString(), HttpStatus.OK);
 
     }
