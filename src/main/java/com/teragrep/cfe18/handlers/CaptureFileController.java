@@ -65,7 +65,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.sql.DataSource;
-import java.sql.SQLException;
 import java.util.List;
 
 @RestController
@@ -109,27 +108,19 @@ public class CaptureFileController {
     })
     public ResponseEntity<String> create(@RequestBody CaptureFile newCapture) {
         LOGGER.info("About to insert <[{}]>", newCapture);
-        try {
-            CaptureFile c = captureFileMapper
-                    .create(
-                            newCapture.getTag(), newCapture.getRetentionTime(), newCapture.getCategory(),
-                            newCapture.getApplication(), newCapture.getIndex(), newCapture.getSourceType(),
-                            newCapture.getProtocol(), newCapture.getFlow(), newCapture.getTagPath(),
-                            newCapture.getCapturePath(), newCapture.getFileProcessingTypeId()
-                    );
-            LOGGER.debug("Values returned <[{}]>", c);
-            JSONObject jsonObjectFile = new JSONObject();
-            jsonObjectFile.put("id", c.getId());
-            jsonObjectFile.put("message", "New capture created");
-            return new ResponseEntity<>(jsonObjectFile.toString(), HttpStatus.CREATED);
-        }
-        catch (RuntimeException ex) {
-            LOGGER.error(ex.getMessage());
-            JSONObject jsonErr = new JSONObject();
-            jsonErr.put("id", newCapture.getId());
-            jsonErr.put("message", ex.getCause().toString());
-            return new ResponseEntity<>(jsonErr.toString(), HttpStatus.BAD_REQUEST);
-        }
+
+        CaptureFile c = captureFileMapper
+                .create(
+                        newCapture.getTag(), newCapture.getRetentionTime(), newCapture.getCategory(),
+                        newCapture.getApplication(), newCapture.getIndex(), newCapture.getSourceType(),
+                        newCapture.getProtocol(), newCapture.getFlow(), newCapture.getTagPath(),
+                        newCapture.getCapturePath(), newCapture.getFileProcessingTypeId()
+                );
+        LOGGER.debug("Values returned <[{}]>", c);
+        JSONObject jsonObjectFile = new JSONObject();
+        jsonObjectFile.put("id", c.getId());
+        jsonObjectFile.put("message", "New capture created");
+        return new ResponseEntity<>(jsonObjectFile.toString(), HttpStatus.CREATED);
 
     }
 
@@ -162,26 +153,9 @@ public class CaptureFileController {
             )
     })
     public ResponseEntity<?> get(@PathVariable("id") int id, @RequestParam(required = false) Integer version) {
-        try {
-            CaptureFile c = captureFileMapper.get(id, version);
-            return new ResponseEntity<>(c, HttpStatus.OK);
-        }
-        catch (RuntimeException ex) {
-            LOGGER.error(ex.getMessage());
-            JSONObject jsonErr = new JSONObject();
-            jsonErr.put("id", id);
-            jsonErr.put("message", ex.getCause().toString());
-            final Throwable cause = ex.getCause();
-            if (cause instanceof SQLException) {
-                LOGGER.error((cause).getMessage());
-                String state = ((SQLException) cause).getSQLState();
-                if (state.equals("45000")) {
-                    jsonErr.put("message", "Record does not exist");
-                    return new ResponseEntity<>(jsonErr.toString(), HttpStatus.NOT_FOUND);
-                }
-            }
-            return new ResponseEntity<>(jsonErr.toString(), HttpStatus.BAD_REQUEST);
-        }
+        CaptureFile c = captureFileMapper.get(id, version);
+        return new ResponseEntity<>(c, HttpStatus.OK);
+
     }
 
     @RequestMapping(
@@ -239,32 +213,10 @@ public class CaptureFileController {
     })
     public ResponseEntity<String> delete(@PathVariable("id") int id) {
         LOGGER.info("Deleting capture with id <[{}]>", id);
-        try {
-            captureFileMapper.delete(id);
-            JSONObject j = new JSONObject();
-            j.put("id", id);
-            j.put("message", "Capture deleted");
-            return new ResponseEntity<>(j.toString(), HttpStatus.OK);
-        }
-        catch (RuntimeException ex) {
-            LOGGER.error(ex.getMessage());
-            JSONObject jsonErr = new JSONObject();
-            jsonErr.put("id", id);
-            jsonErr.put("message", ex.getCause().getMessage());
-            final Throwable cause = ex.getCause();
-            if (cause instanceof SQLException) {
-                LOGGER.error((cause).getMessage());
-                String state = ((SQLException) cause).getSQLState();
-                if (state.equals("23000")) {
-                    jsonErr.put("message", "Is in use");
-                    return new ResponseEntity<>(jsonErr.toString(), HttpStatus.BAD_REQUEST);
-                }
-                else if (state.equals("45000")) {
-                    jsonErr.put("message", "Record does not exist");
-                    return new ResponseEntity<>(jsonErr.toString(), HttpStatus.NOT_FOUND);
-                }
-            }
-            return new ResponseEntity<>(jsonErr.toString(), HttpStatus.BAD_REQUEST);
-        }
+        captureFileMapper.delete(id);
+        JSONObject j = new JSONObject();
+        j.put("id", id);
+        j.put("message", "Capture deleted");
+        return new ResponseEntity<>(j.toString(), HttpStatus.OK);
     }
 }

@@ -43,37 +43,35 @@
  * Teragrep, the applicable Commercial License may apply to this file if you as
  * a licensee so wish it.
  */
-USE cfe_18;
-DELIMITER //
-CREATE OR REPLACE PROCEDURE select_capture_definition(id INT, tx_id INT)
-BEGIN
-    DECLARE EXIT HANDLER FOR SQLEXCEPTION
-        BEGIN
-            ROLLBACK;
-            RESIGNAL;
-        END;
-    IF (tx_id) IS NULL THEN
-        SET @time = (SELECT MAX(transaction_id) FROM mysql.transaction_registry);
-    ELSE
-        SET @time = tx_id;
-    END IF;
+package com.teragrep.cfe18;
 
-    if ((select count(*) from cfe_18.capture_definition FOR SYSTEM_TIME AS OF TRANSACTION @time c where c.id = id) = 0) then
-        signal sqlstate '45000' set MYSQL_ERRNO = 8000;
-    end if;
-    SELECT c.id                 AS id,
-           t.tag                AS tag,
-           cs.captureSourceType AS sourcetype,
-           a.app                AS application,
-           ci.captureIndex      AS capture_index
-    FROM cfe_18.capture_definition c
-             INNER JOIN cfe_18.tags FOR SYSTEM_TIME AS OF TRANSACTION @time t ON t.id = c.tag_id
-             INNER JOIN cfe_18.captureSourcetype FOR SYSTEM_TIME AS OF TRANSACTION @time cs
-                        ON c.captureSourcetype_id = cs.id
-             INNER JOIN cfe_18.application FOR SYSTEM_TIME AS OF TRANSACTION @time a ON c.application_id = a.id
-             INNER JOIN cfe_18.captureIndex FOR SYSTEM_TIME AS OF TRANSACTION @time ci ON c.captureIndex_id = ci.id
-    where c.id = id;
+import org.springframework.http.HttpStatus;
 
-END;
-//
-DELIMITER ;
+public enum MariaDBError {
+
+    MISSING(8000, HttpStatus.NOT_FOUND, "Record does not exist"),
+    INUSE(1451, HttpStatus.BAD_REQUEST, "Is in use"),
+    UNKNOWN(0, HttpStatus.INTERNAL_SERVER_ERROR, "Something went wrong"),;
+
+    private final int errorCode;
+    private final HttpStatus httpStatus;
+    private final String message;
+
+    private MariaDBError(int errorCode, HttpStatus httpStatus, String message) {
+        this.errorCode = errorCode;
+        this.httpStatus = httpStatus;
+        this.message = message;
+    }
+
+    public int errorCode() {
+        return errorCode;
+    }
+
+    public HttpStatus status() {
+        return httpStatus;
+    }
+
+    public String message() {
+        return message;
+    }
+}

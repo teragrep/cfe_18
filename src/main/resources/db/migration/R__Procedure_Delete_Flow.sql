@@ -53,9 +53,10 @@ BEGIN
             RESIGNAL;
         END;
     START TRANSACTION;
+
+
     IF ((SELECT COUNT(id) FROM cfe_18.flows WHERE id = flow_id) = 0) THEN
-        SELECT JSON_OBJECT('id', flow_id, 'message', 'Flow does not exist') INTO @f;
-        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = @f;
+        SIGNAL SQLSTATE '45000' SET MYSQL_ERRNO = 8000;
     END IF;
     DELETE FROM cfe_18.flows WHERE id = flow_id;
     COMMIT;
