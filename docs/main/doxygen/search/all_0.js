@@ -15,12 +15,14 @@ var searchData=
   ['addstorageforflow_12',['addStorageForFlow',['../interfacecom_1_1teragrep_1_1cfe18_1_1StorageMapper.html#aef8a4ad90874676bc1880127d8c380f6',1,'com::teragrep::cfe18::StorageMapper']]],
   ['addviewcontrollers_13',['addViewControllers',['../classcom_1_1teragrep_1_1cfe18_1_1WebAppConfig.html#a1f6648b09bc375618a616831e66caa08',1,'com::teragrep::cfe18::WebAppConfig']]],
   ['afterall_14',['afterAll',['../classcom_1_1teragrep_1_1cfe18_1_1controllerTests_1_1MigrateDatabaseExtension.html#a2a8a5238bcb65b5c408fd9463a06ace8',1,'com::teragrep::cfe18::controllerTests::MigrateDatabaseExtension']]],
-  ['apisessioncontroller_15',['ApiSessionController',['../classcom_1_1teragrep_1_1cfe18_1_1handlers_1_1ApiSessionController.html',1,'com::teragrep::cfe18::handlers']]],
-  ['apisessioncontroller_2ejava_16',['ApiSessionController.java',['../ApiSessionController_8java.html',1,'']]],
-  ['apisessionmapper_17',['ApiSessionMapper',['../interfacecom_1_1teragrep_1_1cfe18_1_1ApiSessionMapper.html',1,'com::teragrep::cfe18']]],
-  ['apisessionmapper_2ejava_18',['ApiSessionMapper.java',['../ApiSessionMapper_8java.html',1,'']]],
-  ['application_19',['application',['../classcom_1_1teragrep_1_1cfe18_1_1handlers_1_1entities_1_1CaptureDefinition.html#a5d0fb04303cdf369f721085a2c4feb1d',1,'com.teragrep.cfe18.handlers.entities.CaptureDefinition.application'],['../classcom_1_1teragrep_1_1cfe18_1_1handlers_1_1entities_1_1CaptureFile.html#a8bdada72af1358ae7739a7f3566f4022',1,'com.teragrep.cfe18.handlers.entities.CaptureFile.application'],['../classcom_1_1teragrep_1_1cfe18_1_1handlers_1_1entities_1_1CaptureRelp.html#a8f6e7b81c7efde55762f1f3ddbc1d9f9',1,'com.teragrep.cfe18.handlers.entities.CaptureRelp.application']]],
-  ['arch_20',['arch',['../classcom_1_1teragrep_1_1cfe18_1_1handlers_1_1entities_1_1HostMeta.html#a9d0b152d05ba6288d1491e0fe6f0681e',1,'com::teragrep::cfe18::handlers::entities::HostMeta']]],
-  ['aws_21',['AWS',['../enumcom_1_1teragrep_1_1cfe18_1_1handlers_1_1entities_1_1IntegrationType.html#a171992a88a1a8806bd74e1f114228626',1,'com::teragrep::cfe18::handlers::entities::IntegrationType']]],
-  ['azure_22',['AZURE',['../enumcom_1_1teragrep_1_1cfe18_1_1handlers_1_1entities_1_1IntegrationType.html#a0ad35f66d8c07aa5aea9e770d0a8ed93',1,'com::teragrep::cfe18::handlers::entities::IntegrationType']]]
+  ['apiutilitycontroller_15',['ApiUtilityController',['../classcom_1_1teragrep_1_1cfe18_1_1handlers_1_1ApiUtilityController.html',1,'com::teragrep::cfe18::handlers']]],
+  ['apiutilitycontroller_2ejava_16',['ApiUtilityController.java',['../ApiUtilityController_8java.html',1,'']]],
+  ['apiutilitycontrollertest_17',['ApiUtilityControllerTest',['../classcom_1_1teragrep_1_1cfe18_1_1controllerTests_1_1ApiUtilityControllerTest.html',1,'com::teragrep::cfe18::controllerTests']]],
+  ['apiutilitycontrollertest_2ejava_18',['ApiUtilityControllerTest.java',['../ApiUtilityControllerTest_8java.html',1,'']]],
+  ['apiutilitymapper_19',['ApiUtilityMapper',['../interfacecom_1_1teragrep_1_1cfe18_1_1ApiUtilityMapper.html',1,'com::teragrep::cfe18']]],
+  ['apiutilitymapper_2ejava_20',['ApiUtilityMapper.java',['../ApiUtilityMapper_8java.html',1,'']]],
+  ['application_21',['application',['../classcom_1_1teragrep_1_1cfe18_1_1handlers_1_1entities_1_1CaptureDefinition.html#a5d0fb04303cdf369f721085a2c4feb1d',1,'com.teragrep.cfe18.handlers.entities.CaptureDefinition.application'],['../classcom_1_1teragrep_1_1cfe18_1_1handlers_1_1entities_1_1CaptureFile.html#a8bdada72af1358ae7739a7f3566f4022',1,'com.teragrep.cfe18.handlers.entities.CaptureFile.application'],['../classcom_1_1teragrep_1_1cfe18_1_1handlers_1_1entities_1_1CaptureRelp.html#a8f6e7b81c7efde55762f1f3ddbc1d9f9',1,'com.teragrep.cfe18.handlers.entities.CaptureRelp.application']]],
+  ['arch_22',['arch',['../classcom_1_1teragrep_1_1cfe18_1_1handlers_1_1entities_1_1HostMeta.html#a9d0b152d05ba6288d1491e0fe6f0681e',1,'com::teragrep::cfe18::handlers::entities::HostMeta']]],
+  ['aws_23',['AWS',['../enumcom_1_1teragrep_1_1cfe18_1_1handlers_1_1entities_1_1IntegrationType.html#a171992a88a1a8806bd74e1f114228626',1,'com::teragrep::cfe18::handlers::entities::IntegrationType']]],
+  ['azure_24',['AZURE',['../enumcom_1_1teragrep_1_1cfe18_1_1handlers_1_1entities_1_1IntegrationType.html#a0ad35f66d8c07aa5aea9e770d0a8ed93',1,'com::teragrep::cfe18::handlers::entities::IntegrationType']]]
 ];

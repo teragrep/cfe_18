@@ -1,7 +1,11 @@
 <map id="com.teragrep.cfe18.controllerTests.TestApiClient.insertFlow" name="com.teragrep.cfe18.controllerTests.TestApiClient.insertFlow">
-<area shape="rect" id="Node000001" title=" " alt="" coords="347,41,563,81"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="347,117,563,157"/>
 <area shape="rect" id="Node000002" href="$classcom_1_1teragrep_1_1cfe18_1_1controllerTests_1_1CaptureMetaControllerTest.html#ad565e69f325693ebed1cd9d94ef86ba6" title=" " alt="" coords="5,5,299,45"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="333,50,299,45,299,40,333,44"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="408,113,356,85,298,60,259,48,261,43,300,55,358,80,410,108"/>
 <area shape="rect" id="Node000003" href="$classcom_1_1teragrep_1_1cfe18_1_1controllerTests_1_1TagTriggerControllerTest.html#a4de673f8ee99ef5accbf0fdb3cfcacb5" title=" " alt="" coords="30,70,274,125"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="333,78,274,85,274,80,333,73"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="333,124,274,116,274,111,333,119"/>
+<area shape="rect" id="Node000004" href="$classcom_1_1teragrep_1_1cfe18_1_1controllerTests_1_1ApiUtilityControllerTest.html#af95d613a11484708db570ebe9908f3b6" title=" " alt="" coords="33,149,271,203"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="333,156,272,163,271,158,332,150"/>
+<area shape="rect" id="Node000005" href="$classcom_1_1teragrep_1_1cfe18_1_1controllerTests_1_1ApiUtilityControllerTest.html#a54d9513e054bdf333c3b7246b502b284" title=" " alt="" coords="33,227,271,282"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="407,166,356,192,300,217,263,230,261,225,298,212,354,188,405,162"/>
 </map>

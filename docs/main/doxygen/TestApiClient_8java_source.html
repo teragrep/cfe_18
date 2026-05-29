@@ -132,269 +132,280 @@ $(document).ready(function() { init_codefold(0); });
 <div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span><span class="keyword">import</span> com.teragrep.cfe18.handlers.entities.*;</div>
 <div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span><span class="keyword">import</span> org.apache.http.HttpEntity;</div>
 <div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span><span class="keyword">import</span> org.apache.http.HttpResponse;</div>
-<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span><span class="keyword">import</span> org.apache.http.client.methods.HttpPut;</div>
-<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span><span class="keyword">import</span> org.apache.http.entity.ContentType;</div>
-<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span><span class="keyword">import</span> org.apache.http.entity.StringEntity;</div>
-<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span><span class="keyword">import</span> org.apache.http.impl.client.HttpClientBuilder;</div>
-<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span><span class="keyword">import</span> org.apache.http.util.EntityUtils;</div>
-<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span><span class="keyword">import</span> org.json.JSONObject;</div>
-<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span><span class="keyword">import</span> org.junit.jupiter.api.Assertions;</div>
-<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span> </div>
-<div class="foldopen" id="foldopen00060" data-start="{" data-end="};">
-<div class="line"><a id="l00060" name="l00060"></a><span class="lineno"><a class="line" href="classcom_1_1teragrep_1_1cfe18_1_1controllerTests_1_1TestApiClient.html">   60</a></span><span class="keyword">public</span> <span class="keyword">class </span><a class="code hl_class" href="classcom_1_1teragrep_1_1cfe18_1_1controllerTests_1_1TestApiClient.html">TestApiClient</a> {</div>
-<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span> </div>
-<div class="line"><a id="l00062" name="l00062"></a><span class="lineno"><a class="line" href="classcom_1_1teragrep_1_1cfe18_1_1controllerTests_1_1TestApiClient.html#a900519589fe56c7f540e143b28b97a5f">   62</a></span>    <span class="keyword">private</span> <span class="keyword">final</span> Gson <a class="code hl_variable" href="classcom_1_1teragrep_1_1cfe18_1_1controllerTests_1_1TestApiClient.html#a900519589fe56c7f540e143b28b97a5f">gson</a> = <span class="keyword">new</span> Gson();</div>
-<div class="line"><a id="l00063" name="l00063"></a><span class="lineno"><a class="line" href="classcom_1_1teragrep_1_1cfe18_1_1controllerTests_1_1TestApiClient.html#a5b575be8bd594a81e95c159d35d0d9fc">   63</a></span>    <span class="keyword">private</span> <span class="keyword">final</span> <span class="keywordtype">int</span> <a class="code hl_variable" href="classcom_1_1teragrep_1_1cfe18_1_1controllerTests_1_1TestApiClient.html#a5b575be8bd594a81e95c159d35d0d9fc">port</a>;</div>
-<div class="line"><a id="l00064" name="l00064"></a><span class="lineno"><a class="line" href="classcom_1_1teragrep_1_1cfe18_1_1controllerTests_1_1TestApiClient.html#a903025aeb7c75a4d20c8fb03528386ee">   64</a></span>    <span class="keyword">private</span> <span class="keyword">final</span> String <a class="code hl_variable" href="classcom_1_1teragrep_1_1cfe18_1_1controllerTests_1_1TestApiClient.html#a903025aeb7c75a4d20c8fb03528386ee">token</a>;</div>
-<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span> </div>
-<div class="foldopen" id="foldopen00066" data-start="{" data-end="}">
-<div class="line"><a id="l00066" name="l00066"></a><span class="lineno"><a class="line" href="classcom_1_1teragrep_1_1cfe18_1_1controllerTests_1_1TestApiClient.html#a4a8a8e8cac06be2ae8956cb647248e63">   66</a></span>    <span class="keyword">public</span> <a class="code hl_function" href="classcom_1_1teragrep_1_1cfe18_1_1controllerTests_1_1TestApiClient.html#a4a8a8e8cac06be2ae8956cb647248e63">TestApiClient</a>(<span class="keywordtype">int</span> <a class="code hl_variable" href="classcom_1_1teragrep_1_1cfe18_1_1controllerTests_1_1TestApiClient.html#a5b575be8bd594a81e95c159d35d0d9fc">port</a>, String <a class="code hl_variable" href="classcom_1_1teragrep_1_1cfe18_1_1controllerTests_1_1TestApiClient.html#a903025aeb7c75a4d20c8fb03528386ee">token</a>) {</div>
-<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span>        this.port = <a class="code hl_variable" href="classcom_1_1teragrep_1_1cfe18_1_1controllerTests_1_1TestApiClient.html#a5b575be8bd594a81e95c159d35d0d9fc">port</a>;</div>
-<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span>        this.token = <a class="code hl_variable" href="classcom_1_1teragrep_1_1cfe18_1_1controllerTests_1_1TestApiClient.html#a903025aeb7c75a4d20c8fb03528386ee">token</a>;</div>
-<div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span>    }</div>
+<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span><span class="keyword">import</span> org.apache.http.client.methods.HttpDelete;</div>
+<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span><span class="keyword">import</span> org.apache.http.client.methods.HttpPut;</div>
+<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span><span class="keyword">import</span> org.apache.http.entity.ContentType;</div>
+<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span><span class="keyword">import</span> org.apache.http.entity.StringEntity;</div>
+<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span><span class="keyword">import</span> org.apache.http.impl.client.HttpClientBuilder;</div>
+<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span><span class="keyword">import</span> org.apache.http.util.EntityUtils;</div>
+<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span><span class="keyword">import</span> org.json.JSONObject;</div>
+<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span><span class="keyword">import</span> org.junit.jupiter.api.Assertions;</div>
+<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span> </div>
+<div class="foldopen" id="foldopen00061" data-start="{" data-end="};">
+<div class="line"><a id="l00061" name="l00061"></a><span class="lineno"><a class="line" href="classcom_1_1teragrep_1_1cfe18_1_1controllerTests_1_1TestApiClient.html">   61</a></span><span class="keyword">public</span> <span class="keyword">class </span><a class="code hl_class" href="classcom_1_1teragrep_1_1cfe18_1_1controllerTests_1_1TestApiClient.html">TestApiClient</a> {</div>
+<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span> </div>
+<div class="line"><a id="l00063" name="l00063"></a><span class="lineno"><a class="line" href="classcom_1_1teragrep_1_1cfe18_1_1controllerTests_1_1TestApiClient.html#a900519589fe56c7f540e143b28b97a5f">   63</a></span>    <span class="keyword">private</span> <span class="keyword">final</span> Gson <a class="code hl_variable" href="classcom_1_1teragrep_1_1cfe18_1_1controllerTests_1_1TestApiClient.html#a900519589fe56c7f540e143b28b97a5f">gson</a> = <span class="keyword">new</span> Gson();</div>
+<div class="line"><a id="l00064" name="l00064"></a><span class="lineno"><a class="line" href="classcom_1_1teragrep_1_1cfe18_1_1controllerTests_1_1TestApiClient.html#a5b575be8bd594a81e95c159d35d0d9fc">   64</a></span>    <span class="keyword">private</span> <span class="keyword">final</span> <span class="keywordtype">int</span> <a class="code hl_variable" href="classcom_1_1teragrep_1_1cfe18_1_1controllerTests_1_1TestApiClient.html#a5b575be8bd594a81e95c159d35d0d9fc">port</a>;</div>
+<div class="line"><a id="l00065" name="l00065"></a><span class="lineno"><a class="line" href="classcom_1_1teragrep_1_1cfe18_1_1controllerTests_1_1TestApiClient.html#a903025aeb7c75a4d20c8fb03528386ee">   65</a></span>    <span class="keyword">private</span> <span class="keyword">final</span> String <a class="code hl_variable" href="classcom_1_1teragrep_1_1cfe18_1_1controllerTests_1_1TestApiClient.html#a903025aeb7c75a4d20c8fb03528386ee">token</a>;</div>
+<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span> </div>
+<div class="foldopen" id="foldopen00067" data-start="{" data-end="}">
+<div class="line"><a id="l00067" name="l00067"></a><span class="lineno"><a class="line" href="classcom_1_1teragrep_1_1cfe18_1_1controllerTests_1_1TestApiClient.html#a4a8a8e8cac06be2ae8956cb647248e63">   67</a></span>    <span class="keyword">public</span> <a class="code hl_function" href="classcom_1_1teragrep_1_1cfe18_1_1controllerTests_1_1TestApiClient.html#a4a8a8e8cac06be2ae8956cb647248e63">TestApiClient</a>(<span class="keywordtype">int</span> <a class="code hl_variable" href="classcom_1_1teragrep_1_1cfe18_1_1controllerTests_1_1TestApiClient.html#a5b575be8bd594a81e95c159d35d0d9fc">port</a>, String <a class="code hl_variable" href="classcom_1_1teragrep_1_1cfe18_1_1controllerTests_1_1TestApiClient.html#a903025aeb7c75a4d20c8fb03528386ee">token</a>) {</div>
+<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span>        this.port = <a class="code hl_variable" href="classcom_1_1teragrep_1_1cfe18_1_1controllerTests_1_1TestApiClient.html#a5b575be8bd594a81e95c159d35d0d9fc">port</a>;</div>
+<div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span>        this.token = <a class="code hl_variable" href="classcom_1_1teragrep_1_1cfe18_1_1controllerTests_1_1TestApiClient.html#a903025aeb7c75a4d20c8fb03528386ee">token</a>;</div>
+<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span>    }</div>
 </div>
-<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span> </div>
-<div class="foldopen" id="foldopen00071" data-start="{" data-end="}">
-<div class="line"><a id="l00071" name="l00071"></a><span class="lineno"><a class="line" href="classcom_1_1teragrep_1_1cfe18_1_1controllerTests_1_1TestApiClient.html#a9a28c3ecb7b02eee1e6c5bbb10893cc3">   71</a></span>    <span class="keyword">public</span> Integer <a class="code hl_function" href="classcom_1_1teragrep_1_1cfe18_1_1controllerTests_1_1TestApiClient.html#a9a28c3ecb7b02eee1e6c5bbb10893cc3">insertFlow</a>(<span class="keyword">final</span> String name) {</div>
-<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span>        Flow flow = <span class="keyword">new</span> Flow();</div>
-<div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span>        flow.setName(name);</div>
-<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span>        String flowJson = <a class="code hl_variable" href="classcom_1_1teragrep_1_1cfe18_1_1controllerTests_1_1TestApiClient.html#a900519589fe56c7f540e143b28b97a5f">gson</a>.toJson(flow);</div>
-<div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span> </div>
-<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span>        StringEntity flowRequestEntity = <span class="keyword">new</span> StringEntity(String.valueOf(flowJson), ContentType.APPLICATION_JSON);</div>
-<div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span> </div>
-<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span>        HttpPut flowRequest = <span class="keyword">new</span> HttpPut(<span class="stringliteral">&quot;http://localhost:&quot;</span> + <a class="code hl_variable" href="classcom_1_1teragrep_1_1cfe18_1_1controllerTests_1_1TestApiClient.html#a5b575be8bd594a81e95c159d35d0d9fc">port</a> + <span class="stringliteral">&quot;/flow&quot;</span>);</div>
-<div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span>        flowRequest.setEntity(flowRequestEntity);</div>
-<div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span>        flowRequest.setHeader(<span class="stringliteral">&quot;Authorization&quot;</span>, <span class="stringliteral">&quot;Bearer &quot;</span> + <a class="code hl_variable" href="classcom_1_1teragrep_1_1cfe18_1_1controllerTests_1_1TestApiClient.html#a903025aeb7c75a4d20c8fb03528386ee">token</a>);</div>
-<div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span> </div>
-<div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span>        HttpResponse flowResponse = Assertions</div>
-<div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span>                .assertDoesNotThrow(() -&gt; HttpClientBuilder.create().build().execute(flowRequest));</div>
-<div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span> </div>
-<div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span>        HttpEntity flowEntity = flowResponse.getEntity();</div>
-<div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span> </div>
-<div class="line"><a id="l00087" name="l00087"></a><span class="lineno">   87</span>        String flowAsResponse = Assertions.assertDoesNotThrow(() -&gt; EntityUtils.toString(flowEntity));</div>
-<div class="line"><a id="l00088" name="l00088"></a><span class="lineno">   88</span> </div>
-<div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span>        JSONObject flowAsJson = Assertions.assertDoesNotThrow(() -&gt; <span class="keyword">new</span> JSONObject(flowAsResponse));</div>
-<div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span> </div>
-<div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span>        <span class="keywordflow">return</span> Assertions.assertDoesNotThrow(() -&gt; flowAsJson.getInt(<span class="stringliteral">&quot;id&quot;</span>));</div>
-<div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span>    }</div>
+<div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span> </div>
+<div class="foldopen" id="foldopen00072" data-start="{" data-end="}">
+<div class="line"><a id="l00072" name="l00072"></a><span class="lineno"><a class="line" href="classcom_1_1teragrep_1_1cfe18_1_1controllerTests_1_1TestApiClient.html#a9a28c3ecb7b02eee1e6c5bbb10893cc3">   72</a></span>    <span class="keyword">public</span> Integer <a class="code hl_function" href="classcom_1_1teragrep_1_1cfe18_1_1controllerTests_1_1TestApiClient.html#a9a28c3ecb7b02eee1e6c5bbb10893cc3">insertFlow</a>(<span class="keyword">final</span> String name) {</div>
+<div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span>        Flow flow = <span class="keyword">new</span> Flow();</div>
+<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span>        flow.setName(name);</div>
+<div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span>        String flowJson = <a class="code hl_variable" href="classcom_1_1teragrep_1_1cfe18_1_1controllerTests_1_1TestApiClient.html#a900519589fe56c7f540e143b28b97a5f">gson</a>.toJson(flow);</div>
+<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span> </div>
+<div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span>        StringEntity flowRequestEntity = <span class="keyword">new</span> StringEntity(String.valueOf(flowJson), ContentType.APPLICATION_JSON);</div>
+<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span> </div>
+<div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span>        HttpPut flowRequest = <span class="keyword">new</span> HttpPut(<span class="stringliteral">&quot;http://localhost:&quot;</span> + <a class="code hl_variable" href="classcom_1_1teragrep_1_1cfe18_1_1controllerTests_1_1TestApiClient.html#a5b575be8bd594a81e95c159d35d0d9fc">port</a> + <span class="stringliteral">&quot;/flow&quot;</span>);</div>
+<div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span>        flowRequest.setEntity(flowRequestEntity);</div>
+<div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span>        flowRequest.setHeader(<span class="stringliteral">&quot;Authorization&quot;</span>, <span class="stringliteral">&quot;Bearer &quot;</span> + <a class="code hl_variable" href="classcom_1_1teragrep_1_1cfe18_1_1controllerTests_1_1TestApiClient.html#a903025aeb7c75a4d20c8fb03528386ee">token</a>);</div>
+<div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span> </div>
+<div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span>        HttpResponse flowResponse = Assertions</div>
+<div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span>                .assertDoesNotThrow(() -&gt; HttpClientBuilder.create().build().execute(flowRequest));</div>
+<div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span> </div>
+<div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span>        HttpEntity flowEntity = flowResponse.getEntity();</div>
+<div class="line"><a id="l00087" name="l00087"></a><span class="lineno">   87</span> </div>
+<div class="line"><a id="l00088" name="l00088"></a><span class="lineno">   88</span>        String flowAsResponse = Assertions.assertDoesNotThrow(() -&gt; EntityUtils.toString(flowEntity));</div>
+<div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span> </div>
+<div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span>        JSONObject flowAsJson = Assertions.assertDoesNotThrow(() -&gt; <span class="keyword">new</span> JSONObject(flowAsResponse));</div>
+<div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span> </div>
+<div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span>        <span class="keywordflow">return</span> Assertions.assertDoesNotThrow(() -&gt; flowAsJson.getInt(<span class="stringliteral">&quot;id&quot;</span>));</div>
+<div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span>    }</div>
 </div>
-<div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span> </div>
-<div class="foldopen" id="foldopen00094" data-start="{" data-end="}">
-<div class="line"><a id="l00094" name="l00094"></a><span class="lineno"><a class="line" href="classcom_1_1teragrep_1_1cfe18_1_1controllerTests_1_1TestApiClient.html#af143a3c89fe0d24ab6a99904d295f9a9">   94</a></span>    <span class="keyword">public</span> Integer <a class="code hl_function" href="classcom_1_1teragrep_1_1cfe18_1_1controllerTests_1_1TestApiClient.html#af143a3c89fe0d24ab6a99904d295f9a9">insertSink</a>(<span class="keyword">final</span> Integer flowId, <span class="keyword">final</span> String sinkPort, <span class="keyword">final</span> String ip, <span class="keyword">final</span> String protocol) {</div>
-<div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span>        Sink sink = <span class="keyword">new</span> Sink();</div>
-<div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span>        sink.setFlowId(flowId);</div>
-<div class="line"><a id="l00097" name="l00097"></a><span class="lineno">   97</span>        sink.setPort(sinkPort);</div>
-<div class="line"><a id="l00098" name="l00098"></a><span class="lineno">   98</span>        sink.setIpAddress(ip);</div>
-<div class="line"><a id="l00099" name="l00099"></a><span class="lineno">   99</span>        sink.setProtocol(protocol);</div>
-<div class="line"><a id="l00100" name="l00100"></a><span class="lineno">  100</span> </div>
-<div class="line"><a id="l00101" name="l00101"></a><span class="lineno">  101</span>        String sinkJson = <a class="code hl_variable" href="classcom_1_1teragrep_1_1cfe18_1_1controllerTests_1_1TestApiClient.html#a900519589fe56c7f540e143b28b97a5f">gson</a>.toJson(sink);</div>
-<div class="line"><a id="l00102" name="l00102"></a><span class="lineno">  102</span> </div>
-<div class="line"><a id="l00103" name="l00103"></a><span class="lineno">  103</span>        StringEntity sinkEntity = <span class="keyword">new</span> StringEntity(String.valueOf(sinkJson), ContentType.APPLICATION_JSON);</div>
-<div class="line"><a id="l00104" name="l00104"></a><span class="lineno">  104</span> </div>
-<div class="line"><a id="l00105" name="l00105"></a><span class="lineno">  105</span>        HttpPut sinkRequest = <span class="keyword">new</span> HttpPut(<span class="stringliteral">&quot;http://localhost:&quot;</span> + <a class="code hl_variable" href="classcom_1_1teragrep_1_1cfe18_1_1controllerTests_1_1TestApiClient.html#a5b575be8bd594a81e95c159d35d0d9fc">port</a> + <span class="stringliteral">&quot;/sink&quot;</span>);</div>
-<div class="line"><a id="l00106" name="l00106"></a><span class="lineno">  106</span>        sinkRequest.setEntity(sinkEntity);</div>
-<div class="line"><a id="l00107" name="l00107"></a><span class="lineno">  107</span>        sinkRequest.setHeader(<span class="stringliteral">&quot;Authorization&quot;</span>, <span class="stringliteral">&quot;Bearer &quot;</span> + <a class="code hl_variable" href="classcom_1_1teragrep_1_1cfe18_1_1controllerTests_1_1TestApiClient.html#a903025aeb7c75a4d20c8fb03528386ee">token</a>);</div>
+<div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span> </div>
+<div class="foldopen" id="foldopen00095" data-start="{" data-end="}">
+<div class="line"><a id="l00095" name="l00095"></a><span class="lineno"><a class="line" href="classcom_1_1teragrep_1_1cfe18_1_1controllerTests_1_1TestApiClient.html#a813310af33cc1f237d79eb22603aaca9">   95</a></span>    <span class="keyword">public</span> HttpResponse <a class="code hl_function" href="classcom_1_1teragrep_1_1cfe18_1_1controllerTests_1_1TestApiClient.html#a813310af33cc1f237d79eb22603aaca9">deleteFlow</a>(<span class="keyword">final</span> Integer flowId) {</div>
+<div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span>        HttpDelete flowRequest = <span class="keyword">new</span> HttpDelete(<span class="stringliteral">&quot;http://localhost:&quot;</span> + <a class="code hl_variable" href="classcom_1_1teragrep_1_1cfe18_1_1controllerTests_1_1TestApiClient.html#a5b575be8bd594a81e95c159d35d0d9fc">port</a> + <span class="stringliteral">&quot;/flow/&quot;</span> + flowId);</div>
+<div class="line"><a id="l00097" name="l00097"></a><span class="lineno">   97</span>        flowRequest.setHeader(<span class="stringliteral">&quot;Authorization&quot;</span>, <span class="stringliteral">&quot;Bearer &quot;</span> + <a class="code hl_variable" href="classcom_1_1teragrep_1_1cfe18_1_1controllerTests_1_1TestApiClient.html#a903025aeb7c75a4d20c8fb03528386ee">token</a>);</div>
+<div class="line"><a id="l00098" name="l00098"></a><span class="lineno">   98</span> </div>
+<div class="line"><a id="l00099" name="l00099"></a><span class="lineno">   99</span>        <span class="keywordflow">return</span> Assertions.assertDoesNotThrow(() -&gt; HttpClientBuilder.create().build().execute(flowRequest));</div>
+<div class="line"><a id="l00100" name="l00100"></a><span class="lineno">  100</span>    }</div>
+</div>
+<div class="line"><a id="l00101" name="l00101"></a><span class="lineno">  101</span> </div>
+<div class="foldopen" id="foldopen00102" data-start="{" data-end="}">
+<div class="line"><a id="l00102" name="l00102"></a><span class="lineno"><a class="line" href="classcom_1_1teragrep_1_1cfe18_1_1controllerTests_1_1TestApiClient.html#af143a3c89fe0d24ab6a99904d295f9a9">  102</a></span>    <span class="keyword">public</span> Integer <a class="code hl_function" href="classcom_1_1teragrep_1_1cfe18_1_1controllerTests_1_1TestApiClient.html#af143a3c89fe0d24ab6a99904d295f9a9">insertSink</a>(<span class="keyword">final</span> Integer flowId, <span class="keyword">final</span> String sinkPort, <span class="keyword">final</span> String ip, <span class="keyword">final</span> String protocol) {</div>
+<div class="line"><a id="l00103" name="l00103"></a><span class="lineno">  103</span>        Sink sink = <span class="keyword">new</span> Sink();</div>
+<div class="line"><a id="l00104" name="l00104"></a><span class="lineno">  104</span>        sink.setFlowId(flowId);</div>
+<div class="line"><a id="l00105" name="l00105"></a><span class="lineno">  105</span>        sink.setPort(sinkPort);</div>
+<div class="line"><a id="l00106" name="l00106"></a><span class="lineno">  106</span>        sink.setIpAddress(ip);</div>
+<div class="line"><a id="l00107" name="l00107"></a><span class="lineno">  107</span>        sink.setProtocol(protocol);</div>
 <div class="line"><a id="l00108" name="l00108"></a><span class="lineno">  108</span> </div>
-<div class="line"><a id="l00109" name="l00109"></a><span class="lineno">  109</span>        HttpResponse sinkResponse = Assertions</div>
-<div class="line"><a id="l00110" name="l00110"></a><span class="lineno">  110</span>                .assertDoesNotThrow(() -&gt; HttpClientBuilder.create().build().execute(sinkRequest));</div>
-<div class="line"><a id="l00111" name="l00111"></a><span class="lineno">  111</span> </div>
-<div class="line"><a id="l00112" name="l00112"></a><span class="lineno">  112</span>        HttpEntity sinkAsEntity = sinkResponse.getEntity();</div>
-<div class="line"><a id="l00113" name="l00113"></a><span class="lineno">  113</span> </div>
-<div class="line"><a id="l00114" name="l00114"></a><span class="lineno">  114</span>        String sinkAsResponse = Assertions.assertDoesNotThrow(() -&gt; EntityUtils.toString(sinkAsEntity));</div>
-<div class="line"><a id="l00115" name="l00115"></a><span class="lineno">  115</span> </div>
-<div class="line"><a id="l00116" name="l00116"></a><span class="lineno">  116</span>        JSONObject sinkAsJson = Assertions.assertDoesNotThrow(() -&gt; <span class="keyword">new</span> JSONObject(sinkAsResponse));</div>
-<div class="line"><a id="l00117" name="l00117"></a><span class="lineno">  117</span> </div>
-<div class="line"><a id="l00118" name="l00118"></a><span class="lineno">  118</span>        <span class="keywordflow">return</span> Assertions.assertDoesNotThrow(() -&gt; sinkAsJson.getInt(<span class="stringliteral">&quot;id&quot;</span>));</div>
+<div class="line"><a id="l00109" name="l00109"></a><span class="lineno">  109</span>        String sinkJson = <a class="code hl_variable" href="classcom_1_1teragrep_1_1cfe18_1_1controllerTests_1_1TestApiClient.html#a900519589fe56c7f540e143b28b97a5f">gson</a>.toJson(sink);</div>
+<div class="line"><a id="l00110" name="l00110"></a><span class="lineno">  110</span> </div>
+<div class="line"><a id="l00111" name="l00111"></a><span class="lineno">  111</span>        StringEntity sinkEntity = <span class="keyword">new</span> StringEntity(String.valueOf(sinkJson), ContentType.APPLICATION_JSON);</div>
+<div class="line"><a id="l00112" name="l00112"></a><span class="lineno">  112</span> </div>
+<div class="line"><a id="l00113" name="l00113"></a><span class="lineno">  113</span>        HttpPut sinkRequest = <span class="keyword">new</span> HttpPut(<span class="stringliteral">&quot;http://localhost:&quot;</span> + <a class="code hl_variable" href="classcom_1_1teragrep_1_1cfe18_1_1controllerTests_1_1TestApiClient.html#a5b575be8bd594a81e95c159d35d0d9fc">port</a> + <span class="stringliteral">&quot;/sink&quot;</span>);</div>
+<div class="line"><a id="l00114" name="l00114"></a><span class="lineno">  114</span>        sinkRequest.setEntity(sinkEntity);</div>
+<div class="line"><a id="l00115" name="l00115"></a><span class="lineno">  115</span>        sinkRequest.setHeader(<span class="stringliteral">&quot;Authorization&quot;</span>, <span class="stringliteral">&quot;Bearer &quot;</span> + <a class="code hl_variable" href="classcom_1_1teragrep_1_1cfe18_1_1controllerTests_1_1TestApiClient.html#a903025aeb7c75a4d20c8fb03528386ee">token</a>);</div>
+<div class="line"><a id="l00116" name="l00116"></a><span class="lineno">  116</span> </div>
+<div class="line"><a id="l00117" name="l00117"></a><span class="lineno">  117</span>        HttpResponse sinkResponse = Assertions</div>
+<div class="line"><a id="l00118" name="l00118"></a><span class="lineno">  118</span>                .assertDoesNotThrow(() -&gt; HttpClientBuilder.create().build().execute(sinkRequest));</div>
 <div class="line"><a id="l00119" name="l00119"></a><span class="lineno">  119</span> </div>
-<div class="line"><a id="l00120" name="l00120"></a><span class="lineno">  120</span>    }</div>
-</div>
+<div class="line"><a id="l00120" name="l00120"></a><span class="lineno">  120</span>        HttpEntity sinkAsEntity = sinkResponse.getEntity();</div>
 <div class="line"><a id="l00121" name="l00121"></a><span class="lineno">  121</span> </div>
-<div class="foldopen" id="foldopen00122" data-start="{" data-end="}">
-<div class="line"><a id="l00122" name="l00122"></a><span class="lineno"><a class="line" href="classcom_1_1teragrep_1_1cfe18_1_1controllerTests_1_1TestApiClient.html#a423b9ca7d8d2865e7ce9742ba1ca3922">  122</a></span>    <span class="keyword">public</span> Integer <a class="code hl_function" href="classcom_1_1teragrep_1_1cfe18_1_1controllerTests_1_1TestApiClient.html#a423b9ca7d8d2865e7ce9742ba1ca3922">insertRelpHost</a>(<span class="keyword">final</span> String md5, <span class="keyword">final</span> String fq) {</div>
-<div class="line"><a id="l00123" name="l00123"></a><span class="lineno">  123</span>        HostRelp relpHost1 = <span class="keyword">new</span> HostRelp();</div>
-<div class="line"><a id="l00124" name="l00124"></a><span class="lineno">  124</span>        relpHost1.setMd5(md5);</div>
-<div class="line"><a id="l00125" name="l00125"></a><span class="lineno">  125</span>        relpHost1.setFqHost(fq);</div>
-<div class="line"><a id="l00126" name="l00126"></a><span class="lineno">  126</span> </div>
-<div class="line"><a id="l00127" name="l00127"></a><span class="lineno">  127</span>        String relpHostJson1 = <a class="code hl_variable" href="classcom_1_1teragrep_1_1cfe18_1_1controllerTests_1_1TestApiClient.html#a900519589fe56c7f540e143b28b97a5f">gson</a>.toJson(relpHost1);</div>
-<div class="line"><a id="l00128" name="l00128"></a><span class="lineno">  128</span> </div>
-<div class="line"><a id="l00129" name="l00129"></a><span class="lineno">  129</span>        StringEntity relpHostStringEntity1 = <span class="keyword">new</span> StringEntity(</div>
-<div class="line"><a id="l00130" name="l00130"></a><span class="lineno">  130</span>                String.valueOf(relpHostJson1),</div>
-<div class="line"><a id="l00131" name="l00131"></a><span class="lineno">  131</span>                ContentType.APPLICATION_JSON</div>
-<div class="line"><a id="l00132" name="l00132"></a><span class="lineno">  132</span>        );</div>
-<div class="line"><a id="l00133" name="l00133"></a><span class="lineno">  133</span> </div>
-<div class="line"><a id="l00134" name="l00134"></a><span class="lineno">  134</span>        HttpPut relpHostPutRequest1 = <span class="keyword">new</span> HttpPut(<span class="stringliteral">&quot;http://localhost:&quot;</span> + <a class="code hl_variable" href="classcom_1_1teragrep_1_1cfe18_1_1controllerTests_1_1TestApiClient.html#a5b575be8bd594a81e95c159d35d0d9fc">port</a> + <span class="stringliteral">&quot;/host/relp&quot;</span>);</div>
-<div class="line"><a id="l00135" name="l00135"></a><span class="lineno">  135</span>        relpHostPutRequest1.setEntity(relpHostStringEntity1);</div>
-<div class="line"><a id="l00136" name="l00136"></a><span class="lineno">  136</span>        relpHostPutRequest1.setHeader(<span class="stringliteral">&quot;Authorization&quot;</span>, <span class="stringliteral">&quot;Bearer &quot;</span> + <a class="code hl_variable" href="classcom_1_1teragrep_1_1cfe18_1_1controllerTests_1_1TestApiClient.html#a903025aeb7c75a4d20c8fb03528386ee">token</a>);</div>
-<div class="line"><a id="l00137" name="l00137"></a><span class="lineno">  137</span> </div>
-<div class="line"><a id="l00138" name="l00138"></a><span class="lineno">  138</span>        HttpResponse relpHostResponse1 = Assertions</div>
-<div class="line"><a id="l00139" name="l00139"></a><span class="lineno">  139</span>                .assertDoesNotThrow(() -&gt; HttpClientBuilder.create().build().execute(relpHostPutRequest1));</div>
-<div class="line"><a id="l00140" name="l00140"></a><span class="lineno">  140</span> </div>
-<div class="line"><a id="l00141" name="l00141"></a><span class="lineno">  141</span>        HttpEntity relpHostResponse1Entity = relpHostResponse1.getEntity();</div>
-<div class="line"><a id="l00142" name="l00142"></a><span class="lineno">  142</span> </div>
-<div class="line"><a id="l00143" name="l00143"></a><span class="lineno">  143</span>        String relpHostResponseString1 = Assertions</div>
-<div class="line"><a id="l00144" name="l00144"></a><span class="lineno">  144</span>                .assertDoesNotThrow(() -&gt; EntityUtils.toString(relpHostResponse1Entity));</div>
+<div class="line"><a id="l00122" name="l00122"></a><span class="lineno">  122</span>        String sinkAsResponse = Assertions.assertDoesNotThrow(() -&gt; EntityUtils.toString(sinkAsEntity));</div>
+<div class="line"><a id="l00123" name="l00123"></a><span class="lineno">  123</span> </div>
+<div class="line"><a id="l00124" name="l00124"></a><span class="lineno">  124</span>        JSONObject sinkAsJson = Assertions.assertDoesNotThrow(() -&gt; <span class="keyword">new</span> JSONObject(sinkAsResponse));</div>
+<div class="line"><a id="l00125" name="l00125"></a><span class="lineno">  125</span> </div>
+<div class="line"><a id="l00126" name="l00126"></a><span class="lineno">  126</span>        <span class="keywordflow">return</span> Assertions.assertDoesNotThrow(() -&gt; sinkAsJson.getInt(<span class="stringliteral">&quot;id&quot;</span>));</div>
+<div class="line"><a id="l00127" name="l00127"></a><span class="lineno">  127</span> </div>
+<div class="line"><a id="l00128" name="l00128"></a><span class="lineno">  128</span>    }</div>
+</div>
+<div class="line"><a id="l00129" name="l00129"></a><span class="lineno">  129</span> </div>
+<div class="foldopen" id="foldopen00130" data-start="{" data-end="}">
+<div class="line"><a id="l00130" name="l00130"></a><span class="lineno"><a class="line" href="classcom_1_1teragrep_1_1cfe18_1_1controllerTests_1_1TestApiClient.html#a423b9ca7d8d2865e7ce9742ba1ca3922">  130</a></span>    <span class="keyword">public</span> Integer <a class="code hl_function" href="classcom_1_1teragrep_1_1cfe18_1_1controllerTests_1_1TestApiClient.html#a423b9ca7d8d2865e7ce9742ba1ca3922">insertRelpHost</a>(<span class="keyword">final</span> String md5, <span class="keyword">final</span> String fq) {</div>
+<div class="line"><a id="l00131" name="l00131"></a><span class="lineno">  131</span>        HostRelp relpHost1 = <span class="keyword">new</span> HostRelp();</div>
+<div class="line"><a id="l00132" name="l00132"></a><span class="lineno">  132</span>        relpHost1.setMd5(md5);</div>
+<div class="line"><a id="l00133" name="l00133"></a><span class="lineno">  133</span>        relpHost1.setFqHost(fq);</div>
+<div class="line"><a id="l00134" name="l00134"></a><span class="lineno">  134</span> </div>
+<div class="line"><a id="l00135" name="l00135"></a><span class="lineno">  135</span>        String relpHostJson1 = <a class="code hl_variable" href="classcom_1_1teragrep_1_1cfe18_1_1controllerTests_1_1TestApiClient.html#a900519589fe56c7f540e143b28b97a5f">gson</a>.toJson(relpHost1);</div>
+<div class="line"><a id="l00136" name="l00136"></a><span class="lineno">  136</span> </div>
+<div class="line"><a id="l00137" name="l00137"></a><span class="lineno">  137</span>        StringEntity relpHostStringEntity1 = <span class="keyword">new</span> StringEntity(</div>
+<div class="line"><a id="l00138" name="l00138"></a><span class="lineno">  138</span>                String.valueOf(relpHostJson1),</div>
+<div class="line"><a id="l00139" name="l00139"></a><span class="lineno">  139</span>                ContentType.APPLICATION_JSON</div>
+<div class="line"><a id="l00140" name="l00140"></a><span class="lineno">  140</span>        );</div>
+<div class="line"><a id="l00141" name="l00141"></a><span class="lineno">  141</span> </div>
+<div class="line"><a id="l00142" name="l00142"></a><span class="lineno">  142</span>        HttpPut relpHostPutRequest1 = <span class="keyword">new</span> HttpPut(<span class="stringliteral">&quot;http://localhost:&quot;</span> + <a class="code hl_variable" href="classcom_1_1teragrep_1_1cfe18_1_1controllerTests_1_1TestApiClient.html#a5b575be8bd594a81e95c159d35d0d9fc">port</a> + <span class="stringliteral">&quot;/host/relp&quot;</span>);</div>
+<div class="line"><a id="l00143" name="l00143"></a><span class="lineno">  143</span>        relpHostPutRequest1.setEntity(relpHostStringEntity1);</div>
+<div class="line"><a id="l00144" name="l00144"></a><span class="lineno">  144</span>        relpHostPutRequest1.setHeader(<span class="stringliteral">&quot;Authorization&quot;</span>, <span class="stringliteral">&quot;Bearer &quot;</span> + <a class="code hl_variable" href="classcom_1_1teragrep_1_1cfe18_1_1controllerTests_1_1TestApiClient.html#a903025aeb7c75a4d20c8fb03528386ee">token</a>);</div>
 <div class="line"><a id="l00145" name="l00145"></a><span class="lineno">  145</span> </div>
-<div class="line"><a id="l00146" name="l00146"></a><span class="lineno">  146</span>        JSONObject relpHostResponseJsonObject1 = Assertions</div>
-<div class="line"><a id="l00147" name="l00147"></a><span class="lineno">  147</span>                .assertDoesNotThrow(() -&gt; <span class="keyword">new</span> JSONObject(relpHostResponseString1));</div>
+<div class="line"><a id="l00146" name="l00146"></a><span class="lineno">  146</span>        HttpResponse relpHostResponse1 = Assertions</div>
+<div class="line"><a id="l00147" name="l00147"></a><span class="lineno">  147</span>                .assertDoesNotThrow(() -&gt; HttpClientBuilder.create().build().execute(relpHostPutRequest1));</div>
 <div class="line"><a id="l00148" name="l00148"></a><span class="lineno">  148</span> </div>
-<div class="line"><a id="l00149" name="l00149"></a><span class="lineno">  149</span>        <span class="keywordflow">return</span> Assertions.assertDoesNotThrow(() -&gt; relpHostResponseJsonObject1.getInt(<span class="stringliteral">&quot;id&quot;</span>));</div>
-<div class="line"><a id="l00150" name="l00150"></a><span class="lineno">  150</span>    }</div>
-</div>
-<div class="line"><a id="l00151" name="l00151"></a><span class="lineno">  151</span> </div>
-<div class="foldopen" id="foldopen00152" data-start="{" data-end="}">
-<div class="line"><a id="l00152" name="l00152"></a><span class="lineno"><a class="line" href="classcom_1_1teragrep_1_1cfe18_1_1controllerTests_1_1TestApiClient.html#a5a045f8b4708f0a871bc5b8f254e3b65">  152</a></span>    <span class="keyword">public</span> Integer <a class="code hl_function" href="classcom_1_1teragrep_1_1cfe18_1_1controllerTests_1_1TestApiClient.html#a5a045f8b4708f0a871bc5b8f254e3b65">insertHostGroup</a>(<span class="keyword">final</span> Integer hostId, <span class="keyword">final</span> String groupName) {</div>
-<div class="line"><a id="l00153" name="l00153"></a><span class="lineno">  153</span>        HostGroup relpHostGroup1 = <span class="keyword">new</span> HostGroup();</div>
-<div class="line"><a id="l00154" name="l00154"></a><span class="lineno">  154</span>        relpHostGroup1.setHost_id(hostId);</div>
-<div class="line"><a id="l00155" name="l00155"></a><span class="lineno">  155</span>        relpHostGroup1.setHost_group_name(groupName);</div>
+<div class="line"><a id="l00149" name="l00149"></a><span class="lineno">  149</span>        HttpEntity relpHostResponse1Entity = relpHostResponse1.getEntity();</div>
+<div class="line"><a id="l00150" name="l00150"></a><span class="lineno">  150</span> </div>
+<div class="line"><a id="l00151" name="l00151"></a><span class="lineno">  151</span>        String relpHostResponseString1 = Assertions</div>
+<div class="line"><a id="l00152" name="l00152"></a><span class="lineno">  152</span>                .assertDoesNotThrow(() -&gt; EntityUtils.toString(relpHostResponse1Entity));</div>
+<div class="line"><a id="l00153" name="l00153"></a><span class="lineno">  153</span> </div>
+<div class="line"><a id="l00154" name="l00154"></a><span class="lineno">  154</span>        JSONObject relpHostResponseJsonObject1 = Assertions</div>
+<div class="line"><a id="l00155" name="l00155"></a><span class="lineno">  155</span>                .assertDoesNotThrow(() -&gt; <span class="keyword">new</span> JSONObject(relpHostResponseString1));</div>
 <div class="line"><a id="l00156" name="l00156"></a><span class="lineno">  156</span> </div>
-<div class="line"><a id="l00157" name="l00157"></a><span class="lineno">  157</span>        String hostGroup1 = <a class="code hl_variable" href="classcom_1_1teragrep_1_1cfe18_1_1controllerTests_1_1TestApiClient.html#a900519589fe56c7f540e143b28b97a5f">gson</a>.toJson(relpHostGroup1);</div>
-<div class="line"><a id="l00158" name="l00158"></a><span class="lineno">  158</span> </div>
-<div class="line"><a id="l00159" name="l00159"></a><span class="lineno">  159</span>        StringEntity hostGroupEntity1 = <span class="keyword">new</span> StringEntity(String.valueOf(hostGroup1), ContentType.APPLICATION_JSON);</div>
-<div class="line"><a id="l00160" name="l00160"></a><span class="lineno">  160</span> </div>
-<div class="line"><a id="l00161" name="l00161"></a><span class="lineno">  161</span>        HttpPut hostGroupPutRequest1 = <span class="keyword">new</span> HttpPut(<span class="stringliteral">&quot;http://localhost:&quot;</span> + <a class="code hl_variable" href="classcom_1_1teragrep_1_1cfe18_1_1controllerTests_1_1TestApiClient.html#a5b575be8bd594a81e95c159d35d0d9fc">port</a> + <span class="stringliteral">&quot;/host/group&quot;</span>);</div>
-<div class="line"><a id="l00162" name="l00162"></a><span class="lineno">  162</span>        hostGroupPutRequest1.setEntity(hostGroupEntity1);</div>
-<div class="line"><a id="l00163" name="l00163"></a><span class="lineno">  163</span>        hostGroupPutRequest1.setHeader(<span class="stringliteral">&quot;Authorization&quot;</span>, <span class="stringliteral">&quot;Bearer &quot;</span> + <a class="code hl_variable" href="classcom_1_1teragrep_1_1cfe18_1_1controllerTests_1_1TestApiClient.html#a903025aeb7c75a4d20c8fb03528386ee">token</a>);</div>
+<div class="line"><a id="l00157" name="l00157"></a><span class="lineno">  157</span>        <span class="keywordflow">return</span> Assertions.assertDoesNotThrow(() -&gt; relpHostResponseJsonObject1.getInt(<span class="stringliteral">&quot;id&quot;</span>));</div>
+<div class="line"><a id="l00158" name="l00158"></a><span class="lineno">  158</span>    }</div>
+</div>
+<div class="line"><a id="l00159" name="l00159"></a><span class="lineno">  159</span> </div>
+<div class="foldopen" id="foldopen00160" data-start="{" data-end="}">
+<div class="line"><a id="l00160" name="l00160"></a><span class="lineno"><a class="line" href="classcom_1_1teragrep_1_1cfe18_1_1controllerTests_1_1TestApiClient.html#a5a045f8b4708f0a871bc5b8f254e3b65">  160</a></span>    <span class="keyword">public</span> Integer <a class="code hl_function" href="classcom_1_1teragrep_1_1cfe18_1_1controllerTests_1_1TestApiClient.html#a5a045f8b4708f0a871bc5b8f254e3b65">insertHostGroup</a>(<span class="keyword">final</span> Integer hostId, <span class="keyword">final</span> String groupName) {</div>
+<div class="line"><a id="l00161" name="l00161"></a><span class="lineno">  161</span>        HostGroup relpHostGroup1 = <span class="keyword">new</span> HostGroup();</div>
+<div class="line"><a id="l00162" name="l00162"></a><span class="lineno">  162</span>        relpHostGroup1.setHost_id(hostId);</div>
+<div class="line"><a id="l00163" name="l00163"></a><span class="lineno">  163</span>        relpHostGroup1.setHost_group_name(groupName);</div>
 <div class="line"><a id="l00164" name="l00164"></a><span class="lineno">  164</span> </div>
-<div class="line"><a id="l00165" name="l00165"></a><span class="lineno">  165</span>        HttpResponse hostGroupResponse1 = Assertions</div>
-<div class="line"><a id="l00166" name="l00166"></a><span class="lineno">  166</span>                .assertDoesNotThrow(() -&gt; HttpClientBuilder.create().build().execute(hostGroupPutRequest1));</div>
-<div class="line"><a id="l00167" name="l00167"></a><span class="lineno">  167</span> </div>
-<div class="line"><a id="l00168" name="l00168"></a><span class="lineno">  168</span>        HttpEntity hostGroupResponseEntity1 = hostGroupResponse1.getEntity();</div>
-<div class="line"><a id="l00169" name="l00169"></a><span class="lineno">  169</span> </div>
-<div class="line"><a id="l00170" name="l00170"></a><span class="lineno">  170</span>        String hostGroupResponseString1 = Assertions</div>
-<div class="line"><a id="l00171" name="l00171"></a><span class="lineno">  171</span>                .assertDoesNotThrow(() -&gt; EntityUtils.toString(hostGroupResponseEntity1));</div>
+<div class="line"><a id="l00165" name="l00165"></a><span class="lineno">  165</span>        String hostGroup1 = <a class="code hl_variable" href="classcom_1_1teragrep_1_1cfe18_1_1controllerTests_1_1TestApiClient.html#a900519589fe56c7f540e143b28b97a5f">gson</a>.toJson(relpHostGroup1);</div>
+<div class="line"><a id="l00166" name="l00166"></a><span class="lineno">  166</span> </div>
+<div class="line"><a id="l00167" name="l00167"></a><span class="lineno">  167</span>        StringEntity hostGroupEntity1 = <span class="keyword">new</span> StringEntity(String.valueOf(hostGroup1), ContentType.APPLICATION_JSON);</div>
+<div class="line"><a id="l00168" name="l00168"></a><span class="lineno">  168</span> </div>
+<div class="line"><a id="l00169" name="l00169"></a><span class="lineno">  169</span>        HttpPut hostGroupPutRequest1 = <span class="keyword">new</span> HttpPut(<span class="stringliteral">&quot;http://localhost:&quot;</span> + <a class="code hl_variable" href="classcom_1_1teragrep_1_1cfe18_1_1controllerTests_1_1TestApiClient.html#a5b575be8bd594a81e95c159d35d0d9fc">port</a> + <span class="stringliteral">&quot;/host/group&quot;</span>);</div>
+<div class="line"><a id="l00170" name="l00170"></a><span class="lineno">  170</span>        hostGroupPutRequest1.setEntity(hostGroupEntity1);</div>
+<div class="line"><a id="l00171" name="l00171"></a><span class="lineno">  171</span>        hostGroupPutRequest1.setHeader(<span class="stringliteral">&quot;Authorization&quot;</span>, <span class="stringliteral">&quot;Bearer &quot;</span> + <a class="code hl_variable" href="classcom_1_1teragrep_1_1cfe18_1_1controllerTests_1_1TestApiClient.html#a903025aeb7c75a4d20c8fb03528386ee">token</a>);</div>
 <div class="line"><a id="l00172" name="l00172"></a><span class="lineno">  172</span> </div>
-<div class="line"><a id="l00173" name="l00173"></a><span class="lineno">  173</span>        JSONObject hostGroupResponseJson1 = Assertions</div>
-<div class="line"><a id="l00174" name="l00174"></a><span class="lineno">  174</span>                .assertDoesNotThrow(() -&gt; <span class="keyword">new</span> JSONObject(hostGroupResponseString1));</div>
+<div class="line"><a id="l00173" name="l00173"></a><span class="lineno">  173</span>        HttpResponse hostGroupResponse1 = Assertions</div>
+<div class="line"><a id="l00174" name="l00174"></a><span class="lineno">  174</span>                .assertDoesNotThrow(() -&gt; HttpClientBuilder.create().build().execute(hostGroupPutRequest1));</div>
 <div class="line"><a id="l00175" name="l00175"></a><span class="lineno">  175</span> </div>
-<div class="line"><a id="l00176" name="l00176"></a><span class="lineno">  176</span>        <span class="keywordflow">return</span> Assertions.assertDoesNotThrow(() -&gt; hostGroupResponseJson1.getInt(<span class="stringliteral">&quot;host_group_id&quot;</span>));</div>
+<div class="line"><a id="l00176" name="l00176"></a><span class="lineno">  176</span>        HttpEntity hostGroupResponseEntity1 = hostGroupResponse1.getEntity();</div>
 <div class="line"><a id="l00177" name="l00177"></a><span class="lineno">  177</span> </div>
-<div class="line"><a id="l00178" name="l00178"></a><span class="lineno">  178</span>    }</div>
+<div class="line"><a id="l00178" name="l00178"></a><span class="lineno">  178</span>        String hostGroupResponseString1 = Assertions</div>
+<div class="line"><a id="l00179" name="l00179"></a><span class="lineno">  179</span>                .assertDoesNotThrow(() -&gt; EntityUtils.toString(hostGroupResponseEntity1));</div>
+<div class="line"><a id="l00180" name="l00180"></a><span class="lineno">  180</span> </div>
+<div class="line"><a id="l00181" name="l00181"></a><span class="lineno">  181</span>        JSONObject hostGroupResponseJson1 = Assertions</div>
+<div class="line"><a id="l00182" name="l00182"></a><span class="lineno">  182</span>                .assertDoesNotThrow(() -&gt; <span class="keyword">new</span> JSONObject(hostGroupResponseString1));</div>
+<div class="line"><a id="l00183" name="l00183"></a><span class="lineno">  183</span> </div>
+<div class="line"><a id="l00184" name="l00184"></a><span class="lineno">  184</span>        <span class="keywordflow">return</span> Assertions.assertDoesNotThrow(() -&gt; hostGroupResponseJson1.getInt(<span class="stringliteral">&quot;host_group_id&quot;</span>));</div>
+<div class="line"><a id="l00185" name="l00185"></a><span class="lineno">  185</span> </div>
+<div class="line"><a id="l00186" name="l00186"></a><span class="lineno">  186</span>    }</div>
 </div>
-<div class="line"><a id="l00179" name="l00179"></a><span class="lineno">  179</span> </div>
-<div class="foldopen" id="foldopen00180" data-start="{" data-end="}">
-<div class="line"><a id="l00180" name="l00180"></a><span class="lineno"><a class="line" href="classcom_1_1teragrep_1_1cfe18_1_1controllerTests_1_1TestApiClient.html#a7e123397ea901ac5105f3d9c5b9c1a85">  180</a></span>    <span class="keyword">public</span> Integer <a class="code hl_function" href="classcom_1_1teragrep_1_1cfe18_1_1controllerTests_1_1TestApiClient.html#a7e123397ea901ac5105f3d9c5b9c1a85">insertCaptureGroup</a>(<span class="keyword">final</span> String name, <span class="keyword">final</span> IntegrationType integrationType, <span class="keyword">final</span> Integer flowId) {</div>
-<div class="line"><a id="l00181" name="l00181"></a><span class="lineno">  181</span> </div>
-<div class="line"><a id="l00182" name="l00182"></a><span class="lineno">  182</span>        CaptureGroups captureGroup1 = <span class="keyword">new</span> CaptureGroups();</div>
-<div class="line"><a id="l00183" name="l00183"></a><span class="lineno">  183</span>        captureGroup1.setCaptureGroupName(name);</div>
-<div class="line"><a id="l00184" name="l00184"></a><span class="lineno">  184</span>        captureGroup1.setCaptureGroupType(integrationType);</div>
-<div class="line"><a id="l00185" name="l00185"></a><span class="lineno">  185</span>        captureGroup1.setFlowId(flowId);</div>
-<div class="line"><a id="l00186" name="l00186"></a><span class="lineno">  186</span> </div>
-<div class="line"><a id="l00187" name="l00187"></a><span class="lineno">  187</span>        String relpCaptureGroup1 = <a class="code hl_variable" href="classcom_1_1teragrep_1_1cfe18_1_1controllerTests_1_1TestApiClient.html#a900519589fe56c7f540e143b28b97a5f">gson</a>.toJson(captureGroup1);</div>
-<div class="line"><a id="l00188" name="l00188"></a><span class="lineno">  188</span> </div>
-<div class="line"><a id="l00189" name="l00189"></a><span class="lineno">  189</span>        StringEntity captureGroupRequestEntity1 = <span class="keyword">new</span> StringEntity(</div>
-<div class="line"><a id="l00190" name="l00190"></a><span class="lineno">  190</span>                String.valueOf(relpCaptureGroup1),</div>
-<div class="line"><a id="l00191" name="l00191"></a><span class="lineno">  191</span>                ContentType.APPLICATION_JSON</div>
-<div class="line"><a id="l00192" name="l00192"></a><span class="lineno">  192</span>        );</div>
-<div class="line"><a id="l00193" name="l00193"></a><span class="lineno">  193</span> </div>
-<div class="line"><a id="l00194" name="l00194"></a><span class="lineno">  194</span>        HttpPut requestCaptureGroup1 = <span class="keyword">new</span> HttpPut(<span class="stringliteral">&quot;http://localhost:&quot;</span> + <a class="code hl_variable" href="classcom_1_1teragrep_1_1cfe18_1_1controllerTests_1_1TestApiClient.html#a5b575be8bd594a81e95c159d35d0d9fc">port</a> + <span class="stringliteral">&quot;/v2/captures/group&quot;</span>);</div>
-<div class="line"><a id="l00195" name="l00195"></a><span class="lineno">  195</span>        requestCaptureGroup1.setEntity(captureGroupRequestEntity1);</div>
-<div class="line"><a id="l00196" name="l00196"></a><span class="lineno">  196</span>        requestCaptureGroup1.setHeader(<span class="stringliteral">&quot;Authorization&quot;</span>, <span class="stringliteral">&quot;Bearer &quot;</span> + <a class="code hl_variable" href="classcom_1_1teragrep_1_1cfe18_1_1controllerTests_1_1TestApiClient.html#a903025aeb7c75a4d20c8fb03528386ee">token</a>);</div>
-<div class="line"><a id="l00197" name="l00197"></a><span class="lineno">  197</span> </div>
-<div class="line"><a id="l00198" name="l00198"></a><span class="lineno">  198</span>        HttpResponse captureGroupResponse1 = Assertions</div>
-<div class="line"><a id="l00199" name="l00199"></a><span class="lineno">  199</span>                .assertDoesNotThrow(() -&gt; HttpClientBuilder.create().build().execute(requestCaptureGroup1));</div>
-<div class="line"><a id="l00200" name="l00200"></a><span class="lineno">  200</span> </div>
-<div class="line"><a id="l00201" name="l00201"></a><span class="lineno">  201</span>        HttpEntity captureGroupEntity1 = captureGroupResponse1.getEntity();</div>
-<div class="line"><a id="l00202" name="l00202"></a><span class="lineno">  202</span> </div>
-<div class="line"><a id="l00203" name="l00203"></a><span class="lineno">  203</span>        String captureGroupAsResponse1 = Assertions.assertDoesNotThrow(() -&gt; EntityUtils.toString(captureGroupEntity1));</div>
-<div class="line"><a id="l00204" name="l00204"></a><span class="lineno">  204</span> </div>
-<div class="line"><a id="l00205" name="l00205"></a><span class="lineno">  205</span>        JSONObject captureGroupAsJson1 = Assertions.assertDoesNotThrow(() -&gt; <span class="keyword">new</span> JSONObject(captureGroupAsResponse1));</div>
-<div class="line"><a id="l00206" name="l00206"></a><span class="lineno">  206</span> </div>
-<div class="line"><a id="l00207" name="l00207"></a><span class="lineno">  207</span>        <span class="keywordflow">return</span> Assertions.assertDoesNotThrow(() -&gt; captureGroupAsJson1.getInt(<span class="stringliteral">&quot;id&quot;</span>));</div>
-<div class="line"><a id="l00208" name="l00208"></a><span class="lineno">  208</span>    }</div>
+<div class="line"><a id="l00187" name="l00187"></a><span class="lineno">  187</span> </div>
+<div class="foldopen" id="foldopen00188" data-start="{" data-end="}">
+<div class="line"><a id="l00188" name="l00188"></a><span class="lineno"><a class="line" href="classcom_1_1teragrep_1_1cfe18_1_1controllerTests_1_1TestApiClient.html#a7e123397ea901ac5105f3d9c5b9c1a85">  188</a></span>    <span class="keyword">public</span> Integer <a class="code hl_function" href="classcom_1_1teragrep_1_1cfe18_1_1controllerTests_1_1TestApiClient.html#a7e123397ea901ac5105f3d9c5b9c1a85">insertCaptureGroup</a>(<span class="keyword">final</span> String name, <span class="keyword">final</span> IntegrationType integrationType, <span class="keyword">final</span> Integer flowId) {</div>
+<div class="line"><a id="l00189" name="l00189"></a><span class="lineno">  189</span> </div>
+<div class="line"><a id="l00190" name="l00190"></a><span class="lineno">  190</span>        CaptureGroups captureGroup1 = <span class="keyword">new</span> CaptureGroups();</div>
+<div class="line"><a id="l00191" name="l00191"></a><span class="lineno">  191</span>        captureGroup1.setCaptureGroupName(name);</div>
+<div class="line"><a id="l00192" name="l00192"></a><span class="lineno">  192</span>        captureGroup1.setCaptureGroupType(integrationType);</div>
+<div class="line"><a id="l00193" name="l00193"></a><span class="lineno">  193</span>        captureGroup1.setFlowId(flowId);</div>
+<div class="line"><a id="l00194" name="l00194"></a><span class="lineno">  194</span> </div>
+<div class="line"><a id="l00195" name="l00195"></a><span class="lineno">  195</span>        String relpCaptureGroup1 = <a class="code hl_variable" href="classcom_1_1teragrep_1_1cfe18_1_1controllerTests_1_1TestApiClient.html#a900519589fe56c7f540e143b28b97a5f">gson</a>.toJson(captureGroup1);</div>
+<div class="line"><a id="l00196" name="l00196"></a><span class="lineno">  196</span> </div>
+<div class="line"><a id="l00197" name="l00197"></a><span class="lineno">  197</span>        StringEntity captureGroupRequestEntity1 = <span class="keyword">new</span> StringEntity(</div>
+<div class="line"><a id="l00198" name="l00198"></a><span class="lineno">  198</span>                String.valueOf(relpCaptureGroup1),</div>
+<div class="line"><a id="l00199" name="l00199"></a><span class="lineno">  199</span>                ContentType.APPLICATION_JSON</div>
+<div class="line"><a id="l00200" name="l00200"></a><span class="lineno">  200</span>        );</div>
+<div class="line"><a id="l00201" name="l00201"></a><span class="lineno">  201</span> </div>
+<div class="line"><a id="l00202" name="l00202"></a><span class="lineno">  202</span>        HttpPut requestCaptureGroup1 = <span class="keyword">new</span> HttpPut(<span class="stringliteral">&quot;http://localhost:&quot;</span> + <a class="code hl_variable" href="classcom_1_1teragrep_1_1cfe18_1_1controllerTests_1_1TestApiClient.html#a5b575be8bd594a81e95c159d35d0d9fc">port</a> + <span class="stringliteral">&quot;/v2/captures/group&quot;</span>);</div>
+<div class="line"><a id="l00203" name="l00203"></a><span class="lineno">  203</span>        requestCaptureGroup1.setEntity(captureGroupRequestEntity1);</div>
+<div class="line"><a id="l00204" name="l00204"></a><span class="lineno">  204</span>        requestCaptureGroup1.setHeader(<span class="stringliteral">&quot;Authorization&quot;</span>, <span class="stringliteral">&quot;Bearer &quot;</span> + <a class="code hl_variable" href="classcom_1_1teragrep_1_1cfe18_1_1controllerTests_1_1TestApiClient.html#a903025aeb7c75a4d20c8fb03528386ee">token</a>);</div>
+<div class="line"><a id="l00205" name="l00205"></a><span class="lineno">  205</span> </div>
+<div class="line"><a id="l00206" name="l00206"></a><span class="lineno">  206</span>        HttpResponse captureGroupResponse1 = Assertions</div>
+<div class="line"><a id="l00207" name="l00207"></a><span class="lineno">  207</span>                .assertDoesNotThrow(() -&gt; HttpClientBuilder.create().build().execute(requestCaptureGroup1));</div>
+<div class="line"><a id="l00208" name="l00208"></a><span class="lineno">  208</span> </div>
+<div class="line"><a id="l00209" name="l00209"></a><span class="lineno">  209</span>        HttpEntity captureGroupEntity1 = captureGroupResponse1.getEntity();</div>
+<div class="line"><a id="l00210" name="l00210"></a><span class="lineno">  210</span> </div>
+<div class="line"><a id="l00211" name="l00211"></a><span class="lineno">  211</span>        String captureGroupAsResponse1 = Assertions.assertDoesNotThrow(() -&gt; EntityUtils.toString(captureGroupEntity1));</div>
+<div class="line"><a id="l00212" name="l00212"></a><span class="lineno">  212</span> </div>
+<div class="line"><a id="l00213" name="l00213"></a><span class="lineno">  213</span>        JSONObject captureGroupAsJson1 = Assertions.assertDoesNotThrow(() -&gt; <span class="keyword">new</span> JSONObject(captureGroupAsResponse1));</div>
+<div class="line"><a id="l00214" name="l00214"></a><span class="lineno">  214</span> </div>
+<div class="line"><a id="l00215" name="l00215"></a><span class="lineno">  215</span>        <span class="keywordflow">return</span> Assertions.assertDoesNotThrow(() -&gt; captureGroupAsJson1.getInt(<span class="stringliteral">&quot;id&quot;</span>));</div>
+<div class="line"><a id="l00216" name="l00216"></a><span class="lineno">  216</span>    }</div>
 </div>
-<div class="line"><a id="l00209" name="l00209"></a><span class="lineno">  209</span> </div>
-<div class="foldopen" id="foldopen00210" data-start="{" data-end="}">
-<div class="line"><a id="l00210" name="l00210"></a><span class="lineno"><a class="line" href="classcom_1_1teragrep_1_1cfe18_1_1controllerTests_1_1TestApiClient.html#abf26572fa5279129438f6f959b396db9">  210</a></span>    <span class="keyword">public</span> Integer <a class="code hl_function" href="classcom_1_1teragrep_1_1cfe18_1_1controllerTests_1_1TestApiClient.html#abf26572fa5279129438f6f959b396db9">insertLinkage</a>(<span class="keyword">final</span> Integer captureGroupId, <span class="keyword">final</span> Integer hostGroupId) {</div>
-<div class="line"><a id="l00211" name="l00211"></a><span class="lineno">  211</span> </div>
-<div class="line"><a id="l00212" name="l00212"></a><span class="lineno">  212</span>        Linkage linkage1 = <span class="keyword">new</span> Linkage();</div>
-<div class="line"><a id="l00213" name="l00213"></a><span class="lineno">  213</span>        linkage1.setCapture_group_id(captureGroupId);</div>
-<div class="line"><a id="l00214" name="l00214"></a><span class="lineno">  214</span>        linkage1.setHost_group_id(hostGroupId);</div>
-<div class="line"><a id="l00215" name="l00215"></a><span class="lineno">  215</span> </div>
-<div class="line"><a id="l00216" name="l00216"></a><span class="lineno">  216</span>        String relpLinkage1 = <a class="code hl_variable" href="classcom_1_1teragrep_1_1cfe18_1_1controllerTests_1_1TestApiClient.html#a900519589fe56c7f540e143b28b97a5f">gson</a>.toJson(linkage1);</div>
 <div class="line"><a id="l00217" name="l00217"></a><span class="lineno">  217</span> </div>
-<div class="line"><a id="l00218" name="l00218"></a><span class="lineno">  218</span>        StringEntity linkageRequestEntity1 = <span class="keyword">new</span> StringEntity(</div>
-<div class="line"><a id="l00219" name="l00219"></a><span class="lineno">  219</span>                String.valueOf(relpLinkage1),</div>
-<div class="line"><a id="l00220" name="l00220"></a><span class="lineno">  220</span>                ContentType.APPLICATION_JSON</div>
-<div class="line"><a id="l00221" name="l00221"></a><span class="lineno">  221</span>        );</div>
-<div class="line"><a id="l00222" name="l00222"></a><span class="lineno">  222</span> </div>
-<div class="line"><a id="l00223" name="l00223"></a><span class="lineno">  223</span>        HttpPut requestLinkage1 = <span class="keyword">new</span> HttpPut(<span class="stringliteral">&quot;http://localhost:&quot;</span> + <a class="code hl_variable" href="classcom_1_1teragrep_1_1cfe18_1_1controllerTests_1_1TestApiClient.html#a5b575be8bd594a81e95c159d35d0d9fc">port</a> + <span class="stringliteral">&quot;/capture/groups/linkage&quot;</span>);</div>
-<div class="line"><a id="l00224" name="l00224"></a><span class="lineno">  224</span>        requestLinkage1.setEntity(linkageRequestEntity1);</div>
-<div class="line"><a id="l00225" name="l00225"></a><span class="lineno">  225</span>        requestLinkage1.setHeader(<span class="stringliteral">&quot;Authorization&quot;</span>, <span class="stringliteral">&quot;Bearer &quot;</span> + <a class="code hl_variable" href="classcom_1_1teragrep_1_1cfe18_1_1controllerTests_1_1TestApiClient.html#a903025aeb7c75a4d20c8fb03528386ee">token</a>);</div>
-<div class="line"><a id="l00226" name="l00226"></a><span class="lineno">  226</span> </div>
-<div class="line"><a id="l00227" name="l00227"></a><span class="lineno">  227</span>        HttpResponse linkageResponse1 = Assertions</div>
-<div class="line"><a id="l00228" name="l00228"></a><span class="lineno">  228</span>                .assertDoesNotThrow(() -&gt; HttpClientBuilder.create().build().execute(requestLinkage1));</div>
-<div class="line"><a id="l00229" name="l00229"></a><span class="lineno">  229</span> </div>
-<div class="line"><a id="l00230" name="l00230"></a><span class="lineno">  230</span>        HttpEntity linkageResponse1Entity = linkageResponse1.getEntity();</div>
-<div class="line"><a id="l00231" name="l00231"></a><span class="lineno">  231</span> </div>
-<div class="line"><a id="l00232" name="l00232"></a><span class="lineno">  232</span>        String linkageResponseString1 = Assertions</div>
-<div class="line"><a id="l00233" name="l00233"></a><span class="lineno">  233</span>                .assertDoesNotThrow(() -&gt; EntityUtils.toString(linkageResponse1Entity));</div>
+<div class="foldopen" id="foldopen00218" data-start="{" data-end="}">
+<div class="line"><a id="l00218" name="l00218"></a><span class="lineno"><a class="line" href="classcom_1_1teragrep_1_1cfe18_1_1controllerTests_1_1TestApiClient.html#abf26572fa5279129438f6f959b396db9">  218</a></span>    <span class="keyword">public</span> Integer <a class="code hl_function" href="classcom_1_1teragrep_1_1cfe18_1_1controllerTests_1_1TestApiClient.html#abf26572fa5279129438f6f959b396db9">insertLinkage</a>(<span class="keyword">final</span> Integer captureGroupId, <span class="keyword">final</span> Integer hostGroupId) {</div>
+<div class="line"><a id="l00219" name="l00219"></a><span class="lineno">  219</span> </div>
+<div class="line"><a id="l00220" name="l00220"></a><span class="lineno">  220</span>        Linkage linkage1 = <span class="keyword">new</span> Linkage();</div>
+<div class="line"><a id="l00221" name="l00221"></a><span class="lineno">  221</span>        linkage1.setCapture_group_id(captureGroupId);</div>
+<div class="line"><a id="l00222" name="l00222"></a><span class="lineno">  222</span>        linkage1.setHost_group_id(hostGroupId);</div>
+<div class="line"><a id="l00223" name="l00223"></a><span class="lineno">  223</span> </div>
+<div class="line"><a id="l00224" name="l00224"></a><span class="lineno">  224</span>        String relpLinkage1 = <a class="code hl_variable" href="classcom_1_1teragrep_1_1cfe18_1_1controllerTests_1_1TestApiClient.html#a900519589fe56c7f540e143b28b97a5f">gson</a>.toJson(linkage1);</div>
+<div class="line"><a id="l00225" name="l00225"></a><span class="lineno">  225</span> </div>
+<div class="line"><a id="l00226" name="l00226"></a><span class="lineno">  226</span>        StringEntity linkageRequestEntity1 = <span class="keyword">new</span> StringEntity(</div>
+<div class="line"><a id="l00227" name="l00227"></a><span class="lineno">  227</span>                String.valueOf(relpLinkage1),</div>
+<div class="line"><a id="l00228" name="l00228"></a><span class="lineno">  228</span>                ContentType.APPLICATION_JSON</div>
+<div class="line"><a id="l00229" name="l00229"></a><span class="lineno">  229</span>        );</div>
+<div class="line"><a id="l00230" name="l00230"></a><span class="lineno">  230</span> </div>
+<div class="line"><a id="l00231" name="l00231"></a><span class="lineno">  231</span>        HttpPut requestLinkage1 = <span class="keyword">new</span> HttpPut(<span class="stringliteral">&quot;http://localhost:&quot;</span> + <a class="code hl_variable" href="classcom_1_1teragrep_1_1cfe18_1_1controllerTests_1_1TestApiClient.html#a5b575be8bd594a81e95c159d35d0d9fc">port</a> + <span class="stringliteral">&quot;/capture/groups/linkage&quot;</span>);</div>
+<div class="line"><a id="l00232" name="l00232"></a><span class="lineno">  232</span>        requestLinkage1.setEntity(linkageRequestEntity1);</div>
+<div class="line"><a id="l00233" name="l00233"></a><span class="lineno">  233</span>        requestLinkage1.setHeader(<span class="stringliteral">&quot;Authorization&quot;</span>, <span class="stringliteral">&quot;Bearer &quot;</span> + <a class="code hl_variable" href="classcom_1_1teragrep_1_1cfe18_1_1controllerTests_1_1TestApiClient.html#a903025aeb7c75a4d20c8fb03528386ee">token</a>);</div>
 <div class="line"><a id="l00234" name="l00234"></a><span class="lineno">  234</span> </div>
-<div class="line"><a id="l00235" name="l00235"></a><span class="lineno">  235</span>        JSONObject linkageJsonResponse1 = Assertions.assertDoesNotThrow(() -&gt; <span class="keyword">new</span> JSONObject(linkageResponseString1));</div>
-<div class="line"><a id="l00236" name="l00236"></a><span class="lineno">  236</span> </div>
-<div class="line"><a id="l00237" name="l00237"></a><span class="lineno">  237</span>        <span class="keywordflow">return</span> Assertions.assertDoesNotThrow(() -&gt; linkageJsonResponse1.getInt(<span class="stringliteral">&quot;id&quot;</span>));</div>
-<div class="line"><a id="l00238" name="l00238"></a><span class="lineno">  238</span> </div>
-<div class="line"><a id="l00239" name="l00239"></a><span class="lineno">  239</span>    }</div>
+<div class="line"><a id="l00235" name="l00235"></a><span class="lineno">  235</span>        HttpResponse linkageResponse1 = Assertions</div>
+<div class="line"><a id="l00236" name="l00236"></a><span class="lineno">  236</span>                .assertDoesNotThrow(() -&gt; HttpClientBuilder.create().build().execute(requestLinkage1));</div>
+<div class="line"><a id="l00237" name="l00237"></a><span class="lineno">  237</span> </div>
+<div class="line"><a id="l00238" name="l00238"></a><span class="lineno">  238</span>        HttpEntity linkageResponse1Entity = linkageResponse1.getEntity();</div>
+<div class="line"><a id="l00239" name="l00239"></a><span class="lineno">  239</span> </div>
+<div class="line"><a id="l00240" name="l00240"></a><span class="lineno">  240</span>        String linkageResponseString1 = Assertions</div>
+<div class="line"><a id="l00241" name="l00241"></a><span class="lineno">  241</span>                .assertDoesNotThrow(() -&gt; EntityUtils.toString(linkageResponse1Entity));</div>
+<div class="line"><a id="l00242" name="l00242"></a><span class="lineno">  242</span> </div>
+<div class="line"><a id="l00243" name="l00243"></a><span class="lineno">  243</span>        JSONObject linkageJsonResponse1 = Assertions.assertDoesNotThrow(() -&gt; <span class="keyword">new</span> JSONObject(linkageResponseString1));</div>
+<div class="line"><a id="l00244" name="l00244"></a><span class="lineno">  244</span> </div>
+<div class="line"><a id="l00245" name="l00245"></a><span class="lineno">  245</span>        <span class="keywordflow">return</span> Assertions.assertDoesNotThrow(() -&gt; linkageJsonResponse1.getInt(<span class="stringliteral">&quot;id&quot;</span>));</div>
+<div class="line"><a id="l00246" name="l00246"></a><span class="lineno">  246</span> </div>
+<div class="line"><a id="l00247" name="l00247"></a><span class="lineno">  247</span>    }</div>
 </div>
-<div class="line"><a id="l00240" name="l00240"></a><span class="lineno">  240</span> </div>
-<div class="foldopen" id="foldopen00241" data-start="{" data-end="}">
-<div class="line"><a id="l00241" name="l00241"></a><span class="lineno"><a class="line" href="classcom_1_1teragrep_1_1cfe18_1_1controllerTests_1_1TestApiClient.html#a6e84433cb230632ee5480fe3743337bd">  241</a></span>    <span class="keyword">public</span> Integer <a class="code hl_function" href="classcom_1_1teragrep_1_1cfe18_1_1controllerTests_1_1TestApiClient.html#a6e84433cb230632ee5480fe3743337bd">insertCapture</a>(</div>
-<div class="line"><a id="l00242" name="l00242"></a><span class="lineno">  242</span>            <span class="keyword">final</span> String tag,</div>
-<div class="line"><a id="l00243" name="l00243"></a><span class="lineno">  243</span>            <span class="keyword">final</span> String retention,</div>
-<div class="line"><a id="l00244" name="l00244"></a><span class="lineno">  244</span>            <span class="keyword">final</span> String category,</div>
-<div class="line"><a id="l00245" name="l00245"></a><span class="lineno">  245</span>            <span class="keyword">final</span> String application,</div>
-<div class="line"><a id="l00246" name="l00246"></a><span class="lineno">  246</span>            <span class="keyword">final</span> String index,</div>
-<div class="line"><a id="l00247" name="l00247"></a><span class="lineno">  247</span>            <span class="keyword">final</span> String sourceType,</div>
-<div class="line"><a id="l00248" name="l00248"></a><span class="lineno">  248</span>            <span class="keyword">final</span> String protocol,</div>
-<div class="line"><a id="l00249" name="l00249"></a><span class="lineno">  249</span>            <span class="keyword">final</span> String flow</div>
-<div class="line"><a id="l00250" name="l00250"></a><span class="lineno">  250</span>    ) {</div>
-<div class="line"><a id="l00251" name="l00251"></a><span class="lineno">  251</span>        CaptureRelp captureRelp1 = <span class="keyword">new</span> CaptureRelp();</div>
-<div class="line"><a id="l00252" name="l00252"></a><span class="lineno">  252</span>        captureRelp1.setTag(tag);</div>
-<div class="line"><a id="l00253" name="l00253"></a><span class="lineno">  253</span>        captureRelp1.setRetentionTime(retention);</div>
-<div class="line"><a id="l00254" name="l00254"></a><span class="lineno">  254</span>        captureRelp1.setCategory(category);</div>
-<div class="line"><a id="l00255" name="l00255"></a><span class="lineno">  255</span>        captureRelp1.setApplication(application);</div>
-<div class="line"><a id="l00256" name="l00256"></a><span class="lineno">  256</span>        captureRelp1.setIndex(index);</div>
-<div class="line"><a id="l00257" name="l00257"></a><span class="lineno">  257</span>        captureRelp1.setSourceType(sourceType);</div>
-<div class="line"><a id="l00258" name="l00258"></a><span class="lineno">  258</span>        captureRelp1.setProtocol(protocol);</div>
-<div class="line"><a id="l00259" name="l00259"></a><span class="lineno">  259</span>        captureRelp1.setFlow(flow);</div>
-<div class="line"><a id="l00260" name="l00260"></a><span class="lineno">  260</span> </div>
-<div class="line"><a id="l00261" name="l00261"></a><span class="lineno">  261</span>        String relpCapture1 = <a class="code hl_variable" href="classcom_1_1teragrep_1_1cfe18_1_1controllerTests_1_1TestApiClient.html#a900519589fe56c7f540e143b28b97a5f">gson</a>.toJson(captureRelp1);</div>
-<div class="line"><a id="l00262" name="l00262"></a><span class="lineno">  262</span> </div>
-<div class="line"><a id="l00263" name="l00263"></a><span class="lineno">  263</span>        StringEntity relpCaptureEntity1 = <span class="keyword">new</span> StringEntity(String.valueOf(relpCapture1), ContentType.APPLICATION_JSON);</div>
-<div class="line"><a id="l00264" name="l00264"></a><span class="lineno">  264</span> </div>
-<div class="line"><a id="l00265" name="l00265"></a><span class="lineno">  265</span>        HttpPut captureRequestEntity1 = <span class="keyword">new</span> HttpPut(</div>
-<div class="line"><a id="l00266" name="l00266"></a><span class="lineno">  266</span>                <span class="stringliteral">&quot;http://localhost:&quot;</span> + <a class="code hl_variable" href="classcom_1_1teragrep_1_1cfe18_1_1controllerTests_1_1TestApiClient.html#a5b575be8bd594a81e95c159d35d0d9fc">port</a> + <span class="stringliteral">&quot;/v2/captures/definitions/relp-streams&quot;</span></div>
-<div class="line"><a id="l00267" name="l00267"></a><span class="lineno">  267</span>        );</div>
-<div class="line"><a id="l00268" name="l00268"></a><span class="lineno">  268</span>        captureRequestEntity1.setEntity(relpCaptureEntity1);</div>
-<div class="line"><a id="l00269" name="l00269"></a><span class="lineno">  269</span>        captureRequestEntity1.setHeader(<span class="stringliteral">&quot;Authorization&quot;</span>, <span class="stringliteral">&quot;Bearer &quot;</span> + <a class="code hl_variable" href="classcom_1_1teragrep_1_1cfe18_1_1controllerTests_1_1TestApiClient.html#a903025aeb7c75a4d20c8fb03528386ee">token</a>);</div>
+<div class="line"><a id="l00248" name="l00248"></a><span class="lineno">  248</span> </div>
+<div class="foldopen" id="foldopen00249" data-start="{" data-end="}">
+<div class="line"><a id="l00249" name="l00249"></a><span class="lineno"><a class="line" href="classcom_1_1teragrep_1_1cfe18_1_1controllerTests_1_1TestApiClient.html#a6e84433cb230632ee5480fe3743337bd">  249</a></span>    <span class="keyword">public</span> Integer <a class="code hl_function" href="classcom_1_1teragrep_1_1cfe18_1_1controllerTests_1_1TestApiClient.html#a6e84433cb230632ee5480fe3743337bd">insertCapture</a>(</div>
+<div class="line"><a id="l00250" name="l00250"></a><span class="lineno">  250</span>            <span class="keyword">final</span> String tag,</div>
+<div class="line"><a id="l00251" name="l00251"></a><span class="lineno">  251</span>            <span class="keyword">final</span> String retention,</div>
+<div class="line"><a id="l00252" name="l00252"></a><span class="lineno">  252</span>            <span class="keyword">final</span> String category,</div>
+<div class="line"><a id="l00253" name="l00253"></a><span class="lineno">  253</span>            <span class="keyword">final</span> String application,</div>
+<div class="line"><a id="l00254" name="l00254"></a><span class="lineno">  254</span>            <span class="keyword">final</span> String index,</div>
+<div class="line"><a id="l00255" name="l00255"></a><span class="lineno">  255</span>            <span class="keyword">final</span> String sourceType,</div>
+<div class="line"><a id="l00256" name="l00256"></a><span class="lineno">  256</span>            <span class="keyword">final</span> String protocol,</div>
+<div class="line"><a id="l00257" name="l00257"></a><span class="lineno">  257</span>            <span class="keyword">final</span> String flow</div>
+<div class="line"><a id="l00258" name="l00258"></a><span class="lineno">  258</span>    ) {</div>
+<div class="line"><a id="l00259" name="l00259"></a><span class="lineno">  259</span>        CaptureRelp captureRelp1 = <span class="keyword">new</span> CaptureRelp();</div>
+<div class="line"><a id="l00260" name="l00260"></a><span class="lineno">  260</span>        captureRelp1.setTag(tag);</div>
+<div class="line"><a id="l00261" name="l00261"></a><span class="lineno">  261</span>        captureRelp1.setRetentionTime(retention);</div>
+<div class="line"><a id="l00262" name="l00262"></a><span class="lineno">  262</span>        captureRelp1.setCategory(category);</div>
+<div class="line"><a id="l00263" name="l00263"></a><span class="lineno">  263</span>        captureRelp1.setApplication(application);</div>
+<div class="line"><a id="l00264" name="l00264"></a><span class="lineno">  264</span>        captureRelp1.setIndex(index);</div>
+<div class="line"><a id="l00265" name="l00265"></a><span class="lineno">  265</span>        captureRelp1.setSourceType(sourceType);</div>
+<div class="line"><a id="l00266" name="l00266"></a><span class="lineno">  266</span>        captureRelp1.setProtocol(protocol);</div>
+<div class="line"><a id="l00267" name="l00267"></a><span class="lineno">  267</span>        captureRelp1.setFlow(flow);</div>
+<div class="line"><a id="l00268" name="l00268"></a><span class="lineno">  268</span> </div>
+<div class="line"><a id="l00269" name="l00269"></a><span class="lineno">  269</span>        String relpCapture1 = <a class="code hl_variable" href="classcom_1_1teragrep_1_1cfe18_1_1controllerTests_1_1TestApiClient.html#a900519589fe56c7f540e143b28b97a5f">gson</a>.toJson(captureRelp1);</div>
 <div class="line"><a id="l00270" name="l00270"></a><span class="lineno">  270</span> </div>
-<div class="line"><a id="l00271" name="l00271"></a><span class="lineno">  271</span>        HttpResponse captureResponse1 = Assertions</div>
-<div class="line"><a id="l00272" name="l00272"></a><span class="lineno">  272</span>                .assertDoesNotThrow(() -&gt; HttpClientBuilder.create().build().execute(captureRequestEntity1));</div>
-<div class="line"><a id="l00273" name="l00273"></a><span class="lineno">  273</span> </div>
-<div class="line"><a id="l00274" name="l00274"></a><span class="lineno">  274</span>        HttpEntity captureResponse1Entity = captureResponse1.getEntity();</div>
-<div class="line"><a id="l00275" name="l00275"></a><span class="lineno">  275</span> </div>
-<div class="line"><a id="l00276" name="l00276"></a><span class="lineno">  276</span>        String captureResponseEntity1 = Assertions</div>
-<div class="line"><a id="l00277" name="l00277"></a><span class="lineno">  277</span>                .assertDoesNotThrow(() -&gt; EntityUtils.toString(captureResponse1Entity));</div>
+<div class="line"><a id="l00271" name="l00271"></a><span class="lineno">  271</span>        StringEntity relpCaptureEntity1 = <span class="keyword">new</span> StringEntity(String.valueOf(relpCapture1), ContentType.APPLICATION_JSON);</div>
+<div class="line"><a id="l00272" name="l00272"></a><span class="lineno">  272</span> </div>
+<div class="line"><a id="l00273" name="l00273"></a><span class="lineno">  273</span>        HttpPut captureRequestEntity1 = <span class="keyword">new</span> HttpPut(</div>
+<div class="line"><a id="l00274" name="l00274"></a><span class="lineno">  274</span>                <span class="stringliteral">&quot;http://localhost:&quot;</span> + <a class="code hl_variable" href="classcom_1_1teragrep_1_1cfe18_1_1controllerTests_1_1TestApiClient.html#a5b575be8bd594a81e95c159d35d0d9fc">port</a> + <span class="stringliteral">&quot;/v2/captures/definitions/relp-streams&quot;</span></div>
+<div class="line"><a id="l00275" name="l00275"></a><span class="lineno">  275</span>        );</div>
+<div class="line"><a id="l00276" name="l00276"></a><span class="lineno">  276</span>        captureRequestEntity1.setEntity(relpCaptureEntity1);</div>
+<div class="line"><a id="l00277" name="l00277"></a><span class="lineno">  277</span>        captureRequestEntity1.setHeader(<span class="stringliteral">&quot;Authorization&quot;</span>, <span class="stringliteral">&quot;Bearer &quot;</span> + <a class="code hl_variable" href="classcom_1_1teragrep_1_1cfe18_1_1controllerTests_1_1TestApiClient.html#a903025aeb7c75a4d20c8fb03528386ee">token</a>);</div>
 <div class="line"><a id="l00278" name="l00278"></a><span class="lineno">  278</span> </div>
-<div class="line"><a id="l00279" name="l00279"></a><span class="lineno">  279</span>        JSONObject captureResponseJson1 = Assertions.assertDoesNotThrow(() -&gt; <span class="keyword">new</span> JSONObject(captureResponseEntity1));</div>
-<div class="line"><a id="l00280" name="l00280"></a><span class="lineno">  280</span> </div>
-<div class="line"><a id="l00281" name="l00281"></a><span class="lineno">  281</span>        <span class="keywordflow">return</span> Assertions.assertDoesNotThrow(() -&gt; captureResponseJson1.getInt(<span class="stringliteral">&quot;id&quot;</span>));</div>
-<div class="line"><a id="l00282" name="l00282"></a><span class="lineno">  282</span> </div>
-<div class="line"><a id="l00283" name="l00283"></a><span class="lineno">  283</span>    }</div>
+<div class="line"><a id="l00279" name="l00279"></a><span class="lineno">  279</span>        HttpResponse captureResponse1 = Assertions</div>
+<div class="line"><a id="l00280" name="l00280"></a><span class="lineno">  280</span>                .assertDoesNotThrow(() -&gt; HttpClientBuilder.create().build().execute(captureRequestEntity1));</div>
+<div class="line"><a id="l00281" name="l00281"></a><span class="lineno">  281</span> </div>
+<div class="line"><a id="l00282" name="l00282"></a><span class="lineno">  282</span>        HttpEntity captureResponse1Entity = captureResponse1.getEntity();</div>
+<div class="line"><a id="l00283" name="l00283"></a><span class="lineno">  283</span> </div>
+<div class="line"><a id="l00284" name="l00284"></a><span class="lineno">  284</span>        String captureResponseEntity1 = Assertions</div>
+<div class="line"><a id="l00285" name="l00285"></a><span class="lineno">  285</span>                .assertDoesNotThrow(() -&gt; EntityUtils.toString(captureResponse1Entity));</div>
+<div class="line"><a id="l00286" name="l00286"></a><span class="lineno">  286</span> </div>
+<div class="line"><a id="l00287" name="l00287"></a><span class="lineno">  287</span>        JSONObject captureResponseJson1 = Assertions.assertDoesNotThrow(() -&gt; <span class="keyword">new</span> JSONObject(captureResponseEntity1));</div>
+<div class="line"><a id="l00288" name="l00288"></a><span class="lineno">  288</span> </div>
+<div class="line"><a id="l00289" name="l00289"></a><span class="lineno">  289</span>        <span class="keywordflow">return</span> Assertions.assertDoesNotThrow(() -&gt; captureResponseJson1.getInt(<span class="stringliteral">&quot;id&quot;</span>));</div>
+<div class="line"><a id="l00290" name="l00290"></a><span class="lineno">  290</span> </div>
+<div class="line"><a id="l00291" name="l00291"></a><span class="lineno">  291</span>    }</div>
 </div>
-<div class="line"><a id="l00284" name="l00284"></a><span class="lineno">  284</span>}</div>
+<div class="line"><a id="l00292" name="l00292"></a><span class="lineno">  292</span>}</div>
 </div>
-<div class="ttc" id="aclasscom_1_1teragrep_1_1cfe18_1_1controllerTests_1_1TestApiClient_html"><div class="ttname"><a href="classcom_1_1teragrep_1_1cfe18_1_1controllerTests_1_1TestApiClient.html">com.teragrep.cfe18.controllerTests.TestApiClient</a></div><div class="ttdef"><b>Definition</b> <a href="TestApiClient_8java_source.html#l00060">TestApiClient.java:60</a></div></div>
-<div class="ttc" id="aclasscom_1_1teragrep_1_1cfe18_1_1controllerTests_1_1TestApiClient_html_a423b9ca7d8d2865e7ce9742ba1ca3922"><div class="ttname"><a href="classcom_1_1teragrep_1_1cfe18_1_1controllerTests_1_1TestApiClient.html#a423b9ca7d8d2865e7ce9742ba1ca3922">com.teragrep.cfe18.controllerTests.TestApiClient.insertRelpHost</a></div><div class="ttdeci">Integer insertRelpHost(final String md5, final String fq)</div><div class="ttdef"><b>Definition</b> <a href="TestApiClient_8java_source.html#l00122">TestApiClient.java:122</a></div></div>
-<div class="ttc" id="aclasscom_1_1teragrep_1_1cfe18_1_1controllerTests_1_1TestApiClient_html_a4a8a8e8cac06be2ae8956cb647248e63"><div class="ttname"><a href="classcom_1_1teragrep_1_1cfe18_1_1controllerTests_1_1TestApiClient.html#a4a8a8e8cac06be2ae8956cb647248e63">com.teragrep.cfe18.controllerTests.TestApiClient.TestApiClient</a></div><div class="ttdeci">TestApiClient(int port, String token)</div><div class="ttdef"><b>Definition</b> <a href="TestApiClient_8java_source.html#l00066">TestApiClient.java:66</a></div></div>
-<div class="ttc" id="aclasscom_1_1teragrep_1_1cfe18_1_1controllerTests_1_1TestApiClient_html_a5a045f8b4708f0a871bc5b8f254e3b65"><div class="ttname"><a href="classcom_1_1teragrep_1_1cfe18_1_1controllerTests_1_1TestApiClient.html#a5a045f8b4708f0a871bc5b8f254e3b65">com.teragrep.cfe18.controllerTests.TestApiClient.insertHostGroup</a></div><div class="ttdeci">Integer insertHostGroup(final Integer hostId, final String groupName)</div><div class="ttdef"><b>Definition</b> <a href="TestApiClient_8java_source.html#l00152">TestApiClient.java:152</a></div></div>
-<div class="ttc" id="aclasscom_1_1teragrep_1_1cfe18_1_1controllerTests_1_1TestApiClient_html_a5b575be8bd594a81e95c159d35d0d9fc"><div class="ttname"><a href="classcom_1_1teragrep_1_1cfe18_1_1controllerTests_1_1TestApiClient.html#a5b575be8bd594a81e95c159d35d0d9fc">com.teragrep.cfe18.controllerTests.TestApiClient.port</a></div><div class="ttdeci">final int port</div><div class="ttdef"><b>Definition</b> <a href="TestApiClient_8java_source.html#l00063">TestApiClient.java:63</a></div></div>
-<div class="ttc" id="aclasscom_1_1teragrep_1_1cfe18_1_1controllerTests_1_1TestApiClient_html_a6e84433cb230632ee5480fe3743337bd"><div class="ttname"><a href="classcom_1_1teragrep_1_1cfe18_1_1controllerTests_1_1TestApiClient.html#a6e84433cb230632ee5480fe3743337bd">com.teragrep.cfe18.controllerTests.TestApiClient.insertCapture</a></div><div class="ttdeci">Integer insertCapture(final String tag, final String retention, final String category, final String application, final String index, final String sourceType, final String protocol, final String flow)</div><div class="ttdef"><b>Definition</b> <a href="TestApiClient_8java_source.html#l00241">TestApiClient.java:241</a></div></div>
-<div class="ttc" id="aclasscom_1_1teragrep_1_1cfe18_1_1controllerTests_1_1TestApiClient_html_a7e123397ea901ac5105f3d9c5b9c1a85"><div class="ttname"><a href="classcom_1_1teragrep_1_1cfe18_1_1controllerTests_1_1TestApiClient.html#a7e123397ea901ac5105f3d9c5b9c1a85">com.teragrep.cfe18.controllerTests.TestApiClient.insertCaptureGroup</a></div><div class="ttdeci">Integer insertCaptureGroup(final String name, final IntegrationType integrationType, final Integer flowId)</div><div class="ttdef"><b>Definition</b> <a href="TestApiClient_8java_source.html#l00180">TestApiClient.java:180</a></div></div>
-<div class="ttc" id="aclasscom_1_1teragrep_1_1cfe18_1_1controllerTests_1_1TestApiClient_html_a900519589fe56c7f540e143b28b97a5f"><div class="ttname"><a href="classcom_1_1teragrep_1_1cfe18_1_1controllerTests_1_1TestApiClient.html#a900519589fe56c7f540e143b28b97a5f">com.teragrep.cfe18.controllerTests.TestApiClient.gson</a></div><div class="ttdeci">final Gson gson</div><div class="ttdef"><b>Definition</b> <a href="TestApiClient_8java_source.html#l00062">TestApiClient.java:62</a></div></div>
-<div class="ttc" id="aclasscom_1_1teragrep_1_1cfe18_1_1controllerTests_1_1TestApiClient_html_a903025aeb7c75a4d20c8fb03528386ee"><div class="ttname"><a href="classcom_1_1teragrep_1_1cfe18_1_1controllerTests_1_1TestApiClient.html#a903025aeb7c75a4d20c8fb03528386ee">com.teragrep.cfe18.controllerTests.TestApiClient.token</a></div><div class="ttdeci">final String token</div><div class="ttdef"><b>Definition</b> <a href="TestApiClient_8java_source.html#l00064">TestApiClient.java:64</a></div></div>
-<div class="ttc" id="aclasscom_1_1teragrep_1_1cfe18_1_1controllerTests_1_1TestApiClient_html_a9a28c3ecb7b02eee1e6c5bbb10893cc3"><div class="ttname"><a href="classcom_1_1teragrep_1_1cfe18_1_1controllerTests_1_1TestApiClient.html#a9a28c3ecb7b02eee1e6c5bbb10893cc3">com.teragrep.cfe18.controllerTests.TestApiClient.insertFlow</a></div><div class="ttdeci">Integer insertFlow(final String name)</div><div class="ttdef"><b>Definition</b> <a href="TestApiClient_8java_source.html#l00071">TestApiClient.java:71</a></div></div>
-<div class="ttc" id="aclasscom_1_1teragrep_1_1cfe18_1_1controllerTests_1_1TestApiClient_html_abf26572fa5279129438f6f959b396db9"><div class="ttname"><a href="classcom_1_1teragrep_1_1cfe18_1_1controllerTests_1_1TestApiClient.html#abf26572fa5279129438f6f959b396db9">com.teragrep.cfe18.controllerTests.TestApiClient.insertLinkage</a></div><div class="ttdeci">Integer insertLinkage(final Integer captureGroupId, final Integer hostGroupId)</div><div class="ttdef"><b>Definition</b> <a href="TestApiClient_8java_source.html#l00210">TestApiClient.java:210</a></div></div>
-<div class="ttc" id="aclasscom_1_1teragrep_1_1cfe18_1_1controllerTests_1_1TestApiClient_html_af143a3c89fe0d24ab6a99904d295f9a9"><div class="ttname"><a href="classcom_1_1teragrep_1_1cfe18_1_1controllerTests_1_1TestApiClient.html#af143a3c89fe0d24ab6a99904d295f9a9">com.teragrep.cfe18.controllerTests.TestApiClient.insertSink</a></div><div class="ttdeci">Integer insertSink(final Integer flowId, final String sinkPort, final String ip, final String protocol)</div><div class="ttdef"><b>Definition</b> <a href="TestApiClient_8java_source.html#l00094">TestApiClient.java:94</a></div></div>
+<div class="ttc" id="aclasscom_1_1teragrep_1_1cfe18_1_1controllerTests_1_1TestApiClient_html"><div class="ttname"><a href="classcom_1_1teragrep_1_1cfe18_1_1controllerTests_1_1TestApiClient.html">com.teragrep.cfe18.controllerTests.TestApiClient</a></div><div class="ttdef"><b>Definition</b> <a href="TestApiClient_8java_source.html#l00061">TestApiClient.java:61</a></div></div>
+<div class="ttc" id="aclasscom_1_1teragrep_1_1cfe18_1_1controllerTests_1_1TestApiClient_html_a423b9ca7d8d2865e7ce9742ba1ca3922"><div class="ttname"><a href="classcom_1_1teragrep_1_1cfe18_1_1controllerTests_1_1TestApiClient.html#a423b9ca7d8d2865e7ce9742ba1ca3922">com.teragrep.cfe18.controllerTests.TestApiClient.insertRelpHost</a></div><div class="ttdeci">Integer insertRelpHost(final String md5, final String fq)</div><div class="ttdef"><b>Definition</b> <a href="TestApiClient_8java_source.html#l00130">TestApiClient.java:130</a></div></div>
+<div class="ttc" id="aclasscom_1_1teragrep_1_1cfe18_1_1controllerTests_1_1TestApiClient_html_a4a8a8e8cac06be2ae8956cb647248e63"><div class="ttname"><a href="classcom_1_1teragrep_1_1cfe18_1_1controllerTests_1_1TestApiClient.html#a4a8a8e8cac06be2ae8956cb647248e63">com.teragrep.cfe18.controllerTests.TestApiClient.TestApiClient</a></div><div class="ttdeci">TestApiClient(int port, String token)</div><div class="ttdef"><b>Definition</b> <a href="TestApiClient_8java_source.html#l00067">TestApiClient.java:67</a></div></div>
+<div class="ttc" id="aclasscom_1_1teragrep_1_1cfe18_1_1controllerTests_1_1TestApiClient_html_a5a045f8b4708f0a871bc5b8f254e3b65"><div class="ttname"><a href="classcom_1_1teragrep_1_1cfe18_1_1controllerTests_1_1TestApiClient.html#a5a045f8b4708f0a871bc5b8f254e3b65">com.teragrep.cfe18.controllerTests.TestApiClient.insertHostGroup</a></div><div class="ttdeci">Integer insertHostGroup(final Integer hostId, final String groupName)</div><div class="ttdef"><b>Definition</b> <a href="TestApiClient_8java_source.html#l00160">TestApiClient.java:160</a></div></div>
+<div class="ttc" id="aclasscom_1_1teragrep_1_1cfe18_1_1controllerTests_1_1TestApiClient_html_a5b575be8bd594a81e95c159d35d0d9fc"><div class="ttname"><a href="classcom_1_1teragrep_1_1cfe18_1_1controllerTests_1_1TestApiClient.html#a5b575be8bd594a81e95c159d35d0d9fc">com.teragrep.cfe18.controllerTests.TestApiClient.port</a></div><div class="ttdeci">final int port</div><div class="ttdef"><b>Definition</b> <a href="TestApiClient_8java_source.html#l00064">TestApiClient.java:64</a></div></div>
+<div class="ttc" id="aclasscom_1_1teragrep_1_1cfe18_1_1controllerTests_1_1TestApiClient_html_a6e84433cb230632ee5480fe3743337bd"><div class="ttname"><a href="classcom_1_1teragrep_1_1cfe18_1_1controllerTests_1_1TestApiClient.html#a6e84433cb230632ee5480fe3743337bd">com.teragrep.cfe18.controllerTests.TestApiClient.insertCapture</a></div><div class="ttdeci">Integer insertCapture(final String tag, final String retention, final String category, final String application, final String index, final String sourceType, final String protocol, final String flow)</div><div class="ttdef"><b>Definition</b> <a href="TestApiClient_8java_source.html#l00249">TestApiClient.java:249</a></div></div>
+<div class="ttc" id="aclasscom_1_1teragrep_1_1cfe18_1_1controllerTests_1_1TestApiClient_html_a7e123397ea901ac5105f3d9c5b9c1a85"><div class="ttname"><a href="classcom_1_1teragrep_1_1cfe18_1_1controllerTests_1_1TestApiClient.html#a7e123397ea901ac5105f3d9c5b9c1a85">com.teragrep.cfe18.controllerTests.TestApiClient.insertCaptureGroup</a></div><div class="ttdeci">Integer insertCaptureGroup(final String name, final IntegrationType integrationType, final Integer flowId)</div><div class="ttdef"><b>Definition</b> <a href="TestApiClient_8java_source.html#l00188">TestApiClient.java:188</a></div></div>
+<div class="ttc" id="aclasscom_1_1teragrep_1_1cfe18_1_1controllerTests_1_1TestApiClient_html_a813310af33cc1f237d79eb22603aaca9"><div class="ttname"><a href="classcom_1_1teragrep_1_1cfe18_1_1controllerTests_1_1TestApiClient.html#a813310af33cc1f237d79eb22603aaca9">com.teragrep.cfe18.controllerTests.TestApiClient.deleteFlow</a></div><div class="ttdeci">HttpResponse deleteFlow(final Integer flowId)</div><div class="ttdef"><b>Definition</b> <a href="TestApiClient_8java_source.html#l00095">TestApiClient.java:95</a></div></div>
+<div class="ttc" id="aclasscom_1_1teragrep_1_1cfe18_1_1controllerTests_1_1TestApiClient_html_a900519589fe56c7f540e143b28b97a5f"><div class="ttname"><a href="classcom_1_1teragrep_1_1cfe18_1_1controllerTests_1_1TestApiClient.html#a900519589fe56c7f540e143b28b97a5f">com.teragrep.cfe18.controllerTests.TestApiClient.gson</a></div><div class="ttdeci">final Gson gson</div><div class="ttdef"><b>Definition</b> <a href="TestApiClient_8java_source.html#l00063">TestApiClient.java:63</a></div></div>
+<div class="ttc" id="aclasscom_1_1teragrep_1_1cfe18_1_1controllerTests_1_1TestApiClient_html_a903025aeb7c75a4d20c8fb03528386ee"><div class="ttname"><a href="classcom_1_1teragrep_1_1cfe18_1_1controllerTests_1_1TestApiClient.html#a903025aeb7c75a4d20c8fb03528386ee">com.teragrep.cfe18.controllerTests.TestApiClient.token</a></div><div class="ttdeci">final String token</div><div class="ttdef"><b>Definition</b> <a href="TestApiClient_8java_source.html#l00065">TestApiClient.java:65</a></div></div>
+<div class="ttc" id="aclasscom_1_1teragrep_1_1cfe18_1_1controllerTests_1_1TestApiClient_html_a9a28c3ecb7b02eee1e6c5bbb10893cc3"><div class="ttname"><a href="classcom_1_1teragrep_1_1cfe18_1_1controllerTests_1_1TestApiClient.html#a9a28c3ecb7b02eee1e6c5bbb10893cc3">com.teragrep.cfe18.controllerTests.TestApiClient.insertFlow</a></div><div class="ttdeci">Integer insertFlow(final String name)</div><div class="ttdef"><b>Definition</b> <a href="TestApiClient_8java_source.html#l00072">TestApiClient.java:72</a></div></div>
+<div class="ttc" id="aclasscom_1_1teragrep_1_1cfe18_1_1controllerTests_1_1TestApiClient_html_abf26572fa5279129438f6f959b396db9"><div class="ttname"><a href="classcom_1_1teragrep_1_1cfe18_1_1controllerTests_1_1TestApiClient.html#abf26572fa5279129438f6f959b396db9">com.teragrep.cfe18.controllerTests.TestApiClient.insertLinkage</a></div><div class="ttdeci">Integer insertLinkage(final Integer captureGroupId, final Integer hostGroupId)</div><div class="ttdef"><b>Definition</b> <a href="TestApiClient_8java_source.html#l00218">TestApiClient.java:218</a></div></div>
+<div class="ttc" id="aclasscom_1_1teragrep_1_1cfe18_1_1controllerTests_1_1TestApiClient_html_af143a3c89fe0d24ab6a99904d295f9a9"><div class="ttname"><a href="classcom_1_1teragrep_1_1cfe18_1_1controllerTests_1_1TestApiClient.html#af143a3c89fe0d24ab6a99904d295f9a9">com.teragrep.cfe18.controllerTests.TestApiClient.insertSink</a></div><div class="ttdeci">Integer insertSink(final Integer flowId, final String sinkPort, final String ip, final String protocol)</div><div class="ttdef"><b>Definition</b> <a href="TestApiClient_8java_source.html#l00102">TestApiClient.java:102</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>

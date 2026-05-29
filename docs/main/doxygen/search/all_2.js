@@ -13,13 +13,14 @@ var searchData=
   ['deletecapturestorage_10',['deleteCaptureStorage',['../interfacecom_1_1teragrep_1_1cfe18_1_1StorageMapper.html#a09d009bf5474b5cdc04eece236688b64',1,'com::teragrep::cfe18::StorageMapper']]],
   ['deletecfe04transform_11',['deleteCfe04Transform',['../classcom_1_1teragrep_1_1cfe18_1_1handlers_1_1Cfe04TransformController.html#a9d3ac8a4f70b9c424fe2e330f0e48b3b',1,'com::teragrep::cfe18::handlers::Cfe04TransformController']]],
   ['deletecfe04transformbyid_12',['deleteCfe04TransformById',['../interfacecom_1_1teragrep_1_1cfe18_1_1Cfe04TransformMapper.html#a2f93585c9f856319c79f190ccc2003d9',1,'com::teragrep::cfe18::Cfe04TransformMapper']]],
-  ['deleteflowstorage_13',['deleteFlowStorage',['../interfacecom_1_1teragrep_1_1cfe18_1_1StorageMapper.html#a4c5485afff81dbeadeff0cec9a054f3e',1,'com::teragrep::cfe18::StorageMapper']]],
-  ['deletehostgroup_14',['deleteHostGroup',['../interfacecom_1_1teragrep_1_1cfe18_1_1HostGroupMapper.html#a1602b0df03407396e3e42cd376532c7a',1,'com::teragrep::cfe18::HostGroupMapper']]],
-  ['deletehostmeta_15',['deleteHostmeta',['../interfacecom_1_1teragrep_1_1cfe18_1_1HostMetaMapper.html#a1c6f06a48498cc2f9ce4518397c431cf',1,'com::teragrep::cfe18::HostMetaMapper']]],
-  ['deletehub_16',['deleteHub',['../interfacecom_1_1teragrep_1_1cfe18_1_1HubMapper.html#a0a19cef9b6e1d70ea00764c7c2dc6f3f',1,'com::teragrep::cfe18::HubMapper']]],
-  ['deleteinterface_17',['deleteInterface',['../interfacecom_1_1teragrep_1_1cfe18_1_1HostMetaMapper.html#afe874552e353498846bb3f7ad4e92ce9',1,'com::teragrep::cfe18::HostMetaMapper']]],
-  ['deleteip_18',['deleteIp',['../interfacecom_1_1teragrep_1_1cfe18_1_1HostMetaMapper.html#a026bfc2307d63927e6329dc168406cbe',1,'com::teragrep::cfe18::HostMetaMapper']]],
-  ['deletelinkage_19',['deleteLinkage',['../interfacecom_1_1teragrep_1_1cfe18_1_1LinkageMapper.html#ab3c0d8508b0351e7e80bfb5e00cfb3f0',1,'com::teragrep::cfe18::LinkageMapper']]],
-  ['destinationkey_20',['destinationKey',['../classcom_1_1teragrep_1_1cfe18_1_1handlers_1_1entities_1_1Cfe04Transform.html#aba9f6289ed23fecd2bcfe0d0da28d71f',1,'com::teragrep::cfe18::handlers::entities::Cfe04Transform']]],
-  ['dofilterinternal_21',['doFilterInternal',['../classcom_1_1teragrep_1_1cfe18_1_1RequestLoggingFilter.html#a7794b9dd87680c36da5dc439d6edbc4d',1,'com::teragrep::cfe18::RequestLoggingFilter']]]
+  ['deleteflow_13',['deleteFlow',['../classcom_1_1teragrep_1_1cfe18_1_1controllerTests_1_1TestApiClient.html#a813310af33cc1f237d79eb22603aaca9',1,'com::teragrep::cfe18::controllerTests::TestApiClient']]],
+  ['deleteflowstorage_14',['deleteFlowStorage',['../interfacecom_1_1teragrep_1_1cfe18_1_1StorageMapper.html#a4c5485afff81dbeadeff0cec9a054f3e',1,'com::teragrep::cfe18::StorageMapper']]],
+  ['deletehostgroup_15',['deleteHostGroup',['../interfacecom_1_1teragrep_1_1cfe18_1_1HostGroupMapper.html#a1602b0df03407396e3e42cd376532c7a',1,'com::teragrep::cfe18::HostGroupMapper']]],
+  ['deletehostmeta_16',['deleteHostmeta',['../interfacecom_1_1teragrep_1_1cfe18_1_1HostMetaMapper.html#a1c6f06a48498cc2f9ce4518397c431cf',1,'com::teragrep::cfe18::HostMetaMapper']]],
+  ['deletehub_17',['deleteHub',['../interfacecom_1_1teragrep_1_1cfe18_1_1HubMapper.html#a0a19cef9b6e1d70ea00764c7c2dc6f3f',1,'com::teragrep::cfe18::HubMapper']]],
+  ['deleteinterface_18',['deleteInterface',['../interfacecom_1_1teragrep_1_1cfe18_1_1HostMetaMapper.html#afe874552e353498846bb3f7ad4e92ce9',1,'com::teragrep::cfe18::HostMetaMapper']]],
+  ['deleteip_19',['deleteIp',['../interfacecom_1_1teragrep_1_1cfe18_1_1HostMetaMapper.html#a026bfc2307d63927e6329dc168406cbe',1,'com::teragrep::cfe18::HostMetaMapper']]],
+  ['deletelinkage_20',['deleteLinkage',['../interfacecom_1_1teragrep_1_1cfe18_1_1LinkageMapper.html#ab3c0d8508b0351e7e80bfb5e00cfb3f0',1,'com::teragrep::cfe18::LinkageMapper']]],
+  ['destinationkey_21',['destinationKey',['../classcom_1_1teragrep_1_1cfe18_1_1handlers_1_1entities_1_1Cfe04Transform.html#aba9f6289ed23fecd2bcfe0d0da28d71f',1,'com::teragrep::cfe18::handlers::entities::Cfe04Transform']]],
+  ['dofilterinternal_22',['doFilterInternal',['../classcom_1_1teragrep_1_1cfe18_1_1RequestLoggingFilter.html#a7794b9dd87680c36da5dc439d6edbc4d',1,'com::teragrep::cfe18::RequestLoggingFilter']]]
 ];

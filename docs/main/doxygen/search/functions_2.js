@@ -5,12 +5,13 @@ var searchData=
   ['deletecapturestorage_2',['deleteCaptureStorage',['../interfacecom_1_1teragrep_1_1cfe18_1_1StorageMapper.html#a09d009bf5474b5cdc04eece236688b64',1,'com::teragrep::cfe18::StorageMapper']]],
   ['deletecfe04transform_3',['deleteCfe04Transform',['../classcom_1_1teragrep_1_1cfe18_1_1handlers_1_1Cfe04TransformController.html#a9d3ac8a4f70b9c424fe2e330f0e48b3b',1,'com::teragrep::cfe18::handlers::Cfe04TransformController']]],
   ['deletecfe04transformbyid_4',['deleteCfe04TransformById',['../interfacecom_1_1teragrep_1_1cfe18_1_1Cfe04TransformMapper.html#a2f93585c9f856319c79f190ccc2003d9',1,'com::teragrep::cfe18::Cfe04TransformMapper']]],
-  ['deleteflowstorage_5',['deleteFlowStorage',['../interfacecom_1_1teragrep_1_1cfe18_1_1StorageMapper.html#a4c5485afff81dbeadeff0cec9a054f3e',1,'com::teragrep::cfe18::StorageMapper']]],
-  ['deletehostgroup_6',['deleteHostGroup',['../interfacecom_1_1teragrep_1_1cfe18_1_1HostGroupMapper.html#a1602b0df03407396e3e42cd376532c7a',1,'com::teragrep::cfe18::HostGroupMapper']]],
-  ['deletehostmeta_7',['deleteHostmeta',['../interfacecom_1_1teragrep_1_1cfe18_1_1HostMetaMapper.html#a1c6f06a48498cc2f9ce4518397c431cf',1,'com::teragrep::cfe18::HostMetaMapper']]],
-  ['deletehub_8',['deleteHub',['../interfacecom_1_1teragrep_1_1cfe18_1_1HubMapper.html#a0a19cef9b6e1d70ea00764c7c2dc6f3f',1,'com::teragrep::cfe18::HubMapper']]],
-  ['deleteinterface_9',['deleteInterface',['../interfacecom_1_1teragrep_1_1cfe18_1_1HostMetaMapper.html#afe874552e353498846bb3f7ad4e92ce9',1,'com::teragrep::cfe18::HostMetaMapper']]],
-  ['deleteip_10',['deleteIp',['../interfacecom_1_1teragrep_1_1cfe18_1_1HostMetaMapper.html#a026bfc2307d63927e6329dc168406cbe',1,'com::teragrep::cfe18::HostMetaMapper']]],
-  ['deletelinkage_11',['deleteLinkage',['../interfacecom_1_1teragrep_1_1cfe18_1_1LinkageMapper.html#ab3c0d8508b0351e7e80bfb5e00cfb3f0',1,'com::teragrep::cfe18::LinkageMapper']]],
-  ['dofilterinternal_12',['doFilterInternal',['../classcom_1_1teragrep_1_1cfe18_1_1RequestLoggingFilter.html#a7794b9dd87680c36da5dc439d6edbc4d',1,'com::teragrep::cfe18::RequestLoggingFilter']]]
+  ['deleteflow_5',['deleteFlow',['../classcom_1_1teragrep_1_1cfe18_1_1controllerTests_1_1TestApiClient.html#a813310af33cc1f237d79eb22603aaca9',1,'com::teragrep::cfe18::controllerTests::TestApiClient']]],
+  ['deleteflowstorage_6',['deleteFlowStorage',['../interfacecom_1_1teragrep_1_1cfe18_1_1StorageMapper.html#a4c5485afff81dbeadeff0cec9a054f3e',1,'com::teragrep::cfe18::StorageMapper']]],
+  ['deletehostgroup_7',['deleteHostGroup',['../interfacecom_1_1teragrep_1_1cfe18_1_1HostGroupMapper.html#a1602b0df03407396e3e42cd376532c7a',1,'com::teragrep::cfe18::HostGroupMapper']]],
+  ['deletehostmeta_8',['deleteHostmeta',['../interfacecom_1_1teragrep_1_1cfe18_1_1HostMetaMapper.html#a1c6f06a48498cc2f9ce4518397c431cf',1,'com::teragrep::cfe18::HostMetaMapper']]],
+  ['deletehub_9',['deleteHub',['../interfacecom_1_1teragrep_1_1cfe18_1_1HubMapper.html#a0a19cef9b6e1d70ea00764c7c2dc6f3f',1,'com::teragrep::cfe18::HubMapper']]],
+  ['deleteinterface_10',['deleteInterface',['../interfacecom_1_1teragrep_1_1cfe18_1_1HostMetaMapper.html#afe874552e353498846bb3f7ad4e92ce9',1,'com::teragrep::cfe18::HostMetaMapper']]],
+  ['deleteip_11',['deleteIp',['../interfacecom_1_1teragrep_1_1cfe18_1_1HostMetaMapper.html#a026bfc2307d63927e6329dc168406cbe',1,'com::teragrep::cfe18::HostMetaMapper']]],
+  ['deletelinkage_12',['deleteLinkage',['../interfacecom_1_1teragrep_1_1cfe18_1_1LinkageMapper.html#ab3c0d8508b0351e7e80bfb5e00cfb3f0',1,'com::teragrep::cfe18::LinkageMapper']]],
+  ['dofilterinternal_13',['doFilterInternal',['../classcom_1_1teragrep_1_1cfe18_1_1RequestLoggingFilter.html#a7794b9dd87680c36da5dc439d6edbc4d',1,'com::teragrep::cfe18::RequestLoggingFilter']]]
 ];
