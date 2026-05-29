@@ -82,141 +82,101 @@ $(function() {
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:acac351b0ebc56a10dfa48bda455c3762" id="r_acac351b0ebc56a10dfa48bda455c3762"><td class="memItemLeft" align="right" valign="top">CaptureMeta&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="interfacecom_1_1teragrep_1_1cfe18_1_1CaptureMetaMapper.html#acac351b0ebc56a10dfa48bda455c3762">addNewCaptureMeta</a> (int capture_id, String capture_meta_key, String capture_meta_value)</td></tr>
-<tr class="separator:acac351b0ebc56a10dfa48bda455c3762"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a385d5627c2a1c7c8519aaf46abdaacd8" id="r_a385d5627c2a1c7c8519aaf46abdaacd8"><td class="memItemLeft" align="right" valign="top">List&lt; CaptureMeta &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="interfacecom_1_1teragrep_1_1cfe18_1_1CaptureMetaMapper.html#a385d5627c2a1c7c8519aaf46abdaacd8">getCaptureMeta</a> (int capture_id, Integer version)</td></tr>
-<tr class="separator:a385d5627c2a1c7c8519aaf46abdaacd8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6e892b2ea3436586c8c925945b24255e" id="r_a6e892b2ea3436586c8c925945b24255e"><td class="memItemLeft" align="right" valign="top">List&lt; CaptureMeta &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="interfacecom_1_1teragrep_1_1cfe18_1_1CaptureMetaMapper.html#a6e892b2ea3436586c8c925945b24255e">getAllCaptureMetas</a> (Integer version)</td></tr>
-<tr class="separator:a6e892b2ea3436586c8c925945b24255e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ace0bb5b8243b34efafdbfb6f23ded591" id="r_ace0bb5b8243b34efafdbfb6f23ded591"><td class="memItemLeft" align="right" valign="top">CaptureMeta&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="interfacecom_1_1teragrep_1_1cfe18_1_1CaptureMetaMapper.html#ace0bb5b8243b34efafdbfb6f23ded591">deleteCaptureMeta</a> (int capture_id)</td></tr>
-<tr class="separator:ace0bb5b8243b34efafdbfb6f23ded591"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad13ae527009de76913b2110c68cf90ec" id="r_ad13ae527009de76913b2110c68cf90ec"><td class="memItemLeft" align="right" valign="top">List&lt; CaptureDefinition &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="interfacecom_1_1teragrep_1_1cfe18_1_1CaptureMetaMapper.html#ad13ae527009de76913b2110c68cf90ec">getCaptureMetaByKeyValue</a> (String key, String value, Integer version)</td></tr>
-<tr class="separator:ad13ae527009de76913b2110c68cf90ec"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0b7712c6e81062c14abf4838e48a108f" id="r_a0b7712c6e81062c14abf4838e48a108f"><td class="memItemLeft" align="right" valign="top">CaptureMeta&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="interfacecom_1_1teragrep_1_1cfe18_1_1CaptureMetaMapper.html#a0b7712c6e81062c14abf4838e48a108f">create</a> (final Integer captureId, final String key, final String captureMetaValue)</td></tr>
+<tr class="separator:a0b7712c6e81062c14abf4838e48a108f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:accb6c19f0de49746795b48eb9f81cb0b" id="r_accb6c19f0de49746795b48eb9f81cb0b"><td class="memItemLeft" align="right" valign="top">List&lt; CaptureMeta &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="interfacecom_1_1teragrep_1_1cfe18_1_1CaptureMetaMapper.html#accb6c19f0de49746795b48eb9f81cb0b">get</a> (final Integer captureId, final String key, final Integer version)</td></tr>
+<tr class="separator:accb6c19f0de49746795b48eb9f81cb0b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af8256b9bfa49996748f96eb5b18b270b" id="r_af8256b9bfa49996748f96eb5b18b270b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="interfacecom_1_1teragrep_1_1cfe18_1_1CaptureMetaMapper.html#af8256b9bfa49996748f96eb5b18b270b">delete</a> (final Integer captureId, final String key)</td></tr>
+<tr class="separator:af8256b9bfa49996748f96eb5b18b270b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock">
-<p class="definition">Definition at line <a class="el" href="CaptureMetaMapper_8java_source.html#l00055">55</a> of file <a class="el" href="CaptureMetaMapper_8java_source.html">CaptureMetaMapper.java</a>.</p>
+<p class="definition">Definition at line <a class="el" href="CaptureMetaMapper_8java_source.html#l00054">54</a> of file <a class="el" href="CaptureMetaMapper_8java_source.html">CaptureMetaMapper.java</a>.</p>
 </div><h2 class="groupheader">Member Function Documentation</h2>
-<a id="acac351b0ebc56a10dfa48bda455c3762" name="acac351b0ebc56a10dfa48bda455c3762"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#acac351b0ebc56a10dfa48bda455c3762">&#9670;&#160;</a></span>addNewCaptureMeta()</h2>
+<a id="a0b7712c6e81062c14abf4838e48a108f" name="a0b7712c6e81062c14abf4838e48a108f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0b7712c6e81062c14abf4838e48a108f">&#9670;&#160;</a></span>create()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">CaptureMeta com.teragrep.cfe18.CaptureMetaMapper.addNewCaptureMeta </td>
+          <td class="memname">CaptureMeta com.teragrep.cfe18.CaptureMetaMapper.create </td>
           <td>(</td>
-          <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>capture_id</em>, </td>
+          <td class="paramtype">final Integer&#160;</td>
+          <td class="paramname"><em>captureId</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">String&#160;</td>
-          <td class="paramname"><em>capture_meta_key</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">String&#160;</td>
-          <td class="paramname"><em>capture_meta_value</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="ace0bb5b8243b34efafdbfb6f23ded591" name="ace0bb5b8243b34efafdbfb6f23ded591"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ace0bb5b8243b34efafdbfb6f23ded591">&#9670;&#160;</a></span>deleteCaptureMeta()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">CaptureMeta com.teragrep.cfe18.CaptureMetaMapper.deleteCaptureMeta </td>
-          <td>(</td>
-          <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>capture_id</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a6e892b2ea3436586c8c925945b24255e" name="a6e892b2ea3436586c8c925945b24255e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a6e892b2ea3436586c8c925945b24255e">&#9670;&#160;</a></span>getAllCaptureMetas()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">List&lt; CaptureMeta &gt; com.teragrep.cfe18.CaptureMetaMapper.getAllCaptureMetas </td>
-          <td>(</td>
-          <td class="paramtype">Integer&#160;</td>
-          <td class="paramname"><em>version</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a385d5627c2a1c7c8519aaf46abdaacd8" name="a385d5627c2a1c7c8519aaf46abdaacd8"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a385d5627c2a1c7c8519aaf46abdaacd8">&#9670;&#160;</a></span>getCaptureMeta()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">List&lt; CaptureMeta &gt; com.teragrep.cfe18.CaptureMetaMapper.getCaptureMeta </td>
-          <td>(</td>
-          <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>capture_id</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">Integer&#160;</td>
-          <td class="paramname"><em>version</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="ad13ae527009de76913b2110c68cf90ec" name="ad13ae527009de76913b2110c68cf90ec"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ad13ae527009de76913b2110c68cf90ec">&#9670;&#160;</a></span>getCaptureMetaByKeyValue()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">List&lt; CaptureDefinition &gt; com.teragrep.cfe18.CaptureMetaMapper.getCaptureMetaByKeyValue </td>
-          <td>(</td>
-          <td class="paramtype">String&#160;</td>
+          <td class="paramtype">final String&#160;</td>
           <td class="paramname"><em>key</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">String&#160;</td>
-          <td class="paramname"><em>value</em>, </td>
+          <td class="paramtype">final String&#160;</td>
+          <td class="paramname"><em>captureMetaValue</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="af8256b9bfa49996748f96eb5b18b270b" name="af8256b9bfa49996748f96eb5b18b270b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af8256b9bfa49996748f96eb5b18b270b">&#9670;&#160;</a></span>delete()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void com.teragrep.cfe18.CaptureMetaMapper.delete </td>
+          <td>(</td>
+          <td class="paramtype">final Integer&#160;</td>
+          <td class="paramname"><em>captureId</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">Integer&#160;</td>
+          <td class="paramtype">final String&#160;</td>
+          <td class="paramname"><em>key</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="accb6c19f0de49746795b48eb9f81cb0b" name="accb6c19f0de49746795b48eb9f81cb0b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#accb6c19f0de49746795b48eb9f81cb0b">&#9670;&#160;</a></span>get()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">List&lt; CaptureMeta &gt; com.teragrep.cfe18.CaptureMetaMapper.get </td>
+          <td>(</td>
+          <td class="paramtype">final Integer&#160;</td>
+          <td class="paramname"><em>captureId</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">final String&#160;</td>
+          <td class="paramname"><em>key</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">final Integer&#160;</td>
           <td class="paramname"><em>version</em>&#160;</td>
         </tr>
         <tr>

@@ -413,9 +413,9 @@ $(document).ready(function() { init_codefold(0); });
 <div class="foldopen" id="foldopen00319" data-start="{" data-end="}">
 <div class="line"><a id="l00319" name="l00319"></a><span class="lineno"><a class="line" href="classcom_1_1teragrep_1_1cfe18_1_1controllerTests_1_1CaptureDefinitionControllerTest.html#aee6e5fefadb129cba7eeba2fe3c45939">  319</a></span>    public <span class="keywordtype">void</span> testSelectValidCaptureWithKey() {</div>
 <div class="line"><a id="l00320" name="l00320"></a><span class="lineno">  320</span>        CaptureMeta captureMeta = <span class="keyword">new</span> CaptureMeta();</div>
-<div class="line"><a id="l00321" name="l00321"></a><span class="lineno">  321</span>        captureMeta.setCapture_id(1);</div>
-<div class="line"><a id="l00322" name="l00322"></a><span class="lineno">  322</span>        captureMeta.setCapture_meta_key(<span class="stringliteral">&quot;relpKey1&quot;</span>);</div>
-<div class="line"><a id="l00323" name="l00323"></a><span class="lineno">  323</span>        captureMeta.setCapture_meta_value(<span class="stringliteral">&quot;relpValue1&quot;</span>);</div>
+<div class="line"><a id="l00321" name="l00321"></a><span class="lineno">  321</span>        captureMeta.setCaptureId(1);</div>
+<div class="line"><a id="l00322" name="l00322"></a><span class="lineno">  322</span>        captureMeta.setCaptureMetaKey(<span class="stringliteral">&quot;relpKey1&quot;</span>);</div>
+<div class="line"><a id="l00323" name="l00323"></a><span class="lineno">  323</span>        captureMeta.setCaptureMetaValue(<span class="stringliteral">&quot;relpValue1&quot;</span>);</div>
 <div class="line"><a id="l00324" name="l00324"></a><span class="lineno">  324</span> </div>
 <div class="line"><a id="l00325" name="l00325"></a><span class="lineno">  325</span>        String captureMetaJson = gson.toJson(captureMeta);</div>
 <div class="line"><a id="l00326" name="l00326"></a><span class="lineno">  326</span> </div>
@@ -426,7 +426,7 @@ $(document).ready(function() { init_codefold(0); });
 <div class="line"><a id="l00331" name="l00331"></a><span class="lineno">  331</span>        );</div>
 <div class="line"><a id="l00332" name="l00332"></a><span class="lineno">  332</span> </div>
 <div class="line"><a id="l00333" name="l00333"></a><span class="lineno">  333</span>        <span class="comment">// Creates the request</span></div>
-<div class="line"><a id="l00334" name="l00334"></a><span class="lineno">  334</span>        HttpPut captureMetaRequest = <span class="keyword">new</span> HttpPut(<span class="stringliteral">&quot;http://localhost:&quot;</span> + port + <span class="stringliteral">&quot;/capture/meta/&quot;</span>);</div>
+<div class="line"><a id="l00334" name="l00334"></a><span class="lineno">  334</span>        HttpPut captureMetaRequest = <span class="keyword">new</span> HttpPut(<span class="stringliteral">&quot;http://localhost:&quot;</span> + port + <span class="stringliteral">&quot;/v2/captures/definitions/1/metadata&quot;</span>);</div>
 <div class="line"><a id="l00335" name="l00335"></a><span class="lineno">  335</span>        <span class="comment">// set requestEntity to the put request</span></div>
 <div class="line"><a id="l00336" name="l00336"></a><span class="lineno">  336</span>        captureMetaRequest.setEntity(requestEntityCaptureMeta);</div>
 <div class="line"><a id="l00337" name="l00337"></a><span class="lineno">  337</span>        <span class="comment">// Header</span></div>
@@ -447,7 +447,7 @@ $(document).ready(function() { init_codefold(0); });
 <div class="line"><a id="l00352" name="l00352"></a><span class="lineno">  352</span>        <span class="comment">// Parsin respponse as JSONObject</span></div>
 <div class="line"><a id="l00353" name="l00353"></a><span class="lineno">  353</span>        JSONObject captureMetaAsJson = Assertions.assertDoesNotThrow(() -&gt; <span class="keyword">new</span> JSONObject(captureMetaAsResponse));</div>
 <div class="line"><a id="l00354" name="l00354"></a><span class="lineno">  354</span>        <span class="comment">// Creating expected message as JSON Object from the data that was sent towards endpoint</span></div>
-<div class="line"><a id="l00355" name="l00355"></a><span class="lineno">  355</span>        String expectedCaptureMeta = <span class="stringliteral">&quot;New capture meta created for = 1&quot;</span>;</div>
+<div class="line"><a id="l00355" name="l00355"></a><span class="lineno">  355</span>        String expectedCaptureMeta = <span class="stringliteral">&quot;New capture meta created&quot;</span>;</div>
 <div class="line"><a id="l00356" name="l00356"></a><span class="lineno">  356</span> </div>
 <div class="line"><a id="l00357" name="l00357"></a><span class="lineno">  357</span>        <span class="comment">// Creating string from Json that was given as a response</span></div>
 <div class="line"><a id="l00358" name="l00358"></a><span class="lineno">  358</span>        String actualCaptureMeta = Assertions.assertDoesNotThrow(() -&gt; captureMetaAsJson.get(<span class="stringliteral">&quot;message&quot;</span>).toString());</div>
