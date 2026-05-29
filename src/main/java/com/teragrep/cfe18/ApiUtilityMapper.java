@@ -43,38 +43,12 @@
  * Teragrep, the applicable Commercial License may apply to this file if you as
  * a licensee so wish it.
  */
-package com.teragrep.cfe18.handlers;
+package com.teragrep.cfe18;
 
-import com.teragrep.cfe18.ApiSessionMapper;
-import io.swagger.v3.oas.annotations.security.SecurityRequirement;
-import org.mybatis.spring.SqlSessionTemplate;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.apache.ibatis.annotations.Mapper;
 
-import javax.sql.DataSource;
+@Mapper
+public interface ApiUtilityMapper {
 
-@RestController
-@RequestMapping(path = "/version")
-@SecurityRequirement(name = "api")
-public class ApiSessionController {
-
-    @Autowired
-    DataSource dataSource;
-
-    @Autowired
-    SqlSessionTemplate sqlSessionTemplate;
-
-    @Autowired
-    ApiSessionMapper apiSessionMapper;
-
-    @RequestMapping(
-            path = "",
-            method = RequestMethod.GET
-    )
-    public int version() {
-        return apiSessionMapper.getSession();
-    }
-
+    Integer getSession();
 }

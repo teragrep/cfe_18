@@ -43,12 +43,49 @@
  * Teragrep, the applicable Commercial License may apply to this file if you as
  * a licensee so wish it.
  */
-package com.teragrep.cfe18;
+package com.teragrep.cfe18.handlers;
 
-import org.apache.ibatis.annotations.Mapper;
+import com.teragrep.cfe18.ApiUtilityMapper;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import org.mybatis.spring.SqlSessionTemplate;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.oauth2.jwt.Jwt;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
 
-@Mapper
-public interface ApiSessionMapper {
+import javax.sql.DataSource;
 
-    int getSession();
+@RestController
+@RequestMapping(path = "/v2/meta")
+@SecurityRequirement(name = "api")
+public class ApiUtilityController {
+
+    @Autowired
+    DataSource dataSource;
+
+    @Autowired
+    SqlSessionTemplate sqlSessionTemplate;
+
+    @Autowired
+    ApiUtilityMapper apiUtilityMapper;
+
+    @RequestMapping(
+            path = "/data-version",
+            method = RequestMethod.GET
+    )
+    public Integer version() {
+        return apiUtilityMapper.getSession();
+    }
+
+    @RequestMapping(
+            path = "/jwt",
+            method = RequestMethod.GET,
+            produces = "application/json"
+    )
+    public String index(@AuthenticationPrincipal Jwt jwt) throws Exception {
+        return String.format("Hello, %s!", jwt.getSubject());
+    }
+
 }
