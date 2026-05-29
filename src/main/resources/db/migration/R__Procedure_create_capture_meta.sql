@@ -61,7 +61,6 @@ BEGIN
         SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = @nocapture;
     END IF;
 
-
     -- check key existence
     IF ((SELECT COUNT(cmk.meta_key_name)
          FROM capture_meta_key cmk
@@ -71,18 +70,8 @@ BEGIN
 
     SELECT meta_key_id INTO @keyId FROM cfe_18.capture_meta_key WHERE meta_key_name = capture_meta_key;
 
-
-    -- check if capture already has key value
-    IF ((SELECT COUNT(cm.capture_id)
-         FROM capture_meta cm
-                  INNER JOIN capture_meta_key cmk ON cm.meta_key_id = cmk.meta_key_id
-         WHERE cm.capture_id = p_capture_id
-           AND cm.meta_value = capture_meta_value
-           AND cmk.meta_key_name = capture_meta_key) = 0) THEN
-        -- insert new record
-        INSERT INTO cfe_18.capture_meta(capture_id, meta_key_id, meta_value)
-        VALUES (p_capture_id, @keyId, capture_meta_value);
-    END IF;
+    INSERT INTO cfe_18.capture_meta(capture_id, meta_key_id, meta_value)
+    VALUES (p_capture_id, @keyId, capture_meta_value);
 
     -- return ID
     SELECT cm.capture_id AS id FROM cfe_18.capture_meta cm WHERE cm.capture_id = p_capture_id;
