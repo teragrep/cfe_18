@@ -67,10 +67,9 @@ BEGIN
          FROM capture_meta_key cmk
          WHERE cmk.meta_key_name = capture_meta_key) = 0) THEN
         INSERT INTO cfe_18.capture_meta_key(meta_key_name) VALUES (capture_meta_key);
-        SELECT meta_key_id INTO @keyId FROM cfe_18.capture_meta_key WHERE meta_key_name = capture_meta_key;
-    ELSE
-        SELECT meta_key_id INTO @keyId FROM cfe_18.capture_meta_key WHERE meta_key_name = capture_meta_key;
     END IF;
+
+    SELECT meta_key_id INTO @keyId FROM cfe_18.capture_meta_key WHERE meta_key_name = capture_meta_key;
 
 
     -- check if capture already has key value
