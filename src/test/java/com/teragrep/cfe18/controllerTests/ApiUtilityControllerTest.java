@@ -159,6 +159,10 @@ public class ApiUtilityControllerTest extends TestSpringBootInformation {
     @Test
     @Order(5)
     public void testVersionCanBeFetched() {
+        TestApiClient testApiClient = new TestApiClient(port, token);
+
+        Integer flowId = testApiClient.insertFlow("Testflow");
+
         HttpGet requestGet = new HttpGet("http://localhost:" + port + "/v2/meta/data-version");
 
         requestGet.setHeader("Authorization", "Bearer " + token);
@@ -172,9 +176,7 @@ public class ApiUtilityControllerTest extends TestSpringBootInformation {
 
         int version = Integer.parseInt(responseStringGet);
 
-        TestApiClient testApiClient = new TestApiClient(port, token);
-
-        HttpResponse response = testApiClient.deleteFlow(1);
+        HttpResponse response = testApiClient.deleteFlow(flowId);
 
         HttpGet requestFlow = new HttpGet("http://localhost:" + port + "/flow?version=" + version);
 
