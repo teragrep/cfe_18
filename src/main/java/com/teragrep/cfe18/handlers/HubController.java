@@ -64,7 +64,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.sql.DataSource;
-import java.sql.SQLException;
 import java.util.List;
 
 @RestController
@@ -116,24 +115,9 @@ public class HubController {
             @PathVariable("hub_id") int hub_id,
             @RequestParam(required = false) Integer version
     ) {
-        JSONObject jsonErr = new JSONObject();
-        jsonErr.put("id", hub_id);
-        try {
-            Hub h = hubMapper.getHubById(hub_id, version);
-            return new ResponseEntity<>(h, HttpStatus.OK);
-        }
-        catch (Exception ex) {
-            final Throwable cause = ex.getCause();
-            if (cause instanceof SQLException) {
-                LOGGER.error((cause).getMessage());
-                String state = ((SQLException) cause).getSQLState();
-                if (state.equals("45000")) {
-                    jsonErr.put("message", "Record does not exist with the given hub_id");
-                    return new ResponseEntity<>(jsonErr.toString(), HttpStatus.BAD_REQUEST);
-                }
-            }
-            return new ResponseEntity<>("Unexpected error", HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+        Hub h = hubMapper.getHubById(hub_id, version);
+        return new ResponseEntity<>(h, HttpStatus.OK);
+
     }
 
     // Get ALL Hubs
@@ -193,31 +177,13 @@ public class HubController {
     })
     public ResponseEntity<String> addNewHub(@RequestBody Hub newHub) {
         LOGGER.info("About to insert <[{}]>", newHub);
-        try {
-            Hub h = hubMapper.addHub(newHub.getFqHost(), newHub.getMd5(), newHub.getIp());
-            LOGGER.debug("Values returned <[{}]>", h);
-            JSONObject jsonObject = new JSONObject();
-            jsonObject.put("id", h.getHub_id());
-            jsonObject.put("message", "New hub created");
-            return new ResponseEntity<>(jsonObject.toString(), HttpStatus.CREATED);
-        }
-        catch (RuntimeException ex) {
-            JSONObject jsonErr = new JSONObject();
-            jsonErr.put("id", newHub.getHub_id());
-            final Throwable cause = ex.getCause();
-            if (cause instanceof SQLException) {
-                LOGGER.error((cause).getMessage());
-                // Get specific error type
-                int error = ((SQLException) cause).getErrorCode();
-                // Link error with state to get accurate error status
-                String state = error + "-" + ((SQLException) cause).getSQLState();
-                if (state.equals("1062-23000")) {
-                    jsonErr.put("message", "ID,MD5 or fqhost already exists");
-                    return new ResponseEntity<>(jsonErr.toString(), HttpStatus.BAD_REQUEST);
-                }
-            }
-            return new ResponseEntity<>("Unexpected error", HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+        Hub h = hubMapper.addHub(newHub.getFqHost(), newHub.getMd5(), newHub.getIp());
+        LOGGER.debug("Values returned <[{}]>", h);
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("id", h.getHub_id());
+        jsonObject.put("message", "New hub created");
+        return new ResponseEntity<>(jsonObject.toString(), HttpStatus.CREATED);
+
     }
 
     // Delete
@@ -251,29 +217,10 @@ public class HubController {
     })
     public ResponseEntity<String> removeHub(@PathVariable("id") int id) {
         LOGGER.info("Deleting Hub <[{}]>", id);
-        JSONObject jsonErr = new JSONObject();
-        jsonErr.put("id", id);
-        try {
-            hubMapper.deleteHub(id);
-            JSONObject j = new JSONObject();
-            j.put("id", id);
-            j.put("message", "Hub with id = " + id + " deleted.");
-            return new ResponseEntity<>(j.toString(), HttpStatus.OK);
-        }
-        catch (Exception ex) {
-            final Throwable cause = ex.getCause();
-            if (cause instanceof SQLException) {
-                LOGGER.error((cause).getMessage());
-                String state = ((SQLException) cause).getSQLState();
-                if (state.equals("23000")) {
-                    jsonErr.put("message", "Is in use");
-                }
-                else if (state.equals("45000")) {
-                    jsonErr.put("message", "Record does not exist");
-                }
-                return new ResponseEntity<>(jsonErr.toString(), HttpStatus.BAD_REQUEST);
-            }
-            return new ResponseEntity<>("Unexpected error", HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+        hubMapper.deleteHub(id);
+        JSONObject j = new JSONObject();
+        j.put("id", id);
+        j.put("message", "Hub with id = " + id + " deleted.");
+        return new ResponseEntity<>(j.toString(), HttpStatus.OK);
     }
 }

@@ -175,6 +175,6 @@ public class ProcedureStorageTest extends DBUnitbase {
             stmnt.execute();
 
         });
-        Assertions.assertEquals("42000", state.getSQLState());
+        Assertions.assertEquals("45000", state.getSQLState());
     }
 }

@@ -54,8 +54,7 @@ BEGIN
         END;
     START TRANSACTION;
     if (select id from cfe_18.host_meta where id = proc_host_meta_id) is null then
-        SELECT JSON_OBJECT('id', null, 'message', 'Hostmeta does not exist') into @hm;
-        signal sqlstate '45000' set message_text = @hm;
+        SIGNAL SQLSTATE '45000' set MYSQL_ERRNO = 50000;
     end if;
     delete from cfe_18.host_meta where id = proc_host_meta_id;
     COMMIT;

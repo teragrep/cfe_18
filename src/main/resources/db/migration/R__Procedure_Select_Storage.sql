@@ -59,8 +59,7 @@ BEGIN
     END IF;
 
     IF ((SELECT COUNT(id) FROM cfe_18.storages WHERE id = storage_id) = 0) THEN
-        SELECT JSON_OBJECT('id', storage_id, 'message', 'Storage does not exist') INTO @pt;
-        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = @pt;
+        SIGNAL SQLSTATE '45000' set MYSQL_ERRNO = 50000;
     END IF;
 
     SELECT s.id           AS id,

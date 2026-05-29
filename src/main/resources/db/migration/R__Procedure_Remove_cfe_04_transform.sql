@@ -56,8 +56,7 @@ BEGIN
     if (select id
         from cfe_18.cfe_04_transforms
         where id = transforms_id) is null then
-        SELECT JSON_OBJECT('id', null, 'message', 'Transform record does not exist') into @c4t;
-        signal sqlstate '45000' set message_text = @c4t;
+        SIGNAL SQLSTATE '45000' set MYSQL_ERRNO = 50000;
     end if;
     delete
     from cfe_18.cfe_04_transforms

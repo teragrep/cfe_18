@@ -56,8 +56,7 @@ BEGIN
     START TRANSACTION;
 
     if (select id from cfe_18.host where id = proc_host_id) is null then
-        SELECT JSON_OBJECT('id', NULL, 'message', 'host does not exist') into @host;
-        signal sqlstate '45000' set message_text = @host;
+        SIGNAL SQLSTATE '45000' set MYSQL_ERRNO = 50000;
     end if;
 
     select host_type into @type from cfe_18.host where id = proc_host_id;

@@ -62,7 +62,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.sql.DataSource;
-import java.sql.SQLException;
 import java.util.List;
 
 @RestController
@@ -120,48 +119,13 @@ public class CaptureGroupMembersController {
     })
     public ResponseEntity<String> create(@PathVariable("groupId") int groupId, @RequestBody int captureId) {
         LOGGER.info("About to insert <[{}]>", captureId);
-        try {
-            Integer returnedCaptureId = captureGroupMapper.create(groupId, captureId);
-            LOGGER.info("Values returned what happened with linking <[{}]>", returnedCaptureId);
-            JSONObject jsonObject = new JSONObject();
-            jsonObject.put("id", returnedCaptureId);
-            jsonObject.put("message", "Capture linked with group");
-            return new ResponseEntity<>(jsonObject.toString(), HttpStatus.CREATED);
-        }
-        catch (RuntimeException ex) {
-            LOGGER.error(ex.getMessage());
-            JSONObject jsonErr = new JSONObject();
-            jsonErr.put("id", groupId);
-            jsonErr.put("message", ex.getCause().getMessage());
-            final Throwable cause = ex.getCause();
-            if (cause instanceof SQLException) {
-                LOGGER.error((cause).getMessage());
-                int error = ((SQLException) cause).getErrorCode();
-                String state = error + "-" + ((SQLException) cause).getSQLState();
-                LOGGER.info(state);
-                switch (state) {
-                    case "1644-45000":
-                        jsonErr.put("message", "Type mismatch between capture group and capture");
-                        return new ResponseEntity<>(jsonErr.toString(), HttpStatus.CONFLICT);
-                    case "1644-45001":
-                        jsonErr.put("message", "Capture does not exist");
-                        return new ResponseEntity<>(jsonErr.toString(), HttpStatus.NOT_FOUND);
-                    case "1644-45002":
-                        jsonErr.put("message", "Group does not exist");
-                        return new ResponseEntity<>(jsonErr.toString(), HttpStatus.NOT_FOUND);
-                    case "1062-23000":
-                        jsonErr.put("message", "Tag already exists within given group");
-                        return new ResponseEntity<>(jsonErr.toString(), HttpStatus.CONFLICT);
-                    case "1644-17001":
-                        jsonErr.put("message", "Tag already exists on the same host through different channels");
-                        return new ResponseEntity<>(jsonErr.toString(), HttpStatus.CONFLICT);
-                    default:
-                        jsonErr.put("message", "Error unrecognized, contact admin");
-                        return new ResponseEntity<>(jsonErr.toString(), HttpStatus.BAD_REQUEST);
-                }
-            }
-            return new ResponseEntity<>(jsonErr.toString(), HttpStatus.BAD_REQUEST);
-        }
+        Integer returnedCaptureId = captureGroupMapper.create(groupId, captureId);
+        LOGGER.info("Values returned what happened with linking <[{}]>", returnedCaptureId);
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("id", returnedCaptureId);
+        jsonObject.put("message", "Capture linked with group");
+        return new ResponseEntity<>(jsonObject.toString(), HttpStatus.CREATED);
+
     }
 
     @RequestMapping(
@@ -185,26 +149,8 @@ public class CaptureGroupMembersController {
             @PathVariable("groupId") int groupId,
             @RequestParam(required = false) Integer version
     ) {
-        try {
-            List<Integer> cg = captureGroupMapper.get(groupId, version);
-            return new ResponseEntity<>(cg.toString(), HttpStatus.OK);
-        }
-        catch (RuntimeException ex) {
-            LOGGER.error(ex.getMessage());
-            JSONObject jsonErr = new JSONObject();
-            jsonErr.put("message", ex.getCause().getMessage());
-            jsonErr.put("id", groupId);
-            final Throwable cause = ex.getCause();
-            if (cause instanceof SQLException) {
-                LOGGER.error((cause).getMessage());
-                String state = ((SQLException) cause).getSQLState();
-                if (state.equals("45000")) {
-                    jsonErr.put("message", "Record does not exist");
-                    return new ResponseEntity<>(jsonErr.toString(), HttpStatus.NOT_FOUND);
-                }
-            }
-            return new ResponseEntity<>(jsonErr.toString(), HttpStatus.BAD_REQUEST);
-        }
+        List<Integer> cg = captureGroupMapper.get(groupId, version);
+        return new ResponseEntity<>(cg.toString(), HttpStatus.OK);
     }
 
     @RequestMapping(
@@ -234,28 +180,11 @@ public class CaptureGroupMembersController {
             @PathVariable("captureId") int captureId
     ) {
         LOGGER.info("Deleting Capture from group <[{}]>", groupId);
-        try {
-            captureGroupMapper.delete(groupId, captureId);
-            JSONObject j = new JSONObject();
-            j.put("id", groupId);
-            j.put("message", "Capture deleted from group");
-            return new ResponseEntity<>(j.toString(), HttpStatus.OK);
-        }
-        catch (RuntimeException ex) {
-            LOGGER.error(ex.getMessage());
-            JSONObject jsonErr = new JSONObject();
-            jsonErr.put("id", groupId);
-            jsonErr.put("message", ex.getCause().getMessage());
-            final Throwable cause = ex.getCause();
-            if (cause instanceof SQLException) {
-                LOGGER.error((cause).getMessage());
-                String state = ((SQLException) cause).getSQLState();
-                if (state.equals("45000")) {
-                    jsonErr.put("message", "Record does not exist");
-                    return new ResponseEntity<>(jsonErr.toString(), HttpStatus.NOT_FOUND);
-                }
-            }
-            return new ResponseEntity<>(jsonErr.toString(), HttpStatus.BAD_REQUEST);
-        }
+        captureGroupMapper.delete(groupId, captureId);
+        JSONObject j = new JSONObject();
+        j.put("id", groupId);
+        j.put("message", "Capture deleted from group");
+        return new ResponseEntity<>(j.toString(), HttpStatus.OK);
+
     }
 }

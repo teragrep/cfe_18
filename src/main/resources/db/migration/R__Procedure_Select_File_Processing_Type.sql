@@ -61,8 +61,7 @@ BEGIN
     IF ((SELECT COUNT(id)
          FROM cfe_18.file_processing_type FOR SYSTEM_TIME AS OF TRANSACTION @time fpt
          WHERE fpt.id = id) = 0) THEN
-        SELECT JSON_OBJECT('id', id, 'message', 'File processing type does not exist') INTO @pt;
-        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = @pt;
+        SIGNAL SQLSTATE '45000' set MYSQL_ERRNO = 50000;
     END IF;
 
     SELECT fpt.id         AS id,

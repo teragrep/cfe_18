@@ -114,27 +114,9 @@ public class HostMetaController {
             )
     })
     public ResponseEntity<?> getHostMeta(@PathVariable("id") int id, @RequestParam(required = false) Integer version) {
-        try {
-            List<HostMeta> hm = hostMetaMapper.getHostMetaById(id, version);
-            return new ResponseEntity<>(hm, HttpStatus.OK);
-        }
-        catch (Exception ex) {
-            JSONObject jsonErr = new JSONObject();
-            jsonErr.put("id", id);
-            final Throwable cause = ex.getCause();
-            if (cause instanceof SQLException) {
-                LOGGER.error((cause).getMessage());
-                String state = ((SQLException) cause).getSQLState();
-                if (state.equals("45000")) {
-                    jsonErr.put("message", "Record does not exist with the given host_meta_id");
-                }
-                else if (state.equals("45100")) {
-                    jsonErr.put("message", "IP and/or Interface is missing");
-                }
-                return new ResponseEntity<>(jsonErr.toString(), HttpStatus.BAD_REQUEST);
-            }
-            return new ResponseEntity<>("Unexpected error", HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+        List<HostMeta> hm = hostMetaMapper.getHostMetaById(id, version);
+        return new ResponseEntity<>(hm, HttpStatus.OK);
+
     }
 
     // GET ALL Hostmeta. IP and Interface excluded.
@@ -509,30 +491,10 @@ public class HostMetaController {
     })
     public ResponseEntity<String> removeHostMeta(@PathVariable("id") int id) {
         LOGGER.info("Deleting Hostmeta <[{}]>", id);
-        JSONObject jsonErr = new JSONObject();
-        jsonErr.put("id", id);
-        jsonErr.put("message", "Unexpected error occurred");
-        try {
-            hostMetaMapper.deleteHostmeta(id);
-            JSONObject j = new JSONObject();
-            j.put("id", id);
-            j.put("message", "Hostmeta with id =  " + id + " deleted.");
-            return new ResponseEntity<>(j.toString(), HttpStatus.OK);
-        }
-        catch (Exception ex) {
-            final Throwable cause = ex.getCause();
-            if (cause instanceof SQLException) {
-                LOGGER.error((cause).getMessage());
-                String state = ((SQLException) cause).getSQLState();
-                if (state.equals("23000")) {
-                    jsonErr.put("message", "Is in use");
-                }
-                else if (state.equals("45000")) {
-                    jsonErr.put("message", "Record does not exist");
-                }
-                return new ResponseEntity<>(jsonErr.toString(), HttpStatus.BAD_REQUEST);
-            }
-            return new ResponseEntity<>("Unexpected error", HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+        hostMetaMapper.deleteHostmeta(id);
+        JSONObject j = new JSONObject();
+        j.put("id", id);
+        j.put("message", "Hostmeta with id =  " + id + " deleted.");
+        return new ResponseEntity<>(j.toString(), HttpStatus.OK);
     }
 }

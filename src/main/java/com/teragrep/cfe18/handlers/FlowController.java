@@ -112,21 +112,13 @@ public class FlowController {
     })
     public ResponseEntity<String> create(@RequestBody Flow newFlow) {
         LOGGER.info("About to insert <[{}]>", newFlow);
-        try {
-            Flow f = flowMapper.create(newFlow.getName());
-            LOGGER.debug("Values returned <[{}]>", f);
-            JSONObject jsonObject = new JSONObject();
-            jsonObject.put("id", f.getId());
-            jsonObject.put("message", "New flow created");
-            return new ResponseEntity<>(jsonObject.toString(), HttpStatus.CREATED);
-        }
-        catch (RuntimeException ex) {
-            LOGGER.error(ex.getMessage());
-            JSONObject jsonErr = new JSONObject();
-            jsonErr.put("id", newFlow.getId());
-            jsonErr.put("message", ex.getCause().toString());
-            return new ResponseEntity<>(jsonErr.toString(), HttpStatus.BAD_REQUEST);
-        }
+        Flow f = flowMapper.create(newFlow.getName());
+        LOGGER.debug("Values returned <[{}]>", f);
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("id", f.getId());
+        jsonObject.put("message", "New flow created");
+        return new ResponseEntity<>(jsonObject.toString(), HttpStatus.CREATED);
+
     }
 
     @RequestMapping(

@@ -64,7 +64,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.sql.DataSource;
-import java.sql.SQLException;
 import java.util.List;
 
 @RestController
@@ -136,25 +135,9 @@ public class Cfe04TransformController {
             @PathVariable Integer id,
             @RequestParam(required = false) Integer version
     ) {
-        try {
-            List<Cfe04Transform> cfe04Transforms = cfe04TransformMapper.getAllTransformsForCfe04Id(id, version);
-            return new ResponseEntity<>(cfe04Transforms, HttpStatus.OK);
-        }
-        catch (Exception ex) {
-            JSONObject jsonErr = new JSONObject();
-            jsonErr.put("id", id);
-            final Throwable cause = ex.getCause();
-            LOGGER.error(cause.getMessage(), cause);
-            if (cause instanceof SQLException) {
-                LOGGER.error((cause).getMessage());
-                String state = ((SQLException) cause).getSQLState();
-                if (state.equals("45000")) {
-                    jsonErr.put("message", "Record does not exist with the given id");
-                    return new ResponseEntity<>(jsonErr.toString(), HttpStatus.BAD_REQUEST);
-                }
-            }
-            return new ResponseEntity<>("Unexpected error", HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+        List<Cfe04Transform> cfe04Transforms = cfe04TransformMapper.getAllTransformsForCfe04Id(id, version);
+        return new ResponseEntity<>(cfe04Transforms, HttpStatus.OK);
+
     }
 
     // New transforms for cfe_04
@@ -187,39 +170,19 @@ public class Cfe04TransformController {
     })
     public ResponseEntity<String> addNewCfe04Transform(@RequestBody Cfe04Transform newCfe04Transform) {
         LOGGER.info("About to insert <[{}]>", newCfe04Transform);
-        try {
-            Cfe04Transform cfe04Transform = cfe04TransformMapper
-                    .addNewCfe04Transform(
-                            newCfe04Transform.getCfe04Id(), newCfe04Transform.getName(),
-                            newCfe04Transform.isWriteMeta(), newCfe04Transform.isWriteDefault(),
-                            newCfe04Transform.getDefaultValue(), newCfe04Transform.getDestinationKey(),
-                            newCfe04Transform.getRegex(), newCfe04Transform.getFormat()
-                    );
-            LOGGER.debug("Values returned <[{}]>", cfe04Transform);
-            JSONObject jsonObject = new JSONObject();
-            jsonObject.put("id", cfe04Transform.getId());
-            jsonObject.put("message", "New cfe_04 transforms created");
-            return new ResponseEntity<>(jsonObject.toString(), HttpStatus.CREATED);
-        }
-        catch (RuntimeException ex) {
-            final Throwable cause = ex.getCause();
-            // 1452-23000
-            if (cause instanceof SQLException) {
-                int error = ((SQLException) cause).getErrorCode();
-                String state = error + "-" + ((SQLException) cause).getSQLState();
-                JSONObject jsonErr = new JSONObject();
-                jsonErr.put("id", newCfe04Transform.getId());
-                if (state.equals("1452-23000")) {
-                    jsonErr.put("message", "No such cfe_04 id");
-                }
-                else {
-                    jsonErr.put("message", "Error unrecognized, contact admin");
-                }
-                return new ResponseEntity<>(jsonErr.toString(), HttpStatus.BAD_REQUEST);
-            }
-            return new ResponseEntity<>("Unexpected error", HttpStatus.INTERNAL_SERVER_ERROR);
+        Cfe04Transform cfe04Transform = cfe04TransformMapper
+                .addNewCfe04Transform(
+                        newCfe04Transform.getCfe04Id(), newCfe04Transform.getName(), newCfe04Transform.isWriteMeta(),
+                        newCfe04Transform.isWriteDefault(), newCfe04Transform.getDefaultValue(),
+                        newCfe04Transform.getDestinationKey(), newCfe04Transform.getRegex(),
+                        newCfe04Transform.getFormat()
+                );
+        LOGGER.debug("Values returned <[{}]>", cfe04Transform);
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("id", cfe04Transform.getId());
+        jsonObject.put("message", "New cfe_04 transforms created");
+        return new ResponseEntity<>(jsonObject.toString(), HttpStatus.CREATED);
 
-        }
     }
 
     // Delete cfe_04 transforms
@@ -255,28 +218,11 @@ public class Cfe04TransformController {
         LOGGER.info("Deleting cfe_04 transforms with id <[{}]>", id);
         JSONObject jsonErr = new JSONObject();
         jsonErr.put("id", id);
-        try {
-            cfe04TransformMapper.deleteCfe04TransformById(id);
-            JSONObject j = new JSONObject();
-            j.put("id", id);
-            j.put("message", "cfe_04 transforms with id of " + id + " deleted.");
-            return new ResponseEntity<>(j.toString(), HttpStatus.OK);
-        }
-        catch (Exception ex) {
-            final Throwable cause = ex.getCause();
-            if (cause instanceof SQLException) {
-                LOGGER.error((cause).getMessage());
-                String state = ((SQLException) cause).getSQLState();
-                if (state.equals("23000")) {
-                    jsonErr.put("message", "Is in use");
-                }
-                else if (state.equals("45000")) {
-                    jsonErr.put("message", "Record does not exist");
-                }
-                return new ResponseEntity<>(jsonErr.toString(), HttpStatus.BAD_REQUEST);
-            }
-            return new ResponseEntity<>("Unexpected error", HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+        cfe04TransformMapper.deleteCfe04TransformById(id);
+        JSONObject j = new JSONObject();
+        j.put("id", id);
+        j.put("message", "cfe_04 transforms with id of " + id + " deleted.");
+        return new ResponseEntity<>(j.toString(), HttpStatus.OK);
     }
 
 }

@@ -56,8 +56,7 @@ BEGIN
         END;
     START TRANSACTION;
     if (select id from cfe_18.host where id = p_host_id) is null then
-        SELECT JSON_OBJECT('id', p_host_id, 'message', 'Host does not exist') into @hid;
-        signal sqlstate '45000' set message_text = @hid;
+        SIGNAL SQLSTATE '45000' set MYSQL_ERRNO = 50000;
     end if;
 
     if (select id from cfe_18.os_type where os = p_os) is null then

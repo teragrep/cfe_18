@@ -59,7 +59,7 @@ BEGIN
     END IF;
 
     if ((select count(*) from cfe_18.capture_definition FOR SYSTEM_TIME AS OF TRANSACTION @time c where c.id = id) = 0) then
-        signal sqlstate '45000' set MYSQL_ERRNO = 8000;
+        signal sqlstate '45000' set MYSQL_ERRNO = 50000;
     end if;
     SELECT c.id                 AS id,
            t.tag                AS tag,

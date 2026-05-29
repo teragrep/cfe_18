@@ -297,7 +297,7 @@ public class CaptureGroupMembersControllerTest extends TestSpringBootInformation
         JSONObject responseAsJson = Assertions.assertDoesNotThrow(() -> new JSONObject(responseString));
 
         // Creating expected message as JSON Object from the data that was sent towards endpoint
-        String expected = "Capture does not exist";
+        String expected = "Record does not exist";
 
         // Creating string from Json that was given as a response
         String actual = Assertions.assertDoesNotThrow(() -> responseAsJson.get("message").toString());
@@ -335,7 +335,7 @@ public class CaptureGroupMembersControllerTest extends TestSpringBootInformation
         JSONObject responseAsJson = Assertions.assertDoesNotThrow(() -> new JSONObject(responseString));
 
         // Creating expected message as JSON Object from the data that was sent towards endpoint
-        String expected = "Group does not exist";
+        String expected = "Record does not exist";
 
         // Creating string from Json that was given as a response
         String actual = Assertions.assertDoesNotThrow(() -> responseAsJson.get("message").toString());
@@ -455,7 +455,7 @@ public class CaptureGroupMembersControllerTest extends TestSpringBootInformation
         JSONObject responseAsJson = Assertions.assertDoesNotThrow(() -> new JSONObject(responseString));
 
         // Creating expected message as JSON Object from the data that was sent towards endpoint
-        String expected = "Type mismatch between capture group and capture";
+        String expected = "Integration type mismatch";
 
         // Creating string from Json that was given as a response
         String actual = Assertions.assertDoesNotThrow(() -> responseAsJson.get("message").toString());
@@ -576,7 +576,7 @@ public class CaptureGroupMembersControllerTest extends TestSpringBootInformation
         JSONObject responseAsJson = Assertions.assertDoesNotThrow(() -> new JSONObject(responseString));
 
         // Creating expected message as JSON Object from the data that was sent towards endpoint
-        String expected = "Tag already exists within given group";
+        String expected = "Duplicate entry";
 
         // Creating string from Json that was given as a response
         String actual = Assertions.assertDoesNotThrow(() -> responseAsJson.get("message").toString());

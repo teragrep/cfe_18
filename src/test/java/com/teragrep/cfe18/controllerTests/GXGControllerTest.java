@@ -419,7 +419,7 @@ public class GXGControllerTest extends TestSpringBootInformation {
         String expected = "Is in use";
 
         assertEquals(expected, actual);
-        assertThat(deleteResponse.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_BAD_REQUEST));
+        assertThat(deleteResponse.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_CONFLICT));
     }
 
     @Test
@@ -445,7 +445,7 @@ public class GXGControllerTest extends TestSpringBootInformation {
         // Creating expected message as JSON Object from the data that was sent towards endpoint
         String expected = "Record does not exist";
 
-        assertThat(deleteResponse.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_BAD_REQUEST));
+        assertThat(deleteResponse.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_NOT_FOUND));
         assertEquals(expected, actual);
     }
 
@@ -472,7 +472,7 @@ public class GXGControllerTest extends TestSpringBootInformation {
         // Creating expected message as JSON Object from the data that was sent towards endpoint
         String expected = "Record does not exist";
 
-        assertThat(deleteResponse.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_BAD_REQUEST));
+        assertThat(deleteResponse.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_NOT_FOUND));
         assertEquals(expected, actual);
     }
 

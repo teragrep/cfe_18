@@ -65,8 +65,7 @@ BEGIN
          FROM capture_meta FOR SYSTEM_TIME AS OF TRANSACTION @time cm
          WHERE cm.capture_id = capture_id) = 0) THEN
         -- standardized JSON error response
-        SELECT JSON_OBJECT('id', capture_id, 'message', 'Capture meta does not exist with given ID') INTO @nometa;
-        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = @nometa;
+        SIGNAL SQLSTATE '45000' set MYSQL_ERRNO = 50000;
     END IF;
 
     SELECT cm.capture_id     AS capture_id,

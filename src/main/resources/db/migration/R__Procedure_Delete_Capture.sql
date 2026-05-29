@@ -54,7 +54,7 @@ BEGIN
         END;
     START TRANSACTION;
     IF ((SELECT COUNT(id) FROM cfe_18.capture_definition WHERE id = capture_id) = 0) THEN
-        SIGNAL SQLSTATE '45000' SET MYSQL_ERRNO =8000;
+        SIGNAL SQLSTATE '45000' set MYSQL_ERRNO = 50000;
     END IF;
     DELETE FROM cfe_18.capture_type WHERE id = capture_id;
     DELETE FROM cfe_18.capture_definition WHERE id = capture_id;

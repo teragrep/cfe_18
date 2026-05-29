@@ -54,8 +54,7 @@ BEGIN
         END;
     START TRANSACTION;
     if (select id from cfe_18.hubs where id = proc_hub_id) is null then
-        SELECT JSON_OBJECT('id', null, 'message', 'Hub does not exist') into @h;
-        signal sqlstate '45000' set message_text = @h;
+        SIGNAL SQLSTATE '45000' set MYSQL_ERRNO = 50000;
     end if;
 
 
@@ -77,9 +76,7 @@ BEGIN
         into @hamount
         from cfe_18.host_type_cfe htc2
         where hub_id = proc_hub_id;
-        SELECT JSON_OBJECT('amount', @hamount, 'message', 'Hosts use the given hub')
-        into @ha;
-        signal sqlstate '23000' set message_text = @ha;
+        signal sqlstate '45000' set MYSQL_ERRNO = 50020 ;
     end if;
 
     delete from cfe_18.host_type_cfe where hub_id = proc_hub_id;

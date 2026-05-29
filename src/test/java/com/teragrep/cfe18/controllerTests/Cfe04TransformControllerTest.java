@@ -191,16 +191,13 @@ public class Cfe04TransformControllerTest extends TestSpringBootInformation {
         // Parsin respponse as JSONObject
         JSONObject responseAsJson = Assertions.assertDoesNotThrow(() -> new JSONObject(responseString));
         // Creating expected message as JSON Object from the data that was sent towards endpoint
-        String expected = "No such cfe_04 id";
-        int expectedId = 0;
+        String expected = "Record does not exist";
 
         // Creating string from Json that was given as a response
         String actual = Assertions.assertDoesNotThrow(() -> responseAsJson.get("message").toString());
-        int actualId = Assertions.assertDoesNotThrow(() -> responseAsJson.getInt("id"));
 
         // Assertions
-        assertThat(response.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_BAD_REQUEST));
-        assertEquals(expectedId, actualId);
+        assertThat(response.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_NOT_FOUND));
         assertEquals(expected, actual);
     }
 
@@ -412,7 +409,7 @@ public class Cfe04TransformControllerTest extends TestSpringBootInformation {
         // Creating expected message as JSON Object from the data that was sent towards endpoint
         String expected = "Record does not exist";
 
-        assertThat(deleteResponse.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_BAD_REQUEST));
+        assertThat(deleteResponse.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_NOT_FOUND));
         assertEquals(expected, actual);
 
     }

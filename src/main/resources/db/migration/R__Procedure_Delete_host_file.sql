@@ -54,8 +54,7 @@ BEGIN
         END;
     START TRANSACTION;
     IF ((SELECT COUNT(id) FROM cfe_18.host WHERE id = proc_host_id) = 0) THEN
-        SELECT JSON_OBJECT('id', proc_host_id, 'message', 'Host does not exist') INTO @h;
-        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = @h;
+        SIGNAL SQLSTATE '45000' set MYSQL_ERRNO = 50000;
     END IF;
     DELETE FROM cfe_18.host_type_cfe WHERE host_id = proc_host_id;
     DELETE FROM cfe_18.host WHERE id = proc_host_id;

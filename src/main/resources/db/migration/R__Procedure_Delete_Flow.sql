@@ -56,7 +56,7 @@ BEGIN
 
 
     IF ((SELECT COUNT(id) FROM cfe_18.flows WHERE id = flow_id) = 0) THEN
-        SIGNAL SQLSTATE '45000' SET MYSQL_ERRNO = 8000;
+        SIGNAL SQLSTATE '45000' SET MYSQL_ERRNO = 50000;
     END IF;
     DELETE FROM cfe_18.flows WHERE id = flow_id;
     COMMIT;

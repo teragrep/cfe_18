@@ -61,8 +61,7 @@ BEGIN
     end if;
 
     if (select id from capture_definition for system_time as of transaction @time where id = proc_id) is null then
-        SELECT JSON_OBJECT('id', proc_id, 'message', 'Capture does not exist with the given ID') into @cid;
-        signal sqlstate '45000' set message_text = @cid;
+        SIGNAL SQLSTATE '45000' set MYSQL_ERRNO = 50000;
     end if;
 
 

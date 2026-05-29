@@ -57,10 +57,7 @@ BEGIN
     -- type check
     IF ((SELECT COUNT(id) FROM cfe_18.host WHERE MD5 = proc_MD5 AND fqhost = proc_fqhost AND host_type != 'RELP') >
         0) THEN
-        SELECT JSON_OBJECT('id', (SELECT id FROM cfe_18.host WHERE MD5 = proc_MD5 AND fqhost = proc_fqhost),
-                           'message', 'Host exists with different type')
-        INTO @hid;
-        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = @hid;
+        SIGNAL SQLSTATE '45000' set MYSQL_ERRNO = 50010;
     END IF;
 
     IF ((SELECT COUNT(id)

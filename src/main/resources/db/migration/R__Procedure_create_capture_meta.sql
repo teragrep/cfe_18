@@ -56,9 +56,7 @@ BEGIN
     START TRANSACTION;
     -- check if capture exists for metadata
     IF ((SELECT COUNT(id) FROM cfe_18.capture_definition WHERE id = p_capture_id) = 0) THEN
-        -- standardized JSON error response
-        SELECT JSON_OBJECT('id', p_capture_id, 'message', 'Capture does not exist with given ID') INTO @nocapture;
-        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = @nocapture;
+        SIGNAL SQLSTATE '45000' set MYSQL_ERRNO = 50000;
     END IF;
 
     -- check key existence

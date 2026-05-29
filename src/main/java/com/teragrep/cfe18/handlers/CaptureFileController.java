@@ -108,7 +108,6 @@ public class CaptureFileController {
     })
     public ResponseEntity<String> create(@RequestBody CaptureFile newCapture) {
         LOGGER.info("About to insert <[{}]>", newCapture);
-
         CaptureFile c = captureFileMapper
                 .create(
                         newCapture.getTag(), newCapture.getRetentionTime(), newCapture.getCategory(),

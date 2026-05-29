@@ -61,8 +61,7 @@ BEGIN
     END IF;
 
     IF ((SELECT COUNT(id) FROM cfe_18.capture_sink FOR SYSTEM_TIME AS OF TRANSACTION @time WHERE id = sink_id) = 0) THEN
-        SELECT JSON_OBJECT('id', sink_id, 'message', 'Sink does not exist') INTO @sink;
-        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = @sink;
+        SIGNAL SQLSTATE '45000' set MYSQL_ERRNO = 50000;
     END IF;
 
     SELECT cs.id          AS id,

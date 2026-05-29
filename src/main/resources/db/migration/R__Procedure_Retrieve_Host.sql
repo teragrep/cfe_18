@@ -59,16 +59,14 @@ BEGIN
              set @time=tx_id;
         end if;
     if (select id from cfe_18.host for system_time as of transaction @time where id = proc_host_id) is null then
-        SELECT JSON_OBJECT('id', proc_host_id, 'message', 'Host does not exist with the given ID') into @hid;
-        signal sqlstate '45000' set message_text = @hid;
+        SIGNAL SQLSTATE '45000' set MYSQL_ERRNO = 50000;
     end if;
 
     if (select h.id
         from cfe_18.host for system_time as of transaction @time h
                  inner join hubs for system_time as of transaction @time h3 on h.id = h3.host_id
         where h.id = proc_host_id) is not null then
-        SELECT JSON_OBJECT('id', proc_host_id, 'message', 'Host given is hub') into @hub;
-        signal sqlstate '45100' set message_text = @hub;
+        SIGNAL SQLSTATE '45000' set MYSQL_ERRNO = 50060;
     elseif (select id from cfe_18.host for system_time as of transaction @time where id = proc_host_id and host_type = 'CFE') then
 
         select h.id          as host_id,

@@ -54,8 +54,7 @@ BEGIN
         END;
     START TRANSACTION;
     if (select id from cfe_18.host_groups_x_capture_def_group where id = linkage_id) is null then
-        SELECT JSON_OBJECT('id', null, 'message', 'Linkage does not exist') into @l;
-        signal sqlstate '45000' set message_text = @l;
+        SIGNAL SQLSTATE '45000' set MYSQL_ERRNO = 50000;
     end if;
     delete from cfe_18.host_groups_x_capture_def_group where id = linkage_id;
     COMMIT;

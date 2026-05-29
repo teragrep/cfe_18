@@ -49,8 +49,16 @@ import org.springframework.http.HttpStatus;
 
 public enum MariaDBError {
 
-    MISSING(8000, HttpStatus.NOT_FOUND, "Record does not exist"),
-    INUSE(1451, HttpStatus.BAD_REQUEST, "Is in use"),
+    MISSING(-15536, HttpStatus.NOT_FOUND, "Record does not exist"),
+    INTEGRATIONTYPECONFLICT(-15526, HttpStatus.CONFLICT, "Integration type mismatch"),
+    HOSTSUSEHUB(-15516, HttpStatus.BAD_REQUEST, "Hosts use the hub"),
+    TAGMD5SUMERROR(-15506, HttpStatus.INTERNAL_SERVER_ERROR, "Tag mismatches with the given tag_path"),
+    DUPLICATEHOST(-15496, HttpStatus.CONFLICT, "Tag already exists on the same host through different channels"),
+    HOSTISAHUB(-15476, HttpStatus.CONFLICT, "Host is a hub"),
+    MISSINGCONSTRAINT(1452, HttpStatus.NOT_FOUND, "Record does not exist"),
+    INUSE(1451, HttpStatus.CONFLICT, "Is in use"),
+    DUPLICATEENTRY(1062, HttpStatus.CONFLICT, "Duplicate entry"),
+    GENERICERR(1644, HttpStatus.CONFLICT, "Generic user error"),
     UNKNOWN(0, HttpStatus.INTERNAL_SERVER_ERROR, "Something went wrong"),;
 
     private final int errorCode;

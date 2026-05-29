@@ -59,8 +59,7 @@ BEGIN
              set @time=tx_id;
         end if;
     if (select distinct id from cfe_18.host_group for system_time as of transaction @time where groupName = grp_name) is null then
-        SELECT JSON_OBJECT('id', NULL, 'message', 'Host group does not exist.') into @hg;
-        signal sqlstate '45000' set message_text = @hg;
+        SIGNAL SQLSTATE '45000' set MYSQL_ERRNO = 50000;
     end if;
     select h.MD5          as MD5,
            h.id           as host_id,
