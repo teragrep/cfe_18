@@ -1,1 +1,1 @@
-var branches = ["main", "dependabot", "revert-162-cfe04ConfigMetaDataV2", "2.2-fixes"]
+var branches = ["2.2-fixes", "main", "dependabot", "revert-162-cfe04ConfigMetaDataV2"]
