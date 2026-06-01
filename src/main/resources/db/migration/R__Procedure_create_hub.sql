@@ -43,7 +43,7 @@
  * Teragrep, the applicable Commercial License may apply to this file if you as
  * a licensee so wish it.
  */
-use cfe_18;
+USE cfe_18;
 DELIMITER //
 CREATE OR REPLACE PROCEDURE insert_cfe_hub(fqhost VARCHAR(128), md5 VARCHAR(32),
                                            ip VARCHAR(255))
@@ -54,7 +54,7 @@ BEGIN
             RESIGNAL;
         END;
     START TRANSACTION;
-    IF ((SELECT COUNT(id)
+    IF ((SELECT COUNT(h.id)
          FROM cfe_18.host h
          WHERE h.MD5 = md5
            AND h.fqhost = fqhost
@@ -67,20 +67,19 @@ BEGIN
         SELECT id INTO @hid FROM cfe_18.host h WHERE h.MD5 = md5 AND h.fqhost = fqhost AND h.host_type = 'CFE';
     END IF;
 
-    IF ((SELECT COUNT(h.host_id)
-         FROM cfe_18.hubs h
-         WHERE h.host_id = @hid
-           AND h.ip = ip
-           AND h.host_type = 'CFE') = 0) THEN
+    IF ((SELECT COUNT(hu.host_id)
+         FROM cfe_18.hubs hu
+         WHERE hu.host_id = @hid
+           AND hu.ip = ip
+           AND hu.host_type = 'CFE') = 0) THEN
 
         INSERT INTO cfe_18.hubs(host_id, ip, host_type)
         VALUES (@hid, ip, 'CFE');
-        SELECT LAST_INSERT_ID() INTO @id;
-    ELSE
-        SELECT id INTO @id FROM cfe_18.hubs h WHERE h.host_id = @hid AND h.ip = ip AND h.host_type = 'CFE';
     END IF;
 
-    IF ((SELECT COUNT(host_id)
+    SELECT id INTO @id FROM cfe_18.hubs hu WHERE hu.host_id = @hid AND hu.ip = ip AND hu.host_type = 'CFE';
+
+    IF ((SELECT COUNT(htc.host_id)
          FROM cfe_18.host_type_cfe htc
          WHERE htc.host_id = @hid
            AND htc.host_type = 'CFE'
