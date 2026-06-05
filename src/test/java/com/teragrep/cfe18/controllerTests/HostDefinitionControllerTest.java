@@ -51,9 +51,6 @@ import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpPut;
-import org.apache.http.entity.ContentType;
-import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.util.EntityUtils;
 import org.json.JSONObject;
@@ -129,40 +126,8 @@ public class HostDefinitionControllerTest extends TestSpringBootInformation {
     @Order(3)
     public void testSelectAll() {
 
-        HostRelp relpHost = new HostRelp();
-        relpHost.setMd5("md5");
-        relpHost.setFqHost("hostFq");
-
-        String json = gson.toJson(relpHost);
-
-        // forms the json to requestEntity
-        StringEntity requestEntity = new StringEntity(String.valueOf(json), ContentType.APPLICATION_JSON);
-
-        // Creates the request
-        HttpPut request = new HttpPut("http://localhost:" + port + "/host/relp");
-        // set requestEntity to the put request
-        request.setEntity(requestEntity);
-        // Header
-        request.setHeader("Authorization", "Bearer " + token);
-
-        // Get the response from endpoint
-        HttpResponse httpResponse = Assertions
-                .assertDoesNotThrow(() -> HttpClientBuilder.create().build().execute(request));
-
-        // Get the entity from response
-        HttpEntity entity = httpResponse.getEntity();
-
-        // Entity response string
-        String responseString = Assertions.assertDoesNotThrow(() -> EntityUtils.toString(entity));
-
-        // Parsing response as JSONObject
-        JSONObject responseAsJson = Assertions.assertDoesNotThrow(() -> new JSONObject(responseString));
-
-        // Creating expected message as JSON Object from the data that was sent towards endpoint
-        String expectedHost = "New host created with relp type";
-
-        // Creating string from Json that was given as a response
-        String actualHost = Assertions.assertDoesNotThrow(() -> responseAsJson.get("message").toString());
+        TestApiClient testApiClient = new TestApiClient(port, token);
+        Integer hostId = testApiClient.insertRelpHost("md5", "hostFq");
 
         // Asserting get request
         HttpGet requestGet = new HttpGet("http://localhost:" + port + "/v2/hosts/definitions");
@@ -179,7 +144,7 @@ public class HostDefinitionControllerTest extends TestSpringBootInformation {
         List<HostDefinition> expectedHosts = new ArrayList<>();
 
         HostDefinition hostDefinition = new HostDefinition();
-        hostDefinition.setHostId(1);
+        hostDefinition.setHostId(hostId);
         hostDefinition.setMd5("md5");
         hostDefinition.setHostFq("hostFq");
         hostDefinition.setHostType(IntegrationType.RELP);
@@ -188,8 +153,6 @@ public class HostDefinitionControllerTest extends TestSpringBootInformation {
 
         String expected = gson.toJson(expectedHosts);
 
-        assertEquals(expectedHost, actualHost);
-        assertEquals(HttpStatus.SC_CREATED, httpResponse.getStatusLine().getStatusCode());
         assertEquals(expected, responseStringGet);
         assertEquals(HttpStatus.SC_OK, responseGet.getStatusLine().getStatusCode());
 
