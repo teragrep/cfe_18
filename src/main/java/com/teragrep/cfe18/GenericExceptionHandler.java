@@ -50,32 +50,25 @@ import jakarta.json.JsonObjectBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.annotation.Order;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-import java.sql.SQLException;
+import java.util.UUID;
 
 @RestControllerAdvice
-@Order(1)
-public class DatabaseExceptionHandler {
+@Order(2)
+public class GenericExceptionHandler {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(DatabaseExceptionHandler.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(GenericExceptionHandler.class);
 
-    MariaDBErrorResolver resolver;
-
-    public DatabaseExceptionHandler(MariaDBErrorResolver resolver) {
-        this.resolver = resolver;
-    }
-
-    @ExceptionHandler(SQLException.class)
-    public ResponseEntity<String> handleSQLException(SQLException ex) {
-        LOGGER.error(ex.getMessage(), ex);
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<String> handleException(Exception ex) {
+        UUID s = UUID.randomUUID();
+        LOGGER.error("Error ID {}", s, ex);
         JsonObjectBuilder errBuilder = Json.createObjectBuilder();
-        MariaDBError mariaDBError = resolver.resolve(ex.getErrorCode());
-        errBuilder.add("message", mariaDBError.message());
-        return new ResponseEntity<>(errBuilder.build().toString(), mariaDBError.status());
-
+        errBuilder.add("message", "an error occured, use errorId {" + s + "} for correlation with administrator");
+        return new ResponseEntity<>(errBuilder.build().toString(), HttpStatus.INTERNAL_SERVER_ERROR);
     }
-
 }
