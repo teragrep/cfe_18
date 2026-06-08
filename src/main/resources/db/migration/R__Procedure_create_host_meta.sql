@@ -45,7 +45,7 @@
  */
 USE cfe_18;
 DELIMITER //
-CREATE OR REPLACE PROCEDURE create_host_meta_data(p_host_id INT, host_meta_key VARCHAR(1024),
+CREATE OR REPLACE PROCEDURE insert_host_meta_data(p_host_id INT, host_meta_key VARCHAR(1024),
                                                   host_meta_value VARCHAR(1024))
 BEGIN
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
@@ -57,9 +57,7 @@ BEGIN
 
     -- check if host exists for metadata
     IF ((SELECT COUNT(id) FROM cfe_18.host WHERE id = p_host_id) = 0) THEN
-        -- standardized JSON error response
-        SELECT JSON_OBJECT('id', p_host_id, 'message', 'Host does not exist with given ID') INTO @noHost;
-        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = @noHost;
+        SIGNAL SQLSTATE '45000' SET MYSQL_ERRNO = 50000;
     END IF;
 
     -- check if key exists
@@ -70,15 +68,10 @@ BEGIN
     -- select key into variable
     SELECT meta_key_id INTO @keyId FROM cfe_18.host_meta_key WHERE meta_key_name = host_meta_key;
 
-    IF ((SELECT COUNT(host_id)
-         FROM cfe_18.host_meta
-         WHERE meta_key_id = @keyId
-           AND host_id = p_host_id
-           AND meta_value = host_meta_value) = 0) THEN
-        INSERT INTO cfe_18.host_meta VALUES (p_host_id, @keyId, host_meta_value);
-    END IF;
+    INSERT INTO cfe_18.host_meta(host_id, meta_key_id, meta_value) VALUES (p_host_id, @keyId, host_meta_value);
+
     -- return host_id as signal
-    SELECT p_host_id AS host_id;
+    SELECT hm.host_id AS host_id from cfe_18.host_meta hm where hm.host_id=p_host_id;
     COMMIT;
 END;
 //

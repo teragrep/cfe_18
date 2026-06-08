@@ -4,13 +4,14 @@
         "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.teragrep.cfe18.HostMetaMapper">
 
-    <!-- p_host_id INT, host_meta_key VARCHAR(1024),host_meta_value VARCHAR(1024) -->
+    <!-- insert  p_host_id INT, host_meta_key VARCHAR(1024),host_meta_value VARCHAR(1024) -->
     <select id="create" resultMap="insertedID" statementType="CALLABLE">
-        {CALL
-        cfe_18.create_host_meta_data(#{param1},#{param2},#{param3})}
+        {CALL cfe_18.insert_host_meta_data(#{param1},#{param2},#{param3})}
     </select>
+
+    <!-- ID return map -->
     <resultMap id="insertedID" type="com.teragrep.cfe18.handlers.entities.HostMeta">
-        <result property="hostId" column="host_id"/>
+        <result property="hostId"    column="host_id"/>
     </resultMap>
 
     <!-- meta_key VARCHAR(1024), tx_id INT -->
@@ -18,11 +19,10 @@
         {CAll cfe_18.select_all_host_metas(#{param1},#{param2})}
     </select>
     <resultMap id="allHostMeta" type="com.teragrep.cfe18.handlers.entities.HostMeta">
-        <result property="hostId" column="host_id"/>
-        <result property="metaKey" column="meta_key"/>
-        <result property="metaValue" column="meta_value"/>
+        <result property="hostId"       column="host_id"/>
+        <result property="metaKey"      column="meta_key"/>
+        <result property="metaValue"    column="meta_value"/>
     </resultMap>
-
 
     <!-- p_host_id INT, meta_key VARCHAR(1024) -->
     <select id="delete" statementType="CALLABLE">
