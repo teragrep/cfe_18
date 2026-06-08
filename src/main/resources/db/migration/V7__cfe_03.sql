@@ -50,6 +50,7 @@ CREATE TABLE host_meta_key
 (
     meta_key_id   INT AUTO_INCREMENT PRIMARY KEY,
     meta_key_name VARCHAR(1024),
+    UNIQUE (meta_key_name),
     start_trxid   BIGINT UNSIGNED GENERATED ALWAYS AS ROW START INVISIBLE,
     end_trxid     BIGINT UNSIGNED GENERATED ALWAYS AS ROW END INVISIBLE,
     PERIOD FOR SYSTEM_TIME(start_trxid, end_trxid)
@@ -60,8 +61,9 @@ CREATE TABLE host_meta
     host_id     INT NOT NULL,
     meta_key_id INT NOT NULL,
     meta_value  VARCHAR(1024),
-    CONSTRAINT ´hostMetaToHost´ FOREIGN KEY (host_id) REFERENCES cfe_18.host (id),
+    CONSTRAINT FOREIGN KEY (host_id) REFERENCES cfe_18.host (id),
     CONSTRAINT FOREIGN KEY (meta_key_id) REFERENCES cfe_18.host_meta_key (meta_key_id),
+    CONSTRAINT UNIQUE (host_id,meta_key_id),
     start_trxid BIGINT UNSIGNED GENERATED ALWAYS AS ROW START INVISIBLE,
     end_trxid   BIGINT UNSIGNED GENERATED ALWAYS AS ROW END INVISIBLE,
     PERIOD FOR SYSTEM_TIME(start_trxid, end_trxid)
