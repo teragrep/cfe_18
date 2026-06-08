@@ -45,7 +45,7 @@
  */
 USE cfe_18;
 DELIMITER //
-CREATE OR REPLACE PROCEDURE select_all_host_metas(meta_key VARCHAR(1024), tx_id INT)
+CREATE OR REPLACE PROCEDURE select_all_host_metas(p_host_id INT, meta_key VARCHAR(1024), tx_id INT)
 BEGIN
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
         BEGIN
@@ -57,13 +57,18 @@ BEGIN
     ELSE
         SET @time = tx_id;
     END IF;
+        if((select count(*) from cfe_18.host_meta where host_id=p_host_id)=0) THEN
+        SIGNAL SQLSTATE '45000' SET MYSQL_ERRNO =50000;
+    END IF;
+
     -- if no key is provided
     IF meta_key IS NULL THEN
         SELECT hm.host_id        AS host_id,
                hmk.meta_key_name AS meta_key,
                hm.meta_value     AS meta_value
         FROM cfe_18.host_meta FOR SYSTEM_TIME AS OF TRANSACTION @time hm
-                 INNER JOIN cfe_18.host_meta_key FOR SYSTEM_TIME AS OF TRANSACTION @time hmk;
+                 INNER JOIN cfe_18.host_meta_key FOR SYSTEM_TIME AS OF TRANSACTION @time hmk
+        WHERE hm.host_id = p_host_id;
     ELSE
         -- if key is provided then sort by key
         SELECT hm.host_id        AS host_id,
@@ -71,7 +76,8 @@ BEGIN
                hm.meta_value     AS meta_value
         FROM cfe_18.host_meta FOR SYSTEM_TIME AS OF TRANSACTION @time hm
                  INNER JOIN cfe_18.host_meta_key FOR SYSTEM_TIME AS OF TRANSACTION @time hmk
-        where hmk.meta_key_name=meta_key;
+        WHERE hm.host_id = p_host_id
+          AND hmk.meta_key_name = meta_key;
     END IF;
 
 END;

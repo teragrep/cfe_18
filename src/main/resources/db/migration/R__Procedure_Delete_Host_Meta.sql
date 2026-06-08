@@ -54,27 +54,15 @@ BEGIN
         END;
     START TRANSACTION;
 
-    -- check if host exists for metadata
-    IF ((SELECT COUNT(host_id) FROM cfe_18.host_meta WHERE host_id = p_host_id) = 0) THEN
-        -- standardized JSON error response
-        SELECT JSON_OBJECT('id', p_host_id, 'message', 'Host does not exist with given ID') INTO @noHost;
-        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = @noHost;
-    END IF;
-
     -- check if key is null. Delete whole hostmeta if null.
     IF meta_key IS NULL THEN
-        DELETE FROM host_meta WHERE host_id = p_host_id;
+        DELETE hm.* FROM host_meta hm WHERE hm.host_id = p_host_id;
     ELSE
-        -- check if key exists
-        IF ((SELECT COUNT(meta_key_id) FROM host_meta_key WHERE meta_key_name = meta_key) = 0) THEN
-            -- standardized JSON error response
-            SELECT JSON_OBJECT('id', p_host_id, 'message', 'Key does not exist') INTO @noKey;
-            SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = @noKey;
-        ELSE
-            -- else remove key from host meta
-            SELECT meta_key_id INTO @keyId FROM cfe_18.host_meta_key WHERE meta_key_name = meta_key;
-            DELETE FROM cfe_18.host_meta WHERE host_id = p_host_id AND meta_key_id = @keyId;
-        END IF;
+        DELETE hm.*
+        FROM cfe_18.host_meta hm
+                 INNER JOIN cfe_18.host_meta_key hmk
+        WHERE hm.host_id = p_host_id
+          AND hmk.meta_key_name = meta_key;
     END IF;
     COMMIT;
 END;

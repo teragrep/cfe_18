@@ -53,9 +53,9 @@ import java.util.List;
 @Mapper
 public interface HostMetaMapper {
 
-    HostMeta create(final Integer hostId, final String hostMetaKey, final String hostMetaValue);
+    HostMeta create(final Integer hostId, final String key, final String hostMetaValue);
 
-    List<HostMeta> get(final String hostMetaKey, final Integer version);
+    List<HostMeta> get(final Integer hostMetaId,final String key, final Integer version);
 
-    void delete(final Integer id, final String hostMetaKey);
+    void delete(final Integer id, final String key);
 }
