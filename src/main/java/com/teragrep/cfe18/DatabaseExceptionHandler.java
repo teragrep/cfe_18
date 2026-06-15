@@ -72,10 +72,10 @@ public class DatabaseExceptionHandler {
     @ExceptionHandler(SQLException.class)
     public ResponseEntity<String> handleSQLException(SQLException ex) {
         UUID uuid = UUID.randomUUID();
-        LOGGER.error("Error ID {}", uuid, ex);
         JsonObjectBuilder errBuilder = Json.createObjectBuilder();
         MariaDBError mariaDBError = resolver.resolve(ex.getErrorCode());
         LOGGER.error("MariaDB error message {}", mariaDBError.message());
+        LOGGER.error("Error ID and message {} , {}", uuid, mariaDBError.message(), ex);
         errBuilder.add("message", mariaDBError.message());
         errBuilder.add("UUID", uuid.toString());
         return new ResponseEntity<>(errBuilder.build().toString(), mariaDBError.status());
