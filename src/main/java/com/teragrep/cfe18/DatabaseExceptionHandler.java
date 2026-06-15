@@ -74,7 +74,6 @@ public class DatabaseExceptionHandler {
         UUID uuid = UUID.randomUUID();
         JsonObjectBuilder errBuilder = Json.createObjectBuilder();
         MariaDBError mariaDBError = resolver.resolve(ex.getErrorCode());
-        LOGGER.error("MariaDB error message {}", mariaDBError.message());
         LOGGER.error("Error ID and message {} , {}", uuid, mariaDBError.message(), ex);
         errBuilder.add("message", mariaDBError.message());
         errBuilder.add("UUID", uuid.toString());
