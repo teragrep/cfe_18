@@ -6,5 +6,7 @@ var searchData=
   ['dbunit_5fpassword_3',['DBUNIT_PASSWORD',['../classcom_1_1teragrep_1_1cfe18_1_1procedureTests_1_1DBUnitbase.html#aee548392941f71e974f57769cd3d2b34',1,'com::teragrep::cfe18::procedureTests::DBUnitbase']]],
   ['dbunit_5fusername_4',['DBUNIT_USERNAME',['../classcom_1_1teragrep_1_1cfe18_1_1procedureTests_1_1DBUnitbase.html#a7e5fad5c0a6ed18ffbb373581e93050b',1,'com::teragrep::cfe18::procedureTests::DBUnitbase']]],
   ['defaultvalue_5',['defaultValue',['../classcom_1_1teragrep_1_1cfe18_1_1handlers_1_1entities_1_1Cfe04Transform.html#ad8318d686c91abaf1949f1d7263adec3',1,'com::teragrep::cfe18::handlers::entities::Cfe04Transform']]],
-  ['destinationkey_6',['destinationKey',['../classcom_1_1teragrep_1_1cfe18_1_1handlers_1_1entities_1_1Cfe04Transform.html#aba9f6289ed23fecd2bcfe0d0da28d71f',1,'com::teragrep::cfe18::handlers::entities::Cfe04Transform']]]
+  ['destinationkey_6',['destinationKey',['../classcom_1_1teragrep_1_1cfe18_1_1handlers_1_1entities_1_1Cfe04Transform.html#aba9f6289ed23fecd2bcfe0d0da28d71f',1,'com::teragrep::cfe18::handlers::entities::Cfe04Transform']]],
+  ['duplicateentry_7',['DUPLICATEENTRY',['../enumcom_1_1teragrep_1_1cfe18_1_1MariaDBError.html#aebffd0981a2fa7cc88f51494a4306852',1,'com::teragrep::cfe18::MariaDBError']]],
+  ['duplicatehost_8',['DUPLICATEHOST',['../enumcom_1_1teragrep_1_1cfe18_1_1MariaDBError.html#a13cccb5b7358770031fddb5f97acce9b',1,'com::teragrep::cfe18::MariaDBError']]]
 ];

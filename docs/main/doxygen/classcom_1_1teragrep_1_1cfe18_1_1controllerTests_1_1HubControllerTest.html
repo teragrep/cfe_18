@@ -217,7 +217,7 @@ Private Attributes</h2></td></tr>
 <div class="line"><span class="lineno">  309</span>        <span class="comment">// Creating string from Json that was given as a response</span></div>
 <div class="line"><span class="lineno">  310</span>        String actual = responseAsJson.get(<span class="stringliteral">&quot;message&quot;</span>).toString();</div>
 <div class="line"><span class="lineno">  311</span>        <span class="comment">// Creating expected message as JSON Object from the data that was sent towards endpoint</span></div>
-<div class="line"><span class="lineno">  312</span>        String expected = <span class="stringliteral">&quot;Is in use&quot;</span>;</div>
+<div class="line"><span class="lineno">  312</span>        String expected = <span class="stringliteral">&quot;Hosts use the hub&quot;</span>;</div>
 <div class="line"><span class="lineno">  313</span> </div>
 <div class="line"><span class="lineno">  314</span>        assertEquals(expected, actual);</div>
 <div class="line"><span class="lineno">  315</span>        assertThat(deleteResponse.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_BAD_REQUEST));</div>
@@ -262,7 +262,7 @@ Private Attributes</h2></td></tr>
 <div class="line"><span class="lineno">  337</span>        String expected = <span class="stringliteral">&quot;Record does not exist&quot;</span>;</div>
 <div class="line"><span class="lineno">  338</span> </div>
 <div class="line"><span class="lineno">  339</span>        assertEquals(expected, actual);</div>
-<div class="line"><span class="lineno">  340</span>        assertThat(deleteResponse.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_BAD_REQUEST));</div>
+<div class="line"><span class="lineno">  340</span>        assertThat(deleteResponse.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_NOT_FOUND));</div>
 <div class="line"><span class="lineno">  341</span>    }</div>
 </div><!-- fragment -->
 </div>

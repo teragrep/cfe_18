@@ -1,5 +1,4 @@
 var searchData=
 [
-  ['main_0',['main',['../classcom_1_1teragrep_1_1cfe18_1_1Main.html#a1bc2ffa5153b2dc27a486b3639fb3668',1,'com::teragrep::cfe18::Main']]],
-  ['mastersqlsessionfactory_1',['masterSqlSessionFactory',['../classcom_1_1teragrep_1_1cfe18_1_1MyBatisConfig.html#abb2f737ba66bf275513759b8c8cb8f3c',1,'com::teragrep::cfe18::MyBatisConfig']]]
+  ['linkstoragetocapture_0',['linkStorageToCapture',['../classcom_1_1teragrep_1_1cfe18_1_1handlers_1_1StorageController.html#a4d112bfad03402ab059d72400f442f09',1,'com::teragrep::cfe18::handlers::StorageController']]]
 ];

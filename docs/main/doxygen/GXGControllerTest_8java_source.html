@@ -518,7 +518,7 @@ $(document).ready(function() { init_codefold(0); });
 <div class="line"><a id="l00419" name="l00419"></a><span class="lineno">  419</span>        String expected = <span class="stringliteral">&quot;Is in use&quot;</span>;</div>
 <div class="line"><a id="l00420" name="l00420"></a><span class="lineno">  420</span> </div>
 <div class="line"><a id="l00421" name="l00421"></a><span class="lineno">  421</span>        assertEquals(expected, actual);</div>
-<div class="line"><a id="l00422" name="l00422"></a><span class="lineno">  422</span>        assertThat(deleteResponse.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_BAD_REQUEST));</div>
+<div class="line"><a id="l00422" name="l00422"></a><span class="lineno">  422</span>        assertThat(deleteResponse.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_CONFLICT));</div>
 <div class="line"><a id="l00423" name="l00423"></a><span class="lineno">  423</span>    }</div>
 </div>
 <div class="line"><a id="l00424" name="l00424"></a><span class="lineno">  424</span> </div>
@@ -546,7 +546,7 @@ $(document).ready(function() { init_codefold(0); });
 <div class="line"><a id="l00445" name="l00445"></a><span class="lineno">  445</span>        <span class="comment">// Creating expected message as JSON Object from the data that was sent towards endpoint</span></div>
 <div class="line"><a id="l00446" name="l00446"></a><span class="lineno">  446</span>        String expected = <span class="stringliteral">&quot;Record does not exist&quot;</span>;</div>
 <div class="line"><a id="l00447" name="l00447"></a><span class="lineno">  447</span> </div>
-<div class="line"><a id="l00448" name="l00448"></a><span class="lineno">  448</span>        assertThat(deleteResponse.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_BAD_REQUEST));</div>
+<div class="line"><a id="l00448" name="l00448"></a><span class="lineno">  448</span>        assertThat(deleteResponse.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_NOT_FOUND));</div>
 <div class="line"><a id="l00449" name="l00449"></a><span class="lineno">  449</span>        assertEquals(expected, actual);</div>
 <div class="line"><a id="l00450" name="l00450"></a><span class="lineno">  450</span>    }</div>
 </div>
@@ -575,7 +575,7 @@ $(document).ready(function() { init_codefold(0); });
 <div class="line"><a id="l00472" name="l00472"></a><span class="lineno">  472</span>        <span class="comment">// Creating expected message as JSON Object from the data that was sent towards endpoint</span></div>
 <div class="line"><a id="l00473" name="l00473"></a><span class="lineno">  473</span>        String expected = <span class="stringliteral">&quot;Record does not exist&quot;</span>;</div>
 <div class="line"><a id="l00474" name="l00474"></a><span class="lineno">  474</span> </div>
-<div class="line"><a id="l00475" name="l00475"></a><span class="lineno">  475</span>        assertThat(deleteResponse.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_BAD_REQUEST));</div>
+<div class="line"><a id="l00475" name="l00475"></a><span class="lineno">  475</span>        assertThat(deleteResponse.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_NOT_FOUND));</div>
 <div class="line"><a id="l00476" name="l00476"></a><span class="lineno">  476</span>        assertEquals(expected, actual);</div>
 <div class="line"><a id="l00477" name="l00477"></a><span class="lineno">  477</span>    }</div>
 </div>

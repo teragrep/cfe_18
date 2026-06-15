@@ -369,7 +369,7 @@ Private Attributes</h2></td></tr>
 <div class="line"><span class="lineno">  422</span>        assertEquals(HttpStatus.SC_CREATED, captureResponse.getStatusLine().getStatusCode());</div>
 <div class="line"><span class="lineno">  423</span> </div>
 <div class="line"><span class="lineno">  424</span>        assertEquals(expected, actual);</div>
-<div class="line"><span class="lineno">  425</span>        assertEquals(HttpStatus.SC_BAD_REQUEST, deleteResponse.getStatusLine().getStatusCode());</div>
+<div class="line"><span class="lineno">  425</span>        assertEquals(HttpStatus.SC_CONFLICT, deleteResponse.getStatusLine().getStatusCode());</div>
 <div class="line"><span class="lineno">  426</span> </div>
 <div class="line"><span class="lineno">  427</span>    }</div>
 </div><!-- fragment -->

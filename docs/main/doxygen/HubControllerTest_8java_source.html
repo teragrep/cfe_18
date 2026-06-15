@@ -400,7 +400,7 @@ $(document).ready(function() { init_codefold(0); });
 <div class="line"><a id="l00309" name="l00309"></a><span class="lineno">  309</span>        <span class="comment">// Creating string from Json that was given as a response</span></div>
 <div class="line"><a id="l00310" name="l00310"></a><span class="lineno">  310</span>        String actual = responseAsJson.get(<span class="stringliteral">&quot;message&quot;</span>).toString();</div>
 <div class="line"><a id="l00311" name="l00311"></a><span class="lineno">  311</span>        <span class="comment">// Creating expected message as JSON Object from the data that was sent towards endpoint</span></div>
-<div class="line"><a id="l00312" name="l00312"></a><span class="lineno">  312</span>        String expected = <span class="stringliteral">&quot;Is in use&quot;</span>;</div>
+<div class="line"><a id="l00312" name="l00312"></a><span class="lineno">  312</span>        String expected = <span class="stringliteral">&quot;Hosts use the hub&quot;</span>;</div>
 <div class="line"><a id="l00313" name="l00313"></a><span class="lineno">  313</span> </div>
 <div class="line"><a id="l00314" name="l00314"></a><span class="lineno">  314</span>        assertEquals(expected, actual);</div>
 <div class="line"><a id="l00315" name="l00315"></a><span class="lineno">  315</span>        assertThat(deleteResponse.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_BAD_REQUEST));</div>
@@ -430,7 +430,7 @@ $(document).ready(function() { init_codefold(0); });
 <div class="line"><a id="l00337" name="l00337"></a><span class="lineno">  337</span>        String expected = <span class="stringliteral">&quot;Record does not exist&quot;</span>;</div>
 <div class="line"><a id="l00338" name="l00338"></a><span class="lineno">  338</span> </div>
 <div class="line"><a id="l00339" name="l00339"></a><span class="lineno">  339</span>        assertEquals(expected, actual);</div>
-<div class="line"><a id="l00340" name="l00340"></a><span class="lineno">  340</span>        assertThat(deleteResponse.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_BAD_REQUEST));</div>
+<div class="line"><a id="l00340" name="l00340"></a><span class="lineno">  340</span>        assertThat(deleteResponse.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_NOT_FOUND));</div>
 <div class="line"><a id="l00341" name="l00341"></a><span class="lineno">  341</span>    }</div>
 </div>
 <div class="line"><a id="l00342" name="l00342"></a><span class="lineno">  342</span> </div>

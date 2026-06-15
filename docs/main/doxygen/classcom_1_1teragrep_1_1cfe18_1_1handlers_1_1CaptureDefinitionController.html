@@ -100,7 +100,7 @@ Static Private Attributes</h2></td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock">
-<p class="definition">Definition at line <a class="el" href="CaptureDefinitionController_8java_source.html#l00072">72</a> of file <a class="el" href="CaptureDefinitionController_8java_source.html">CaptureDefinitionController.java</a>.</p>
+<p class="definition">Definition at line <a class="el" href="CaptureDefinitionController_8java_source.html#l00070">70</a> of file <a class="el" href="CaptureDefinitionController_8java_source.html">CaptureDefinitionController.java</a>.</p>
 </div><h2 class="groupheader">Member Function Documentation</h2>
 <a id="a6677b1acb7c080fff61c19bf3fbe2205" name="a6677b1acb7c080fff61c19bf3fbe2205"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a6677b1acb7c080fff61c19bf3fbe2205">&#9670;&#160;</a></span>get()</h2>
@@ -128,30 +128,11 @@ Static Private Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="CaptureDefinitionController_8java_source.html#l00112">112</a> of file <a class="el" href="CaptureDefinitionController_8java_source.html">CaptureDefinitionController.java</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  112</span>                                                                                                                       {</div>
-<div class="line"><span class="lineno">  113</span>        <span class="keywordflow">try</span> {</div>
-<div class="line"><span class="lineno">  114</span>            CaptureDefinition captureDefinition = captureDefinitionMapper.<a class="code hl_function" href="interfacecom_1_1teragrep_1_1cfe18_1_1CaptureDefinitionMapper.html#a8fbb16e334e1145b5c20ef2195902e51">get</a>(<span class="keywordtype">id</span>, version);</div>
-<div class="line"><span class="lineno">  115</span>            <span class="keywordflow">return</span> <span class="keyword">new</span> ResponseEntity&lt;&gt;(captureDefinition.toString(), HttpStatus.OK);</div>
-<div class="line"><span class="lineno">  116</span>        }</div>
-<div class="line"><span class="lineno">  117</span>        <span class="keywordflow">catch</span> (RuntimeException ex) {</div>
-<div class="line"><span class="lineno">  118</span>            <a class="code hl_variable" href="classcom_1_1teragrep_1_1cfe18_1_1handlers_1_1CaptureDefinitionController.html#abef0073377621769ed4124dfd2b36eb8">LOGGER</a>.error(ex.getMessage());</div>
-<div class="line"><span class="lineno">  119</span>            JSONObject jsonErr = <span class="keyword">new</span> JSONObject();</div>
-<div class="line"><span class="lineno">  120</span>            jsonErr.put(<span class="stringliteral">&quot;id&quot;</span>, <span class="keywordtype">id</span>);</div>
-<div class="line"><span class="lineno">  121</span>            jsonErr.put(<span class="stringliteral">&quot;message&quot;</span>, ex.getCause().toString());</div>
-<div class="line"><span class="lineno">  122</span>            <span class="keyword">final</span> Throwable cause = ex.getCause();</div>
-<div class="line"><span class="lineno">  123</span>            <span class="keywordflow">if</span> (cause instanceof SQLException) {</div>
-<div class="line"><span class="lineno">  124</span>                <a class="code hl_variable" href="classcom_1_1teragrep_1_1cfe18_1_1handlers_1_1CaptureDefinitionController.html#abef0073377621769ed4124dfd2b36eb8">LOGGER</a>.error((cause).getMessage());</div>
-<div class="line"><span class="lineno">  125</span>                String state = ((SQLException) cause).getSQLState();</div>
-<div class="line"><span class="lineno">  126</span>                <span class="keywordflow">if</span> (state.equals(<span class="stringliteral">&quot;45000&quot;</span>)) {</div>
-<div class="line"><span class="lineno">  127</span>                    jsonErr.put(<span class="stringliteral">&quot;message&quot;</span>, <span class="stringliteral">&quot;Record does not exist&quot;</span>);</div>
-<div class="line"><span class="lineno">  128</span>                    <span class="keywordflow">return</span> <span class="keyword">new</span> ResponseEntity&lt;&gt;(jsonErr.toString(), HttpStatus.NOT_FOUND);</div>
-<div class="line"><span class="lineno">  129</span>                }</div>
-<div class="line"><span class="lineno">  130</span>            }</div>
-<div class="line"><span class="lineno">  131</span>            <span class="keywordflow">return</span> <span class="keyword">new</span> ResponseEntity&lt;&gt;(jsonErr.toString(), HttpStatus.BAD_REQUEST);</div>
-<div class="line"><span class="lineno">  132</span>        }</div>
-<div class="line"><span class="lineno">  133</span>    }</div>
-<div class="ttc" id="aclasscom_1_1teragrep_1_1cfe18_1_1handlers_1_1CaptureDefinitionController_html_abef0073377621769ed4124dfd2b36eb8"><div class="ttname"><a href="classcom_1_1teragrep_1_1cfe18_1_1handlers_1_1CaptureDefinitionController.html#abef0073377621769ed4124dfd2b36eb8">com.teragrep.cfe18.handlers.CaptureDefinitionController.LOGGER</a></div><div class="ttdeci">static final Logger LOGGER</div><div class="ttdef"><b>Definition</b> <a href="CaptureDefinitionController_8java_source.html#l00074">CaptureDefinitionController.java:74</a></div></div>
+<p class="definition">Definition at line <a class="el" href="CaptureDefinitionController_8java_source.html#l00110">110</a> of file <a class="el" href="CaptureDefinitionController_8java_source.html">CaptureDefinitionController.java</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  110</span>                                                                                                                       {</div>
+<div class="line"><span class="lineno">  111</span>        CaptureDefinition captureDefinition = captureDefinitionMapper.<a class="code hl_function" href="interfacecom_1_1teragrep_1_1cfe18_1_1CaptureDefinitionMapper.html#a8fbb16e334e1145b5c20ef2195902e51">get</a>(<span class="keywordtype">id</span>, version);</div>
+<div class="line"><span class="lineno">  112</span>        <span class="keywordflow">return</span> <span class="keyword">new</span> ResponseEntity&lt;&gt;(captureDefinition.toString(), HttpStatus.OK);</div>
+<div class="line"><span class="lineno">  113</span>    }</div>
 <div class="ttc" id="ainterfacecom_1_1teragrep_1_1cfe18_1_1CaptureDefinitionMapper_html_a8fbb16e334e1145b5c20ef2195902e51"><div class="ttname"><a href="interfacecom_1_1teragrep_1_1cfe18_1_1CaptureDefinitionMapper.html#a8fbb16e334e1145b5c20ef2195902e51">com.teragrep.cfe18.CaptureDefinitionMapper.get</a></div><div class="ttdeci">CaptureDefinition get(Integer id, Integer version)</div></div>
 </div><!-- fragment --><div class="dynheader">
 Here is the call graph for this function:</div>
@@ -187,10 +168,10 @@ Here is the call graph for this function:</div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="CaptureDefinitionController_8java_source.html#l00157">157</a> of file <a class="el" href="CaptureDefinitionController_8java_source.html">CaptureDefinitionController.java</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  163</span>      {</div>
-<div class="line"><span class="lineno">  164</span>        <span class="keywordflow">return</span> captureDefinitionMapper.<a class="code hl_function" href="interfacecom_1_1teragrep_1_1cfe18_1_1CaptureDefinitionMapper.html#a51b62632ed617b3961f6e7f26b758f06">getAll</a>(filterMetadataKey, version);</div>
-<div class="line"><span class="lineno">  165</span>    }</div>
+<p class="definition">Definition at line <a class="el" href="CaptureDefinitionController_8java_source.html#l00137">137</a> of file <a class="el" href="CaptureDefinitionController_8java_source.html">CaptureDefinitionController.java</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  143</span>      {</div>
+<div class="line"><span class="lineno">  144</span>        <span class="keywordflow">return</span> captureDefinitionMapper.<a class="code hl_function" href="interfacecom_1_1teragrep_1_1cfe18_1_1CaptureDefinitionMapper.html#a51b62632ed617b3961f6e7f26b758f06">getAll</a>(filterMetadataKey, version);</div>
+<div class="line"><span class="lineno">  145</span>    }</div>
 <div class="ttc" id="ainterfacecom_1_1teragrep_1_1cfe18_1_1CaptureDefinitionMapper_html_a51b62632ed617b3961f6e7f26b758f06"><div class="ttname"><a href="interfacecom_1_1teragrep_1_1cfe18_1_1CaptureDefinitionMapper.html#a51b62632ed617b3961f6e7f26b758f06">com.teragrep.cfe18.CaptureDefinitionMapper.getAll</a></div><div class="ttdeci">List&lt; CaptureDefinition &gt; getAll(String key, Integer version)</div></div>
 </div><!-- fragment -->
 </div>
@@ -216,7 +197,7 @@ Here is the call graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="CaptureDefinitionController_8java_source.html#l00074">74</a> of file <a class="el" href="CaptureDefinitionController_8java_source.html">CaptureDefinitionController.java</a>.</p>
+<p class="definition">Definition at line <a class="el" href="CaptureDefinitionController_8java_source.html#l00072">72</a> of file <a class="el" href="CaptureDefinitionController_8java_source.html">CaptureDefinitionController.java</a>.</p>
 
 </div>
 </div>

@@ -342,7 +342,7 @@ $(document).ready(function() { init_codefold(0); });
 <div class="line"><a id="l00251" name="l00251"></a><span class="lineno">  251</span>        String expected = <span class="stringliteral">&quot;Is in use&quot;</span>;</div>
 <div class="line"><a id="l00252" name="l00252"></a><span class="lineno">  252</span> </div>
 <div class="line"><a id="l00253" name="l00253"></a><span class="lineno">  253</span>        assertEquals(expected, actual);</div>
-<div class="line"><a id="l00254" name="l00254"></a><span class="lineno">  254</span>        assertThat(deleteResponse.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_BAD_REQUEST));</div>
+<div class="line"><a id="l00254" name="l00254"></a><span class="lineno">  254</span>        assertThat(deleteResponse.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_CONFLICT));</div>
 <div class="line"><a id="l00255" name="l00255"></a><span class="lineno">  255</span>    }</div>
 </div>
 <div class="line"><a id="l00256" name="l00256"></a><span class="lineno">  256</span> </div>

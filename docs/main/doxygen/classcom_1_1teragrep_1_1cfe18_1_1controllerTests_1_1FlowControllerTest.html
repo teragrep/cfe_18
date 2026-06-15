@@ -261,7 +261,7 @@ Private Attributes</h2></td></tr>
 <div class="line"><span class="lineno">  251</span>        String expected = <span class="stringliteral">&quot;Is in use&quot;</span>;</div>
 <div class="line"><span class="lineno">  252</span> </div>
 <div class="line"><span class="lineno">  253</span>        assertEquals(expected, actual);</div>
-<div class="line"><span class="lineno">  254</span>        assertThat(deleteResponse.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_BAD_REQUEST));</div>
+<div class="line"><span class="lineno">  254</span>        assertThat(deleteResponse.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_CONFLICT));</div>
 <div class="line"><span class="lineno">  255</span>    }</div>
 </div><!-- fragment -->
 </div>

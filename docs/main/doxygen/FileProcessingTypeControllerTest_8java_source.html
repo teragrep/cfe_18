@@ -517,7 +517,7 @@ $(document).ready(function() { init_codefold(0); });
 <div class="line"><a id="l00422" name="l00422"></a><span class="lineno">  422</span>        assertEquals(HttpStatus.SC_CREATED, captureResponse.getStatusLine().getStatusCode());</div>
 <div class="line"><a id="l00423" name="l00423"></a><span class="lineno">  423</span> </div>
 <div class="line"><a id="l00424" name="l00424"></a><span class="lineno">  424</span>        assertEquals(expected, actual);</div>
-<div class="line"><a id="l00425" name="l00425"></a><span class="lineno">  425</span>        assertEquals(HttpStatus.SC_BAD_REQUEST, deleteResponse.getStatusLine().getStatusCode());</div>
+<div class="line"><a id="l00425" name="l00425"></a><span class="lineno">  425</span>        assertEquals(HttpStatus.SC_CONFLICT, deleteResponse.getStatusLine().getStatusCode());</div>
 <div class="line"><a id="l00426" name="l00426"></a><span class="lineno">  426</span> </div>
 <div class="line"><a id="l00427" name="l00427"></a><span class="lineno">  427</span>    }</div>
 </div>

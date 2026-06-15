@@ -102,7 +102,7 @@ Static Private Attributes</h2></td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock">
-<p class="definition">Definition at line <a class="el" href="CaptureMetaController_8java_source.html#l00073">73</a> of file <a class="el" href="CaptureMetaController_8java_source.html">CaptureMetaController.java</a>.</p>
+<p class="definition">Definition at line <a class="el" href="CaptureMetaController_8java_source.html#l00072">72</a> of file <a class="el" href="CaptureMetaController_8java_source.html">CaptureMetaController.java</a>.</p>
 </div><h2 class="groupheader">Member Function Documentation</h2>
 <a id="afe752ecdb5fad3f0d27bc3cd864b7128" name="afe752ecdb5fad3f0d27bc3cd864b7128"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#afe752ecdb5fad3f0d27bc3cd864b7128">&#9670;&#160;</a></span>create()</h2>
@@ -130,38 +130,23 @@ Static Private Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="CaptureMetaController_8java_source.html#l00114">114</a> of file <a class="el" href="CaptureMetaController_8java_source.html">CaptureMetaController.java</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  117</span>      {</div>
-<div class="line"><span class="lineno">  118</span>        newCaptureMeta.setCaptureId(captureId);</div>
-<div class="line"><span class="lineno">  119</span>        <a class="code hl_variable" href="classcom_1_1teragrep_1_1cfe18_1_1handlers_1_1CaptureMetaController.html#a294ffab844c8d05b63864c1fda8cf482">LOGGER</a>.info(<span class="stringliteral">&quot;About to insert &lt;[{}]&gt;&quot;</span>, newCaptureMeta);</div>
-<div class="line"><span class="lineno">  120</span>        <span class="keywordflow">try</span> {</div>
-<div class="line"><span class="lineno">  121</span>            CaptureMeta cm = captureMetaMapper</div>
-<div class="line"><span class="lineno">  122</span>                    .<a class="code hl_function" href="interfacecom_1_1teragrep_1_1cfe18_1_1CaptureMetaMapper.html#a0b7712c6e81062c14abf4838e48a108f">create</a>(</div>
-<div class="line"><span class="lineno">  123</span>                            newCaptureMeta.getCaptureId(), newCaptureMeta.getCaptureMetaKey(),</div>
-<div class="line"><span class="lineno">  124</span>                            newCaptureMeta.getCaptureMetaValue()</div>
-<div class="line"><span class="lineno">  125</span>                    );</div>
-<div class="line"><span class="lineno">  126</span>            <a class="code hl_variable" href="classcom_1_1teragrep_1_1cfe18_1_1handlers_1_1CaptureMetaController.html#a294ffab844c8d05b63864c1fda8cf482">LOGGER</a>.debug(<span class="stringliteral">&quot;Values returned &lt;[{}]&gt;&quot;</span>, cm);</div>
-<div class="line"><span class="lineno">  127</span>            JSONObject jsonObject = <span class="keyword">new</span> JSONObject();</div>
-<div class="line"><span class="lineno">  128</span>            jsonObject.put(<span class="stringliteral">&quot;id&quot;</span>, captureId);</div>
-<div class="line"><span class="lineno">  129</span>            jsonObject.put(<span class="stringliteral">&quot;message&quot;</span>, <span class="stringliteral">&quot;New capture meta created&quot;</span>);</div>
-<div class="line"><span class="lineno">  130</span>            <span class="keywordflow">return</span> <span class="keyword">new</span> ResponseEntity&lt;&gt;(jsonObject.toString(), HttpStatus.CREATED);</div>
-<div class="line"><span class="lineno">  131</span>        }</div>
-<div class="line"><span class="lineno">  132</span>        <span class="keywordflow">catch</span> (Exception ex) {</div>
-<div class="line"><span class="lineno">  133</span>            JSONObject jsonErr = <span class="keyword">new</span> JSONObject();</div>
-<div class="line"><span class="lineno">  134</span>            jsonErr.put(<span class="stringliteral">&quot;id&quot;</span>, captureId);</div>
-<div class="line"><span class="lineno">  135</span>            <span class="keyword">final</span> Throwable cause = ex.getCause();</div>
-<div class="line"><span class="lineno">  136</span>            <span class="keywordflow">if</span> (cause instanceof SQLException) {</div>
-<div class="line"><span class="lineno">  137</span>                <a class="code hl_variable" href="classcom_1_1teragrep_1_1cfe18_1_1handlers_1_1CaptureMetaController.html#a294ffab844c8d05b63864c1fda8cf482">LOGGER</a>.error((cause).getMessage());</div>
-<div class="line"><span class="lineno">  138</span>                String state = ((SQLException) cause).getSQLState();</div>
-<div class="line"><span class="lineno">  139</span>                <span class="keywordflow">if</span> (state.equals(<span class="stringliteral">&quot;45000&quot;</span>)) {</div>
-<div class="line"><span class="lineno">  140</span>                    jsonErr.put(<span class="stringliteral">&quot;message&quot;</span>, <span class="stringliteral">&quot;Record does not exist&quot;</span>);</div>
-<div class="line"><span class="lineno">  141</span>                    <span class="keywordflow">return</span> <span class="keyword">new</span> ResponseEntity&lt;&gt;(jsonErr.toString(), HttpStatus.NOT_FOUND);</div>
-<div class="line"><span class="lineno">  142</span>                }</div>
-<div class="line"><span class="lineno">  143</span>            }</div>
-<div class="line"><span class="lineno">  144</span>            <span class="keywordflow">return</span> <span class="keyword">new</span> ResponseEntity&lt;&gt;(<span class="stringliteral">&quot;Unexpected error&quot;</span>, HttpStatus.BAD_REQUEST);</div>
-<div class="line"><span class="lineno">  145</span>        }</div>
-<div class="line"><span class="lineno">  146</span>    }</div>
-<div class="ttc" id="aclasscom_1_1teragrep_1_1cfe18_1_1handlers_1_1CaptureMetaController_html_a294ffab844c8d05b63864c1fda8cf482"><div class="ttname"><a href="classcom_1_1teragrep_1_1cfe18_1_1handlers_1_1CaptureMetaController.html#a294ffab844c8d05b63864c1fda8cf482">com.teragrep.cfe18.handlers.CaptureMetaController.LOGGER</a></div><div class="ttdeci">static final Logger LOGGER</div><div class="ttdef"><b>Definition</b> <a href="CaptureMetaController_8java_source.html#l00075">CaptureMetaController.java:75</a></div></div>
+<p class="definition">Definition at line <a class="el" href="CaptureMetaController_8java_source.html#l00113">113</a> of file <a class="el" href="CaptureMetaController_8java_source.html">CaptureMetaController.java</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  116</span>      {</div>
+<div class="line"><span class="lineno">  117</span>        newCaptureMeta.setCaptureId(captureId);</div>
+<div class="line"><span class="lineno">  118</span>        <a class="code hl_variable" href="classcom_1_1teragrep_1_1cfe18_1_1handlers_1_1CaptureMetaController.html#a294ffab844c8d05b63864c1fda8cf482">LOGGER</a>.info(<span class="stringliteral">&quot;About to insert &lt;[{}]&gt;&quot;</span>, newCaptureMeta);</div>
+<div class="line"><span class="lineno">  119</span>        CaptureMeta cm = captureMetaMapper</div>
+<div class="line"><span class="lineno">  120</span>                .<a class="code hl_function" href="interfacecom_1_1teragrep_1_1cfe18_1_1CaptureMetaMapper.html#a0b7712c6e81062c14abf4838e48a108f">create</a>(</div>
+<div class="line"><span class="lineno">  121</span>                        newCaptureMeta.getCaptureId(), newCaptureMeta.getCaptureMetaKey(),</div>
+<div class="line"><span class="lineno">  122</span>                        newCaptureMeta.getCaptureMetaValue()</div>
+<div class="line"><span class="lineno">  123</span>                );</div>
+<div class="line"><span class="lineno">  124</span>        <a class="code hl_variable" href="classcom_1_1teragrep_1_1cfe18_1_1handlers_1_1CaptureMetaController.html#a294ffab844c8d05b63864c1fda8cf482">LOGGER</a>.debug(<span class="stringliteral">&quot;Values returned &lt;[{}]&gt;&quot;</span>, cm);</div>
+<div class="line"><span class="lineno">  125</span>        JSONObject jsonObject = <span class="keyword">new</span> JSONObject();</div>
+<div class="line"><span class="lineno">  126</span>        jsonObject.put(<span class="stringliteral">&quot;id&quot;</span>, captureId);</div>
+<div class="line"><span class="lineno">  127</span>        jsonObject.put(<span class="stringliteral">&quot;message&quot;</span>, <span class="stringliteral">&quot;New capture meta created&quot;</span>);</div>
+<div class="line"><span class="lineno">  128</span>        <span class="keywordflow">return</span> <span class="keyword">new</span> ResponseEntity&lt;&gt;(jsonObject.toString(), HttpStatus.CREATED);</div>
+<div class="line"><span class="lineno">  129</span> </div>
+<div class="line"><span class="lineno">  130</span>    }</div>
+<div class="ttc" id="aclasscom_1_1teragrep_1_1cfe18_1_1handlers_1_1CaptureMetaController_html_a294ffab844c8d05b63864c1fda8cf482"><div class="ttname"><a href="classcom_1_1teragrep_1_1cfe18_1_1handlers_1_1CaptureMetaController.html#a294ffab844c8d05b63864c1fda8cf482">com.teragrep.cfe18.handlers.CaptureMetaController.LOGGER</a></div><div class="ttdeci">static final Logger LOGGER</div><div class="ttdef"><b>Definition</b> <a href="CaptureMetaController_8java_source.html#l00074">CaptureMetaController.java:74</a></div></div>
 <div class="ttc" id="ainterfacecom_1_1teragrep_1_1cfe18_1_1CaptureMetaMapper_html_a0b7712c6e81062c14abf4838e48a108f"><div class="ttname"><a href="interfacecom_1_1teragrep_1_1cfe18_1_1CaptureMetaMapper.html#a0b7712c6e81062c14abf4838e48a108f">com.teragrep.cfe18.CaptureMetaMapper.create</a></div><div class="ttdeci">CaptureMeta create(final Integer captureId, final String key, final String captureMetaValue)</div></div>
 </div><!-- fragment -->
 </div>
@@ -192,23 +177,15 @@ Static Private Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="CaptureMetaController_8java_source.html#l00220">220</a> of file <a class="el" href="CaptureMetaController_8java_source.html">CaptureMetaController.java</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  223</span>      {</div>
-<div class="line"><span class="lineno">  224</span>        <a class="code hl_variable" href="classcom_1_1teragrep_1_1cfe18_1_1handlers_1_1CaptureMetaController.html#a294ffab844c8d05b63864c1fda8cf482">LOGGER</a>.info(<span class="stringliteral">&quot;Deleting Capture meta &lt;[{}]&gt;&quot;</span>, captureId);</div>
-<div class="line"><span class="lineno">  225</span>        <span class="keywordflow">try</span> {</div>
-<div class="line"><span class="lineno">  226</span>            captureMetaMapper.<a class="code hl_function" href="interfacecom_1_1teragrep_1_1cfe18_1_1CaptureMetaMapper.html#af8256b9bfa49996748f96eb5b18b270b">delete</a>(captureId, key);</div>
-<div class="line"><span class="lineno">  227</span>            JSONObject j = <span class="keyword">new</span> JSONObject();</div>
-<div class="line"><span class="lineno">  228</span>            j.put(<span class="stringliteral">&quot;id&quot;</span>, captureId);</div>
-<div class="line"><span class="lineno">  229</span>            j.put(<span class="stringliteral">&quot;message&quot;</span>, <span class="stringliteral">&quot;Capture meta deleted&quot;</span>);</div>
-<div class="line"><span class="lineno">  230</span>            <span class="keywordflow">return</span> <span class="keyword">new</span> ResponseEntity&lt;&gt;(j.toString(), HttpStatus.OK);</div>
-<div class="line"><span class="lineno">  231</span>        }</div>
-<div class="line"><span class="lineno">  232</span>        <span class="keywordflow">catch</span> (RuntimeException ex) {</div>
-<div class="line"><span class="lineno">  233</span>            JSONObject jsonErr = <span class="keyword">new</span> JSONObject();</div>
-<div class="line"><span class="lineno">  234</span>            jsonErr.put(<span class="stringliteral">&quot;id&quot;</span>, captureId);</div>
-<div class="line"><span class="lineno">  235</span>            jsonErr.put(<span class="stringliteral">&quot;message&quot;</span>, ex.getCause());</div>
-<div class="line"><span class="lineno">  236</span>            <span class="keywordflow">return</span> <span class="keyword">new</span> ResponseEntity&lt;&gt;(jsonErr.toString(), HttpStatus.BAD_REQUEST);</div>
-<div class="line"><span class="lineno">  237</span>        }</div>
-<div class="line"><span class="lineno">  238</span>    }</div>
+<p class="definition">Definition at line <a class="el" href="CaptureMetaController_8java_source.html#l00187">187</a> of file <a class="el" href="CaptureMetaController_8java_source.html">CaptureMetaController.java</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  190</span>      {</div>
+<div class="line"><span class="lineno">  191</span>        <a class="code hl_variable" href="classcom_1_1teragrep_1_1cfe18_1_1handlers_1_1CaptureMetaController.html#a294ffab844c8d05b63864c1fda8cf482">LOGGER</a>.info(<span class="stringliteral">&quot;Deleting Capture meta &lt;[{}]&gt;&quot;</span>, captureId);</div>
+<div class="line"><span class="lineno">  192</span>        captureMetaMapper.<a class="code hl_function" href="interfacecom_1_1teragrep_1_1cfe18_1_1CaptureMetaMapper.html#af8256b9bfa49996748f96eb5b18b270b">delete</a>(captureId, key);</div>
+<div class="line"><span class="lineno">  193</span>        JSONObject j = <span class="keyword">new</span> JSONObject();</div>
+<div class="line"><span class="lineno">  194</span>        j.put(<span class="stringliteral">&quot;id&quot;</span>, captureId);</div>
+<div class="line"><span class="lineno">  195</span>        j.put(<span class="stringliteral">&quot;message&quot;</span>, <span class="stringliteral">&quot;Capture meta deleted&quot;</span>);</div>
+<div class="line"><span class="lineno">  196</span>        <span class="keywordflow">return</span> <span class="keyword">new</span> ResponseEntity&lt;&gt;(j.toString(), HttpStatus.OK);</div>
+<div class="line"><span class="lineno">  197</span>    }</div>
 <div class="ttc" id="ainterfacecom_1_1teragrep_1_1cfe18_1_1CaptureMetaMapper_html_af8256b9bfa49996748f96eb5b18b270b"><div class="ttname"><a href="interfacecom_1_1teragrep_1_1cfe18_1_1CaptureMetaMapper.html#af8256b9bfa49996748f96eb5b18b270b">com.teragrep.cfe18.CaptureMetaMapper.delete</a></div><div class="ttdeci">void delete(final Integer captureId, final String key)</div></div>
 </div><!-- fragment -->
 </div>
@@ -245,29 +222,12 @@ Static Private Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="CaptureMetaController_8java_source.html#l00169">169</a> of file <a class="el" href="CaptureMetaController_8java_source.html">CaptureMetaController.java</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  173</span>      {</div>
-<div class="line"><span class="lineno">  174</span>        <a class="code hl_variable" href="classcom_1_1teragrep_1_1cfe18_1_1handlers_1_1CaptureMetaController.html#a294ffab844c8d05b63864c1fda8cf482">LOGGER</a>.info(<span class="stringliteral">&quot;About to fetch &lt;[{},{}]&gt;&quot;</span>, captureId, key);</div>
-<div class="line"><span class="lineno">  175</span>        <span class="keywordflow">try</span> {</div>
-<div class="line"><span class="lineno">  176</span>            List&lt;CaptureMeta&gt; cm = captureMetaMapper.<a class="code hl_function" href="interfacecom_1_1teragrep_1_1cfe18_1_1CaptureMetaMapper.html#accb6c19f0de49746795b48eb9f81cb0b">get</a>(captureId, key, version);</div>
-<div class="line"><span class="lineno">  177</span>            <span class="keywordflow">return</span> <span class="keyword">new</span> ResponseEntity&lt;&gt;(cm.toString(), HttpStatus.OK);</div>
-<div class="line"><span class="lineno">  178</span> </div>
-<div class="line"><span class="lineno">  179</span>        }</div>
-<div class="line"><span class="lineno">  180</span>        <span class="keywordflow">catch</span> (Exception ex) {</div>
-<div class="line"><span class="lineno">  181</span>            JSONObject jsonErr = <span class="keyword">new</span> JSONObject();</div>
-<div class="line"><span class="lineno">  182</span>            jsonErr.put(<span class="stringliteral">&quot;id&quot;</span>, captureId);</div>
-<div class="line"><span class="lineno">  183</span>            <span class="keyword">final</span> Throwable cause = ex.getCause();</div>
-<div class="line"><span class="lineno">  184</span>            <span class="keywordflow">if</span> (cause instanceof SQLException) {</div>
-<div class="line"><span class="lineno">  185</span>                <a class="code hl_variable" href="classcom_1_1teragrep_1_1cfe18_1_1handlers_1_1CaptureMetaController.html#a294ffab844c8d05b63864c1fda8cf482">LOGGER</a>.error((cause).getMessage());</div>
-<div class="line"><span class="lineno">  186</span>                String state = ((SQLException) cause).getSQLState();</div>
-<div class="line"><span class="lineno">  187</span>                <span class="keywordflow">if</span> (state.equals(<span class="stringliteral">&quot;45000&quot;</span>)) {</div>
-<div class="line"><span class="lineno">  188</span>                    jsonErr.put(<span class="stringliteral">&quot;message&quot;</span>, <span class="stringliteral">&quot;Record does not exist&quot;</span>);</div>
-<div class="line"><span class="lineno">  189</span>                    <span class="keywordflow">return</span> <span class="keyword">new</span> ResponseEntity&lt;&gt;(jsonErr.toString(), HttpStatus.NOT_FOUND);</div>
-<div class="line"><span class="lineno">  190</span>                }</div>
-<div class="line"><span class="lineno">  191</span>            }</div>
-<div class="line"><span class="lineno">  192</span>            <span class="keywordflow">return</span> <span class="keyword">new</span> ResponseEntity&lt;&gt;(<span class="stringliteral">&quot;Unexpected error&quot;</span>, HttpStatus.BAD_REQUEST);</div>
-<div class="line"><span class="lineno">  193</span>        }</div>
-<div class="line"><span class="lineno">  194</span>    }</div>
+<p class="definition">Definition at line <a class="el" href="CaptureMetaController_8java_source.html#l00153">153</a> of file <a class="el" href="CaptureMetaController_8java_source.html">CaptureMetaController.java</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  157</span>      {</div>
+<div class="line"><span class="lineno">  158</span>        <a class="code hl_variable" href="classcom_1_1teragrep_1_1cfe18_1_1handlers_1_1CaptureMetaController.html#a294ffab844c8d05b63864c1fda8cf482">LOGGER</a>.info(<span class="stringliteral">&quot;About to fetch &lt;[{},{}]&gt;&quot;</span>, captureId, key);</div>
+<div class="line"><span class="lineno">  159</span>        List&lt;CaptureMeta&gt; cm = captureMetaMapper.<a class="code hl_function" href="interfacecom_1_1teragrep_1_1cfe18_1_1CaptureMetaMapper.html#accb6c19f0de49746795b48eb9f81cb0b">get</a>(captureId, key, version);</div>
+<div class="line"><span class="lineno">  160</span>        <span class="keywordflow">return</span> <span class="keyword">new</span> ResponseEntity&lt;&gt;(cm.toString(), HttpStatus.OK);</div>
+<div class="line"><span class="lineno">  161</span>    }</div>
 <div class="ttc" id="ainterfacecom_1_1teragrep_1_1cfe18_1_1CaptureMetaMapper_html_accb6c19f0de49746795b48eb9f81cb0b"><div class="ttname"><a href="interfacecom_1_1teragrep_1_1cfe18_1_1CaptureMetaMapper.html#accb6c19f0de49746795b48eb9f81cb0b">com.teragrep.cfe18.CaptureMetaMapper.get</a></div><div class="ttdeci">List&lt; CaptureMeta &gt; get(final Integer captureId, final String key, final Integer version)</div></div>
 </div><!-- fragment -->
 </div>
@@ -293,7 +253,7 @@ Static Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="CaptureMetaController_8java_source.html#l00075">75</a> of file <a class="el" href="CaptureMetaController_8java_source.html">CaptureMetaController.java</a>.</p>
+<p class="definition">Definition at line <a class="el" href="CaptureMetaController_8java_source.html#l00074">74</a> of file <a class="el" href="CaptureMetaController_8java_source.html">CaptureMetaController.java</a>.</p>
 
 </div>
 </div>
