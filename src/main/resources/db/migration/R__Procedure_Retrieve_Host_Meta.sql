@@ -61,9 +61,7 @@ BEGIN
         end if;
     if (select id from host_meta for system_time as of transaction @time where id = proc_host_meta_id) is null
     then
-        SELECT JSON_OBJECT('id', proc_host_meta_id, 'message', 'Host metadata does not exist for the given ID')
-        into @hmd;
-        signal sqlstate '45000' set message_text = @hmd;
+        SIGNAL SQLSTATE '45000' set MYSQL_ERRNO = 50000;
     end if;
 
     if (((select count(*) from cfe_18.host_meta_x_ip for system_time as of transaction @time where host_meta_id = proc_host_meta_id) and

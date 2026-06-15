@@ -59,8 +59,7 @@ BEGIN
              set @time=tx_id;
         end if;
     if (select id from cfe_18.hubs for system_time as of transaction @time where id = proc_hub_id) is null then
-        SELECT JSON_OBJECT('id', proc_hub_id, 'message', 'Hub does not exist with given ID') into @hub;
-        signal sqlstate '45000' set message_text = @hub;
+        SIGNAL SQLSTATE '45000' set MYSQL_ERRNO = 50000;
     end if;
     select hu.id      as hub_id,
            hu.host_id as host_id,

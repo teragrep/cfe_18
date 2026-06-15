@@ -59,8 +59,7 @@ BEGIN
         SET @time = tx_id;
     END IF;
     IF ((SELECT COUNT(id) FROM cfe_18.host FOR SYSTEM_TIME AS OF TRANSACTION @time WHERE id = proc_host_id) = 0) THEN
-        SELECT JSON_OBJECT('id', proc_host_id, 'message', 'Host does not exist') INTO @hid;
-        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = @hid;
+        SIGNAL SQLSTATE '45000' set MYSQL_ERRNO = 50000;
     END IF;
 
     SELECT h.id        AS id,

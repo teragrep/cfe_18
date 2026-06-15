@@ -64,7 +64,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.sql.DataSource;
-import java.sql.SQLException;
 import java.util.List;
 
 @RestController
@@ -113,26 +112,16 @@ public class FileProcessingTypeController {
     })
     public ResponseEntity<String> create(@RequestBody FileProcessing newFileProcessing) {
         LOGGER.info("About to insert <[{}]>", newFileProcessing);
-        try {
-            FileProcessing n = fileProcessingTypeMapper
-                    .create(
-                            newFileProcessing.getTemplate(), newFileProcessing.getRuleset(),
-                            newFileProcessing.getName(), newFileProcessing.getInputtype().toString(),
-                            newFileProcessing.getInputvalue()
-                    );
-            LOGGER.debug("Values returned <[{}]>", n);
-            JSONObject jsonObject = new JSONObject();
-            jsonObject.put("id", n.getId());
-            jsonObject.put("message", "New file processing type created");
-            return new ResponseEntity<>(jsonObject.toString(), HttpStatus.CREATED);
-        }
-        catch (RuntimeException ex) {
-            LOGGER.error(ex.getMessage());
-            JSONObject jsonErr = new JSONObject();
-            jsonErr.put("id", newFileProcessing.getId());
-            jsonErr.put("message", ex.getCause().getMessage());
-            return new ResponseEntity<>(jsonErr.toString(), HttpStatus.BAD_REQUEST);
-        }
+        FileProcessing n = fileProcessingTypeMapper
+                .create(
+                        newFileProcessing.getTemplate(), newFileProcessing.getRuleset(), newFileProcessing.getName(),
+                        newFileProcessing.getInputtype().toString(), newFileProcessing.getInputvalue()
+                );
+        LOGGER.debug("Values returned <[{}]>", n);
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("id", n.getId());
+        jsonObject.put("message", "New file processing type created");
+        return new ResponseEntity<>(jsonObject.toString(), HttpStatus.CREATED);
     }
 
     @RequestMapping(
@@ -164,26 +153,9 @@ public class FileProcessingTypeController {
             )
     })
     public ResponseEntity<?> get(@PathVariable("id") int id, @RequestParam(required = false) Integer version) {
-        try {
-            FileProcessing fc = fileProcessingTypeMapper.get(id, version);
-            return new ResponseEntity<>(fc, HttpStatus.OK);
-        }
-        catch (RuntimeException ex) {
-            LOGGER.error(ex.getMessage());
-            JSONObject jsonErr = new JSONObject();
-            jsonErr.put("id", id);
-            jsonErr.put("message", ex.getCause().getMessage());
-            final Throwable cause = ex.getCause();
-            if (cause instanceof SQLException) {
-                LOGGER.error((cause).getMessage());
-                String state = ((SQLException) cause).getSQLState();
-                if (state.equals("45000")) {
-                    jsonErr.put("message", "Record does not exist");
-                    return new ResponseEntity<>(jsonErr.toString(), HttpStatus.NOT_FOUND);
-                }
-            }
-            return new ResponseEntity<>(jsonErr.toString(), HttpStatus.BAD_REQUEST);
-        }
+        FileProcessing fc = fileProcessingTypeMapper.get(id, version);
+        return new ResponseEntity<>(fc, HttpStatus.OK);
+
     }
 
     @RequestMapping(
@@ -246,32 +218,10 @@ public class FileProcessingTypeController {
     })
     public ResponseEntity<String> delete(@PathVariable("id") Integer id) {
         LOGGER.info("Deleting file processing type  <[{}]>", id);
-        try {
-            fileProcessingTypeMapper.delete(id);
-            JSONObject j = new JSONObject();
-            j.put("id", id);
-            j.put("message", "File processing type deleted");
-            return new ResponseEntity<>(j.toString(), HttpStatus.OK);
-        }
-        catch (RuntimeException ex) {
-            LOGGER.error(ex.getMessage());
-            JSONObject jsonErr = new JSONObject();
-            jsonErr.put("id", id);
-            jsonErr.put("message", ex.getCause().getMessage());
-            final Throwable cause = ex.getCause();
-            if (cause instanceof SQLException) {
-                LOGGER.error((cause).getMessage());
-                String state = ((SQLException) cause).getSQLState();
-                if (state.equals("23000")) {
-                    jsonErr.put("message", "Is in use");
-                    return new ResponseEntity<>(jsonErr.toString(), HttpStatus.BAD_REQUEST);
-                }
-                else if (state.equals("45000")) {
-                    jsonErr.put("message", "Record does not exist");
-                    return new ResponseEntity<>(jsonErr.toString(), HttpStatus.NOT_FOUND);
-                }
-            }
-            return new ResponseEntity<>(jsonErr.toString(), HttpStatus.BAD_REQUEST);
-        }
+        fileProcessingTypeMapper.delete(id);
+        JSONObject j = new JSONObject();
+        j.put("id", id);
+        j.put("message", "File processing type deleted");
+        return new ResponseEntity<>(j.toString(), HttpStatus.OK);
     }
 }

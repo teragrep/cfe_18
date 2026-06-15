@@ -54,8 +54,7 @@ BEGIN
         END;
     START TRANSACTION;
     IF ((SELECT COUNT(id) FROM cfe_18.capture_sink WHERE id = sink_id) = 0) THEN
-        SELECT JSON_OBJECT('id', sink_id, 'message', 'Capture sink does not exist') INTO @cs;
-        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = @cs;
+        SIGNAL SQLSTATE '45000' set MYSQL_ERRNO = 50000;
     END IF;
     DELETE FROM cfe_18.capture_sink WHERE id = sink_id;
     COMMIT;

@@ -43,47 +43,32 @@
  * Teragrep, the applicable Commercial License may apply to this file if you as
  * a licensee so wish it.
  */
-use cfe_18;
-DELIMITER //
-CREATE OR REPLACE PROCEDURE remove_hub(proc_hub_id int)
-BEGIN
-    DECLARE EXIT HANDLER FOR SQLEXCEPTION
-        BEGIN
-            ROLLBACK;
-            RESIGNAL;
-        END;
-    START TRANSACTION;
-    if (select id from cfe_18.hubs where id = proc_hub_id) is null then
-        SIGNAL SQLSTATE '45000' set MYSQL_ERRNO = 50000;
-    end if;
+package com.teragrep.cfe18;
 
+import jakarta.json.Json;
+import jakarta.json.JsonObjectBuilder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.core.annotation.Order;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-    select h.id
-    into @hostid
-    from cfe_18.host h
-             inner join hubs h2 on h.id = h2.host_id
-    where h2.id = proc_hub_id;
+import java.util.UUID;
 
+@RestControllerAdvice
+@Order(2)
+public class GenericExceptionHandler {
 
-    select count(htc.host_id)
-    into @rowcount
-    from cfe_18.host_type_cfe htc
-    where hub_id = proc_hub_id
-      and host_id != @hostid;
+    private static final Logger LOGGER = LoggerFactory.getLogger(GenericExceptionHandler.class);
 
-    if (@rowcount > 0) then
-        select count(htc2.host_id)
-        into @hamount
-        from cfe_18.host_type_cfe htc2
-        where hub_id = proc_hub_id;
-        signal sqlstate '45000' set MYSQL_ERRNO = 50020 ;
-    end if;
-
-    delete from cfe_18.host_type_cfe where hub_id = proc_hub_id;
-    delete from cfe_18.hubs where id = proc_hub_id;
-    delete from cfe_18.host where id = @hostid;
-    COMMIT;
-END;
-
-//
-DELIMITER ;
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<String> handleException(Exception ex) {
+        UUID s = UUID.randomUUID();
+        LOGGER.error("Error ID {}", s, ex);
+        JsonObjectBuilder errBuilder = Json.createObjectBuilder();
+        errBuilder.add("message", "an error occured, use errorId {" + s + "} for correlation with administrator");
+        return new ResponseEntity<>(errBuilder.build().toString(), HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+}

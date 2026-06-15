@@ -106,15 +106,13 @@ BEGIN
     END IF;
 
     IF ((SELECT COUNT(id) FROM cfe_18.L7 WHERE app_protocol = app_protoc) = 0) THEN
-        SELECT JSON_OBJECT('id', NULL, 'message', 'L7 is missing') INTO @L7;
-        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = @L7;
+        SIGNAL SQLSTATE '45000' set MYSQL_ERRNO = 50000;
     ELSE
         SELECT id INTO @L7Id FROM cfe_18.L7 WHERE app_protocol = app_protoc;
     END IF;
 
     IF ((SELECT COUNT(id) FROM cfe_18.flows WHERE name = flow) = 0) THEN
-        SELECT JSON_OBJECT('id', NULL, 'message', 'Flow is missing') INTO @Flow;
-        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = @Flow;
+        SIGNAL SQLSTATE '45000' set MYSQL_ERRNO = 50000;
     ELSE
         SELECT id INTO @FlowId FROM cfe_18.flows WHERE name = flow;
     END IF;

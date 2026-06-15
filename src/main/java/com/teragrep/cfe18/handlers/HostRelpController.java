@@ -64,7 +64,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.sql.DataSource;
-import java.sql.SQLException;
 import java.util.List;
 
 @RestController
@@ -118,36 +117,13 @@ public class HostRelpController {
     })
     public ResponseEntity<String> create(@RequestBody HostRelp newHostRelp) {
         LOGGER.info("About to insert <[{}]>", newHostRelp);
-        try {
-            HostRelp hr = hostRelpMapper.create(newHostRelp.getMd5(), newHostRelp.getFqHost());
-            LOGGER.debug("Values returned <[{}]>", hr);
-            JSONObject jsonObject = new JSONObject();
-            jsonObject.put("id", hr.getId());
-            jsonObject.put("message", "New host created with relp type");
-            return new ResponseEntity<>(jsonObject.toString(), HttpStatus.CREATED);
-        }
-        catch (RuntimeException ex) {
-            JSONObject jsonErr = new JSONObject();
-            jsonErr.put("id", newHostRelp.getId());
-            jsonErr.put("message", ex.getCause().getMessage());
-            final Throwable cause = ex.getCause();
-            if (cause instanceof SQLException) {
-                LOGGER.error((cause).getMessage());
-                // Get specific error type
-                int error = ((SQLException) cause).getErrorCode();
-                // Link error with state to get accurate error status
-                String state = error + "-" + ((SQLException) cause).getSQLState();
-                if (state.equals("1062-23000")) {
-                    jsonErr.put("message", "ID,MD5 or fqhost already exists");
-                    return new ResponseEntity<>(jsonErr.toString(), HttpStatus.BAD_REQUEST);
-                }
-                else if (state.equals("45000")) {
-                    jsonErr.put("message", "Host exists with different type");
-                    return new ResponseEntity<>(jsonErr.toString(), HttpStatus.BAD_REQUEST);
-                }
-            }
-            return new ResponseEntity<>(jsonErr.toString(), HttpStatus.BAD_REQUEST);
-        }
+        HostRelp hr = hostRelpMapper.create(newHostRelp.getMd5(), newHostRelp.getFqHost());
+        LOGGER.debug("Values returned <[{}]>", hr);
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("id", hr.getId());
+        jsonObject.put("message", "New host created with relp type");
+        return new ResponseEntity<>(jsonObject.toString(), HttpStatus.CREATED);
+
     }
 
     @RequestMapping(
@@ -179,25 +155,9 @@ public class HostRelpController {
             )
     })
     public ResponseEntity<?> get(@PathVariable("id") int id, @RequestParam(required = false) Integer version) {
-        try {
-            HostRelp hr = hostRelpMapper.get(id, version);
-            return new ResponseEntity<>(hr, HttpStatus.OK);
-        }
-        catch (Exception ex) {
-            JSONObject jsonErr = new JSONObject();
-            jsonErr.put("id", id);
-            jsonErr.put("message", ex.getCause().getMessage());
-            final Throwable cause = ex.getCause();
-            if (cause instanceof SQLException) {
-                LOGGER.error((cause).getMessage());
-                String state = ((SQLException) cause).getSQLState();
-                if (state.equals("45000")) {
-                    jsonErr.put("message", "Record does not exist");
-                    return new ResponseEntity<>(jsonErr.toString(), HttpStatus.NOT_FOUND);
-                }
-            }
-            return new ResponseEntity<>(jsonErr.toString(), HttpStatus.BAD_REQUEST);
-        }
+        HostRelp hr = hostRelpMapper.get(id, version);
+        return new ResponseEntity<>(hr, HttpStatus.OK);
+
     }
 
     @RequestMapping(
@@ -255,31 +215,10 @@ public class HostRelpController {
     })
     public ResponseEntity<String> delete(@PathVariable("id") int id) {
         LOGGER.info("Deleting Host  <[{}]>", id);
-        try {
-            hostRelpMapper.delete(id);
-            JSONObject j = new JSONObject();
-            j.put("id", id);
-            j.put("message", "Host deleted");
-            return new ResponseEntity<>(j.toString(), HttpStatus.OK);
-        }
-        catch (RuntimeException ex) {
-            JSONObject jsonErr = new JSONObject();
-            jsonErr.put("id", id);
-            jsonErr.put("message", ex.getCause().getMessage());
-            final Throwable cause = ex.getCause();
-            if (cause instanceof SQLException) {
-                LOGGER.error((cause).getMessage());
-                String state = ((SQLException) cause).getSQLState();
-                if (state.equals("23000")) {
-                    jsonErr.put("message", "Is in use");
-                    return new ResponseEntity<>(jsonErr.toString(), HttpStatus.BAD_REQUEST);
-                }
-                else if (state.equals("45000")) {
-                    jsonErr.put("message", "Record does not exist");
-                    return new ResponseEntity<>(jsonErr.toString(), HttpStatus.NOT_FOUND);
-                }
-            }
-            return new ResponseEntity<>(jsonErr.toString(), HttpStatus.BAD_REQUEST);
-        }
+        hostRelpMapper.delete(id);
+        JSONObject j = new JSONObject();
+        j.put("id", id);
+        j.put("message", "Host deleted");
+        return new ResponseEntity<>(j.toString(), HttpStatus.OK);
     }
 }

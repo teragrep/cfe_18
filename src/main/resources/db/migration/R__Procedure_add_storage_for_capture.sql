@@ -55,7 +55,7 @@ BEGIN
     START TRANSACTION;
 
     if (select id from cfe_18.capture_definition where id = capture_id) is null then
-        signal sqlstate '42000' set message_text = 'Capture does not exist with given ID';
+        SIGNAL SQLSTATE '45000' set MYSQL_ERRNO = 50000;
     end if;
 
     select flow_id into @FlowId from cfe_18.capture_definition where id = capture_id;

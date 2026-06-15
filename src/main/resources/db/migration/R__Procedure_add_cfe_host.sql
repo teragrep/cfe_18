@@ -61,12 +61,12 @@ BEGIN
     from cfe_18.hubs
              inner join(select id from cfe_18.host where cfe_18.host.fqhost = proc_hub_fq) as hi
     where hubs.host_id = hi.id;
+
     if (select cfe_18.hubs.id
         from cfe_18.hubs
                  inner join(select id from cfe_18.host where cfe_18.host.fqhost = proc_hub_fq) as hi
         where hubs.host_id = hi.id) is null then
-        SELECT JSON_OBJECT('id', @hubs_id, 'message', 'Hub does not exist') into @hub;
-        signal sqlstate '45000' set message_text = @hub;
+        signal sqlstate '45000' set MYSQL_ERRNO =50000;
     else
         if (select id
             from cfe_18.host

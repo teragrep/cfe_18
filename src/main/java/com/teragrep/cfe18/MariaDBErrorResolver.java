@@ -43,47 +43,32 @@
  * Teragrep, the applicable Commercial License may apply to this file if you as
  * a licensee so wish it.
  */
-use cfe_18;
-DELIMITER //
-CREATE OR REPLACE PROCEDURE remove_hub(proc_hub_id int)
-BEGIN
-    DECLARE EXIT HANDLER FOR SQLEXCEPTION
-        BEGIN
-            ROLLBACK;
-            RESIGNAL;
-        END;
-    START TRANSACTION;
-    if (select id from cfe_18.hubs where id = proc_hub_id) is null then
-        SIGNAL SQLSTATE '45000' set MYSQL_ERRNO = 50000;
-    end if;
+package com.teragrep.cfe18;
 
+import org.springframework.stereotype.Component;
 
-    select h.id
-    into @hostid
-    from cfe_18.host h
-             inner join hubs h2 on h.id = h2.host_id
-    where h2.id = proc_hub_id;
+import java.util.HashMap;
+import java.util.Map;
 
+@Component
+public class MariaDBErrorResolver {
 
-    select count(htc.host_id)
-    into @rowcount
-    from cfe_18.host_type_cfe htc
-    where hub_id = proc_hub_id
-      and host_id != @hostid;
+    private final Map<Integer, MariaDBError> registry;
 
-    if (@rowcount > 0) then
-        select count(htc2.host_id)
-        into @hamount
-        from cfe_18.host_type_cfe htc2
-        where hub_id = proc_hub_id;
-        signal sqlstate '45000' set MYSQL_ERRNO = 50020 ;
-    end if;
+    // populate resolver on initialization
+    public MariaDBErrorResolver() {
+        this.registry = new HashMap<>();
+        for (MariaDBError error : MariaDBError.values()) {
+            this.registry.put(error.errorCode(), error);
+        }
+    }
 
-    delete from cfe_18.host_type_cfe where hub_id = proc_hub_id;
-    delete from cfe_18.hubs where id = proc_hub_id;
-    delete from cfe_18.host where id = @hostid;
-    COMMIT;
-END;
+    public MariaDBErrorResolver(Map<Integer, MariaDBError> registry) {
+        this.registry = registry;
+    }
 
-//
-DELIMITER ;
+    public MariaDBError resolve(int errorCode) {
+        return registry.get(errorCode);
+    }
+
+}

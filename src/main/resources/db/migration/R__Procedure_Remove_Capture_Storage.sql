@@ -57,8 +57,7 @@ BEGIN
         from cfe_18.capture_def_x_flow_targets
         where capture_def_id = proc_capture_id
           and flow_target_id = proc_storage_id) is null then
-        SELECT JSON_OBJECT('id', null, 'message', 'Capture storage does not exist') into @cs;
-        signal sqlstate '45000' set message_text = @cs;
+        SIGNAL SQLSTATE '45000' set MYSQL_ERRNO = 50000;
     end if;
     delete
     from cfe_18.capture_def_x_flow_targets

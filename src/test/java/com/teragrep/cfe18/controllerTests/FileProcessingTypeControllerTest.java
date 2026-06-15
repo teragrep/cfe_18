@@ -422,7 +422,7 @@ public class FileProcessingTypeControllerTest extends TestSpringBootInformation 
         assertEquals(HttpStatus.SC_CREATED, captureResponse.getStatusLine().getStatusCode());
 
         assertEquals(expected, actual);
-        assertEquals(HttpStatus.SC_BAD_REQUEST, deleteResponse.getStatusLine().getStatusCode());
+        assertEquals(HttpStatus.SC_CONFLICT, deleteResponse.getStatusLine().getStatusCode());
 
     }
 

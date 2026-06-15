@@ -64,7 +64,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.sql.DataSource;
-import java.sql.SQLException;
 import java.util.List;
 
 @RestController
@@ -116,23 +115,9 @@ public class HostGroupController {
             @PathVariable("name") String name,
             @RequestParam(required = false) Integer version
     ) {
-        JSONObject jsonErr = new JSONObject();
-        try {
-            List<HostGroup> hg = hostGroupMapper.getHostGroupByName(name, version);
-            return new ResponseEntity<>(hg, HttpStatus.OK);
-        }
-        catch (Exception ex) {
-            final Throwable cause = ex.getCause();
-            if (cause instanceof SQLException) {
-                LOGGER.error((cause).getMessage());
-                String state = ((SQLException) cause).getSQLState();
-                if (state.equals("45000")) {
-                    jsonErr.put("message", "Record does not exist with the given host group name");
-                    return new ResponseEntity<>(jsonErr.toString(), HttpStatus.BAD_REQUEST);
-                }
-            }
-            return new ResponseEntity<>("Unexpected error", HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+        List<HostGroup> hg = hostGroupMapper.getHostGroupByName(name, version);
+        return new ResponseEntity<>(hg, HttpStatus.OK);
+
     }
 
     @RequestMapping(
@@ -191,35 +176,13 @@ public class HostGroupController {
     })
     public ResponseEntity<String> newHostGroup(@RequestBody HostGroup newHostGroup) {
         LOGGER.info("About to insert <[{}]>", newHostGroup);
-        try {
-            HostGroup hg = hostGroupMapper
-                    .addNewHostGroup(newHostGroup.getHost_id(), newHostGroup.getHost_group_name());
-            LOGGER.debug("Values returned <[{}]>", hg);
-            JSONObject jsonObject = new JSONObject();
-            jsonObject.put("host_group_id", hg.getId());
-            jsonObject.put("message", "New host group created with name = " + hg.getHost_group_name());
-            return new ResponseEntity<>(jsonObject.toString(), HttpStatus.CREATED);
-        }
-        catch (RuntimeException ex) {
-            JSONObject jsonErr = new JSONObject();
-            jsonErr.put("id", newHostGroup.getId());
-            final Throwable cause = ex.getCause();
-            if (cause instanceof SQLException) {
-                LOGGER.error((cause).getMessage());
-                // Get specific error type
-                int error = ((SQLException) cause).getErrorCode();
-                // Link error with state to get accurate error status
-                String state = error + "-" + ((SQLException) cause).getSQLState();
-                if (state.equals("1452-23000")) {
-                    jsonErr.put("message", "Type mismatch between host group and host");
-                }
-                else if (state.equals("1644-45000")) {
-                    jsonErr.put("message", "Host does not exist");
-                }
-                return new ResponseEntity<>(jsonErr.toString(), HttpStatus.BAD_REQUEST);
-            }
-            return new ResponseEntity<>("Unexpected error", HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+        HostGroup hg = hostGroupMapper.addNewHostGroup(newHostGroup.getHost_id(), newHostGroup.getHost_group_name());
+        LOGGER.debug("Values returned <[{}]>", hg);
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("host_group_id", hg.getId());
+        jsonObject.put("message", "New host group created with name = " + hg.getHost_group_name());
+        return new ResponseEntity<>(jsonObject.toString(), HttpStatus.CREATED);
+
     }
 
     // Delete
@@ -253,27 +216,10 @@ public class HostGroupController {
     })
     public ResponseEntity<String> removeHost(@PathVariable("name") String name) {
         LOGGER.info("Deleting Host Group <[{}]>", name);
-        JSONObject jsonErr = new JSONObject();
-        try {
-            hostGroupMapper.deleteHostGroup(name);
-            JSONObject j = new JSONObject();
-            j.put("message", "Host Group " + name + " deleted.");
-            return new ResponseEntity<>(j.toString(), HttpStatus.OK);
-        }
-        catch (Exception ex) {
-            final Throwable cause = ex.getCause();
-            if (cause instanceof SQLException) {
-                LOGGER.error((cause).getMessage());
-                String state = ((SQLException) cause).getSQLState();
-                if (state.equals("23000")) {
-                    jsonErr.put("message", "Is in use");
-                }
-                else if (state.equals("45000")) {
-                    jsonErr.put("message", "Record does not exist");
-                }
-                return new ResponseEntity<>(jsonErr.toString(), HttpStatus.BAD_REQUEST);
-            }
-            return new ResponseEntity<>("Unexpected error", HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+        hostGroupMapper.deleteHostGroup(name);
+        JSONObject j = new JSONObject();
+        j.put("message", "Host Group " + name + " deleted.");
+        return new ResponseEntity<>(j.toString(), HttpStatus.OK);
+
     }
 }

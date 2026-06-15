@@ -55,8 +55,7 @@ BEGIN
     START TRANSACTION;
 
     IF ((SELECT COUNT(id) FROM cfe_18.capture_def_group WHERE id = capture_group_id) = 0) THEN
-        SELECT JSON_OBJECT('id', capture_group_id, 'message', 'Capture group does not exist') INTO @cg;
-        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = @cg;
+        SIGNAL SQLSTATE '45000' set MYSQL_ERRNO = 50000;
     END IF;
 
     DELETE FROM cfe_18.capture_def_group WHERE id = capture_group_id;

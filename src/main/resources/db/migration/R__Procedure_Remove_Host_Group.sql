@@ -54,8 +54,7 @@ BEGIN
         END;
     START TRANSACTION;
     if (select id from cfe_18.host_group where groupName = proc_host_group_name) is null then
-        SELECT JSON_OBJECT('id', null, 'message', 'Host group does not exist') into @hg;
-        signal sqlstate '45000' set message_text = @hg;
+        SIGNAL SQLSTATE '45000' set MYSQL_ERRNO = 50000;
     end if;
 
     delete from cfe_18.host_group where groupName = proc_host_group_name;

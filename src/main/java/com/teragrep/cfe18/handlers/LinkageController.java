@@ -64,7 +64,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.sql.DataSource;
-import java.sql.SQLException;
 import java.util.List;
 
 @RestController
@@ -116,23 +115,9 @@ public class LinkageController {
             @PathVariable("name") String name,
             @RequestParam(required = false) Integer version
     ) {
-        try {
-            List<Linkage> l = linkageMapper.getLinkageByName(name, version);
-            return new ResponseEntity<>(l, HttpStatus.OK);
-        }
-        catch (Exception ex) {
-            final Throwable cause = ex.getCause();
-            if (cause instanceof SQLException) {
-                JSONObject jsonErr = new JSONObject();
-                LOGGER.error((cause).getMessage());
-                String state = ((SQLException) cause).getSQLState();
-                if (state.equals("45000")) {
-                    jsonErr.put("message", "Record does not exist with the given group name");
-                    return new ResponseEntity<>(jsonErr.toString(), HttpStatus.BAD_REQUEST);
-                }
-            }
-            return new ResponseEntity<>("Unexpected error", HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+        List<Linkage> l = linkageMapper.getLinkageByName(name, version);
+        return new ResponseEntity<>(l, HttpStatus.OK);
+
     }
 
     // GET ALL Linkages
@@ -192,25 +177,18 @@ public class LinkageController {
     })
     public ResponseEntity<String> newLinkage(@RequestBody Linkage newLinkage) {
         LOGGER.info("About to insert <[{}]>", newLinkage);
-        try {
-            Linkage l = linkageMapper.addLinkage(newLinkage.getHost_group_id(), newLinkage.getCapture_group_id());
-            LOGGER.debug("Values returned <[{}]>", l);
-            JSONObject jsonObject = new JSONObject();
-            jsonObject.put("id", l.getId());
-            jsonObject
-                    .put(
-                            "message",
-                            "New linkage created for groups = " + l.getCapture_group_name() + " and "
-                                    + l.getHost_group_name()
-                    );
-            return new ResponseEntity<>(jsonObject.toString(), HttpStatus.CREATED);
-        }
-        catch (RuntimeException ex) {
-            JSONObject jsonErr = new JSONObject();
-            jsonErr.put("id", newLinkage.getId());
-            jsonErr.put("message", ex.getCause().toString());
-            return new ResponseEntity<>(jsonErr.toString(), HttpStatus.BAD_REQUEST);
-        }
+        Linkage l = linkageMapper.addLinkage(newLinkage.getHost_group_id(), newLinkage.getCapture_group_id());
+        LOGGER.debug("Values returned <[{}]>", l);
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("id", l.getId());
+        jsonObject
+                .put(
+                        "message",
+                        "New linkage created for groups = " + l.getCapture_group_name() + " and "
+                                + l.getHost_group_name()
+                );
+        return new ResponseEntity<>(jsonObject.toString(), HttpStatus.CREATED);
+
     }
 
     // Delete
@@ -244,30 +222,11 @@ public class LinkageController {
     })
     public ResponseEntity<String> removeLinkage(@PathVariable("id") int id) {
         LOGGER.info("Deleting Linkage <[{}]>", id);
-        JSONObject jsonErr = new JSONObject();
-        jsonErr.put("id", id);
-        try {
-            linkageMapper.deleteLinkage(id);
-            JSONObject j = new JSONObject();
-            j.put("id", id);
-            j.put("message", "Linkage with id = " + id + " deleted.");
-            return new ResponseEntity<>(j.toString(), HttpStatus.OK);
-        }
-        catch (Exception ex) {
-            final Throwable cause = ex.getCause();
-            if (cause instanceof SQLException) {
-                LOGGER.error((cause).getMessage());
-                String state = ((SQLException) cause).getSQLState();
-                if (state.equals("23000")) {
-                    jsonErr.put("message", "Is in use");
-                }
-                else if (state.equals("45000")) {
-                    jsonErr.put("message", "Record does not exist");
-                }
-                return new ResponseEntity<>(jsonErr.toString(), HttpStatus.BAD_REQUEST);
-            }
-            return new ResponseEntity<>("Unexpected error", HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+        linkageMapper.deleteLinkage(id);
+        JSONObject j = new JSONObject();
+        j.put("id", id);
+        j.put("message", "Linkage with id = " + id + " deleted.");
+        return new ResponseEntity<>(j.toString(), HttpStatus.OK);
 
     }
 

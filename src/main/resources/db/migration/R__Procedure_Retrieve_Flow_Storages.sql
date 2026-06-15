@@ -59,8 +59,7 @@ BEGIN
              set @time=tx_id;
     end if;
     if (select id from flows for system_time as of transaction @time where name = flow) is null then
-        SELECT JSON_OBJECT('id', NULL, 'message', 'Flow does not exist') into @fs;
-        signal sqlstate '45000' set message_text = @fs;
+        SIGNAL SQLSTATE '45000' set MYSQL_ERRNO = 50000;
     else
         select s.storage_name  as target,
                f.name          as flow,

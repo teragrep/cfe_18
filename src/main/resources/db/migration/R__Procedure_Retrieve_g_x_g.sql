@@ -66,8 +66,7 @@ BEGIN
         (select groupName
          from cfe_18.host_group for system_time as of transaction @time
          where groupName = grp_name)) is null then
-        SELECT JSON_OBJECT('id', NULL, 'message', 'group does not exist with the given name') into @gxg;
-        signal sqlstate '45000' set message_text = @gxg;
+        SIGNAL SQLSTATE '45000' set MYSQL_ERRNO = 50000;
     end if;
 
     -- return resultset accordingly

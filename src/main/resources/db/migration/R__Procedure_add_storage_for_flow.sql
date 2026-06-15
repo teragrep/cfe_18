@@ -56,12 +56,12 @@ BEGIN
     START TRANSACTION;
 
     if (select id from flows where name = flow) is null then
-        signal sqlstate '45000' set message_text = 'flow does not exist';
+        SIGNAL SQLSTATE '45000' set MYSQL_ERRNO = 50000;
     else
         select id into @FlowId from flows where name = flow;
     end if;
     if (select id from storages where id = proc_storage_id) is null then
-        signal sqlstate '45000' set message_text = 'Storage is not valid';
+        SIGNAL SQLSTATE '45000' set MYSQL_ERRNO = 50000;
     end if;
 
     select cfe_type into @Storage_type from cfe_18.storages where id = proc_storage_id;

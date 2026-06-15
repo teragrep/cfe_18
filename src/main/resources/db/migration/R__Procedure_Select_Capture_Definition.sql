@@ -59,8 +59,7 @@ BEGIN
     END IF;
 
     if ((select count(*) from cfe_18.capture_definition FOR SYSTEM_TIME AS OF TRANSACTION @time c where c.id = id) = 0) then
-        SELECT JSON_OBJECT('id', id, 'message', 'Capture not found') INTO @c;
-        signal sqlstate '45000' set message_text = @c;
+        signal sqlstate '45000' set MYSQL_ERRNO = 50000;
     end if;
     SELECT c.id                 AS id,
            t.tag                AS tag,

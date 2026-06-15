@@ -60,8 +60,7 @@ BEGIN
           and fqhost = proc_fqhost
           and host_type != 'RELP') is not null then
         select id into @id from cfe_18.host where MD5 = proc_MD5 and fqhost = proc_fqhost;
-        SELECT JSON_OBJECT('id', @id, 'message', 'Host exists with different host type') into @host;
-        signal sqlstate '45000' set message_text = @host;
+        SIGNAL SQLSTATE '45000' set MYSQL_ERRNO = 50010;
     end if;
     if (select id
         from cfe_18.host

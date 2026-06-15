@@ -62,8 +62,7 @@ BEGIN
     START TRANSACTION;
 
     IF ((SELECT COUNT(id) FROM cfe_18.file_processing_type WHERE id = file_processing_id) = 0) THEN
-        SELECT JSON_OBJECT('id', file_processing_id, 'message', 'Processing type does not exist') INTO @pt;
-        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = @pt;
+        SIGNAL SQLSTATE '45000' set MYSQL_ERRNO = 50000;
     END IF;
 
     -- Check if tag_path matches with tag
@@ -74,9 +73,8 @@ BEGIN
         SELECT LEFT(@FinalString, 23) INTO @FinalString;
         SELECT CONCAT(@FinalMd5, '-', @FinalString) INTO @Final;
         IF @Final != meta_tag THEN
-            SELECT JSON_OBJECT('id', @TagId, 'message', 'Tag mismatches with the given tag_path')
-            INTO @tp;
-            SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = @tp;
+
+            SIGNAL SQLSTATE '45000' SET MYSQL_ERRNO = 50030;
         ELSE
             IF ((SELECT COUNT(id) FROM cfe_18.tags WHERE tag = @Final) = 0) THEN
                 INSERT INTO cfe_18.tags(tag)
@@ -140,15 +138,13 @@ BEGIN
     END IF;
 
     IF ((SELECT COUNT(id) FROM cfe_18.L7 WHERE app_protocol = protocol) = 0) THEN
-        SELECT JSON_OBJECT('id', NULL, 'message', 'L7 is missing') INTO @L7;
-        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = @L7;
+        SIGNAL SQLSTATE '45000' set MYSQL_ERRNO = 50000;
     ELSE
         SELECT id INTO @L7Id FROM cfe_18.L7 WHERE app_protocol = protocol;
     END IF;
 
     IF ((SELECT COUNT(id) FROM cfe_18.flows WHERE name = flow) = 0) THEN
-        SELECT JSON_OBJECT('id', NULL, 'message', 'Flow is missing') INTO @Flow;
-        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = @Flow;
+        SIGNAL SQLSTATE '45000' set MYSQL_ERRNO = 50000;
     ELSE
         SELECT id INTO @FlowId FROM cfe_18.flows WHERE name = flow;
     END IF;

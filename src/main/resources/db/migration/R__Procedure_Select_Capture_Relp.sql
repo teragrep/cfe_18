@@ -62,8 +62,7 @@ BEGIN
 
     IF ((SELECT COUNT(id) FROM capture_definition FOR SYSTEM_TIME AS OF TRANSACTION @time WHERE id = capture_id) =
         0) THEN
-        SELECT JSON_OBJECT('id', capture_id, 'message', 'Capture does not exist with the given ID') INTO @cid;
-        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = @cid;
+        SIGNAL SQLSTATE '45000' set MYSQL_ERRNO = 50000;
     END IF;
 
 

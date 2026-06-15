@@ -309,7 +309,7 @@ public class HubControllerTest extends TestSpringBootInformation {
         // Creating string from Json that was given as a response
         String actual = responseAsJson.get("message").toString();
         // Creating expected message as JSON Object from the data that was sent towards endpoint
-        String expected = "Is in use";
+        String expected = "Hosts use the hub";
 
         assertEquals(expected, actual);
         assertThat(deleteResponse.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_BAD_REQUEST));
@@ -337,7 +337,7 @@ public class HubControllerTest extends TestSpringBootInformation {
         String expected = "Record does not exist";
 
         assertEquals(expected, actual);
-        assertThat(deleteResponse.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_BAD_REQUEST));
+        assertThat(deleteResponse.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_NOT_FOUND));
     }
 
     @Test

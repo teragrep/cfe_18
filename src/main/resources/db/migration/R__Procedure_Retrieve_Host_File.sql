@@ -59,16 +59,14 @@ BEGIN
         SET @time = tx_id;
     END IF;
     IF ((SELECT COUNT(id) FROM cfe_18.host FOR SYSTEM_TIME AS OF TRANSACTION @time WHERE id = proc_host_id) = 0) THEN
-        SELECT JSON_OBJECT('id', proc_host_id, 'message', 'Host does not exist') INTO @hid;
-        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = @hid;
+        SIGNAL SQLSTATE '45000' set MYSQL_ERRNO = 50000;
     END IF;
 
     IF ((SELECT COUNT(h.id)
          FROM cfe_18.host FOR SYSTEM_TIME AS OF TRANSACTION @time h
                   INNER JOIN hubs FOR SYSTEM_TIME AS OF TRANSACTION @time h3 ON h.id = h3.host_id
          WHERE h.id = proc_host_id) > 0) THEN
-        SELECT JSON_OBJECT('id', proc_host_id, 'message', 'Host is hub') INTO @hub;
-        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = @hub;
+        SIGNAL SQLSTATE '45000' set MYSQL_ERRNO = 50060;
     ELSE
         SELECT h.id          AS id,
                h.md5         AS host_md5,

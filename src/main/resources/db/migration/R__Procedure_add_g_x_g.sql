@@ -57,22 +57,19 @@ BEGIN
          from cfe_18.capture_def_group
          where id = proc_capture_group_id) !=
         (select distinct host_type from cfe_18.host_group_x_host where host_group_id = proc_host_group_id)) then
-        SELECT JSON_OBJECT('id', NULL, 'message', ' type mismatch between host group and capture group') into @gxg;
-        signal sqlstate '45000' set message_text = @gxg;
+        signal sqlstate '45000' set MYSQL_ERRNO = 50010;
     end if;
     --  Check if host group exists before junction
     IF (select distinct host_group_id
         from cfe_18.host_group_x_host
         where host_group_id = proc_host_group_id) IS NULL THEN
-        SELECT JSON_OBJECT('id', NULL, 'message', ' HOST group does not exist') into @gxgh;
-        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = @gxgh;
+        SIGNAL SQLSTATE '45000' set MYSQL_ERRNO = 50000;
     END IF;
     --  Check if capture group exists before junction
     IF (select distinct id
         from cfe_18.capture_def_group
         where id = proc_capture_group_id) IS NULL THEN
-        SELECT JSON_OBJECT('id', NULL, 'message', ' CAPTURE group does not exist') into @gxgc;
-        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = @gxgc;
+        SIGNAL SQLSTATE '45000' set MYSQL_ERRNO = 50000;
     END IF;
     --  Insert into junction table
     if (select id

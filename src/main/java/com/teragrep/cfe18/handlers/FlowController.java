@@ -64,7 +64,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.sql.DataSource;
-import java.sql.SQLException;
 import java.util.List;
 
 @RestController
@@ -113,21 +112,13 @@ public class FlowController {
     })
     public ResponseEntity<String> create(@RequestBody Flow newFlow) {
         LOGGER.info("About to insert <[{}]>", newFlow);
-        try {
-            Flow f = flowMapper.create(newFlow.getName());
-            LOGGER.debug("Values returned <[{}]>", f);
-            JSONObject jsonObject = new JSONObject();
-            jsonObject.put("id", f.getId());
-            jsonObject.put("message", "New flow created");
-            return new ResponseEntity<>(jsonObject.toString(), HttpStatus.CREATED);
-        }
-        catch (RuntimeException ex) {
-            LOGGER.error(ex.getMessage());
-            JSONObject jsonErr = new JSONObject();
-            jsonErr.put("id", newFlow.getId());
-            jsonErr.put("message", ex.getCause().toString());
-            return new ResponseEntity<>(jsonErr.toString(), HttpStatus.BAD_REQUEST);
-        }
+        Flow f = flowMapper.create(newFlow.getName());
+        LOGGER.debug("Values returned <[{}]>", f);
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("id", f.getId());
+        jsonObject.put("message", "New flow created");
+        return new ResponseEntity<>(jsonObject.toString(), HttpStatus.CREATED);
+
     }
 
     @RequestMapping(
@@ -190,31 +181,10 @@ public class FlowController {
     })
     public ResponseEntity<String> delete(@PathVariable("id") int id) {
         LOGGER.info("Deleting flow  <[{}]>", id);
-        try {
-            flowMapper.delete(id);
-            JSONObject j = new JSONObject();
-            j.put("id", id);
-            j.put("message", "Flow deleted");
-            return new ResponseEntity<>(j.toString(), HttpStatus.OK);
-        }
-        catch (RuntimeException ex) {
-            LOGGER.error(ex.getMessage());
-            JSONObject jsonErr = new JSONObject();
-            jsonErr.put("id", id);
-            jsonErr.put("message", ex.getCause().getMessage());
-            final Throwable cause = ex.getCause();
-            if (cause instanceof SQLException) {
-                String state = ((SQLException) cause).getSQLState();
-                if (state.equals("23000")) {
-                    jsonErr.put("message", "Is in use");
-                    return new ResponseEntity<>(jsonErr.toString(), HttpStatus.BAD_REQUEST);
-                }
-                else if (state.equals("45000")) {
-                    jsonErr.put("message", "Record does not exist");
-                    return new ResponseEntity<>(jsonErr.toString(), HttpStatus.NOT_FOUND);
-                }
-            }
-            return new ResponseEntity<>(jsonErr.toString(), HttpStatus.BAD_REQUEST);
-        }
+        flowMapper.delete(id);
+        JSONObject j = new JSONObject();
+        j.put("id", id);
+        j.put("message", "Flow deleted");
+        return new ResponseEntity<>(j.toString(), HttpStatus.OK);
     }
 }

@@ -57,18 +57,14 @@ BEGIN
     -- type check
     IF ((SELECT COUNT(id) FROM cfe_18.host WHERE MD5 = proc_MD5 AND fqhost = proc_fqhost AND host_type != 'CFE') >
         0) THEN
-        SELECT JSON_OBJECT('id', (SELECT id FROM cfe_18.host WHERE MD5 = proc_MD5 AND fqhost = proc_fqhost),
-                           'message', 'Host exists with different type')
-        INTO @hid;
-        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = @hid;
+        SIGNAL SQLSTATE '45000' set MYSQL_ERRNO = 50010;
     END IF;
 
     IF ((SELECT COUNT(cfe_18.hubs.id)
          FROM cfe_18.hubs
                   INNER JOIN(SELECT id FROM cfe_18.host WHERE cfe_18.host.fqhost = proc_hub_fq) as hi
          WHERE hubs.host_id = hi.id) = 0) THEN
-        SELECT JSON_OBJECT('id', @hubs_id, 'message', 'Hub does not exist') INTO @hub;
-        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = @hub;
+        SIGNAL SQLSTATE '45000' set MYSQL_ERRNO = 50000;
     ELSE
         IF ((SELECT COUNT(h.id)
              FROM cfe_18.host h

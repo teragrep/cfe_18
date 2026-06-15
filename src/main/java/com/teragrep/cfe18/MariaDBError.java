@@ -43,47 +43,43 @@
  * Teragrep, the applicable Commercial License may apply to this file if you as
  * a licensee so wish it.
  */
-use cfe_18;
-DELIMITER //
-CREATE OR REPLACE PROCEDURE remove_hub(proc_hub_id int)
-BEGIN
-    DECLARE EXIT HANDLER FOR SQLEXCEPTION
-        BEGIN
-            ROLLBACK;
-            RESIGNAL;
-        END;
-    START TRANSACTION;
-    if (select id from cfe_18.hubs where id = proc_hub_id) is null then
-        SIGNAL SQLSTATE '45000' set MYSQL_ERRNO = 50000;
-    end if;
+package com.teragrep.cfe18;
 
+import org.springframework.http.HttpStatus;
 
-    select h.id
-    into @hostid
-    from cfe_18.host h
-             inner join hubs h2 on h.id = h2.host_id
-    where h2.id = proc_hub_id;
+public enum MariaDBError {
 
+    MISSING(-15536, HttpStatus.NOT_FOUND, "Record does not exist"),
+    INTEGRATIONTYPECONFLICT(-15526, HttpStatus.CONFLICT, "Integration type mismatch"),
+    HOSTSUSEHUB(-15516, HttpStatus.BAD_REQUEST, "Hosts use the hub"),
+    TAGMD5SUMERROR(-15506, HttpStatus.INTERNAL_SERVER_ERROR, "Tag mismatches with the given tag_path"),
+    DUPLICATEHOST(-15496, HttpStatus.CONFLICT, "Tag already exists on the same host through different channels"),
+    HOSTISAHUB(-15476, HttpStatus.CONFLICT, "Host is a hub"),
+    MISSINGCONSTRAINT(1452, HttpStatus.NOT_FOUND, "Record does not exist"),
+    INUSE(1451, HttpStatus.CONFLICT, "Is in use"),
+    DUPLICATEENTRY(1062, HttpStatus.CONFLICT, "Duplicate entry"),
+    GENERICERR(1644, HttpStatus.CONFLICT, "Generic user error"),
+    UNKNOWN(0, HttpStatus.INTERNAL_SERVER_ERROR, "Something went wrong"),;
 
-    select count(htc.host_id)
-    into @rowcount
-    from cfe_18.host_type_cfe htc
-    where hub_id = proc_hub_id
-      and host_id != @hostid;
+    private final int errorCode;
+    private final HttpStatus httpStatus;
+    private final String message;
 
-    if (@rowcount > 0) then
-        select count(htc2.host_id)
-        into @hamount
-        from cfe_18.host_type_cfe htc2
-        where hub_id = proc_hub_id;
-        signal sqlstate '45000' set MYSQL_ERRNO = 50020 ;
-    end if;
+    private MariaDBError(int errorCode, HttpStatus httpStatus, String message) {
+        this.errorCode = errorCode;
+        this.httpStatus = httpStatus;
+        this.message = message;
+    }
 
-    delete from cfe_18.host_type_cfe where hub_id = proc_hub_id;
-    delete from cfe_18.hubs where id = proc_hub_id;
-    delete from cfe_18.host where id = @hostid;
-    COMMIT;
-END;
+    public int errorCode() {
+        return errorCode;
+    }
 
-//
-DELIMITER ;
+    public HttpStatus status() {
+        return httpStatus;
+    }
+
+    public String message() {
+        return message;
+    }
+}

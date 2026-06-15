@@ -60,8 +60,7 @@ BEGIN
     END IF;
 
     if((select count(*) from cfe_18.capture_meta where capture_id=p_capture_id)=0) THEN
-        SELECT JSON_OBJECT('id', p_capture_id, 'message', 'Capture does not have metadata') INTO @cm;
-        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = @cm;
+        SIGNAL SQLSTATE '45000' SET MYSQL_ERRNO = 50000;
     END IF;
 
     IF meta_key IS NULL THEN

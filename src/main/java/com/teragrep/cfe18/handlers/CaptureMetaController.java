@@ -64,7 +64,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.sql.DataSource;
-import java.sql.SQLException;
 import java.util.List;
 
 @RestController
@@ -117,32 +116,17 @@ public class CaptureMetaController {
     ) {
         newCaptureMeta.setCaptureId(captureId);
         LOGGER.info("About to insert <[{}]>", newCaptureMeta);
-        try {
-            CaptureMeta cm = captureMetaMapper
-                    .create(
-                            newCaptureMeta.getCaptureId(), newCaptureMeta.getCaptureMetaKey(),
-                            newCaptureMeta.getCaptureMetaValue()
-                    );
-            LOGGER.debug("Values returned <[{}]>", cm);
-            JSONObject jsonObject = new JSONObject();
-            jsonObject.put("id", captureId);
-            jsonObject.put("message", "New capture meta created");
-            return new ResponseEntity<>(jsonObject.toString(), HttpStatus.CREATED);
-        }
-        catch (Exception ex) {
-            JSONObject jsonErr = new JSONObject();
-            jsonErr.put("id", captureId);
-            final Throwable cause = ex.getCause();
-            if (cause instanceof SQLException) {
-                LOGGER.error((cause).getMessage());
-                String state = ((SQLException) cause).getSQLState();
-                if (state.equals("45000")) {
-                    jsonErr.put("message", "Record does not exist");
-                    return new ResponseEntity<>(jsonErr.toString(), HttpStatus.NOT_FOUND);
-                }
-            }
-            return new ResponseEntity<>("Unexpected error", HttpStatus.BAD_REQUEST);
-        }
+        CaptureMeta cm = captureMetaMapper
+                .create(
+                        newCaptureMeta.getCaptureId(), newCaptureMeta.getCaptureMetaKey(),
+                        newCaptureMeta.getCaptureMetaValue()
+                );
+        LOGGER.debug("Values returned <[{}]>", cm);
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("id", captureId);
+        jsonObject.put("message", "New capture meta created");
+        return new ResponseEntity<>(jsonObject.toString(), HttpStatus.CREATED);
+
     }
 
     @RequestMapping(
@@ -172,25 +156,8 @@ public class CaptureMetaController {
             @RequestParam(required = false) Integer version
     ) {
         LOGGER.info("About to fetch <[{},{}]>", captureId, key);
-        try {
-            List<CaptureMeta> cm = captureMetaMapper.get(captureId, key, version);
-            return new ResponseEntity<>(cm.toString(), HttpStatus.OK);
-
-        }
-        catch (Exception ex) {
-            JSONObject jsonErr = new JSONObject();
-            jsonErr.put("id", captureId);
-            final Throwable cause = ex.getCause();
-            if (cause instanceof SQLException) {
-                LOGGER.error((cause).getMessage());
-                String state = ((SQLException) cause).getSQLState();
-                if (state.equals("45000")) {
-                    jsonErr.put("message", "Record does not exist");
-                    return new ResponseEntity<>(jsonErr.toString(), HttpStatus.NOT_FOUND);
-                }
-            }
-            return new ResponseEntity<>("Unexpected error", HttpStatus.BAD_REQUEST);
-        }
+        List<CaptureMeta> cm = captureMetaMapper.get(captureId, key, version);
+        return new ResponseEntity<>(cm.toString(), HttpStatus.OK);
     }
 
     // Delete
@@ -222,19 +189,11 @@ public class CaptureMetaController {
             @RequestParam(required = false) String key
     ) {
         LOGGER.info("Deleting Capture meta <[{}]>", captureId);
-        try {
-            captureMetaMapper.delete(captureId, key);
-            JSONObject j = new JSONObject();
-            j.put("id", captureId);
-            j.put("message", "Capture meta deleted");
-            return new ResponseEntity<>(j.toString(), HttpStatus.OK);
-        }
-        catch (RuntimeException ex) {
-            JSONObject jsonErr = new JSONObject();
-            jsonErr.put("id", captureId);
-            jsonErr.put("message", ex.getCause());
-            return new ResponseEntity<>(jsonErr.toString(), HttpStatus.BAD_REQUEST);
-        }
+        captureMetaMapper.delete(captureId, key);
+        JSONObject j = new JSONObject();
+        j.put("id", captureId);
+        j.put("message", "Capture meta deleted");
+        return new ResponseEntity<>(j.toString(), HttpStatus.OK);
     }
 
 }

@@ -81,7 +81,7 @@ public class TriggerTagTest extends DBUnitbase {
             stmnt.addBatch("insert into cfe_18.capture_def_group_x_capture_def values(1,3,1,'cfe',1)");
             stmnt.executeBatch();
         });
-        Assertions.assertEquals("17001", state.getSQLState());
+        Assertions.assertEquals("45000", state.getSQLState());
     }
 
     /*

@@ -63,8 +63,7 @@ BEGIN
     IF ((SELECT COUNT(cdg.id)
          FROM capture_def_group FOR SYSTEM_TIME AS OF TRANSACTION @time cdg
          WHERE cdg.id = capture_group_id) = 0) THEN
-        SELECT JSON_OBJECT('id', capture_group_id, 'message', 'Capture group not found') INTO @gc;
-        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = @gc;
+        SIGNAL SQLSTATE '45000' set MYSQL_ERRNO = 50000;
     END IF;
 
     SELECT cdg.id                     AS id,
