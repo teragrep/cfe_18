@@ -55,6 +55,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import java.sql.SQLException;
+import java.util.UUID;
 
 @RestControllerAdvice
 @Order(1)
@@ -70,10 +71,13 @@ public class DatabaseExceptionHandler {
 
     @ExceptionHandler(SQLException.class)
     public ResponseEntity<String> handleSQLException(SQLException ex) {
-        LOGGER.error(ex.getMessage(), ex);
+        UUID uuid = UUID.randomUUID();
+        LOGGER.error("Error ID {}", uuid, ex);
         JsonObjectBuilder errBuilder = Json.createObjectBuilder();
         MariaDBError mariaDBError = resolver.resolve(ex.getErrorCode());
+        LOGGER.error("MariaDB error message {}", mariaDBError.message());
         errBuilder.add("message", mariaDBError.message());
+        errBuilder.add("UUID", uuid.toString());
         return new ResponseEntity<>(errBuilder.build().toString(), mariaDBError.status());
 
     }
