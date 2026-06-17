@@ -53,7 +53,6 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
-import org.json.JSONObject;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -63,7 +62,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.sql.DataSource;
-import java.sql.SQLException;
 import java.util.List;
 
 @RestController
@@ -110,26 +108,8 @@ public class HostDefinitionController {
             )
     })
     public ResponseEntity<String> get(@PathVariable("id") Integer id, @RequestParam(required = false) Integer version) {
-        try {
-            HostDefinition hostDefinition = hostDefinitionMapper.get(id, version);
-            return new ResponseEntity<>(hostDefinition.toString(), HttpStatus.OK);
-        }
-        catch (RuntimeException ex) {
-            LOGGER.error(ex.getMessage());
-            JSONObject jsonErr = new JSONObject();
-            jsonErr.put("id", id);
-            jsonErr.put("message", ex.getCause().toString());
-            final Throwable cause = ex.getCause();
-            if (cause instanceof SQLException) {
-                LOGGER.error((cause).getMessage());
-                String state = ((SQLException) cause).getSQLState();
-                if (state.equals("45000")) {
-                    jsonErr.put("message", "Record does not exist");
-                    return new ResponseEntity<>(jsonErr.toString(), HttpStatus.NOT_FOUND);
-                }
-            }
-            return new ResponseEntity<>(jsonErr.toString(), HttpStatus.BAD_REQUEST);
-        }
+        HostDefinition hostDefinition = hostDefinitionMapper.get(id, version);
+        return new ResponseEntity<>(hostDefinition.toString(), HttpStatus.OK);
     }
 
     @RequestMapping(
