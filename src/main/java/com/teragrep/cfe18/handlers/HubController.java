@@ -64,7 +64,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.sql.DataSource;
-import java.sql.SQLException;
 import java.util.List;
 
 @RestController
@@ -113,31 +112,13 @@ public class HubController {
     })
     public ResponseEntity<String> create(@RequestBody Hub newHub) {
         LOGGER.info("About to insert <[{}]>", newHub);
-        try {
-            Hub h = hubMapper.create(newHub.getFqHost(), newHub.getMd5(), newHub.getIp());
-            LOGGER.debug("Values returned <[{}]>", h);
-            JSONObject jsonObject = new JSONObject();
-            jsonObject.put("id", h.getId());
-            jsonObject.put("message", "New hub created");
-            return new ResponseEntity<>(jsonObject.toString(), HttpStatus.CREATED);
-        }
-        catch (RuntimeException ex) {
-            LOGGER.error(ex.getMessage());
-            JSONObject jsonErr = new JSONObject();
-            jsonErr.put("id", newHub.getId());
-            jsonErr.put("message", ex.getCause().getMessage());
-            final Throwable cause = ex.getCause();
-            if (cause instanceof SQLException) {
-                LOGGER.error((cause).getMessage());
-                String state = ((SQLException) cause).getSQLState();
-                // 23000 = Constraint exception, Foreign key constraint fails
-                if (state.equals("23000")) {
-                    jsonErr.put("message", "ID,MD5 or fqhost already exists");
-                    return new ResponseEntity<>(jsonErr.toString(), HttpStatus.CONFLICT);
-                }
-            }
-            return new ResponseEntity<>(jsonErr.toString(), HttpStatus.BAD_REQUEST);
-        }
+        Hub h = hubMapper.create(newHub.getFqHost(), newHub.getMd5(), newHub.getIp());
+        LOGGER.debug("Values returned <[{}]>", h);
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("id", h.getId());
+        jsonObject.put("message", "New hub created");
+        return new ResponseEntity<>(jsonObject.toString(), HttpStatus.CREATED);
+
     }
 
     @RequestMapping(
@@ -170,27 +151,9 @@ public class HubController {
     })
     public ResponseEntity<String> get(@PathVariable("id") int id, @RequestParam(required = false) Integer version) {
         LOGGER.info("About to fetch <[{}]>", id);
-        try {
-            Hub h = hubMapper.get(id, version);
-            return new ResponseEntity<>(h.toString(), HttpStatus.OK);
-        }
-        catch (RuntimeException ex) {
-            LOGGER.error(ex.getMessage());
-            JSONObject jsonErr = new JSONObject();
-            jsonErr.put("id", id);
-            jsonErr.put("message", ex.getCause().getMessage());
-            final Throwable cause = ex.getCause();
-            if (cause instanceof SQLException) {
-                LOGGER.error((cause).getMessage());
-                String state = ((SQLException) cause).getSQLState();
-                // 45000 = Custom error, row does not exist
-                if (state.equals("45000")) {
-                    jsonErr.put("message", "Record does not exist");
-                    return new ResponseEntity<>(jsonErr.toString(), HttpStatus.NOT_FOUND);
-                }
-            }
-            return new ResponseEntity<>(jsonErr.toString(), HttpStatus.BAD_REQUEST);
-        }
+        Hub h = hubMapper.get(id, version);
+        return new ResponseEntity<>(h.toString(), HttpStatus.OK);
+
     }
 
     @RequestMapping(
@@ -253,34 +216,10 @@ public class HubController {
     })
     public ResponseEntity<String> delete(@PathVariable("id") int id) {
         LOGGER.info("Deleting Hub <[{}]>", id);
-        try {
-            hubMapper.delete(id);
-            JSONObject j = new JSONObject();
-            j.put("id", id);
-            j.put("message", "Hub deleted");
-            return new ResponseEntity<>(j.toString(), HttpStatus.OK);
-        }
-        catch (RuntimeException ex) {
-            LOGGER.error(ex.getMessage());
-            JSONObject jsonErr = new JSONObject();
-            jsonErr.put("id", id);
-            jsonErr.put("message", ex.getCause().getMessage());
-            final Throwable cause = ex.getCause();
-            if (cause instanceof SQLException) {
-                LOGGER.error((cause).getMessage());
-                String state = ((SQLException) cause).getSQLState();
-                // 23000 = Constraint exception, Foreign key constraint fails
-                if (state.equals("23000")) {
-                    jsonErr.put("message", "Is in use");
-                    return new ResponseEntity<>(jsonErr.toString(), HttpStatus.CONFLICT);
-                    // 45000 = Custom error, row does not exist
-                }
-                else if (state.equals("45000")) {
-                    jsonErr.put("message", "Record does not exist");
-                    return new ResponseEntity<>(jsonErr.toString(), HttpStatus.NOT_FOUND);
-                }
-            }
-            return new ResponseEntity<>(jsonErr.toString(), HttpStatus.BAD_REQUEST);
-        }
+        hubMapper.delete(id);
+        JSONObject j = new JSONObject();
+        j.put("id", id);
+        j.put("message", "Hub deleted");
+        return new ResponseEntity<>(j.toString(), HttpStatus.OK);
     }
 }

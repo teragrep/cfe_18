@@ -54,8 +54,7 @@ BEGIN
         END;
     START TRANSACTION;
     IF ((SELECT COUNT(id) FROM cfe_18.hubs WHERE id = input_hub_id) = 0) THEN
-        SELECT JSON_OBJECT('id', input_hub_id, 'message', 'Hub does not exist') INTO @h;
-        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = @h;
+        SIGNAL SQLSTATE '45000' SET MYSQL_ERRNO = 50000;
     END IF;
 
     -- check if there are hosts using the hub before deleting
@@ -67,9 +66,8 @@ BEGIN
                            FROM cfe_18.host h
                                     INNER JOIN hubs h2 ON h.id = h2.host_id
                            WHERE h2.id = input_hub_id)) > 0) THEN
-        SELECT JSON_OBJECT('id', input_hub_id, 'message', 'Hosts use the hub') INTO @ha;
         -- Signal user error due to user not removing hosts from Hub before deleting.
-        SIGNAL SQLSTATE '23000' SET MESSAGE_TEXT = @ha;
+        SIGNAL SQLSTATE '45000' SET MYSQL_ERRNO = 50020;
     END IF;
     -- select the host id before deleting hub since it's not accessible later
     SELECT host_id INTO @HostId FROM cfe_18.hubs WHERE id = input_hub_id;

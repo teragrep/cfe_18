@@ -202,10 +202,10 @@ public class HubControllerTest extends TestSpringBootInformation {
 
         String actual = Assertions.assertDoesNotThrow(() -> responseAsJson.get("message").toString());
 
-        String expected = "Is in use";
+        String expected = "Hosts use the hub";
 
         assertEquals(expected, actual);
-        assertEquals(HttpStatus.SC_CONFLICT, deleteResponse.getStatusLine().getStatusCode());
+        assertEquals(HttpStatus.SC_BAD_REQUEST, deleteResponse.getStatusLine().getStatusCode());
     }
 
     @Test

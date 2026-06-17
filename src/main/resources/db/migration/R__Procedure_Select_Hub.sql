@@ -59,8 +59,7 @@ BEGIN
         SET @time = tx_id;
     END IF;
     IF ((SELECT COUNT(id) FROM cfe_18.hubs FOR SYSTEM_TIME AS OF TRANSACTION @time WHERE id = hub_id) = 0) THEN
-        SELECT JSON_OBJECT('id', hub_id, 'message', 'Hub does not exist with given ID') INTO @hub;
-        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = @hub;
+        SIGNAL SQLSTATE '45000' SET  MYSQL_ERRNO =50000;
     END IF;
 
     SELECT hu.id      AS id,
