@@ -54,10 +54,10 @@ BEGIN
         END;
     START TRANSACTION;
     select id into @FlowId from cfe_18.flows where name = proc_flow;
-    if (select id from cfe_18.flow_targets where flow_id = @FlowId and storage_id = proc_storage_id) is null then
+    if (select id from cfe_18.flow_storages where flow_id = @FlowId and storage_id = proc_storage_id) is null then
         SIGNAL SQLSTATE '45000' set MYSQL_ERRNO = 50000;
     end if;
-    delete from cfe_18.flow_targets where storage_id = proc_storage_id and flow_id = @FlowId;
+    delete from cfe_18.flow_storages where storage_id = proc_storage_id and flow_id = @FlowId;
     COMMIT;
 END;
 //

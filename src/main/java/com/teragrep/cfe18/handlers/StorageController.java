@@ -67,7 +67,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.sql.DataSource;
-import java.sql.SQLException;
 import java.util.List;
 
 @RestController
@@ -118,24 +117,9 @@ public class StorageController {
             @PathVariable String flow,
             @RequestParam(required = false) Integer version
     ) {
-        try {
-            List<FlowStorage> fs = storageMapper.retrieveFlowStorages(flow, version);
-            return new ResponseEntity<>(fs, HttpStatus.OK);
-        }
-        catch (Exception ex) {
+        List<FlowStorage> fs = storageMapper.retrieveFlowStorages(flow, version);
+        return new ResponseEntity<>(fs, HttpStatus.OK);
 
-            final Throwable cause = ex.getCause();
-            if (cause instanceof SQLException) {
-                LOGGER.error((cause).getMessage());
-                String state = ((SQLException) cause).getSQLState();
-                if (state.equals("45000")) {
-                    JSONObject jsonErr = new JSONObject();
-                    jsonErr.put("message", "Record does not exist with the given flow");
-                    return new ResponseEntity<>(jsonErr.toString(), HttpStatus.BAD_REQUEST);
-                }
-            }
-            return new ResponseEntity<>("Unexpected error", HttpStatus.INTERNAL_SERVER_ERROR);
-        }
     }
 
     // Get ALL Flow storages
@@ -197,24 +181,9 @@ public class StorageController {
             @PathVariable int capture_id,
             @RequestParam(required = false) Integer version
     ) {
-        try {
-            List<CaptureStorage> cs = storageMapper.retrieveCaptureStorages(capture_id, version);
-            return new ResponseEntity<>(cs, HttpStatus.OK);
-        }
-        catch (Exception ex) {
-            JSONObject jsonErr = new JSONObject();
-            jsonErr.put("id", capture_id);
-            final Throwable cause = ex.getCause();
-            if (cause instanceof SQLException) {
-                LOGGER.error((cause).getMessage());
-                String state = ((SQLException) cause).getSQLState();
-                if (state.equals("45000")) {
-                    jsonErr.put("message", "Record does not exist with the given capture_id");
-                    return new ResponseEntity<>(jsonErr.toString(), HttpStatus.BAD_REQUEST);
-                }
-            }
-            return new ResponseEntity<>("Unexpected error", HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+        List<CaptureStorage> cs = storageMapper.retrieveCaptureStorages(capture_id, version);
+        return new ResponseEntity<>(cs, HttpStatus.OK);
+
     }
 
     // Fetch ALL Capture storages
@@ -295,26 +264,9 @@ public class StorageController {
             )
     })
     public ResponseEntity<?> get(@PathVariable("id") int id, @RequestParam(required = false) Integer version) {
-        try {
-            Storage s = storageMapper.get(id, version);
-            return new ResponseEntity<>(s, HttpStatus.OK);
-        }
-        catch (RuntimeException ex) {
-            LOGGER.error(ex.getMessage());
-            JSONObject jsonErr = new JSONObject();
-            jsonErr.put("id", id);
-            jsonErr.put("message", ex.getCause().toString());
-            final Throwable cause = ex.getCause();
-            if (cause instanceof SQLException) {
-                LOGGER.error((cause).getMessage());
-                String state = ((SQLException) cause).getSQLState();
-                if (state.equals("45000")) {
-                    jsonErr.put("message", "Record does not exist");
-                    return new ResponseEntity<>(jsonErr.toString(), HttpStatus.NOT_FOUND);
-                }
-            }
-            return new ResponseEntity<>(jsonErr.toString(), HttpStatus.BAD_REQUEST);
-        }
+        Storage s = storageMapper.get(id, version);
+        return new ResponseEntity<>(s, HttpStatus.OK);
+
     }
 
     // New storage with the flow
@@ -348,20 +300,13 @@ public class StorageController {
     })
     public ResponseEntity<String> addNewStorage(@RequestBody FlowStorage newFlowStorage) {
         LOGGER.info("About to insert <[{}]>", newFlowStorage);
-        try {
-            FlowStorage fs = storageMapper.addStorageForFlow(newFlowStorage.getFlow(), newFlowStorage.getStorage_id());
-            LOGGER.debug("Values returned <[{}]>", fs);
-            JSONObject jsonObject = new JSONObject();
-            jsonObject.put("id", fs.getId());
-            jsonObject.put("message", "New flow storage created");
-            return new ResponseEntity<>(jsonObject.toString(), HttpStatus.CREATED);
-        }
-        catch (RuntimeException ex) {
-            JSONObject jsonErr = new JSONObject();
-            jsonErr.put("id", newFlowStorage.getId());
-            jsonErr.put("message", ex.getCause().toString());
-            return new ResponseEntity<>(jsonErr.toString(), HttpStatus.BAD_REQUEST);
-        }
+        FlowStorage fs = storageMapper.addStorageForFlow(newFlowStorage.getFlow(), newFlowStorage.getStorage_id());
+        LOGGER.debug("Values returned <[{}]>", fs);
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("id", fs.getId());
+        jsonObject.put("message", "New flow storage created");
+        return new ResponseEntity<>(jsonObject.toString(), HttpStatus.CREATED);
+
     }
 
     // Link storage to capture
@@ -395,33 +340,13 @@ public class StorageController {
     })
     public ResponseEntity<String> linkStorageToCapture(@RequestBody CaptureStorage newCaptureStorage) {
         LOGGER.info("About to insert <[{}]>", newCaptureStorage);
-        try {
-            CaptureStorage cs = storageMapper
-                    .addStorageForCapture(newCaptureStorage.getCapture_id(), newCaptureStorage.getStorage_id());
-            LOGGER.debug("Values returned <[{}]>", cs);
-            JSONObject jsonObject = new JSONObject();
-            jsonObject.put("id", cs.getCapture_id());
-            jsonObject.put("message", "New capture storage created");
-            return new ResponseEntity<>(jsonObject.toString(), HttpStatus.CREATED);
-        }
-        catch (RuntimeException ex) {
-            JSONObject jsonErr = new JSONObject();
-            jsonErr.put("id", newCaptureStorage.getCapture_id());
-            final Throwable cause = ex.getCause();
-            if (cause instanceof SQLException) {
-                LOGGER.error((cause).getMessage());
-                // Get specific error type
-                int error = ((SQLException) cause).getErrorCode();
-                // Link error with state to get accurate error status
-                String state = error + "-" + ((SQLException) cause).getSQLState();
-                if (state.equals("1452-23000")) {
-                    jsonErr.put("message", "Storage does not exist");
-                    return new ResponseEntity<>(jsonErr.toString(), HttpStatus.BAD_REQUEST);
-                }
-            }
-            return new ResponseEntity<>("Unexpected error", HttpStatus.INTERNAL_SERVER_ERROR);
-
-        }
+        CaptureStorage cs = storageMapper
+                .addStorageForCapture(newCaptureStorage.getCapture_id(), newCaptureStorage.getStorage_id());
+        LOGGER.debug("Values returned <[{}]>", cs);
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("id", cs.getCapture_id());
+        jsonObject.put("message", "New capture storage created");
+        return new ResponseEntity<>(jsonObject.toString(), HttpStatus.CREATED);
     }
 
     @RequestMapping(
@@ -454,30 +379,13 @@ public class StorageController {
     })
     public ResponseEntity<String> create(@RequestBody Storage newStorage) {
         LOGGER.info("About to insert <[{}]>", newStorage);
-        try {
-            Storage s = storageMapper.create(newStorage.getStorageType(), newStorage.getStorageName());
-            LOGGER.debug("Values returned <[{}]>", s);
-            JSONObject jsonObject = new JSONObject();
-            jsonObject.put("id", s.getId());
-            jsonObject.put("message", "New storage created");
-            return new ResponseEntity<>(jsonObject.toString(), HttpStatus.CREATED);
-        }
-        catch (RuntimeException ex) {
-            LOGGER.error(ex.getMessage());
-            JSONObject jsonErr = new JSONObject();
-            jsonErr.put("id", newStorage.getId());
-            jsonErr.put("message", ex.getCause().toString());
-            final Throwable cause = ex.getCause();
-            if (cause instanceof SQLException) {
-                LOGGER.error((cause).getMessage());
-                String state = ((SQLException) cause).getSQLState();
-                if (state.equals("23000")) {
-                    jsonErr.put("message", "Storage name already exists");
-                    return new ResponseEntity<>(jsonErr.toString(), HttpStatus.BAD_REQUEST);
-                }
-            }
-            return new ResponseEntity<>(jsonErr.toString(), HttpStatus.BAD_REQUEST);
-        }
+        Storage s = storageMapper.create(newStorage.getStorageType(), newStorage.getStorageName());
+        LOGGER.debug("Values returned <[{}]>", s);
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("id", s.getId());
+        jsonObject.put("message", "New storage created");
+        return new ResponseEntity<>(jsonObject.toString(), HttpStatus.CREATED);
+
     }
 
     @RequestMapping(
@@ -515,33 +423,11 @@ public class StorageController {
     })
     public ResponseEntity<String> delete(@PathVariable("id") int id) {
         LOGGER.info("Deleting Storage <[{}]>", id);
-        try {
-            storageMapper.delete(id);
-            JSONObject j = new JSONObject();
-            j.put("id", id);
-            j.put("message", "Storage deleted");
-            return new ResponseEntity<>(j.toString(), HttpStatus.OK);
-        }
-        catch (RuntimeException ex) {
-            LOGGER.error(ex.getMessage());
-            JSONObject jsonErr = new JSONObject();
-            jsonErr.put("id", id);
-            jsonErr.put("message", ex.getCause().getMessage());
-            final Throwable cause = ex.getCause();
-            if (cause instanceof SQLException) {
-                LOGGER.error((cause).getMessage());
-                String state = ((SQLException) cause).getSQLState();
-                if (state.equals("23000")) {
-                    jsonErr.put("message", "Is in use");
-                    return new ResponseEntity<>(jsonErr.toString(), HttpStatus.CONFLICT);
-                }
-                else if (state.equals("45000")) {
-                    jsonErr.put("message", "Record does not exist");
-                    return new ResponseEntity<>(jsonErr.toString(), HttpStatus.NOT_FOUND);
-                }
-            }
-            return new ResponseEntity<>(jsonErr.toString(), HttpStatus.BAD_REQUEST);
-        }
+        storageMapper.delete(id);
+        JSONObject j = new JSONObject();
+        j.put("id", id);
+        j.put("message", "Storage deleted");
+        return new ResponseEntity<>(j.toString(), HttpStatus.OK);
     }
 
     // Delete flow storage
@@ -575,30 +461,11 @@ public class StorageController {
     })
     public ResponseEntity<String> removeFlowStorage(@PathVariable("flow") String flow, @PathVariable("id") int id) {
         LOGGER.info("Deleting flow Storage with id <[{}]>", id);
-        JSONObject jsonErr = new JSONObject();
-        jsonErr.put("id", id);
-        try {
-            storageMapper.deleteFlowStorage(flow, id);
-            JSONObject j = new JSONObject();
-            j.put("id", id);
-            j.put("message", "Flow =" + flow + ", Storage " + id + " deleted.");
-            return new ResponseEntity<>(j.toString(), HttpStatus.OK);
-        }
-        catch (Exception ex) {
-            final Throwable cause = ex.getCause();
-            if (cause instanceof SQLException) {
-                LOGGER.error((cause).getMessage());
-                String state = ((SQLException) cause).getSQLState();
-                if (state.equals("23000")) {
-                    jsonErr.put("message", "Is in use");
-                }
-                else if (state.equals("45000")) {
-                    jsonErr.put("message", "Record does not exist");
-                }
-                return new ResponseEntity<>(jsonErr.toString(), HttpStatus.BAD_REQUEST);
-            }
-            return new ResponseEntity<>("Unexpected error", HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+        storageMapper.deleteFlowStorage(flow, id);
+        JSONObject j = new JSONObject();
+        j.put("id", id);
+        j.put("message", "Flow =" + flow + ", Storage " + id + " deleted.");
+        return new ResponseEntity<>(j.toString(), HttpStatus.OK);
     }
 
     // Delete capture storage
@@ -635,29 +502,10 @@ public class StorageController {
             @PathVariable("storage_id") int storage_id
     ) {
         LOGGER.info("Deleting capture storage with id <[{}]>", storage_id);
-        JSONObject jsonErr = new JSONObject();
-        jsonErr.put("id", capture_id);
-        try {
-            storageMapper.deleteCaptureStorage(capture_id, storage_id);
-            JSONObject j = new JSONObject();
-            j.put("id", capture_id);
-            j.put("message", "Capture = " + capture_id + ", with Storage " + storage_id + " deleted.");
-            return new ResponseEntity<>(j.toString(), HttpStatus.OK);
-        }
-        catch (Exception ex) {
-            final Throwable cause = ex.getCause();
-            if (cause instanceof SQLException) {
-                LOGGER.error((cause).getMessage());
-                String state = ((SQLException) cause).getSQLState();
-                if (state.equals("23000")) {
-                    jsonErr.put("message", "Is in use");
-                }
-                else if (state.equals("45000")) {
-                    jsonErr.put("message", "Record does not exist");
-                }
-                return new ResponseEntity<>(jsonErr.toString(), HttpStatus.BAD_REQUEST);
-            }
-            return new ResponseEntity<>("Unexpected error", HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+        storageMapper.deleteCaptureStorage(capture_id, storage_id);
+        JSONObject j = new JSONObject();
+        j.put("id", capture_id);
+        j.put("message", "Capture = " + capture_id + ", with Storage " + storage_id + " deleted.");
+        return new ResponseEntity<>(j.toString(), HttpStatus.OK);
     }
 }

@@ -64,7 +64,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.sql.DataSource;
-import java.sql.SQLException;
 
 @RestController
 @RequestMapping(path = "/v2/storages/definitions/cfe_04")
@@ -104,37 +103,19 @@ public class Cfe04StorageSourcetypeController {
             @RequestBody Cfe04StorageSourcetype cfe04StorageSourcetype
     ) {
         LOGGER.info("About to insert <[{}]>", storageId);
-        try {
-            Integer returnedStorageId = cfe04StorageSourcetypeMapper
-                    .create(
-                            storageId, cfe04StorageSourcetype.getSourcetypeId(), cfe04StorageSourcetype.getMaxDaysAgo(),
-                            cfe04StorageSourcetype.getCategory(), cfe04StorageSourcetype.getSourceDescription(),
-                            cfe04StorageSourcetype.getTruncate(), cfe04StorageSourcetype.isFreeformIndexerEnabled(),
-                            cfe04StorageSourcetype.getFreeformIndexerText(),
-                            cfe04StorageSourcetype.isFreeformLbEnabled(), cfe04StorageSourcetype.getFreeformLbText()
-                    );
-            LOGGER.debug("Values returned <[{}]>", returnedStorageId);
-            JsonObjectBuilder returnJson = Json.createObjectBuilder();
-            returnJson.add("id", storageId);
-            returnJson.add("message", "New sourcetype linked to storage");
-            return new ResponseEntity<>(returnJson.build().toString(), HttpStatus.CREATED);
-        }
-        catch (RuntimeException ex) {
-            LOGGER.error(ex.getMessage());
-            JsonObjectBuilder returnJson = Json.createObjectBuilder();
-            returnJson.add("id", storageId);
-            returnJson.add("message", ex.getCause().getMessage());
-            final Throwable cause = ex.getCause();
-            if (cause instanceof SQLException) {
-                LOGGER.error((cause).getMessage());
-                String state = ((SQLException) cause).getSQLState();
-                if (state.equals("23000")) {
-                    returnJson.add("message", "Record does not exist");
-                    return new ResponseEntity<>(returnJson.build().toString(), HttpStatus.NOT_FOUND);
-                }
-            }
-            return new ResponseEntity<>(returnJson.build().toString(), HttpStatus.BAD_REQUEST);
-        }
+        Integer returnedStorageId = cfe04StorageSourcetypeMapper
+                .create(
+                        storageId, cfe04StorageSourcetype.getSourcetypeId(), cfe04StorageSourcetype.getMaxDaysAgo(),
+                        cfe04StorageSourcetype.getCategory(), cfe04StorageSourcetype.getSourceDescription(),
+                        cfe04StorageSourcetype.getTruncate(), cfe04StorageSourcetype.isFreeformIndexerEnabled(),
+                        cfe04StorageSourcetype.getFreeformIndexerText(), cfe04StorageSourcetype.isFreeformLbEnabled(),
+                        cfe04StorageSourcetype.getFreeformLbText()
+                );
+        LOGGER.debug("Values returned <[{}]>", returnedStorageId);
+        JsonObjectBuilder returnJson = Json.createObjectBuilder();
+        returnJson.add("id", storageId);
+        returnJson.add("message", "New sourcetype linked to storage");
+        return new ResponseEntity<>(returnJson.build().toString(), HttpStatus.CREATED);
     }
 
     @RequestMapping(
@@ -159,19 +140,10 @@ public class Cfe04StorageSourcetypeController {
             @PathVariable("sourceTypeId") int sourceTypeId
     ) {
         LOGGER.info("Deleting cfe 04 storage sourcetype <[{}]>", cfe04Id);
-        try {
-            cfe04StorageSourcetypeMapper.delete(cfe04Id, sourceTypeId);
-            JsonObjectBuilder returnJson = Json.createObjectBuilder();
-            returnJson.add("id", cfe04Id);
-            returnJson.add("message", "Sourcetype deleted from cfe_04 storage");
-            return new ResponseEntity<>(returnJson.build().toString(), HttpStatus.OK);
-        }
-        catch (RuntimeException ex) {
-            LOGGER.error(ex.getMessage());
-            JsonObjectBuilder returnJson = Json.createObjectBuilder();
-            returnJson.add("id", cfe04Id);
-            returnJson.add("message", ex.getCause().getMessage());
-            return new ResponseEntity<>(returnJson.build().toString(), HttpStatus.BAD_REQUEST);
-        }
+        cfe04StorageSourcetypeMapper.delete(cfe04Id, sourceTypeId);
+        JsonObjectBuilder returnJson = Json.createObjectBuilder();
+        returnJson.add("id", cfe04Id);
+        returnJson.add("message", "Sourcetype deleted from cfe_04 storage");
+        return new ResponseEntity<>(returnJson.build().toString(), HttpStatus.OK);
     }
 }

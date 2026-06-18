@@ -73,7 +73,7 @@ BEGIN
         select last_insert_id() as last;
     else
         select id as last
-        from cfe_18.capture_def_x_flow_storages
+        from cfe_18.capture_def_x_flow_target
         where capture_def_id = capture_id
           and flow_id = @FlowId
           and flow_storage_id = storage_id

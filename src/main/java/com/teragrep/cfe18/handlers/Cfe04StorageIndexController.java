@@ -64,7 +64,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.sql.DataSource;
-import java.sql.SQLException;
 
 @RestController
 @RequestMapping(path = "/v2/storages/definitions/cfe_04")
@@ -104,35 +103,17 @@ public class Cfe04StorageIndexController {
             @RequestBody Cfe04StorageIndex cfe04StorageIndex
     ) {
         LOGGER.info("About to insert <[{}]>", storageId);
-        try {
-            Integer returnedStorageId = storageIndexMapper
-                    .create(
-                            storageId, cfe04StorageIndex.getIndexId(), cfe04StorageIndex.getRepFactor(),
-                            cfe04StorageIndex.isDisabled(), cfe04StorageIndex.getHomePath(),
-                            cfe04StorageIndex.getColdpath(), cfe04StorageIndex.getThawedPath()
-                    );
-            LOGGER.debug("Values returned <[{}]>", returnedStorageId);
-            JsonObjectBuilder returnJson = Json.createObjectBuilder();
-            returnJson.add("id", returnedStorageId);
-            returnJson.add("message", "New index linked to storage");
-            return new ResponseEntity<>(returnJson.build().toString(), HttpStatus.CREATED);
-        }
-        catch (RuntimeException ex) {
-            LOGGER.error(ex.getMessage());
-            JsonObjectBuilder returnJson = Json.createObjectBuilder();
-            returnJson.add("id", storageId);
-            returnJson.add("message", ex.getCause().getMessage());
-            final Throwable cause = ex.getCause();
-            if (cause instanceof SQLException) {
-                LOGGER.error((cause).getMessage());
-                String state = ((SQLException) cause).getSQLState();
-                if (state.equals("23000")) {
-                    returnJson.add("message", "Record does not exist");
-                    return new ResponseEntity<>(returnJson.build().toString(), HttpStatus.NOT_FOUND);
-                }
-            }
-            return new ResponseEntity<>(returnJson.build().toString(), HttpStatus.BAD_REQUEST);
-        }
+        Integer returnedStorageId = storageIndexMapper
+                .create(
+                        storageId, cfe04StorageIndex.getIndexId(), cfe04StorageIndex.getRepFactor(),
+                        cfe04StorageIndex.isDisabled(), cfe04StorageIndex.getHomePath(),
+                        cfe04StorageIndex.getColdpath(), cfe04StorageIndex.getThawedPath()
+                );
+        LOGGER.debug("Values returned <[{}]>", returnedStorageId);
+        JsonObjectBuilder returnJson = Json.createObjectBuilder();
+        returnJson.add("id", returnedStorageId);
+        returnJson.add("message", "New index linked to storage");
+        return new ResponseEntity<>(returnJson.build().toString(), HttpStatus.CREATED);
     }
 
     @RequestMapping(
@@ -154,20 +135,11 @@ public class Cfe04StorageIndexController {
     })
     public ResponseEntity<String> delete(@PathVariable("cfe_04_id") int cfe04Id, @PathVariable("indexId") int indexId) {
         LOGGER.info("Deleting index from storage <[{}]>", cfe04Id);
-        try {
-            storageIndexMapper.delete(cfe04Id, indexId);
-            JsonObjectBuilder returnJson = Json.createObjectBuilder();
-            returnJson.add("id", cfe04Id);
-            returnJson.add("message", "Index deleted from cfe_04 storage");
-            return new ResponseEntity<>(returnJson.build().toString(), HttpStatus.OK);
-        }
-        catch (RuntimeException ex) {
-            LOGGER.error(ex.getMessage());
-            JsonObjectBuilder returnJson = Json.createObjectBuilder();
-            returnJson.add("id", cfe04Id);
-            returnJson.add("message", ex.getCause().getMessage());
-            return new ResponseEntity<>(returnJson.build().toString(), HttpStatus.BAD_REQUEST);
-        }
+        storageIndexMapper.delete(cfe04Id, indexId);
+        JsonObjectBuilder returnJson = Json.createObjectBuilder();
+        returnJson.add("id", cfe04Id);
+        returnJson.add("message", "Index deleted from cfe_04 storage");
+        return new ResponseEntity<>(returnJson.build().toString(), HttpStatus.OK);
     }
 
 }
