@@ -43,34 +43,28 @@
  * Teragrep, the applicable Commercial License may apply to this file if you as
  * a licensee so wish it.
  */
-package com.teragrep.cfe18.handlers.entities;
+USE cfe_18;
+DELIMITER //
+CREATE OR REPLACE PROCEDURE delete_hostmeta(p_host_id INT, meta_key VARCHAR(1024))
+BEGIN
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+        BEGIN
+            ROLLBACK;
+            RESIGNAL;
+        END;
+    START TRANSACTION;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-
-@JsonInclude(JsonInclude.Include.NON_NULL)
-public class IPAddress {
-
-    private String ipAddress;
-    private int host_meta_id;
-
-    public String getIpAddress() {
-        return ipAddress;
-    }
-
-    public void setIpAddress(String ip_address) {
-        this.ipAddress = ip_address;
-    }
-
-    public int getHost_meta_id() {
-        return host_meta_id;
-    }
-
-    public void setHost_meta_id(int host_meta_id) {
-        this.host_meta_id = host_meta_id;
-    }
-
-    @Override
-    public String toString() {
-        return "Ip_Address{" + "ip_address='" + ipAddress + '\'' + ", host_meta_id=" + host_meta_id + '}';
-    }
-}
+    -- check if key is null. Delete whole hostmeta if null.
+    IF meta_key IS NULL THEN
+        DELETE hm.* FROM host_meta hm WHERE hm.host_id = p_host_id;
+    ELSE
+        DELETE hm.*
+        FROM cfe_18.host_meta hm
+                 INNER JOIN cfe_18.host_meta_key hmk
+        WHERE hm.host_id = p_host_id
+          AND hmk.meta_key_name = meta_key;
+    END IF;
+    COMMIT;
+END;
+//
+DELIMITER ;
