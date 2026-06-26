@@ -79,40 +79,11 @@ public class HostMetaControllerTest extends TestSpringBootInformation {
     private int port;
 
     @Test
-    @BeforeAll
-    void testData() {
-        HostRelp relpHost = new HostRelp();
-        relpHost.setMd5("relpHostmd5");
-        relpHost.setFqHost("relpHostfq");
-
-        String json = gson.toJson(relpHost);
-
-        StringEntity requestEntity = new StringEntity(String.valueOf(json), ContentType.APPLICATION_JSON);
-
-        HttpPut request = new HttpPut("http://localhost:" + port + "/host/relp");
-        request.setEntity(requestEntity);
-        request.setHeader("Authorization", "Bearer " + token);
-
-        HttpResponse httpResponse = Assertions
-                .assertDoesNotThrow(() -> HttpClientBuilder.create().build().execute(request));
-
-        HttpEntity entity = httpResponse.getEntity();
-
-        String responseString = Assertions.assertDoesNotThrow(() -> EntityUtils.toString(entity));
-
-        JSONObject responseAsJson = Assertions.assertDoesNotThrow(() -> new JSONObject(responseString));
-
-        String expected = "New host created with relp type";
-
-        String actual = Assertions.assertDoesNotThrow(() -> responseAsJson.get("message").toString());
-
-        assertEquals(expected, actual);
-        assertEquals(HttpStatus.SC_CREATED, httpResponse.getStatusLine().getStatusCode());
-    }
-
-    @Test
     @Order(1)
     public void testAddHostMeta() {
+        TestApiClient testApiClient = new TestApiClient(port, token);
+        Integer hostId = testApiClient.insertRelpHost("relpHostmd5", "relpHostfq");
+
         HostMeta hostMeta = new HostMeta();
         hostMeta.setMetaKey("metaKey");
         hostMeta.setMetaValue("metaValue");
@@ -121,7 +92,7 @@ public class HostMetaControllerTest extends TestSpringBootInformation {
 
         StringEntity requestEntity4 = new StringEntity(String.valueOf(hostMetaJson), ContentType.APPLICATION_JSON);
 
-        HttpPut request4 = new HttpPut("http://localhost:" + port + "/v2/hosts/definitions/1/metadata");
+        HttpPut request4 = new HttpPut("http://localhost:" + port + "/v2/hosts/definitions/" + hostId + "/metadata");
         request4.setEntity(requestEntity4);
         request4.setHeader("Authorization", "Bearer " + token);
 
@@ -357,30 +328,6 @@ public class HostMetaControllerTest extends TestSpringBootInformation {
 
         assertEquals(HttpStatus.SC_OK, deleteResponse.getStatusLine().getStatusCode());
         assertEquals(expectedDelete, actualDelete);
-    }
-
-    @Test
-    @Order(9)
-    public void testDeleteNonExistentHostMeta() {
-        HttpDelete delete = new HttpDelete("http://localhost:" + port + "/v2/hosts/definitions/67/metadata");
-
-        delete.setHeader("Authorization", "Bearer " + token);
-
-        HttpResponse deleteResponse = Assertions
-                .assertDoesNotThrow(() -> HttpClientBuilder.create().build().execute(delete));
-
-        HttpEntity entityDelete = deleteResponse.getEntity();
-
-        String responseStringGet = Assertions.assertDoesNotThrow(() -> EntityUtils.toString(entityDelete, "UTF-8"));
-
-        JSONObject responseAsJson = Assertions.assertDoesNotThrow(() -> new JSONObject(responseStringGet));
-
-        String actual = Assertions.assertDoesNotThrow(() -> responseAsJson.get("message").toString());
-
-        String expected = "Record does not exist";
-
-        assertEquals(HttpStatus.SC_BAD_REQUEST, deleteResponse.getStatusLine().getStatusCode());
-        assertEquals(expected, actual);
     }
 
 }

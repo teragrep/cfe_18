@@ -71,7 +71,7 @@ BEGIN
     INSERT INTO cfe_18.host_meta(host_id, meta_key_id, meta_value) VALUES (p_host_id, @keyId, host_meta_value);
 
     -- return host_id as signal
-    SELECT hm.host_id AS host_id from cfe_18.host_meta hm where hm.host_id=p_host_id;
+    SELECT distinct hm.host_id AS host_id from cfe_18.host_meta hm where hm.host_id=p_host_id;
     COMMIT;
 END;
 //

@@ -64,7 +64,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.sql.DataSource;
-import java.sql.SQLException;
 import java.util.List;
 
 @RequestMapping(path = "v2/hosts/definitions")
@@ -139,11 +138,12 @@ public class HostMetaController {
                     }
             )
     })
-    public List<HostMeta> get(@PathVariable("hostId") int hostId,
+    public List<HostMeta> get(
+            @PathVariable("hostId") int hostId,
             @RequestParam(required = false) String key,
             @RequestParam(required = false) Integer version
     ) {
-        return hostMetaMapper.get(hostId,key, version);
+        return hostMetaMapper.get(hostId, key, version);
     }
 
     @RequestMapping(
