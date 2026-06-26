@@ -16,7 +16,7 @@
 
     <!-- meta_key VARCHAR(1024), tx_id INT -->
     <select id="get" resultMap="allHostMeta" statementType="CALLABLE">
-        {CAll cfe_18.select_all_host_metas(#{param1},#{param2})}
+        {CAll cfe_18.select_all_host_metas(#{param1},#{param2},#{param3})}
     </select>
     <resultMap id="allHostMeta" type="com.teragrep.cfe18.handlers.entities.HostMeta">
         <result property="hostId"       column="host_id"/>

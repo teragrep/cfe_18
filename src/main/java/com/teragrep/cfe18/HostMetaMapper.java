@@ -55,7 +55,7 @@ public interface HostMetaMapper {
 
     HostMeta create(final Integer hostId, final String key, final String hostMetaValue);
 
-    List<HostMeta> get(final Integer hostMetaId,final String key, final Integer version);
+    List<HostMeta> get(final Integer hostMetaId, final String key, final Integer version);
 
     void delete(final Integer id, final String key);
 }
