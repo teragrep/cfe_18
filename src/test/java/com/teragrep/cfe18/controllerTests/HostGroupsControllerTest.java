@@ -114,6 +114,39 @@ public class HostGroupsControllerTest extends TestSpringBootInformation {
 
     @Test
     @Order(2)
+    public void testAddHostGroupWithIndifferentType() {
+        HostGroup relpHostGroup = new HostGroup();
+        relpHostGroup.setHost_group_name("hostgroup1");
+        relpHostGroup.setHost_group_type(IntegrationType.CFE);
+
+        String jsonGroup = gson.toJson(relpHostGroup);
+
+        StringEntity requestEntityGroup = new StringEntity(String.valueOf(jsonGroup), ContentType.APPLICATION_JSON);
+
+        HttpPut requestGroup = new HttpPut("http://localhost:" + port + "/v2/hosts/groups");
+        requestGroup.setEntity(requestEntityGroup);
+        requestGroup.setHeader("Authorization", "Bearer " + token);
+
+        HttpResponse httpResponse = Assertions
+                .assertDoesNotThrow(() -> HttpClientBuilder.create().build().execute(requestGroup));
+
+        HttpEntity entity = httpResponse.getEntity();
+
+        String responseString = Assertions.assertDoesNotThrow(() -> EntityUtils.toString(entity));
+
+        JSONObject responseAsJson = Assertions.assertDoesNotThrow(() -> new JSONObject(responseString));
+
+        String expected = "Record already exists with different integration type";
+
+        String actual = Assertions.assertDoesNotThrow(() -> responseAsJson.get("message").toString());
+
+        assertEquals(expected, actual);
+        assertEquals((HttpStatus.SC_CONFLICT), httpResponse.getStatusLine().getStatusCode());
+
+    }
+
+    @Test
+    @Order(3)
     public void testRetrieveHostGroup() {
         HostGroup hostGroup = new HostGroup();
         hostGroup.setHost_group_name("hostgroup1");
@@ -139,7 +172,7 @@ public class HostGroupsControllerTest extends TestSpringBootInformation {
     }
 
     @Test
-    @Order(3)
+    @Order(4)
     public void testRetrieveAllHostGroups() {
         ArrayList<HostGroup> expected = new ArrayList<>();
         HostGroup hostGroup = new HostGroup();
@@ -168,7 +201,7 @@ public class HostGroupsControllerTest extends TestSpringBootInformation {
     }
 
     @Test
-    @Order(4)
+    @Order(5)
     public void testDeleteHostGroupInUse() {
         TestApiClient testApiClient = new TestApiClient(port, token);
         Integer hostId = testApiClient.insertRelpHost("md5", "fq");
@@ -195,7 +228,7 @@ public class HostGroupsControllerTest extends TestSpringBootInformation {
     }
 
     @Test
-    @Order(5)
+    @Order(6)
     public void testDeleteHostGroup() {
         TestApiClient testApiClient = new TestApiClient(port, token);
         testApiClient.insertHostGroup("group2", IntegrationType.RELP);
@@ -221,7 +254,7 @@ public class HostGroupsControllerTest extends TestSpringBootInformation {
     }
 
     @Test
-    @Order(6)
+    @Order(7)
     public void testDeleteNonExistentHostGroup() {
         HttpDelete delete = new HttpDelete("http://localhost:" + port + "/v2/hosts/groups/124");
 
@@ -245,7 +278,7 @@ public class HostGroupsControllerTest extends TestSpringBootInformation {
     }
 
     @Test
-    @Order(7)
+    @Order(8)
     public void testRetrieveNonExistentHostGroup() {
         HttpGet requestGet = new HttpGet("http://localhost:" + port + "/v2/hosts/groups/67");
 

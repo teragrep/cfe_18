@@ -51,6 +51,7 @@ public enum MariaDBError {
 
     MISSING(-15536, HttpStatus.NOT_FOUND, "Record does not exist"),
     INTEGRATIONTYPECONFLICT(-15526, HttpStatus.CONFLICT, "Integration type mismatch"),
+    EXISTINGRECORDTYPECONFLICT(-15521, HttpStatus.CONFLICT, "Record already exists with different integration type"),
     HOSTSUSEHUB(-15516, HttpStatus.BAD_REQUEST, "Hosts use the hub"),
     TAGMD5SUMERROR(-15506, HttpStatus.INTERNAL_SERVER_ERROR, "Tag mismatches with the given tag_path"),
     DUPLICATEHOST(-15496, HttpStatus.CONFLICT, "Tag already exists on the same host through different channels"),

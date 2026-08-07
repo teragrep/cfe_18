@@ -45,7 +45,7 @@
  */
 USE cfe_18;
 DELIMITER //
-CREATE OR REPLACE PROCEDURE insert_host_group(p_group_name VARCHAR(255), host_type VARCHAR(64))
+CREATE OR REPLACE PROCEDURE insert_host_group(p_group_name VARCHAR(255), p_host_type VARCHAR(64))
 
 BEGIN
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
@@ -55,9 +55,14 @@ BEGIN
         END;
     START TRANSACTION;
 
+    -- check if the group exists with the same name but different type
+    IF ((SELECT COUNT(id) FROM cfe_18.host_group WHERE group_name = p_group_name AND host_type != p_host_type)>0) THEN
+        SIGNAL SQLSTATE '45000' SET MYSQL_ERRNO = 50015;
+    END IF;
+
     -- check if the group exists. If not then create said group
     IF ((SELECT COUNT(id) FROM cfe_18.host_group WHERE group_name = p_group_name) = 0) THEN
-        INSERT INTO cfe_18.host_group(group_name, host_type) VALUES (p_group_name, host_type);
+        INSERT INTO cfe_18.host_group(group_name, host_type) VALUES (p_group_name, p_host_type);
     END IF;
 
     SELECT id AS id FROM cfe_18.host_group WHERE group_name = p_group_name;
