@@ -64,7 +64,7 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping(path = "v2/captures/indexes")
+@RequestMapping(path = "v2/captures/definitions/indexes")
 @SecurityRequirement(name = "api")
 public class CaptureIndexController {
 
