@@ -326,7 +326,7 @@ $(document).ready(function() { init_codefold(0); });
 <div class="line"><a id="l00224" name="l00224"></a><span class="lineno">  224</span><span class="comment">    */</span></div>
 <div class="foldopen" id="foldopen00225" data-start="{" data-end="}">
 <div class="line"><a id="l00225" name="l00225"></a><span class="lineno"><a class="line" href="classcom_1_1teragrep_1_1cfe18_1_1procedureTests_1_1ProcedureHostMetaFileTest.html#a0650c77af82e48f3e4aeb0890f2441ff">  225</a></span>    <span class="keyword">public</span> <span class="keywordtype">void</span> <a class="code hl_function" href="classcom_1_1teragrep_1_1cfe18_1_1procedureTests_1_1ProcedureHostMetaFileTest.html#a0650c77af82e48f3e4aeb0890f2441ff">testProcedureRetrieveCfeHost</a>() throws Exception {</div>
-<div class="line"><a id="l00226" name="l00226"></a><span class="lineno">  226</span>        CallableStatement stmnt = conn.prepareCall(<span class="stringliteral">&quot;{CALL cfe_18.retrieve_host_details(?,?)}&quot;</span>);</div>
+<div class="line"><a id="l00226" name="l00226"></a><span class="lineno">  226</span>        CallableStatement stmnt = conn.prepareCall(<span class="stringliteral">&quot;{CALL cfe_18.select_host_definition(?,?)}&quot;</span>);</div>
 <div class="line"><a id="l00227" name="l00227"></a><span class="lineno">  227</span>        stmnt.setInt(1, 2);</div>
 <div class="line"><a id="l00228" name="l00228"></a><span class="lineno">  228</span>        stmnt.setString(2, <span class="keyword">null</span>);</div>
 <div class="line"><a id="l00229" name="l00229"></a><span class="lineno">  229</span>        ResultSet rs = stmnt.executeQuery();</div>
@@ -335,13 +335,9 @@ $(document).ready(function() { init_codefold(0); });
 <div class="line"><a id="l00232" name="l00232"></a><span class="lineno">  232</span>        Assertions.assertEquals(<span class="stringliteral">&quot;12322&quot;</span>, rs.getString(<span class="stringliteral">&quot;host_md5&quot;</span>)); <span class="comment">// md5</span></div>
 <div class="line"><a id="l00233" name="l00233"></a><span class="lineno">  233</span>        Assertions.assertEquals(<span class="stringliteral">&quot;2&quot;</span>, rs.getString(<span class="stringliteral">&quot;host_fq&quot;</span>)); <span class="comment">// fqhost</span></div>
 <div class="line"><a id="l00234" name="l00234"></a><span class="lineno">  234</span>        Assertions.assertEquals(<span class="stringliteral">&quot;cfe&quot;</span>, rs.getString(<span class="stringliteral">&quot;host_type&quot;</span>)); <span class="comment">// host_type</span></div>
-<div class="line"><a id="l00235" name="l00235"></a><span class="lineno">  235</span>        Assertions.assertEquals(1, rs.getInt(<span class="stringliteral">&quot;hub_id&quot;</span>)); <span class="comment">// hub_id</span></div>
-<div class="line"><a id="l00236" name="l00236"></a><span class="lineno">  236</span>        Assertions.assertEquals(<span class="stringliteral">&quot;host1&quot;</span>, rs.getString(<span class="stringliteral">&quot;host_name&quot;</span>)); <span class="comment">// hostname</span></div>
-<div class="line"><a id="l00237" name="l00237"></a><span class="lineno">  237</span>        Assertions.assertEquals(1, rs.getInt(<span class="stringliteral">&quot;host_meta_id&quot;</span>)); <span class="comment">// host_meta_id</span></div>
-<div class="line"><a id="l00238" name="l00238"></a><span class="lineno">  238</span>        Assertions.assertEquals(<span class="stringliteral">&quot;1&quot;</span>, rs.getString(<span class="stringliteral">&quot;hub_fq&quot;</span>)); <span class="comment">// hub_fq</span></div>
-<div class="line"><a id="l00239" name="l00239"></a><span class="lineno">  239</span>    }</div>
+<div class="line"><a id="l00235" name="l00235"></a><span class="lineno">  235</span>    }</div>
 </div>
-<div class="line"><a id="l00240" name="l00240"></a><span class="lineno">  240</span>}</div>
+<div class="line"><a id="l00236" name="l00236"></a><span class="lineno">  236</span>}</div>
 </div>
 <div class="ttc" id="aclasscom_1_1teragrep_1_1cfe18_1_1procedureTests_1_1DBUnitbase_html"><div class="ttname"><a href="classcom_1_1teragrep_1_1cfe18_1_1procedureTests_1_1DBUnitbase.html">com.teragrep.cfe18.procedureTests.DBUnitbase</a></div><div class="ttdef"><b>Definition</b> <a href="DBUnitbase_8java_source.html#l00063">DBUnitbase.java:63</a></div></div>
 <div class="ttc" id="aclasscom_1_1teragrep_1_1cfe18_1_1procedureTests_1_1ProcedureHostMetaFileTest_html"><div class="ttname"><a href="classcom_1_1teragrep_1_1cfe18_1_1procedureTests_1_1ProcedureHostMetaFileTest.html">com.teragrep.cfe18.procedureTests.ProcedureHostMetaFileTest</a></div><div class="ttdef"><b>Definition</b> <a href="ProcedureHostMetaFileTest_8java_source.html#l00064">ProcedureHostMetaFileTest.java:64</a></div></div>

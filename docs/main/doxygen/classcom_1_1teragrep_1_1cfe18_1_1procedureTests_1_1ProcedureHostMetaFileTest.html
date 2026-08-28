@@ -465,7 +465,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p class="definition">Definition at line <a class="el" href="ProcedureHostMetaFileTest_8java_source.html#l00225">225</a> of file <a class="el" href="ProcedureHostMetaFileTest_8java_source.html">ProcedureHostMetaFileTest.java</a>.</p>
 <div class="fragment"><div class="line"><span class="lineno">  225</span>                                                                {</div>
-<div class="line"><span class="lineno">  226</span>        CallableStatement stmnt = conn.prepareCall(<span class="stringliteral">&quot;{CALL cfe_18.retrieve_host_details(?,?)}&quot;</span>);</div>
+<div class="line"><span class="lineno">  226</span>        CallableStatement stmnt = conn.prepareCall(<span class="stringliteral">&quot;{CALL cfe_18.select_host_definition(?,?)}&quot;</span>);</div>
 <div class="line"><span class="lineno">  227</span>        stmnt.setInt(1, 2);</div>
 <div class="line"><span class="lineno">  228</span>        stmnt.setString(2, <span class="keyword">null</span>);</div>
 <div class="line"><span class="lineno">  229</span>        ResultSet rs = stmnt.executeQuery();</div>
@@ -474,11 +474,7 @@ Additional Inherited Members</h2></td></tr>
 <div class="line"><span class="lineno">  232</span>        Assertions.assertEquals(<span class="stringliteral">&quot;12322&quot;</span>, rs.getString(<span class="stringliteral">&quot;host_md5&quot;</span>)); <span class="comment">// md5</span></div>
 <div class="line"><span class="lineno">  233</span>        Assertions.assertEquals(<span class="stringliteral">&quot;2&quot;</span>, rs.getString(<span class="stringliteral">&quot;host_fq&quot;</span>)); <span class="comment">// fqhost</span></div>
 <div class="line"><span class="lineno">  234</span>        Assertions.assertEquals(<span class="stringliteral">&quot;cfe&quot;</span>, rs.getString(<span class="stringliteral">&quot;host_type&quot;</span>)); <span class="comment">// host_type</span></div>
-<div class="line"><span class="lineno">  235</span>        Assertions.assertEquals(1, rs.getInt(<span class="stringliteral">&quot;hub_id&quot;</span>)); <span class="comment">// hub_id</span></div>
-<div class="line"><span class="lineno">  236</span>        Assertions.assertEquals(<span class="stringliteral">&quot;host1&quot;</span>, rs.getString(<span class="stringliteral">&quot;host_name&quot;</span>)); <span class="comment">// hostname</span></div>
-<div class="line"><span class="lineno">  237</span>        Assertions.assertEquals(1, rs.getInt(<span class="stringliteral">&quot;host_meta_id&quot;</span>)); <span class="comment">// host_meta_id</span></div>
-<div class="line"><span class="lineno">  238</span>        Assertions.assertEquals(<span class="stringliteral">&quot;1&quot;</span>, rs.getString(<span class="stringliteral">&quot;hub_fq&quot;</span>)); <span class="comment">// hub_fq</span></div>
-<div class="line"><span class="lineno">  239</span>    }</div>
+<div class="line"><span class="lineno">  235</span>    }</div>
 </div><!-- fragment -->
 </div>
 </div>
