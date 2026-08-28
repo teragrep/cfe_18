@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.teragrep.cfe18.HostDefinitionMapper">
+
+    <!-- GET (id int, tx_id int) -->
+    <select id="get" resultMap="hostDefinition" statementType="CALLABLE">
+        {CALL cfe_18.select_host_definition(#{param1},#{param2})}
+    </select>
+
+    <!-- GET All ( metadatakey varchar(255), tx_id INT) -->
+    <select id="getAll" resultMap="hostDefinition" statementType="CALLABLE">
+        {CALL cfe_18.select_all_host_definitions(#{param1})}
+    </select>
+
+    <resultMap id="hostDefinition" type="com.teragrep.cfe18.handlers.entities.HostDefinition">
+        <result property="hostId" column="host_id"/>
+        <result property="md5" column="host_md5"/>
+        <result property="hostFq" column="host_fq"/>
+        <result property="hostType" column="host_type"/>
+    </resultMap>
+
+
+</mapper>

@@ -223,7 +223,7 @@ public class ProcedureHostMetaFileTest extends DBUnitbase {
     Testi millä tarkastetaan cfe hostin palautus missä host_meta_id tulee mukana. Testidatan vuoksi hostin testi täälä.
     */
     public void testProcedureRetrieveCfeHost() throws Exception {
-        CallableStatement stmnt = conn.prepareCall("{CALL cfe_18.retrieve_host_details(?,?)}");
+        CallableStatement stmnt = conn.prepareCall("{CALL cfe_18.select_host_definition(?,?)}");
         stmnt.setInt(1, 2);
         stmnt.setString(2, null);
         ResultSet rs = stmnt.executeQuery();
@@ -232,9 +232,5 @@ public class ProcedureHostMetaFileTest extends DBUnitbase {
         Assertions.assertEquals("12322", rs.getString("host_md5")); // md5
         Assertions.assertEquals("2", rs.getString("host_fq")); // fqhost
         Assertions.assertEquals("cfe", rs.getString("host_type")); // host_type
-        Assertions.assertEquals(1, rs.getInt("hub_id")); // hub_id
-        Assertions.assertEquals("host1", rs.getString("host_name")); // hostname
-        Assertions.assertEquals(1, rs.getInt("host_meta_id")); // host_meta_id
-        Assertions.assertEquals("1", rs.getString("hub_fq")); // hub_fq
     }
 }

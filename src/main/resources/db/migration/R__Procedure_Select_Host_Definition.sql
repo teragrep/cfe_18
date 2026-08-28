@@ -45,7 +45,7 @@
  */
 USE cfe_18;
 DELIMITER //
-CREATE OR REPLACE PROCEDURE retrieve_host_details(proc_host_id int,tx_id int)
+CREATE OR REPLACE PROCEDURE select_host_definition(proc_host_id INT, tx_id INT)
 BEGIN
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
         BEGIN
@@ -53,46 +53,22 @@ BEGIN
             RESIGNAL;
         END;
     START TRANSACTION;
-            if(tx_id) is null then
-             set @time = (select max(transaction_id) from mysql.transaction_registry);
-        else
-             set @time=tx_id;
-        end if;
-    if (select id from cfe_18.host for system_time as of transaction @time where id = proc_host_id) is null then
-        SIGNAL SQLSTATE '45000' set MYSQL_ERRNO = 50000;
-    end if;
+    IF (tx_id) IS NULL THEN
+        SET @time = (SELECT MAX(transaction_id) FROM mysql.transaction_registry);
+    ELSE
+        SET @time = tx_id;
+    END IF;
 
-    if (select h.id
-        from cfe_18.host for system_time as of transaction @time h
-                 inner join hubs for system_time as of transaction @time h3 on h.id = h3.host_id
-        where h.id = proc_host_id) is not null then
-        SIGNAL SQLSTATE '45000' set MYSQL_ERRNO = 50060;
-    elseif (select id from cfe_18.host for system_time as of transaction @time where id = proc_host_id and host_type = 'CFE') then
+    IF ((SELECT COUNT(*) FROM cfe_18.host FOR SYSTEM_TIME AS OF TRANSACTION @time WHERE id = proc_host_id) = 0) THEN
+        SIGNAL SQLSTATE '45000' SET MYSQL_ERRNO = 50000;
+    END IF;
 
-        select h.id          as host_id,
-               h.md5         as host_md5,
-               h.fqhost      as host_fq,
-               htc.host_type as host_type,
-               h2.id         as hub_id,
-               hm.hostname   as host_name,
-               hm.id         as host_meta_id,
-               h3.fqhost     as hub_fq
-        from cfe_18.host for system_time as of transaction @time h
-                 inner join host_type_cfe for system_time as of transaction @time htc on h.id = htc.host_id
-                 inner join hubs for system_time as of transaction @time h2 on htc.hub_id = h2.id
-                 inner join cfe_18.host_meta for system_time as of transaction @time hm on h.id = hm.host_id
-                 inner join cfe_18.host for system_time as of transaction @time h3 on h2.host_id = h3.id
-        where h.id = proc_host_id
-          and hm.host_id = proc_host_id
-          and h3.id = h2.host_id;
-    elseif (select id from cfe_18.host for system_time as of transaction @time where id = proc_host_id and host_type = 'RELP') then
-        select id        as host_id,
-               md5       as md5,
-               fqhost    as fqhost,
-               host_type as host_type
-        from cfe_18.host for system_time as of transaction @time
-        where id = proc_host_id;
-    end if;
+    SELECT h.id        AS host_id,
+           h.md5       AS host_md5,
+           h.fqhost    AS host_fq,
+           h.host_type AS host_type
+    FROM cfe_18.host FOR SYSTEM_TIME AS OF TRANSACTION @time h
+    WHERE h.id = proc_host_id;
     COMMIT;
 END;
 //
