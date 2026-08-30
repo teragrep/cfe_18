@@ -46,18 +46,19 @@
 package com.teragrep.cfe18;
 
 import com.teragrep.cfe18.handlers.entities.HostGroup;
+import com.teragrep.cfe18.handlers.entities.IntegrationType;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
 
 @Mapper
-public interface HostGroupMapper {
+public interface HostGroupsMapper {
 
-    List<HostGroup> getHostGroupByName(String host_group_name, Integer version);
+    HostGroup create(final String host_group_name, final IntegrationType groupType);
 
-    HostGroup addNewHostGroup(int host_id, String host_group_name);
+    HostGroup get(final Integer id, final Integer version);
 
-    List<HostGroup> getAllHostGroup(Integer version);
+    List<HostGroup> getAll(final Integer version);
 
-    HostGroup deleteHostGroup(String name);
+    void delete(final Integer id);
 }

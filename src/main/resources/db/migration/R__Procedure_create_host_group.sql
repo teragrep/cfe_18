@@ -43,32 +43,30 @@
  * Teragrep, the applicable Commercial License may apply to this file if you as
  * a licensee so wish it.
  */
-use cfe_18;
+USE cfe_18;
 DELIMITER //
-create trigger if not exists Host_cant_have_duplicate_tag
-    before insert
-    on cfe_18.host_group_x_host
-    for each row
-begin
-    declare truthvalue int;
-    select if(count(DISTINCT ldgxld.tag_id) = count(ldgxld.tag_id), true, false)
-    into truthvalue
-    from cfe_18.capture_def_group_x_capture_def ldgxld
-             INNER JOIN (select distinct hgxh.capture_group_id, hgxh.host_group_id
-                         from cfe_18.host_groups_x_capture_def_group hgxh
-                                  INNER JOIN (select distinct hgxh.host_group_id, hgxh.host_id
-                                              from host_group_x_host hgxh
-                                                       INNER JOIN (select hid.host_id
-                                                                   from host_group_x_host hid) ch
-                                                                  on hgxh.host_group_id
-                                              where hgxh.host_id = new.host_id
-                                                 or hgxh.host_group_id = new.host_group_id) hchdt
-                                             on hgxh.capture_group_id = hchdt.host_group_id) ctftlg
-                        on ldgxld.capture_def_group_id = ctftlg.capture_group_id;
-    if truthvalue = 0 then
-        signal sqlstate '45000' set MYSQL_ERRNO =50040;
-    end if;
-end;
+CREATE OR REPLACE PROCEDURE insert_host_group(p_group_name VARCHAR(255), p_host_type VARCHAR(64))
+
+BEGIN
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+        BEGIN
+            ROLLBACK;
+            RESIGNAL;
+        END;
+    START TRANSACTION;
+
+    -- check if the group exists with the same name but different type
+    IF ((SELECT COUNT(id) FROM cfe_18.host_group WHERE group_name = p_group_name AND host_type != p_host_type)>0) THEN
+        SIGNAL SQLSTATE '45000' SET MYSQL_ERRNO = 50015;
+    END IF;
+
+    -- check if the group exists. If not then create said group
+    IF ((SELECT COUNT(id) FROM cfe_18.host_group WHERE group_name = p_group_name) = 0) THEN
+        INSERT INTO cfe_18.host_group(group_name, host_type) VALUES (p_group_name, p_host_type);
+    END IF;
+
+    SELECT id AS id FROM cfe_18.host_group WHERE group_name = p_group_name;
+    COMMIT;
+END;
 //
 DELIMITER ;
-

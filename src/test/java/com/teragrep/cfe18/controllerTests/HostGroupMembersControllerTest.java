@@ -43,32 +43,32 @@
  * Teragrep, the applicable Commercial License may apply to this file if you as
  * a licensee so wish it.
  */
-use cfe_18;
-DELIMITER //
-create trigger if not exists Host_cant_have_duplicate_tag
-    before insert
-    on cfe_18.host_group_x_host
-    for each row
-begin
-    declare truthvalue int;
-    select if(count(DISTINCT ldgxld.tag_id) = count(ldgxld.tag_id), true, false)
-    into truthvalue
-    from cfe_18.capture_def_group_x_capture_def ldgxld
-             INNER JOIN (select distinct hgxh.capture_group_id, hgxh.host_group_id
-                         from cfe_18.host_groups_x_capture_def_group hgxh
-                                  INNER JOIN (select distinct hgxh.host_group_id, hgxh.host_id
-                                              from host_group_x_host hgxh
-                                                       INNER JOIN (select hid.host_id
-                                                                   from host_group_x_host hid) ch
-                                                                  on hgxh.host_group_id
-                                              where hgxh.host_id = new.host_id
-                                                 or hgxh.host_group_id = new.host_group_id) hchdt
-                                             on hgxh.capture_group_id = hchdt.host_group_id) ctftlg
-                        on ldgxld.capture_def_group_id = ctftlg.capture_group_id;
-    if truthvalue = 0 then
-        signal sqlstate '45000' set MYSQL_ERRNO =50040;
-    end if;
-end;
-//
-DELIMITER ;
+package com.teragrep.cfe18.controllerTests;
 
+import com.google.gson.Gson;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.MethodOrderer;
+import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.api.TestMethodOrder;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.web.server.LocalServerPort;
+
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
+@ExtendWith(MigrateDatabaseExtension.class)
+public class HostGroupMembersControllerTest extends TestSpringBootInformation {
+
+    Gson gson = new Gson();
+
+    @LocalServerPort
+    private int port;
+
+    @BeforeAll
+    public void testData() {
+        TestApiClient testApiClient = new TestApiClient(port, token);
+        testApiClient.insertRelpHost("relpHostmd5", "relpHostfq");
+    }
+
+}

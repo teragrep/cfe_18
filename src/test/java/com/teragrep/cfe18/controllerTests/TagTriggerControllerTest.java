@@ -73,7 +73,7 @@ public class TagTriggerControllerTest extends TestSpringBootInformation {
     private int port;
 
     @Test
-    public void testTagTriggerOnError() {
+    public void testTagTriggerOnCaptureGroup() {
 
         final TestApiClient testApiClient = new TestApiClient(port, token);
 
@@ -84,9 +84,12 @@ public class TagTriggerControllerTest extends TestSpringBootInformation {
         Integer hostId1 = testApiClient.insertRelpHost("relpHostmd51", "relpHostfq1");
         Integer hostId2 = testApiClient.insertRelpHost("relpHostmd52", "relpHostfq2");
 
-        Integer hostGroup1 = testApiClient.insertHostGroup(hostId1, "hostgroup1");
-        Integer hostGroup2 = testApiClient.insertHostGroup(hostId2, "hostgroup2");
-        Integer hostGroup3 = testApiClient.insertHostGroup(hostId1, "hostgroup2");
+        Integer hostGroup1 = testApiClient.insertHostGroup("hostGroup1", IntegrationType.RELP);
+        Integer hostGroup2 = testApiClient.insertHostGroup("hostGroup2", IntegrationType.RELP);
+
+        Integer hostFromGroup1 = testApiClient.insertHostToGroup(hostGroup1, hostId1);
+        Integer hostFromGroup2 = testApiClient.insertHostToGroup(hostGroup2, hostId2);
+        Integer hostFromGroup3 = testApiClient.insertHostToGroup(hostGroup2, hostId1);
 
         Integer captureGroup1 = testApiClient.insertCaptureGroup("groupRelp1", IntegrationType.RELP, 1);
         Integer captureGroup2 = testApiClient.insertCaptureGroup("groupRelp2", IntegrationType.RELP, 1);
