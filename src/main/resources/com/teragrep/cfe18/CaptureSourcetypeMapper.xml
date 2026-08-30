@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.teragrep.cfe18.CaptureSourcetypeMapper">
+
+
+    <select id="get" resultMap="getMap" statementType="CALLABLE">
+        {CALL cfe_18.select_all_sourcetypes(#{param1})}
+    </select>
+    <resultMap id="getMap" type="java.util.LinkedHashMap">
+        <result property="id" column="id" javaType="java.lang.Integer"/>
+        <result property="sourcetype" column="sourcetype" javaType="java.lang.String"/>
+    </resultMap>
+
+
+</mapper>
+
