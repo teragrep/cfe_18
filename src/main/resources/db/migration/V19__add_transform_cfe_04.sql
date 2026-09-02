@@ -54,7 +54,7 @@ CREATE TABLE cfe_04_transforms
     write_default   BOOLEAN      NOT NULL,
     default_value   VARCHAR(255) NOT NULL,
     destination_key VARCHAR(255) NOT NULL,
-    regex           VARCHAR(255) NOT NULL,
+    regex           VARCHAR(8000) NOT NULL,
     format          VARCHAR(255) NOT NULL,
     CONSTRAINT FOREIGN KEY (cfe_04_id) REFERENCES cfe_04 (id),
     UNIQUE ( cfe_04_id,id),
