@@ -43,44 +43,14 @@
  * Teragrep, the applicable Commercial License may apply to this file if you as
  * a licensee so wish it.
  */
-USE cfe_18;
-DELIMITER //
-CREATE OR REPLACE PROCEDURE insert_storage_sourcetype(p_storage_id INT, sourcetype VARCHAR(255))
-BEGIN
-    DECLARE EXIT HANDLER FOR SQLEXCEPTION
-        BEGIN
-            ROLLBACK;
-            RESIGNAL;
-        END;
-    START TRANSACTION;
+package com.teragrep.cfe18;
 
-        -- record checks
+import com.teragrep.cfe18.handlers.entities.StorageIndex;
+import org.apache.ibatis.annotations.Mapper;
 
-    IF ((SELECT COUNT(*) FROM cfe_18.captureSourcetype WHERE captureSourceType = sourcetype) = 0) THEN
-        -- record does not exist mysql_errno
-        SIGNAL SQLSTATE '45000' SET MYSQL_ERRNO = 50000;
-    END IF;
+@Mapper
+public interface StorageIndexMapper {
 
-    IF ((SELECT COUNT(*) FROM cfe_18.storages WHERE id = p_storage_id) = 0) THEN
-        -- record does not exist mysql_errno
-        SIGNAL SQLSTATE '45000' SET MYSQL_ERRNO = 50000;
-    END IF;
+    StorageIndex create(final Integer storageId, final String index);
 
-    SELECT id INTO @sourcetypeId FROM cfe_18.captureSourcetype WHERE captureSourceType = sourcetype;
-
-    IF ((SELECT COUNT(*)
-         FROM cfe_18.storage_sourcetypes
-         WHERE storage_id = p_storage_id AND sourcetype_id = @sourcetypeId) =
-        0) THEN
-        INSERT INTO cfe_18.storage_sourcetypes VALUES (p_storage_id, @sourcetypeId);
-        SELECT LAST_INSERT_ID() AS storage_id;
-    ELSE
-        SELECT storage_id AS storage_id
-        FROM cfe_18.storage_sourcetypes
-        WHERE storage_id = p_storage_id
-          AND sourcetype_id = @sourcetypeId;
-    END IF;
-    COMMIT;
-END;
-//
-DELIMITER ;
+}

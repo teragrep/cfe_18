@@ -54,6 +54,18 @@ BEGIN
         END;
     START TRANSACTION;
 
+    -- record checks
+
+    IF ((SELECT COUNT(*) FROM cfe_18.captureIndex WHERE captureIndex = p_index) = 0) THEN
+        -- record does not exist mysql_errno
+        SIGNAL SQLSTATE '45000' SET MYSQL_ERRNO = 50000;
+    END IF;
+
+    IF ((SELECT COUNT(*) FROM cfe_18.storages WHERE id = p_storage_id) = 0) THEN
+        -- record does not exist mysql_errno
+        SIGNAL SQLSTATE '45000' SET MYSQL_ERRNO = 50000;
+    END IF;
+
     SELECT id INTO @indexId FROM cfe_18.captureIndex WHERE captureIndex = p_index;
 
     IF ((SELECT COUNT(*) FROM cfe_18.storage_indexes WHERE storage_id = p_storage_id AND index_id = @indexId) = 0) THEN
@@ -62,7 +74,8 @@ BEGIN
     ELSE
         SELECT storage_id AS storage_id
         FROM cfe_18.storage_indexes
-        WHERE storage_id = p_storage_id AND index_id = @indexId;
+        WHERE storage_id = p_storage_id
+          AND index_id = @indexId;
     END IF;
     COMMIT;
 END;
