@@ -69,6 +69,58 @@ public class TestApiClient {
         this.token = token;
     }
 
+    public Integer insertHub(final String fqHost, final String md5, final String ip) {
+        Hub hub2 = new Hub();
+        hub2.setFqHost(fqHost);
+        hub2.setMd5(md5);
+        hub2.setIp(ip);
+
+        String json2 = gson.toJson(hub2);
+
+        StringEntity requestEntity2 = new StringEntity(String.valueOf(json2), ContentType.APPLICATION_JSON);
+
+        HttpPut request2 = new HttpPut("http://localhost:" + port + "/v2/host/hub");
+        request2.setEntity(requestEntity2);
+        request2.setHeader("Authorization", "Bearer " + token);
+
+        HttpResponse httpResponse = Assertions
+                .assertDoesNotThrow(() -> HttpClientBuilder.create().build().execute(request2));
+
+        HttpEntity entity = httpResponse.getEntity();
+
+        String responseString = Assertions.assertDoesNotThrow(() -> EntityUtils.toString(entity));
+
+        JSONObject responseAsJson = Assertions.assertDoesNotThrow(() -> new JSONObject(responseString));
+
+        return Assertions.assertDoesNotThrow(() -> responseAsJson.getInt("id"));
+    }
+
+    public Integer insertHostFile(final String fqHost, final String md5, final String hubFq) {
+        HostFile host = new HostFile();
+        host.setFqHost(fqHost);
+        host.setMd5(md5);
+        host.setHubFq(hubFq);
+
+        String json = gson.toJson(host);
+
+        StringEntity requestEntity = new StringEntity(String.valueOf(json), ContentType.APPLICATION_JSON);
+
+        HttpPut request = new HttpPut("http://localhost:" + port + "/host/file");
+        request.setEntity(requestEntity);
+        request.setHeader("Authorization", "Bearer " + token);
+
+        HttpResponse httpResponse2 = Assertions
+                .assertDoesNotThrow(() -> HttpClientBuilder.create().build().execute(request));
+
+        HttpEntity entity2 = httpResponse2.getEntity();
+
+        String responseString2 = Assertions.assertDoesNotThrow(() -> EntityUtils.toString(entity2));
+
+        JSONObject responseAsJson2 = Assertions.assertDoesNotThrow(() -> new JSONObject(responseString2));
+
+        return Assertions.assertDoesNotThrow(() -> responseAsJson2.getInt("id"));
+    }
+
     public Integer insertFlow(final String name) {
         Flow flow = new Flow();
         flow.setName(name);

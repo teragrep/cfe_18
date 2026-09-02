@@ -46,7 +46,6 @@
 package com.teragrep.cfe18.controllerTests;
 
 import com.google.gson.Gson;
-import com.teragrep.cfe18.handlers.entities.HostFile;
 import com.teragrep.cfe18.handlers.entities.Hub;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -66,8 +65,6 @@ import org.springframework.boot.test.web.server.LocalServerPort;
 
 import java.util.ArrayList;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.equalTo;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -82,9 +79,16 @@ public class HubControllerTest extends TestSpringBootInformation {
     private int port;
 
     @Test
-    @Order(1)
-    public void testInsertHub() throws Exception {
+    @BeforeAll
+    public void testData() {
+        TestApiClient testApiClient = new TestApiClient(port, token);
+        testApiClient.insertHub("hubfq1", "hubmd52", "hubip2");
+        testApiClient.insertHostFile("hostFq", "randommd5value", "hubfq1");
+    }
 
+    @Test
+    @Order(1)
+    public void testInsertHub() {
         Hub hub = new Hub();
         hub.setFqHost("hubfq");
         hub.setMd5("hubmd5");
@@ -92,278 +96,164 @@ public class HubControllerTest extends TestSpringBootInformation {
 
         String json = gson.toJson(hub);
 
-        // forms the json to requestEntity
         StringEntity requestEntity = new StringEntity(String.valueOf(json), ContentType.APPLICATION_JSON);
 
-        // Creates the request
-        HttpPut request = new HttpPut("http://localhost:" + port + "/host/hub");
-        // set requestEntity to the put request
+        HttpPut request = new HttpPut("http://localhost:" + port + "/v2/host/hub");
         request.setEntity(requestEntity);
-        // Header
         request.setHeader("Authorization", "Bearer " + token);
 
-        // Get the response from endpoint
-        HttpResponse httpResponse = HttpClientBuilder.create().build().execute(request);
+        HttpResponse httpResponse = Assertions
+                .assertDoesNotThrow(() -> HttpClientBuilder.create().build().execute(request));
 
-        // Get the entity from response
         HttpEntity entity = httpResponse.getEntity();
 
-        // Entity response string
-        String responseString = EntityUtils.toString(entity);
+        String responseString = Assertions.assertDoesNotThrow(() -> EntityUtils.toString(entity));
 
-        // Parsin respponse as JSONObject
-        JSONObject responseAsJson = new JSONObject(responseString);
+        JSONObject responseAsJson = Assertions.assertDoesNotThrow(() -> new JSONObject(responseString));
 
-        // Creating expected message as JSON Object from the data that was sent towards endpoint
         String expected = "New hub created";
 
-        // Creating string from Json that was given as a response
-        String actual = responseAsJson.get("message").toString();
+        String actual = Assertions.assertDoesNotThrow(() -> responseAsJson.get("message").toString());
 
-        // Assertions
         assertEquals(expected, actual);
-        assertThat(httpResponse.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_CREATED));
+        assertEquals(HttpStatus.SC_CREATED, httpResponse.getStatusLine().getStatusCode());
     }
 
     @Test
     @Order(2)
-    public void testGetHub() throws Exception {
-
-        Hub hub2 = new Hub();
-        hub2.setHost_id(123456);
-        hub2.setFqHost("hubfq");
-        hub2.setMd5("hubmd5");
-        hub2.setIp("hubip");
-
-        String json2 = gson.toJson(hub2);
-
-        // forms the json to requestEntity
-        StringEntity requestEntity2 = new StringEntity(String.valueOf(json2), ContentType.APPLICATION_JSON);
-
-        // Creates the request
-        HttpPut request2 = new HttpPut("http://localhost:" + port + "/host/hub");
-        // set requestEntity to the put request
-        request2.setEntity(requestEntity2);
-        // Header
-        request2.setHeader("Authorization", "Bearer " + token);
-
-        // Get the response from endpoint
-        HttpClientBuilder.create().build().execute(request2);
-
-        // When getting the values back it should have ID carried with the object created.
-        Gson gson2 = new Gson();
-
+    public void testGetHub() {
         Hub hub = new Hub();
-        hub.setHost_id(1);
-        hub.setFqHost("hubfq");
-        hub.setMd5("hubmd5");
-        hub.setIp("hubip");
-        hub.setHub_id(1);
+        hub.setHostId(1);
+        hub.setFqHost("hubfq1");
+        hub.setMd5("hubmd52");
+        hub.setIp("hubip2");
+        hub.setId(1);
 
-        String json = gson2.toJson(hub);
-
-        // Asserting get request                                        // request host_id as path variable
-        HttpGet requestGet = new HttpGet("http://localhost:" + port + "/host/hub/" + 1);
+        HttpGet requestGet = new HttpGet("http://localhost:" + port + "/v2/host/hub/" + 1);
 
         requestGet.setHeader("Authorization", "Bearer " + token);
 
-        HttpResponse responseGet = HttpClientBuilder.create().build().execute(requestGet);
+        HttpResponse responseGet = Assertions
+                .assertDoesNotThrow(() -> HttpClientBuilder.create().build().execute(requestGet));
 
-        HttpEntity entityGet = responseGet.getEntity();
+        HttpEntity entityGet = Assertions.assertDoesNotThrow(() -> responseGet.getEntity());
 
-        String responseStringGet = EntityUtils.toString(entityGet, "UTF-8");
+        String responseStringGet = Assertions.assertDoesNotThrow(() -> EntityUtils.toString(entityGet, "UTF-8"));
 
-        assertEquals(json, responseStringGet);
-        assertThat(responseGet.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_OK));
+        assertEquals(hub.toString(), responseStringGet);
+        assertEquals(HttpStatus.SC_OK, responseGet.getStatusLine().getStatusCode());
     }
 
     @Test
     @Order(3)
-    public void testGetAllHubs() throws Exception {
-        // send one hub
-        Hub hub1 = new Hub();
-        hub1.setHost_id(123456);
-        hub1.setFqHost("hubfq");
-        hub1.setMd5("hubmd5");
-        hub1.setIp("hubip");
-
-        String json1 = gson.toJson(hub1);
-
-        // forms the json to requestEntity
-        StringEntity requestEntity1 = new StringEntity(String.valueOf(json1), ContentType.APPLICATION_JSON);
-
-        // Creates the request
-        HttpPut request1 = new HttpPut("http://localhost:" + port + "/host/hub");
-        // set requestEntity to the put request
-        request1.setEntity(requestEntity1);
-        // Header
-        request1.setHeader("Authorization", "Bearer " + token);
-
-        // Get the response from endpoint
-        HttpClientBuilder.create().build().execute(request1);
-
-        // send another hub
-        Hub hub2 = new Hub();
-        hub2.setHost_id(123);
-        hub2.setFqHost("hubfq2");
-        hub2.setMd5("hubmd52");
-        hub2.setIp("hubip2");
-
-        String json2 = gson.toJson(hub2);
-
-        // forms the json to requestEntity
-        StringEntity requestEntity2 = new StringEntity(String.valueOf(json2), ContentType.APPLICATION_JSON);
-
-        // Creates the request
-        HttpPut request2 = new HttpPut("http://localhost:" + port + "/host/hub");
-        // set requestEntity to the put request
-        request2.setEntity(requestEntity2);
-        // Header
-        request2.setHeader("Authorization", "Bearer " + token);
-
-        // Get the response from endpoint
-        HttpClientBuilder.create().build().execute(request2);
-
-        // When getting the values back it should have ID carried with the object created.
-        Gson gson2 = new Gson();
-
+    public void testGetAllHubs() {
         ArrayList<Hub> expected = new ArrayList<>();
 
         Hub hubexpected1 = new Hub();
-        hubexpected1.setHost_id(1);
-        hubexpected1.setFqHost("hubfq");
-        hubexpected1.setMd5("hubmd5");
-        hubexpected1.setIp("hubip");
-        hubexpected1.setHub_id(1);
+        hubexpected1.setHostId(1);
+        hubexpected1.setFqHost("hubfq1");
+        hubexpected1.setMd5("hubmd52");
+        hubexpected1.setIp("hubip2");
+        hubexpected1.setId(1);
 
         Hub hubexpected2 = new Hub();
-        hubexpected2.setHost_id(2);
-        hubexpected2.setFqHost("hubfq2");
-        hubexpected2.setMd5("hubmd52");
-        hubexpected2.setIp("hubip2");
-        hubexpected2.setHub_id(2);
+        hubexpected2.setHostId(3);
+        hubexpected2.setFqHost("hubfq");
+        hubexpected2.setMd5("hubmd5");
+        hubexpected2.setIp("hubip");
+        hubexpected2.setId(2);
 
         expected.add(hubexpected1);
         expected.add(hubexpected2);
 
-        String json = gson2.toJson(expected);
+        String json = gson.toJson(expected);
 
-        // Asserting get request                                        // request host_id as path variable
-        HttpGet requestGet = new HttpGet("http://localhost:" + port + "/host/hub");
+        HttpGet requestGet = new HttpGet("http://localhost:" + port + "/v2/host/hub");
 
         requestGet.setHeader("Authorization", "Bearer " + token);
 
-        HttpResponse responseGet = HttpClientBuilder.create().build().execute(requestGet);
+        HttpResponse responseGet = Assertions
+                .assertDoesNotThrow(() -> HttpClientBuilder.create().build().execute(requestGet));
 
         HttpEntity entityGet = responseGet.getEntity();
 
-        String responseStringGet = EntityUtils.toString(entityGet, "UTF-8");
+        String responseStringGet = Assertions.assertDoesNotThrow(() -> EntityUtils.toString(entityGet, "UTF-8"));
 
         assertEquals(json, responseStringGet);
-        assertThat(responseGet.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_OK));
+        assertEquals(HttpStatus.SC_OK, responseGet.getStatusLine().getStatusCode());
     }
-
-    // Delete
 
     @Test
     @Order(4)
-    public void testDeleteHubInUse() throws Exception {
-        // add host to hub
-        HostFile host = new HostFile();
-        host.setId(321);
-        host.setMd5("randommd5value");
-        host.setFqHost("hostFq");
-        host.setHubFq("hubfq");
+    public void testDeleteHubInUse() {
 
-        String json = gson.toJson(host);
+        HttpDelete delete = new HttpDelete("http://localhost:" + port + "/v2/host/hub/" + 1);
 
-        // forms the json to requestEntity
-        StringEntity requestEntity = new StringEntity(String.valueOf(json), ContentType.APPLICATION_JSON);
-
-        // Creates the request
-        HttpPut request = new HttpPut("http://localhost:" + port + "/host/file");
-        // set requestEntity to the put request
-        request.setEntity(requestEntity);
-        // Header
-        request.setHeader("Authorization", "Bearer " + token);
-
-        // Get the response from endpoint
-        HttpClientBuilder.create().build().execute(request);
-
-        // try to delete given hub when host is using the given hub
-
-        HttpDelete delete = new HttpDelete("http://localhost:" + port + "/host/hub/" + 1);
-
-        // Header
         delete.setHeader("Authorization", "Bearer " + token);
 
-        HttpResponse deleteResponse = HttpClientBuilder.create().build().execute(delete);
+        HttpResponse deleteResponse = Assertions
+                .assertDoesNotThrow(() -> HttpClientBuilder.create().build().execute(delete));
 
         HttpEntity entityDelete = deleteResponse.getEntity();
 
-        String responseStringGet = EntityUtils.toString(entityDelete, "UTF-8");
+        String responseStringGet = Assertions.assertDoesNotThrow(() -> EntityUtils.toString(entityDelete, "UTF-8"));
 
-        // Parsin respponse as JSONObject
-        JSONObject responseAsJson = new JSONObject(responseStringGet);
+        JSONObject responseAsJson = Assertions.assertDoesNotThrow(() -> new JSONObject(responseStringGet));
 
-        // Creating string from Json that was given as a response
-        String actual = responseAsJson.get("message").toString();
-        // Creating expected message as JSON Object from the data that was sent towards endpoint
+        String actual = Assertions.assertDoesNotThrow(() -> responseAsJson.get("message").toString());
+
         String expected = "Hosts use the hub";
 
         assertEquals(expected, actual);
-        assertThat(deleteResponse.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_BAD_REQUEST));
+        assertEquals(HttpStatus.SC_BAD_REQUEST, deleteResponse.getStatusLine().getStatusCode());
     }
 
     @Test
-    public void testDeleteNonExistentHub() throws Exception {
-        HttpDelete delete = new HttpDelete("http://localhost:" + port + "/host/hub/" + 112412214);
+    @Order(5)
+    public void testDeleteNonExistentHub() {
+        HttpDelete delete = new HttpDelete("http://localhost:" + port + "/v2/host/hub/" + 112412214);
 
-        // Header
         delete.setHeader("Authorization", "Bearer " + token);
 
-        HttpResponse deleteResponse = HttpClientBuilder.create().build().execute(delete);
+        HttpResponse deleteResponse = Assertions
+                .assertDoesNotThrow(() -> HttpClientBuilder.create().build().execute(delete));
 
         HttpEntity entityDelete = deleteResponse.getEntity();
 
-        String responseStringGet = EntityUtils.toString(entityDelete, "UTF-8");
+        String responseStringGet = Assertions.assertDoesNotThrow(() -> EntityUtils.toString(entityDelete, "UTF-8"));
 
-        // Parsin respponse as JSONObject
-        JSONObject responseAsJson = new JSONObject(responseStringGet);
+        JSONObject responseAsJson = Assertions.assertDoesNotThrow(() -> new JSONObject(responseStringGet));
 
-        // Creating string from Json that was given as a response
-        String actual = responseAsJson.get("message").toString();
-        // Creating expected message as JSON Object from the data that was sent towards endpoint
+        String actual = Assertions.assertDoesNotThrow(() -> responseAsJson.get("message").toString());
+
         String expected = "Record does not exist";
 
         assertEquals(expected, actual);
-        assertThat(deleteResponse.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_NOT_FOUND));
+        assertEquals(HttpStatus.SC_NOT_FOUND, deleteResponse.getStatusLine().getStatusCode());
     }
 
     @Test
-    public void testDeleteHub() throws Exception {
-        HttpDelete delete = new HttpDelete("http://localhost:" + port + "/host/hub/" + 2);
+    @Order(7)
+    public void testDeleteHub() {
+        HttpDelete delete = new HttpDelete("http://localhost:" + port + "/v2/host/hub/" + 2);
 
-        // Header
         delete.setHeader("Authorization", "Bearer " + token);
 
-        HttpResponse deleteResponse = HttpClientBuilder.create().build().execute(delete);
+        HttpResponse deleteResponse = Assertions
+                .assertDoesNotThrow(() -> HttpClientBuilder.create().build().execute(delete));
 
         HttpEntity entityDelete = deleteResponse.getEntity();
 
-        String responseStringGet = EntityUtils.toString(entityDelete, "UTF-8");
+        String responseStringGet = Assertions.assertDoesNotThrow(() -> EntityUtils.toString(entityDelete, "UTF-8"));
 
-        // Parsin respponse as JSONObject
-        JSONObject responseAsJson = new JSONObject(responseStringGet);
+        JSONObject responseAsJson = Assertions.assertDoesNotThrow(() -> new JSONObject(responseStringGet));
 
-        // Creating string from Json that was given as a response
-        String actual = responseAsJson.get("message").toString();
+        String actual = Assertions.assertDoesNotThrow(() -> responseAsJson.get("message").toString());
 
-        // Creating expected message as JSON Object from the data that was sent towards endpoint
-        String expected = "Hub with id = 2 deleted.";
+        String expected = "Hub deleted";
 
         assertEquals(expected, actual);
-        assertThat(deleteResponse.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_OK));
+        assertEquals(HttpStatus.SC_OK, deleteResponse.getStatusLine().getStatusCode());
     }
 
 }

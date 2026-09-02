@@ -43,51 +43,28 @@
  * Teragrep, the applicable Commercial License may apply to this file if you as
  * a licensee so wish it.
  */
-use cfe_18;
+USE cfe_18;
 DELIMITER //
-CREATE OR REPLACE PROCEDURE host_add_cfe_hub(proc_fqhost varchar(128), proc_md5 varchar(32),
-                                             proc_ip varchar(255))
+CREATE OR REPLACE PROCEDURE select_all_hubs(tx_id INT)
 BEGIN
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
         BEGIN
             ROLLBACK;
             RESIGNAL;
-        end;
-    start transaction;
-    if (select id
-        from cfe_18.host
-        where MD5 = proc_md5
-          and fqhost = proc_fqhost
-          and host_type = 'CFE') is null then
-        insert into cfe_18.host(MD5, fqhost, host_type)
-        values (proc_md5, proc_fqhost, 'CFE');
-        select last_insert_id() into @hid;
-    else
-        select id into @hid from cfe_18.host where MD5 = proc_md5 and fqhost = proc_fqhost and host_type = 'CFE';
-    end if;
+        END;
+    IF (tx_id) IS NULL THEN
+        SET @time = (SELECT MAX(transaction_id) FROM mysql.transaction_registry);
+    ELSE
+        SET @time = tx_id;
+    END IF;
+    SELECT DISTINCT h.id       AS id,
+                    h2.id      AS host_id,
+                    h2.fqhost  AS hub_fq_host,
+                    h.ip       AS ip,
+                    h2.MD5     AS md5
+    FROM cfe_18.hubs FOR SYSTEM_TIME AS OF TRANSACTION @time h
+             INNER JOIN cfe_18.host FOR SYSTEM_TIME AS OF TRANSACTION @time h2 ON h2.id = h.host_id;
 
-    if (select host_id
-        from cfe_18.hubs
-        where host_id = @hid
-          and ip = proc_ip
-          and host_type = 'CFE') is null then
-        insert into cfe_18.hubs(host_id, ip, host_type)
-        values (@hid, proc_ip, 'CFE');
-        select last_insert_id() into @id;
-    else
-        select id into @id from cfe_18.hubs where host_id = @hid and ip = proc_ip and host_type = 'CFE';
-    end if;
-
-    if (select host_id
-        from cfe_18.host_type_cfe
-        where host_id = @hid
-          and host_type = 'CFE'
-          and hub_id = @id) is null then
-        insert into cfe_18.host_type_cfe(host_id, host_type, hub_id)
-        values (@hid, 'CFE', @id);
-    end if;
-    COMMIT;
-    select @id as last;
 
 END;
 //
