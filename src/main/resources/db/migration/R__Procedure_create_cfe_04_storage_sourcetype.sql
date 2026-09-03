@@ -59,20 +59,54 @@ BEGIN
             RESIGNAL;
         END;
     START TRANSACTION;
+    -- record checks
+    -- makes sure exact record exists in storage_sourcetypes
+    IF ((SELECT COUNT(*)
+         FROM cfe_18.storage_sourcetypes
+         WHERE storage_id = p_storage_id
+           AND sourcetype_id = p_sourcetype_id) = 0) THEN
+        -- record does not exist mysql_errno
+        SIGNAL SQLSTATE '45000' SET MYSQL_ERRNO = 50000;
+    END IF;
 
-    INSERT INTO cfe_18.storage_sourcetypes VALUES (p_storage_id, p_sourcetype_id);
+    IF ((SELECT COUNT(*) FROM cfe_18.storages WHERE id = p_storage_id) = 0) THEN
+        -- record does not exist mysql_errno
+        SIGNAL SQLSTATE '45000' SET MYSQL_ERRNO = 50000;
+    END IF;
 
-    INSERT INTO cfe_18.cfe_04_sourcetypes(cfe_04_id, capture_sourcetype_id, maxdaysago, category, sourcedescription,
-                                          truncate, freeform_indexer_enabled, freeform_indexer_text,
-                                          freeform_lb_enabled, freeform_lb_text)
-    VALUES (p_storage_id, p_sourcetype_id, p_maxdaysago, p_category, p_sourcedescription, p_truncate,
-            p_freeform_indexer_enabled, p_freeform_indexer_text, p_freeform_lb_enabled, p_freeform_lb_text);
+    IF ((SELECT COUNT(*)
+         FROM cfe_18.cfe_04_sourcetypes
+         WHERE p_storage_id = cfe_04_id
+           AND p_sourcetype_id = capture_sourcetype_id
+           AND p_maxdaysago = maxdaysago
+           AND p_category = category
+           AND p_sourcedescription = sourcedescription
+           AND p_truncate = truncate
+           AND p_freeform_indexer_enabled = freeform_indexer_enabled
+           AND p_freeform_indexer_text = freeform_indexer_text
+           AND p_freeform_lb_enabled = freeform_lb_enabled
+           AND p_freeform_lb_text = freeform_lb_text) = 0) THEN
+        INSERT INTO cfe_18.cfe_04_sourcetypes(cfe_04_id, capture_sourcetype_id, maxdaysago, category, sourcedescription,
+                                              truncate, freeform_indexer_enabled, freeform_indexer_text,
+                                              freeform_lb_enabled, freeform_lb_text)
+        VALUES (p_storage_id, p_sourcetype_id, p_maxdaysago, p_category, p_sourcedescription, p_truncate,
+                p_freeform_indexer_enabled, p_freeform_indexer_text, p_freeform_lb_enabled, p_freeform_lb_text);
+
+    END IF;
 
     -- return storage id as signal
-    SELECT storage_id AS storage_id
-    FROM cfe_18.storage_sourcetypes
-    WHERE storage_id = p_storage_id
-      AND sourcetype_id = p_sourcetype_id;
+    SELECT cfe_04_id AS storage_id
+    FROM cfe_18.cfe_04_sourcetypes
+    WHERE cfe_04_id = p_storage_id
+      AND capture_sourcetype_id = p_sourcetype_id
+      AND p_maxdaysago = maxdaysago
+      AND p_category = category
+      AND p_sourcedescription = sourcedescription
+      AND p_truncate = truncate
+      AND p_freeform_indexer_enabled = freeform_indexer_enabled
+      AND p_freeform_indexer_text = freeform_indexer_text
+      AND p_freeform_lb_enabled = freeform_lb_enabled
+      AND p_freeform_lb_text = freeform_lb_text;
 
     COMMIT;
 END;

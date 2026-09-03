@@ -44,7 +44,7 @@
  * a licensee so wish it.
  */
 use cfe_18;
-
+/*
 create table cfe_07_promise
 (
     id int primary key,
@@ -111,4 +111,6 @@ create table cfe_07_promise_x_instance
     end_trxid BIGINT UNSIGNED GENERATED ALWAYS AS ROW END INVISIBLE,
     PERIOD FOR SYSTEM_TIME(start_trxid, end_trxid)
 ) WITH SYSTEM VERSIONING;
+
+ */
 
