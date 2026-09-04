@@ -56,12 +56,9 @@ BEGIN
         END;
     START TRANSACTION;
 
-    -- record checks
-    -- makes sure exact record exists in storage_indexes
-    IF ((SELECT COUNT(*) FROM cfe_18.storage_indexes WHERE storage_id = p_storage_id AND index_id = p_index_id) =
-        0) THEN
-        -- record does not exist mysql_errno
-        SIGNAL SQLSTATE '45000' SET MYSQL_ERRNO = 50000;
+    IF ((SELECT COUNT(*) FROM cfe_18.storage_indexes WHERE storage_id = p_storage_id AND index_id = p_index_id) = 0) THEN
+            insert into cfe_18.storage_indexes values(p_storage_id,p_index_id);
+
     END IF;
 
     IF ((SELECT COUNT(*) FROM cfe_18.storages WHERE id = p_storage_id) = 0) THEN

@@ -56,13 +56,13 @@ BEGIN
     if (select id
         from cfe_18.capture_def_x_flow_storages
         where capture_def_id = proc_capture_id
-          and flow_storage_id = proc_storage_id) is null then
+          and storage_id = proc_storage_id) is null then
         SIGNAL SQLSTATE '45000' set MYSQL_ERRNO = 50000;
     end if;
     delete
     from cfe_18.capture_def_x_flow_storages
     where capture_def_id = proc_capture_id
-      and flow_storage_id = proc_storage_id;
+      and storage_id = proc_storage_id;
     COMMIT;
 END;
 

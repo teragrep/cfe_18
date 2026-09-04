@@ -82,7 +82,7 @@ create table instance_targets
 (
     id                     int auto_increment primary key,
     flow_id                int          not null,
-    flow_storage_id         int          not null,
+    storage_id         int          not null,
     instance_id            int          not null,
     enabled                boolean      not null,
     target                 varchar(100) not null,
@@ -92,7 +92,7 @@ create table instance_targets
     rebindInterval         int          not null,
     resumerIntervalMax     int          not null,
     userResumerIntervalMax boolean      not null,
-    constraint ´TargetToFlowTargets´ foreign key (flow_id, flow_storage_id) references cfe_18.flow_storages (flow_id, id),
+    constraint ´TargetToFlowTargets´ foreign key (flow_id, storage_id) references cfe_18.flow_storages (flow_id, id),
     constraint ´TargetToInstanceTargets´ foreign key (flow_id, instance_id) references instances (flow_id, id),
     start_trxid BIGINT UNSIGNED GENERATED ALWAYS AS ROW START INVISIBLE,
     end_trxid BIGINT UNSIGNED GENERATED ALWAYS AS ROW END INVISIBLE,

@@ -2,26 +2,19 @@
 <dataset>
     <cfe_18.flows id="2" name="flow"/>
     <cfe_18.flows id="1" name="flow1"/>
-    <cfe_18.storages id="1" storage_name="cfe_04" cfe_type="cfe_04"/>
-    <cfe_18.storages id="2" storage_name="cfe_10" cfe_type="cfe_10"/>
-    <cfe_18.storages id="3" storage_name="cfe_11" cfe_type="cfe_11"/>
-    <cfe_18.storages id="4" storage_name="cfe_12" cfe_type="cfe_12"/>
-    <cfe_18.storages id="5" storage_name="cfe_19" cfe_type="cfe_19"/>
-    <cfe_18.storages id="6" storage_name="cfe_23" cfe_type="cfe_23"/>
+    <cfe_18.storages id="1" storage_name="cfe_04" cfe_type="cfe_04" flow_id="1"/>
+    <cfe_18.storages id="2" storage_name="cfe_10" cfe_type="cfe_10" flow_id="1"/>
+    <cfe_18.storages id="3" storage_name="cfe_11" cfe_type="cfe_11" flow_id="1"/>
+    <cfe_18.storages id="4" storage_name="cfe_12" cfe_type="cfe_12" flow_id="1"/>
+    <cfe_18.storages id="5" storage_name="cfe_19" cfe_type="cfe_19" flow_id="1"/>
+    <cfe_18.storages id="6" storage_name="cfe_23" cfe_type="cfe_23" flow_id="1"/>
+    <cfe_18.storages id="7" storage_name="cfe_04V2" cfe_type="cfe_04" flow_id="2"/>
     <cfe_18.cfe_23 id="6" cfe_type="cfe_23"/>
     <cfe_18.cfe_12 id="4" cfe_type="cfe_12"/>
     <cfe_18.cfe_19 id="5" cfe_type="cfe_19"/>
     <cfe_18.cfe_11 id="3" cfe_type="cfe_11"/>
     <cfe_18.cfe_10 id="2" cfe_type="cfe_10"/>
     <cfe_18.cfe_04 id="1" cfe_type="cfe_04"/>
-    <cfe_18.flow_storages id="1" flow_id="1" storage_id="1" storage_type="cfe_04"/>
-    <cfe_18.flow_storages id="2" flow_id="1" storage_id="2" storage_type="cfe_10"/>
-    <cfe_18.flow_storages id="3" flow_id="1" storage_id="3" storage_type="cfe_11"/>
-    <cfe_18.flow_storages id="4" flow_id="1" storage_id="4" storage_type="cfe_12"/>
-    <cfe_18.flow_storages id="5" flow_id="1" storage_id="5" storage_type="cfe_19"/>
-    <cfe_18.flow_storages id="6" flow_id="1" storage_id="6" storage_type="cfe_23"/>
-    <cfe_18.flow_storages id="7" flow_id="2" storage_id="1" storage_type="cfe_04"/>
-    <cfe_18.flow_storages id="8" flow_id="2" storage_id="2" storage_type="cfe_10"/>
     <cfe_18.L7 id="1" app_protocol="plain"/>
     <cfe_18.capture_sink id="1" L7_id="1" flow_id="1" ip_address="ip1" sink_port="652"/>
     <cfe_18.file_processing_type id="1" name="usesregex" inputtype="regex" inputvalue="normalRegex" ruleset="ruleset1" template="template1"/>
@@ -89,6 +82,6 @@
                                flow_id="1"/>
     <cfe_18.storage_indexes storage_id="1" index_id="1"/>
     <cfe_18.storage_sourcetypes storage_id="1" sourcetype_id="1"/>
-    <cfe_18.capture_def_x_flow_storages id="1" capture_def_id="1" flow_id="1" flow_storage_id="1" sourcetype_id="1" index_id="1"/>
+    <cfe_18.capture_def_x_flow_storages id="1" capture_def_id="1" flow_id="1" storage_id="1" sourcetype_id="1" index_id="1"/>
 
 </dataset>

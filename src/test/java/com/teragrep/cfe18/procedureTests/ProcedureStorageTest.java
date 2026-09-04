@@ -78,13 +78,14 @@ public class ProcedureStorageTest extends DBUnitbase {
     */
     public void testStorageFlowExistence() throws Exception {
         SQLException state = Assertions.assertThrows(SQLException.class, () -> {
-            CallableStatement stmnt = conn.prepareCall("{CALL cfe_18.add_storage(?,?)}");
+            CallableStatement stmnt = conn.prepareCall("{CALL cfe_18.add_storage(?,?,?)}");
             stmnt.setString(1, "FlowThatDontExist");
             stmnt.setInt(2, 2);
+            stmnt.setInt(3, 1);
             stmnt.execute();
 
         });
-        Assertions.assertEquals("45000", state.getSQLState());
+        Assertions.assertEquals("42000", state.getSQLState());
     }
 
     /*
@@ -97,14 +98,15 @@ public class ProcedureStorageTest extends DBUnitbase {
         IDataSet expectedDataSet = new FlatXmlDataSetBuilder()
                 .build(new File("src/test/resources/XMLProcedureStorage/procedureStorageExpectedTestData1.xml"));
 
-        ITable expectedTable = expectedDataSet.getTable("cfe_18.flow_storages");
+        ITable expectedTable = expectedDataSet.getTable("cfe_18.storages");
 
-        CallableStatement stmnt = conn.prepareCall("CALL cfe_18.add_storage(?,?)");
-        stmnt.setString(1, "flow");
-        stmnt.setInt(2, 2);
+        CallableStatement stmnt = conn.prepareCall("CALL cfe_18.insert_storage(?,?,?)");
+        stmnt.setString(1, "cfe_04");
+        stmnt.setString(2, "cfe_04V2");
+        stmnt.setInt(3, 2);
         stmnt.execute();
 
-        ITable actualTable = databaseConnection.createQueryTable("result", "select * from cfe_18.flow_storages");
+        ITable actualTable = databaseConnection.createQueryTable("result", "select * from cfe_18.storages");
 
         Assertion.assertEquals(expectedTable, actualTable);
 

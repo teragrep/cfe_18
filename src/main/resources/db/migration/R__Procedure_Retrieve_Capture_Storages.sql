@@ -63,10 +63,9 @@ BEGIN
     if ((select count(id) from cfe_18.capture_def_x_flow_storages for system_time as of transaction @time where capture_def_id = capture_id) = 0) then
         SIGNAL SQLSTATE '45000' set MYSQL_ERRNO = 50000;
     else
-        select s.storage_name as storage_name, cdxft.flow_storage_id as storage_id, cdxft.capture_def_id as capture_id
+        select s.storage_name as storage_name, cdxft.storage_id as storage_id, cdxft.capture_def_id as capture_id
         from cfe_18.capture_def_x_flow_storages for system_time as of transaction @time cdxft
-                 inner join cfe_18.flow_storages for system_time as of transaction @time ft on cdxft.flow_storage_id = ft.storage_id
-                 inner join cfe_18.storages for system_time as of transaction @time s on ft.storage_id = s.id
+                 inner join cfe_18.storages for system_time as of transaction @time s on cdxft.storage_id = s.id
         where cdxft.capture_def_id = capture_id;
     end if;
     COMMIT;

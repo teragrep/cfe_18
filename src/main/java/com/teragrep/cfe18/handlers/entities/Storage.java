@@ -55,6 +55,7 @@ public class Storage {
     private int id;
     private String storageName;
     private StorageType storageType;
+    private int flowId;
 
     public int getId() {
         return id;
@@ -80,8 +81,17 @@ public class Storage {
         this.storageType = storageType;
     }
 
+    public int getFlowId() {
+        return flowId;
+    }
+
+    public void setFlowId(int flowId) {
+        this.flowId = flowId;
+    }
+
     @Override
     public String toString() {
-        return "Storage{" + "id=" + id + ", storageName='" + storageName + '\'' + ", storageType=" + storageType + '}';
+        return "Storage{" + "id=" + id + ", storageName='" + storageName + '\'' + ", storageType=" + storageType
+                + ", flowId=" + flowId + '}';
     }
 }

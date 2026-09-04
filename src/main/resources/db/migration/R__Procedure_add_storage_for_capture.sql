@@ -45,7 +45,7 @@
  */
 use cfe_18;
 DELIMITER //
-CREATE OR REPLACE PROCEDURE add_storage_for_capture(capture_id int, storage_id int)
+CREATE OR REPLACE PROCEDURE add_storage_for_capture(capture_id int, p_storage_id int)
 BEGIN
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
         BEGIN
@@ -67,16 +67,16 @@ BEGIN
         from cfe_18.capture_def_x_flow_storages
         where capture_def_id = capture_id
           and flow_id = @FlowId
-          and flow_storage_id = storage_id) is null then
-        insert into cfe_18.capture_def_x_flow_storages(capture_def_id, flow_id, flow_storage_id,sourcetype_id, index_id)
-        VALUES (capture_id, @FlowId, storage_id,@sourcetypeId,@indexId);
+          and storage_id = p_storage_id) is null then
+        insert into cfe_18.capture_def_x_flow_storages(capture_def_id, flow_id, storage_id,sourcetype_id, index_id)
+        VALUES (capture_id, @FlowId, p_storage_id,@sourcetypeId,@indexId);
         select last_insert_id() as last;
     else
         select id as last
         from cfe_18.capture_def_x_flow_target
         where capture_def_id = capture_id
           and flow_id = @FlowId
-          and flow_storage_id = storage_id
+          and storage_id = p_storage_id
         and sourcetype_id = @sourcetypeId
         and index_id= @indexId;
     end if;

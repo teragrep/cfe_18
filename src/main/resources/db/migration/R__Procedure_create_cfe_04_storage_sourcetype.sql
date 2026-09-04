@@ -60,13 +60,11 @@ BEGIN
         END;
     START TRANSACTION;
     -- record checks
-    -- makes sure exact record exists in storage_sourcetypes
     IF ((SELECT COUNT(*)
          FROM cfe_18.storage_sourcetypes
          WHERE storage_id = p_storage_id
            AND sourcetype_id = p_sourcetype_id) = 0) THEN
-        -- record does not exist mysql_errno
-        SIGNAL SQLSTATE '45000' SET MYSQL_ERRNO = 50000;
+        INSERT INTO cfe_18.storage_sourcetypes VALUES (p_storage_id, p_sourcetype_id);
     END IF;
 
     IF ((SELECT COUNT(*) FROM cfe_18.storages WHERE id = p_storage_id) = 0) THEN
@@ -107,7 +105,6 @@ BEGIN
       AND p_freeform_indexer_text = freeform_indexer_text
       AND p_freeform_lb_enabled = freeform_lb_enabled
       AND p_freeform_lb_text = freeform_lb_text;
-
     COMMIT;
 END;
 //

@@ -87,11 +87,14 @@ public class Cfe04TransformControllerTest extends TestSpringBootInformation {
     @Order(1)
     @Description("Tests successful add of cfe_04 transform")
     public void testAddCfe04Transforms() {
+        TestApiClient testApiClient = new TestApiClient(port, token);
+        Integer flowId = testApiClient.insertFlow("flow1");
 
         // Insert base cfe_04 storage first
         Storage storage = new Storage();
         storage.setStorageType(StorageType.CFE_04);
         storage.setStorageName("cfe_04");
+        storage.setFlowId(flowId);
         String json2 = gson.toJson(storage);
 
         // forms the json to requestEntity

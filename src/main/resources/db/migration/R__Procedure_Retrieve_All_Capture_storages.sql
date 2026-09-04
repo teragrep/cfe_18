@@ -58,12 +58,10 @@ BEGIN
              set @time=tx_id;
         end if;
     select cdxft.capture_def_id as capture_id,
-           cdxft.flow_storage_id as storage_id,
+           cdxft.storage_id as storage_id,
            s.storage_name       as storage_name
     from capture_def_x_flow_storages for system_time as of transaction @time cdxft
-             inner join cfe_18.flow_storages for system_time as of transaction @time ft
-                        on cdxft.flow_id = ft.flow_id and cdxft.flow_storage_id = ft.storage_id
-             inner join cfe_18.storages for system_time as of transaction @time s on ft.storage_id = s.id;
+             inner join cfe_18.storages for system_time as of transaction @time s on cdxft.storage_id = s.id;
 
 END;
 

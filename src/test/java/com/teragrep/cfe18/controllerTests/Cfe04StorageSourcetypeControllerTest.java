@@ -81,7 +81,7 @@ public class Cfe04StorageSourcetypeControllerTest extends TestSpringBootInformat
     public void testData() {
         final TestApiClient testApiClient = new TestApiClient(port, token);
         final Integer flowId = testApiClient.insertFlow("capflow");
-        final Integer cfe04StorageId = testApiClient.insertCfe04Storage("cfe_04");
+        final Integer cfe04StorageId = testApiClient.insertCfe04Storage("cfe_04", flowId);
         final Integer sinkId = testApiClient.insertSink(flowId, "cap", "capsink", "prot");
         final Integer captureId = testApiClient
                 .insertCapture("relpTag", "P30D", "audit", "relp", "audit_relp", "relpsource1", "prot", "capflow");

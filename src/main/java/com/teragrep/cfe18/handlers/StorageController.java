@@ -48,7 +48,6 @@ package com.teragrep.cfe18.handlers;
 import com.teragrep.cfe18.StorageMapper;
 import com.teragrep.cfe18.handlers.entities.CaptureStorage;
 import com.teragrep.cfe18.handlers.entities.FileProcessing;
-import com.teragrep.cfe18.handlers.entities.FlowStorage;
 import com.teragrep.cfe18.handlers.entities.Storage;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -83,70 +82,6 @@ public class StorageController {
 
     @Autowired
     StorageMapper storageMapper;
-
-    // Fetch flow storages
-    @RequestMapping(
-            path = "/flow/{flow}",
-            method = RequestMethod.GET,
-            produces = "application/json"
-    )
-    @Operation(summary = "Fetch flow storage by flow name")
-    @ApiResponses(value = {
-            @ApiResponse(
-                    responseCode = "200",
-                    description = "Flow storage retrieved",
-                    content = {
-                            @Content(
-                                    mediaType = "application/json",
-                                    schema = @Schema(implementation = FlowStorage.class)
-                            )
-                    }
-            ),
-            @ApiResponse(
-                    responseCode = "400",
-                    description = "Flow storage does not exist with the given name",
-                    content = @Content
-            ),
-            @ApiResponse(
-                    responseCode = "500",
-                    description = "Internal server error, contact admin",
-                    content = @Content
-            )
-    })
-    public ResponseEntity<?> getStoragesByFlow(
-            @PathVariable String flow,
-            @RequestParam(required = false) Integer version
-    ) {
-        List<FlowStorage> fs = storageMapper.retrieveFlowStorages(flow, version);
-        return new ResponseEntity<>(fs, HttpStatus.OK);
-
-    }
-
-    // Get ALL Flow storages
-    @RequestMapping(
-            path = "/flow",
-            method = RequestMethod.GET,
-            produces = "application/json"
-    )
-    @Operation(
-            summary = "Fetch all flow storages",
-            description = "Will return empty list if there are no flow storages to fetch"
-    )
-    @ApiResponses(value = {
-            @ApiResponse(
-                    responseCode = "200",
-                    description = "Flow storages fetched",
-                    content = {
-                            @Content(
-                                    mediaType = "application/json",
-                                    schema = @Schema(implementation = FlowStorage.class)
-                            )
-                    }
-            )
-    })
-    public List<FlowStorage> getAllFlowStorages(@RequestParam(required = false) Integer version) {
-        return storageMapper.getAllFlowStorage(version);
-    }
 
     // Fetch capture storages
     @RequestMapping(
@@ -228,7 +163,7 @@ public class StorageController {
                     content = {
                             @Content(
                                     mediaType = "application/json",
-                                    schema = @Schema(implementation = FlowStorage.class)
+                                    schema = @Schema(implementation = Storage.class)
                             )
                     }
             )
@@ -266,46 +201,6 @@ public class StorageController {
     public ResponseEntity<?> get(@PathVariable("id") int id, @RequestParam(required = false) Integer version) {
         Storage s = storageMapper.get(id, version);
         return new ResponseEntity<>(s, HttpStatus.OK);
-
-    }
-
-    // New storage with the flow
-    @RequestMapping(
-            path = "/flow",
-            method = RequestMethod.PUT,
-            produces = "application/json"
-    )
-    @Operation(summary = "Insert new flow storage")
-    @ApiResponses(value = {
-            @ApiResponse(
-                    responseCode = "201",
-                    description = "New flow storage created",
-                    content = {
-                            @Content(
-                                    mediaType = "application/json",
-                                    schema = @Schema(implementation = FlowStorage.class)
-                            )
-                    }
-            ),
-            @ApiResponse(
-                    responseCode = "400",
-                    description = "SQL Constraint error",
-                    content = @Content
-            ),
-            @ApiResponse(
-                    responseCode = "500",
-                    description = "Internal server error, contact admin",
-                    content = @Content
-            )
-    })
-    public ResponseEntity<String> addNewStorage(@RequestBody FlowStorage newFlowStorage) {
-        LOGGER.info("About to insert <[{}]>", newFlowStorage);
-        FlowStorage fs = storageMapper.addStorageForFlow(newFlowStorage.getFlow(), newFlowStorage.getStorage_id());
-        LOGGER.debug("Values returned <[{}]>", fs);
-        JSONObject jsonObject = new JSONObject();
-        jsonObject.put("id", fs.getId());
-        jsonObject.put("message", "New flow storage created");
-        return new ResponseEntity<>(jsonObject.toString(), HttpStatus.CREATED);
 
     }
 
@@ -379,7 +274,8 @@ public class StorageController {
     })
     public ResponseEntity<String> create(@RequestBody Storage newStorage) {
         LOGGER.info("About to insert <[{}]>", newStorage);
-        Storage s = storageMapper.create(newStorage.getStorageType(), newStorage.getStorageName());
+        Storage s = storageMapper
+                .create(newStorage.getStorageType(), newStorage.getStorageName(), newStorage.getFlowId());
         LOGGER.debug("Values returned <[{}]>", s);
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("id", s.getId());
@@ -427,44 +323,6 @@ public class StorageController {
         JSONObject j = new JSONObject();
         j.put("id", id);
         j.put("message", "Storage deleted");
-        return new ResponseEntity<>(j.toString(), HttpStatus.OK);
-    }
-
-    // Delete flow storage
-    @RequestMapping(
-            path = "/flow/{flow}/{id}",
-            method = RequestMethod.DELETE,
-            produces = MediaType.APPLICATION_JSON_VALUE
-    )
-    @Operation(summary = "Delete flow storage")
-    @ApiResponses(value = {
-            @ApiResponse(
-                    responseCode = "200",
-                    description = "Flow storage deleted",
-                    content = {
-                            @Content(
-                                    mediaType = "application/json",
-                                    schema = @Schema(implementation = FlowStorage.class)
-                            )
-                    }
-            ),
-            @ApiResponse(
-                    responseCode = "400",
-                    description = "Flow storage is being used OR Flow storage does not exist",
-                    content = @Content
-            ),
-            @ApiResponse(
-                    responseCode = "500",
-                    description = "Internal server error, contact admin",
-                    content = @Content
-            )
-    })
-    public ResponseEntity<String> removeFlowStorage(@PathVariable("flow") String flow, @PathVariable("id") int id) {
-        LOGGER.info("Deleting flow Storage with id <[{}]>", id);
-        storageMapper.deleteFlowStorage(flow, id);
-        JSONObject j = new JSONObject();
-        j.put("id", id);
-        j.put("message", "Flow =" + flow + ", Storage " + id + " deleted.");
         return new ResponseEntity<>(j.toString(), HttpStatus.OK);
     }
 
