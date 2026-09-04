@@ -44,31 +44,36 @@
  * a licensee so wish it.
  */
 use cfe_18;
-create table cfe_18.storages
-(
-    id           int auto_increment primary key,
-    storage_name varchar(255) unique not null,
-    cfe_type     varchar(6)          not null check (cfe_type in ('cfe_10', 'cfe_11', 'cfe_12', 'cfe_19', 'cfe_23', 'cfe_04')),
-    unique KEY (id, cfe_type),
-    unique (storage_name,cfe_type),
-    start_trxid BIGINT UNSIGNED GENERATED ALWAYS AS ROW START INVISIBLE,
-    end_trxid BIGINT UNSIGNED GENERATED ALWAYS AS ROW END INVISIBLE,
-    PERIOD FOR SYSTEM_TIME(start_trxid, end_trxid)
-) WITH SYSTEM VERSIONING;
-
-create table L7
-(
-    id           int auto_increment primary key,
-    app_protocol varchar(64) unique not null,
-    start_trxid BIGINT UNSIGNED GENERATED ALWAYS AS ROW START INVISIBLE,
-    end_trxid BIGINT UNSIGNED GENERATED ALWAYS AS ROW END INVISIBLE,
-    PERIOD FOR SYSTEM_TIME(start_trxid, end_trxid)
-) WITH SYSTEM VERSIONING;
 
 create table flows
 (
     id   int auto_increment primary key,
     name varchar(255) unique not null,
+    start_trxid BIGINT UNSIGNED GENERATED ALWAYS AS ROW START INVISIBLE,
+    end_trxid BIGINT UNSIGNED GENERATED ALWAYS AS ROW END INVISIBLE,
+    PERIOD FOR SYSTEM_TIME(start_trxid, end_trxid)
+) WITH SYSTEM VERSIONING;
+
+
+create table cfe_18.storages
+(
+    id           int auto_increment primary key,
+    flow_id int not null,
+    storage_name varchar(255) unique not null,
+    cfe_type     varchar(6)          not null check (cfe_type in ('cfe_10', 'cfe_11', 'cfe_12', 'cfe_19', 'cfe_23', 'cfe_04')),
+    unique KEY (id, cfe_type),
+    unique (storage_name,cfe_type),
+    constraint ´flow_idToFlows´ foreign key (flow_id) references cfe_18.flows (id),
+    start_trxid BIGINT UNSIGNED GENERATED ALWAYS AS ROW START INVISIBLE,
+    end_trxid BIGINT UNSIGNED GENERATED ALWAYS AS ROW END INVISIBLE,
+    PERIOD FOR SYSTEM_TIME(start_trxid, end_trxid)
+) WITH SYSTEM VERSIONING;
+
+
+create table L7
+(
+    id           int auto_increment primary key,
+    app_protocol varchar(64) unique not null,
     start_trxid BIGINT UNSIGNED GENERATED ALWAYS AS ROW START INVISIBLE,
     end_trxid BIGINT UNSIGNED GENERATED ALWAYS AS ROW END INVISIBLE,
     PERIOD FOR SYSTEM_TIME(start_trxid, end_trxid)
@@ -164,22 +169,6 @@ create table routers
     PERIOD FOR SYSTEM_TIME(start_trxid, end_trxid)
 ) WITH SYSTEM VERSIONING;
 
-create table flow_targets
-(
-    id           int auto_increment primary key,
-    index (flow_id),
-    flow_id      int        not null,
-    storage_id   int        not null,
-    storage_type varchar(6) not null check (storage_type in
-                                            ('cfe_10', 'cfe_11', 'cfe_12', 'cfe_19',
-                                             'cfe_23', 'cfe_04')),
-    constraint ´flow_idToFlows´ foreign key (flow_id) references cfe_18.flows (id),
-    constraint ´storage_idToStorage´ foreign key (storage_id, storage_type) references cfe_18.storages (id, cfe_type),
-    unique key (flow_id, storage_id),
-    start_trxid BIGINT UNSIGNED GENERATED ALWAYS AS ROW START INVISIBLE,
-    end_trxid BIGINT UNSIGNED GENERATED ALWAYS AS ROW END INVISIBLE,
-    PERIOD FOR SYSTEM_TIME(start_trxid, end_trxid)
-) WITH SYSTEM VERSIONING;
 
 
 

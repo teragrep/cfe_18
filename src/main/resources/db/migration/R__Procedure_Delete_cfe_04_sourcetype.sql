@@ -45,24 +45,19 @@
  */
 USE cfe_18;
 DELIMITER //
-CREATE OR REPLACE PROCEDURE select_all_storages(tx_id INT)
+CREATE OR REPLACE PROCEDURE delete_cfe_04_storage_sourcetype(p_storage_id INT, p_sourcetype_id INT)
 BEGIN
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
         BEGIN
             ROLLBACK;
             RESIGNAL;
         END;
-    IF (tx_id) IS NULL THEN
-        SET @time = (SELECT MAX(transaction_id) FROM mysql.transaction_registry);
-    ELSE
-        SET @time = tx_id;
-    END IF;
-    SELECT s.id           AS id,
-           s.storage_name AS storage_name,
-           s.cfe_type     AS storage_type,
-           s.flow_id      AS flowId
-    FROM cfe_18.storages FOR SYSTEM_TIME AS OF TRANSACTION @time s;
-END;
+    START TRANSACTION;
 
+    delete from cfe_18.cfe_04_sourcetypes where cfe_04_id=p_storage_id and capture_sourcetype_id=p_sourcetype_id;
+    delete from cfe_18.storage_sourcetypes where storage_id=p_storage_id and sourcetype_id=p_sourcetype_id;
+
+    COMMIT;
+END;
 //
 DELIMITER ;

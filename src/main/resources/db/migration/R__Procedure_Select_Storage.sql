@@ -64,7 +64,8 @@ BEGIN
 
     SELECT s.id           AS id,
            s.storage_name AS storage_name,
-           s.cfe_type     AS storage_type
+           s.cfe_type     AS storage_type,
+           s.flow_id      AS flowId
     FROM cfe_18.storages FOR SYSTEM_TIME AS OF TRANSACTION @time s
     WHERE id = storage_id;
 END;
