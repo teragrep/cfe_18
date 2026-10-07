@@ -158,7 +158,7 @@ CREATE TABLE capture_def_x_flow_storages
     storage_id INT NOT NULL,
     sourcetype_id   INT NOT NULL,
     index_id        INT NOT NULL,
-    CONSTRAINT ´target_id_TO_flow_storages´ FOREIGN KEY (flow_id, storage_id) REFERENCES storages (flow_id, id),
+    CONSTRAINT ´check_flow_storage´ FOREIGN KEY (flow_id, storage_id) REFERENCES storages (flow_id, id),
     CONSTRAINT ´capture_def_id_TO_capture_definition´ FOREIGN KEY (flow_id, capture_def_id) REFERENCES capture_definition (flow_id, id),
     CONSTRAINT ´capture_def_WITH_source_type´ FOREIGN KEY (capture_def_id, sourcetype_id) REFERENCES capture_definition (id, captureSourcetype_id),
     CONSTRAINT ´capture_def_WITH_index´ FOREIGN KEY (capture_def_id, index_id) REFERENCES capture_definition (id, captureIndex_id),
