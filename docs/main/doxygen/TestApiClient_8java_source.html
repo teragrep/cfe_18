@@ -391,9 +391,38 @@ $(document).ready(function() { init_codefold(0); });
 <div class="line"><a id="l00290" name="l00290"></a><span class="lineno">  290</span> </div>
 <div class="line"><a id="l00291" name="l00291"></a><span class="lineno">  291</span>    }</div>
 </div>
-<div class="line"><a id="l00292" name="l00292"></a><span class="lineno">  292</span>}</div>
+<div class="line"><a id="l00292" name="l00292"></a><span class="lineno">  292</span> </div>
+<div class="foldopen" id="foldopen00293" data-start="{" data-end="}">
+<div class="line"><a id="l00293" name="l00293"></a><span class="lineno"><a class="line" href="classcom_1_1teragrep_1_1cfe18_1_1controllerTests_1_1TestApiClient.html#a2b6cfda77aa0b5c75dc6a6866dd8fa3c">  293</a></span>    <span class="keyword">public</span> Integer <a class="code hl_function" href="classcom_1_1teragrep_1_1cfe18_1_1controllerTests_1_1TestApiClient.html#a2b6cfda77aa0b5c75dc6a6866dd8fa3c">insertCfe04Storage</a>(<span class="keyword">final</span> String storageName, <span class="keyword">final</span> Integer flowId) {</div>
+<div class="line"><a id="l00294" name="l00294"></a><span class="lineno">  294</span>        Storage storage = <span class="keyword">new</span> Storage();</div>
+<div class="line"><a id="l00295" name="l00295"></a><span class="lineno">  295</span>        storage.setStorageType(StorageType.CFE_04);</div>
+<div class="line"><a id="l00296" name="l00296"></a><span class="lineno">  296</span>        storage.setStorageName(storageName);</div>
+<div class="line"><a id="l00297" name="l00297"></a><span class="lineno">  297</span>        storage.setFlowId(flowId);</div>
+<div class="line"><a id="l00298" name="l00298"></a><span class="lineno">  298</span> </div>
+<div class="line"><a id="l00299" name="l00299"></a><span class="lineno">  299</span>        String jsonStorage = <a class="code hl_variable" href="classcom_1_1teragrep_1_1cfe18_1_1controllerTests_1_1TestApiClient.html#a900519589fe56c7f540e143b28b97a5f">gson</a>.toJson(storage);</div>
+<div class="line"><a id="l00300" name="l00300"></a><span class="lineno">  300</span> </div>
+<div class="line"><a id="l00301" name="l00301"></a><span class="lineno">  301</span>        StringEntity storageRequest = <span class="keyword">new</span> StringEntity(String.valueOf(jsonStorage), ContentType.APPLICATION_JSON);</div>
+<div class="line"><a id="l00302" name="l00302"></a><span class="lineno">  302</span> </div>
+<div class="line"><a id="l00303" name="l00303"></a><span class="lineno">  303</span>        HttpPut storageAsRequest = <span class="keyword">new</span> HttpPut(<span class="stringliteral">&quot;http://localhost:&quot;</span> + <a class="code hl_variable" href="classcom_1_1teragrep_1_1cfe18_1_1controllerTests_1_1TestApiClient.html#a5b575be8bd594a81e95c159d35d0d9fc">port</a> + <span class="stringliteral">&quot;/storage&quot;</span>);</div>
+<div class="line"><a id="l00304" name="l00304"></a><span class="lineno">  304</span>        storageAsRequest.setEntity(storageRequest);</div>
+<div class="line"><a id="l00305" name="l00305"></a><span class="lineno">  305</span>        storageAsRequest.setHeader(<span class="stringliteral">&quot;Authorization&quot;</span>, <span class="stringliteral">&quot;Bearer &quot;</span> + <a class="code hl_variable" href="classcom_1_1teragrep_1_1cfe18_1_1controllerTests_1_1TestApiClient.html#a903025aeb7c75a4d20c8fb03528386ee">token</a>);</div>
+<div class="line"><a id="l00306" name="l00306"></a><span class="lineno">  306</span> </div>
+<div class="line"><a id="l00307" name="l00307"></a><span class="lineno">  307</span>        HttpResponse storageResponse = Assertions</div>
+<div class="line"><a id="l00308" name="l00308"></a><span class="lineno">  308</span>                .assertDoesNotThrow(() -&gt; HttpClientBuilder.create().build().execute(storageAsRequest));</div>
+<div class="line"><a id="l00309" name="l00309"></a><span class="lineno">  309</span> </div>
+<div class="line"><a id="l00310" name="l00310"></a><span class="lineno">  310</span>        HttpEntity storageResponseEntity = storageResponse.getEntity();</div>
+<div class="line"><a id="l00311" name="l00311"></a><span class="lineno">  311</span> </div>
+<div class="line"><a id="l00312" name="l00312"></a><span class="lineno">  312</span>        String storageAsResponse = Assertions.assertDoesNotThrow(() -&gt; EntityUtils.toString(storageResponseEntity));</div>
+<div class="line"><a id="l00313" name="l00313"></a><span class="lineno">  313</span> </div>
+<div class="line"><a id="l00314" name="l00314"></a><span class="lineno">  314</span>        JSONObject storageAsJson = Assertions.assertDoesNotThrow(() -&gt; <span class="keyword">new</span> JSONObject(storageAsResponse));</div>
+<div class="line"><a id="l00315" name="l00315"></a><span class="lineno">  315</span> </div>
+<div class="line"><a id="l00316" name="l00316"></a><span class="lineno">  316</span>        <span class="keywordflow">return</span> Assertions.assertDoesNotThrow(() -&gt; storageAsJson.getInt(<span class="stringliteral">&quot;id&quot;</span>));</div>
+<div class="line"><a id="l00317" name="l00317"></a><span class="lineno">  317</span>    }</div>
+</div>
+<div class="line"><a id="l00318" name="l00318"></a><span class="lineno">  318</span>}</div>
 </div>
 <div class="ttc" id="aclasscom_1_1teragrep_1_1cfe18_1_1controllerTests_1_1TestApiClient_html"><div class="ttname"><a href="classcom_1_1teragrep_1_1cfe18_1_1controllerTests_1_1TestApiClient.html">com.teragrep.cfe18.controllerTests.TestApiClient</a></div><div class="ttdef"><b>Definition</b> <a href="TestApiClient_8java_source.html#l00061">TestApiClient.java:61</a></div></div>
+<div class="ttc" id="aclasscom_1_1teragrep_1_1cfe18_1_1controllerTests_1_1TestApiClient_html_a2b6cfda77aa0b5c75dc6a6866dd8fa3c"><div class="ttname"><a href="classcom_1_1teragrep_1_1cfe18_1_1controllerTests_1_1TestApiClient.html#a2b6cfda77aa0b5c75dc6a6866dd8fa3c">com.teragrep.cfe18.controllerTests.TestApiClient.insertCfe04Storage</a></div><div class="ttdeci">Integer insertCfe04Storage(final String storageName, final Integer flowId)</div><div class="ttdef"><b>Definition</b> <a href="TestApiClient_8java_source.html#l00293">TestApiClient.java:293</a></div></div>
 <div class="ttc" id="aclasscom_1_1teragrep_1_1cfe18_1_1controllerTests_1_1TestApiClient_html_a423b9ca7d8d2865e7ce9742ba1ca3922"><div class="ttname"><a href="classcom_1_1teragrep_1_1cfe18_1_1controllerTests_1_1TestApiClient.html#a423b9ca7d8d2865e7ce9742ba1ca3922">com.teragrep.cfe18.controllerTests.TestApiClient.insertRelpHost</a></div><div class="ttdeci">Integer insertRelpHost(final String md5, final String fq)</div><div class="ttdef"><b>Definition</b> <a href="TestApiClient_8java_source.html#l00130">TestApiClient.java:130</a></div></div>
 <div class="ttc" id="aclasscom_1_1teragrep_1_1cfe18_1_1controllerTests_1_1TestApiClient_html_a4a8a8e8cac06be2ae8956cb647248e63"><div class="ttname"><a href="classcom_1_1teragrep_1_1cfe18_1_1controllerTests_1_1TestApiClient.html#a4a8a8e8cac06be2ae8956cb647248e63">com.teragrep.cfe18.controllerTests.TestApiClient.TestApiClient</a></div><div class="ttdeci">TestApiClient(int port, String token)</div><div class="ttdef"><b>Definition</b> <a href="TestApiClient_8java_source.html#l00067">TestApiClient.java:67</a></div></div>
 <div class="ttc" id="aclasscom_1_1teragrep_1_1cfe18_1_1controllerTests_1_1TestApiClient_html_a5a045f8b4708f0a871bc5b8f254e3b65"><div class="ttname"><a href="classcom_1_1teragrep_1_1cfe18_1_1controllerTests_1_1TestApiClient.html#a5a045f8b4708f0a871bc5b8f254e3b65">com.teragrep.cfe18.controllerTests.TestApiClient.insertHostGroup</a></div><div class="ttdeci">Integer insertHostGroup(final Integer hostId, final String groupName)</div><div class="ttdef"><b>Definition</b> <a href="TestApiClient_8java_source.html#l00160">TestApiClient.java:160</a></div></div>
