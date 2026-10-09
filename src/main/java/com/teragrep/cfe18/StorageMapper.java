@@ -56,7 +56,7 @@ import java.util.List;
 @Mapper
 public interface StorageMapper {
 
-    Storage create(StorageType storageType, String storageName);
+    Storage create(StorageType storageType, String storageName, Integer flowId);
 
     Storage get(int id, Integer version);
 

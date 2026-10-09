@@ -43,10 +43,9 @@
  * Teragrep, the applicable Commercial License may apply to this file if you as
  * a licensee so wish it.
  */
-use cfe_18;
+USE cfe_18;
 DELIMITER //
-CREATE OR REPLACE PROCEDURE add_storage(flow varchar(255), proc_storage_id int
-)
+CREATE OR REPLACE PROCEDURE delete_cfe_04_storage_index(p_storage_id INT, p_index_id INT)
 BEGIN
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
         BEGIN
@@ -54,35 +53,8 @@ BEGIN
             RESIGNAL;
         END;
     START TRANSACTION;
-
-    if (select id from flows where name = flow) is null then
-        SIGNAL SQLSTATE '45000' set MYSQL_ERRNO = 50000;
-    else
-        select id into @FlowId from flows where name = flow;
-    end if;
-    if (select id from storages where id = proc_storage_id) is null then
-        SIGNAL SQLSTATE '45000' set MYSQL_ERRNO = 50000;
-    end if;
-
-    select cfe_type into @Storage_type from cfe_18.storages where id = proc_storage_id;
-
-    if (select id
-        from cfe_18.flow_targets
-        where flow_id = @FlowId
-          and storage_id = proc_storage_id
-          and storage_type = @Storage_type) is null then
-
-        insert into cfe_18.flow_targets(flow_id, storage_id, storage_type)
-        values (@FlowId, proc_storage_id, @Storage_type);
-        select last_insert_id() as last;
-    else
-        select id as last
-        from cfe_18.flow_targets
-        where flow_id = @FlowId
-          and storage_id = proc_storage_id
-          and storage_type = @Storage_type;
-
-    end if;
+    delete from cfe_18.cfe_04_indexes where cfe_04_id=p_storage_id and capture_index_id=p_index_id;
+    delete from cfe_18.storage_indexes where storage_id=p_storage_id and index_id=p_index_id;
     COMMIT;
 END;
 //

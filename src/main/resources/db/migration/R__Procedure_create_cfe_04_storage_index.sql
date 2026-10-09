@@ -43,9 +43,11 @@
  * Teragrep, the applicable Commercial License may apply to this file if you as
  * a licensee so wish it.
  */
-use cfe_18;
+USE cfe_18;
 DELIMITER //
-CREATE OR REPLACE PROCEDURE remove_flow_storage(proc_flow varchar(255), proc_storage_id int)
+CREATE OR REPLACE PROCEDURE insert_cfe_04_storage_index(p_storage_id INT, p_index_id INT, p_repFactor VARCHAR(255),
+                                                        p_disabled BOOLEAN, p_homePath VARCHAR(255),
+                                                        p_coldPath VARCHAR(255), p_thawedPath VARCHAR(255))
 BEGIN
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
         BEGIN
@@ -53,11 +55,43 @@ BEGIN
             RESIGNAL;
         END;
     START TRANSACTION;
-    select id into @FlowId from cfe_18.flows where name = proc_flow;
-    if (select id from cfe_18.flow_targets where flow_id = @FlowId and storage_id = proc_storage_id) is null then
-        SIGNAL SQLSTATE '45000' set MYSQL_ERRNO = 50000;
-    end if;
-    delete from cfe_18.flow_targets where storage_id = proc_storage_id and flow_id = @FlowId;
+
+    IF ((SELECT COUNT(*) FROM cfe_18.storage_indexes WHERE storage_id = p_storage_id AND index_id = p_index_id) = 0) THEN
+            insert into cfe_18.storage_indexes values(p_storage_id,p_index_id);
+
+    END IF;
+
+    IF ((SELECT COUNT(*) FROM cfe_18.storages WHERE id = p_storage_id) = 0) THEN
+        -- record does not exist mysql_errno
+        SIGNAL SQLSTATE '45000' SET MYSQL_ERRNO = 50000;
+    END IF;
+
+    -- only insert if exact row does not exist
+    IF ((SELECT COUNT(*)
+         FROM cfe_18.cfe_04_indexes
+         WHERE cfe_04_id = p_storage_id
+           AND capture_index_id = p_index_id
+           AND repFactor = p_repFactor
+           AND disabled = p_disabled
+           AND homePath = p_homePath
+           AND coldPath = p_coldPath
+           AND thawedPath = p_thawedPath) = 0) THEN
+        INSERT INTO cfe_18.cfe_04_indexes(cfe_04_id, capture_index_id, repFactor, disabled, homePath, coldPath,
+                                          thawedPath)
+        VALUES (p_storage_id, p_index_id, p_repFactor, p_disabled, p_homePath, p_coldPath, p_thawedPath);
+
+    END IF;
+
+    -- return storage id as signal
+    SELECT cfe_04_id AS storage_id
+    FROM cfe_18.cfe_04_indexes
+    WHERE cfe_04_id = p_storage_id
+           AND capture_index_id = p_index_id
+           AND repFactor = p_repFactor
+           AND disabled = p_disabled
+           AND homePath = p_homePath
+           AND coldPath = p_coldPath
+           AND thawedPath = p_thawedPath;
     COMMIT;
 END;
 //

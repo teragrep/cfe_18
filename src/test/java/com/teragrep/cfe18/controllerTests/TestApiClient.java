@@ -289,4 +289,30 @@ public class TestApiClient {
         return Assertions.assertDoesNotThrow(() -> captureResponseJson1.getInt("id"));
 
     }
+
+    public Integer insertCfe04Storage(final String storageName, final Integer flowId) {
+        Storage storage = new Storage();
+        storage.setStorageType(StorageType.CFE_04);
+        storage.setStorageName(storageName);
+        storage.setFlowId(flowId);
+
+        String jsonStorage = gson.toJson(storage);
+
+        StringEntity storageRequest = new StringEntity(String.valueOf(jsonStorage), ContentType.APPLICATION_JSON);
+
+        HttpPut storageAsRequest = new HttpPut("http://localhost:" + port + "/storage");
+        storageAsRequest.setEntity(storageRequest);
+        storageAsRequest.setHeader("Authorization", "Bearer " + token);
+
+        HttpResponse storageResponse = Assertions
+                .assertDoesNotThrow(() -> HttpClientBuilder.create().build().execute(storageAsRequest));
+
+        HttpEntity storageResponseEntity = storageResponse.getEntity();
+
+        String storageAsResponse = Assertions.assertDoesNotThrow(() -> EntityUtils.toString(storageResponseEntity));
+
+        JSONObject storageAsJson = Assertions.assertDoesNotThrow(() -> new JSONObject(storageAsResponse));
+
+        return Assertions.assertDoesNotThrow(() -> storageAsJson.getInt("id"));
+    }
 }

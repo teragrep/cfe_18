@@ -43,26 +43,69 @@
  * Teragrep, the applicable Commercial License may apply to this file if you as
  * a licensee so wish it.
  */
-USE cfe_18;
-DELIMITER //
-CREATE OR REPLACE PROCEDURE select_all_storages(tx_id INT)
-BEGIN
-    DECLARE EXIT HANDLER FOR SQLEXCEPTION
-        BEGIN
-            ROLLBACK;
-            RESIGNAL;
-        END;
-    IF (tx_id) IS NULL THEN
-        SET @time = (SELECT MAX(transaction_id) FROM mysql.transaction_registry);
-    ELSE
-        SET @time = tx_id;
-    END IF;
-    SELECT s.id           AS id,
-           s.storage_name AS storage_name,
-           s.cfe_type     AS storage_type,
-           s.flow_id      AS flowId
-    FROM cfe_18.storages FOR SYSTEM_TIME AS OF TRANSACTION @time s;
-END;
+package com.teragrep.cfe18.handlers.entities;
 
-//
-DELIMITER ;
+public class Cfe04StorageIndex {
+
+    private int indexId;
+    private String repFactor;
+    private boolean disabled;
+    private String homePath;
+    private String coldpath;
+    private String thawedPath;
+
+    public int getIndexId() {
+        return indexId;
+    }
+
+    public void setIndexId(int indexId) {
+        this.indexId = indexId;
+    }
+
+    public String getRepFactor() {
+        return repFactor;
+    }
+
+    public void setRepFactor(String repFactor) {
+        this.repFactor = repFactor;
+    }
+
+    public boolean isDisabled() {
+        return disabled;
+    }
+
+    public void setDisabled(boolean disabled) {
+        this.disabled = disabled;
+    }
+
+    public String getHomePath() {
+        return homePath;
+    }
+
+    public void setHomePath(String homePath) {
+        this.homePath = homePath;
+    }
+
+    public String getColdpath() {
+        return coldpath;
+    }
+
+    public void setColdpath(String coldpath) {
+        this.coldpath = coldpath;
+    }
+
+    public String getThawedPath() {
+        return thawedPath;
+    }
+
+    public void setThawedPath(String thawedPath) {
+        this.thawedPath = thawedPath;
+    }
+
+    @Override
+    public String toString() {
+        return "Cfe04StorageIndex{" + "indexId=" + indexId + ", repFactor='" + repFactor + '\'' + ", disabled="
+                + disabled + ", homePath='" + homePath + '\'' + ", coldpath='" + coldpath + '\'' + ", thawedPath='"
+                + thawedPath + '\'' + '}';
+    }
+}
