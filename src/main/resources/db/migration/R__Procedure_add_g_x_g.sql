@@ -56,13 +56,13 @@ BEGIN
     if ((select distinct capture_type
          from cfe_18.capture_def_group
          where id = proc_capture_group_id) !=
-        (select distinct host_type from cfe_18.host_group_x_host where host_group_id = proc_host_group_id)) then
+        (select distinct host_type from cfe_18.host_group where id = proc_host_group_id)) then
         signal sqlstate '45000' set MYSQL_ERRNO = 50010;
     end if;
     --  Check if host group exists before junction
-    IF (select distinct host_group_id
-        from cfe_18.host_group_x_host
-        where host_group_id = proc_host_group_id) IS NULL THEN
+    IF (select distinct id
+        from cfe_18.host_group
+        where id = proc_host_group_id) IS NULL THEN
         SIGNAL SQLSTATE '45000' set MYSQL_ERRNO = 50000;
     END IF;
     --  Check if capture group exists before junction
@@ -80,7 +80,7 @@ BEGIN
         VALUES (proc_host_group_id, proc_capture_group_id);
 
         select c.capture_def_group_name as capture_group_name,
-               hg.groupName             as host_group_name,
+               hg.group_name             as host_group_name,
                last_insert_id()         as last
         from cfe_18.host_groups_x_capture_def_group hgxcdg
                  inner join capture_def_group c on hgxcdg.capture_group_id = c.id
@@ -94,7 +94,7 @@ BEGIN
 
     else
         select c.capture_def_group_name as capture_group_name,
-               hg.groupName             as host_group_name,
+               hg.group_name             as host_group_name,
                hgxcdg.id                as last
         from cfe_18.host_groups_x_capture_def_group hgxcdg
                  inner join capture_def_group c on hgxcdg.capture_group_id = c.id

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.teragrep.cfe18.HostGroupsMapper">
+
+    <!-- CREATE  group_name VARCHAR(255), host_type VARCHAR(64) -->
+    <select id="create" resultMap="insertedID" statementType="CALLABLE">
+        {CALL
+        cfe_18.insert_host_group(#{param1},#{param2})}
+    </select>
+    <resultMap id="insertedID" type="com.teragrep.cfe18.handlers.entities.HostGroup">
+        <result property="id"               column="id"/>
+    </resultMap>
+
+    <!-- GET  p_host_group_id INT, tx_id INT -->
+    <select id="get" resultMap="HostGroup" statementType="CALLABLE">
+        {CALL cfe_18.select_host_group(#{param1},#{param2})}
+    </select>
+
+    <!-- GET ALL tx_id int -->
+    <select id="getAll" resultMap="HostGroup" statementType="CALLABLE">
+        {CALL cfe_18.select_all_host_groups(#{param1})}
+    </select>
+    <resultMap id="HostGroup" type="com.teragrep.cfe18.handlers.entities.HostGroup">
+        <result property="id"               column="host_group_id"/>
+        <result property="host_group_name"  column="host_group_name"/>
+        <result property="host_group_type"  column="host_group_type"/>
+    </resultMap>
+
+
+    <!-- DELETE p_host_group_id INT -->
+    <select id="delete" statementType="CALLABLE">
+        {CALL cfe_18.delete_host_group(#{param1})}
+    </select>
+
+</mapper>
+

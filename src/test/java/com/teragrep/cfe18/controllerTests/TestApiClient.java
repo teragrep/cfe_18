@@ -157,17 +157,12 @@ public class TestApiClient {
         return Assertions.assertDoesNotThrow(() -> relpHostResponseJsonObject1.getInt("id"));
     }
 
-    public Integer insertHostGroup(final Integer hostId, final String groupName) {
-        HostGroup relpHostGroup1 = new HostGroup();
-        relpHostGroup1.setHost_id(hostId);
-        relpHostGroup1.setHost_group_name(groupName);
+    public Integer insertHostToGroup(final Integer groupId, final Integer hostId) {
 
-        String hostGroup1 = gson.toJson(relpHostGroup1);
-
-        StringEntity hostGroupEntity1 = new StringEntity(String.valueOf(hostGroup1), ContentType.APPLICATION_JSON);
-
-        HttpPut hostGroupPutRequest1 = new HttpPut("http://localhost:" + port + "/host/group");
-        hostGroupPutRequest1.setEntity(hostGroupEntity1);
+        HttpPut hostGroupPutRequest1 = new HttpPut(
+                "http://localhost:" + port + "/v2/hosts/groups/" + groupId + "/members"
+        );
+        hostGroupPutRequest1.setEntity(new StringEntity(String.valueOf(hostId), ContentType.APPLICATION_JSON));
         hostGroupPutRequest1.setHeader("Authorization", "Bearer " + token);
 
         HttpResponse hostGroupResponse1 = Assertions
@@ -182,6 +177,37 @@ public class TestApiClient {
                 .assertDoesNotThrow(() -> new JSONObject(hostGroupResponseString1));
 
         return Assertions.assertDoesNotThrow(() -> hostGroupResponseJson1.getInt("host_group_id"));
+
+    }
+
+    public Integer insertHostGroup(final String groupName, final IntegrationType integrationType) {
+        HostGroup hostGroup = new HostGroup();
+        hostGroup.setHost_group_type(integrationType);
+        hostGroup.setHost_group_name(groupName);
+
+        String hostGroupString = gson.toJson(hostGroup);
+
+        StringEntity hostGroupStringEntity = new StringEntity(
+                String.valueOf(hostGroupString),
+                ContentType.APPLICATION_JSON
+        );
+
+        HttpPut hostGroupPutRequest1 = new HttpPut("http://localhost:" + port + "/v2/hosts/groups");
+        hostGroupPutRequest1.setEntity(hostGroupStringEntity);
+        hostGroupPutRequest1.setHeader("Authorization", "Bearer " + token);
+
+        HttpResponse hostGroupResponse1 = Assertions
+                .assertDoesNotThrow(() -> HttpClientBuilder.create().build().execute(hostGroupPutRequest1));
+
+        HttpEntity hostGroupResponseEntity1 = hostGroupResponse1.getEntity();
+
+        String hostGroupResponseString1 = Assertions
+                .assertDoesNotThrow(() -> EntityUtils.toString(hostGroupResponseEntity1));
+
+        JSONObject hostGroupResponseJson1 = Assertions
+                .assertDoesNotThrow(() -> new JSONObject(hostGroupResponseString1));
+
+        return Assertions.assertDoesNotThrow(() -> hostGroupResponseJson1.getInt("id"));
 
     }
 

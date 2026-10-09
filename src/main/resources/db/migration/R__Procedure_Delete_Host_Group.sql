@@ -43,9 +43,9 @@
  * Teragrep, the applicable Commercial License may apply to this file if you as
  * a licensee so wish it.
  */
-use cfe_18;
+USE cfe_18;
 DELIMITER //
-CREATE OR REPLACE PROCEDURE retrieve_host_group_details(grp_name varchar(255),tx_id int)
+CREATE OR REPLACE PROCEDURE delete_host_group(p_host_group_id INT)
 BEGIN
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
         BEGIN
@@ -53,23 +53,11 @@ BEGIN
             RESIGNAL;
         END;
     START TRANSACTION;
-            if(tx_id) is null then
-             set @time = (select max(transaction_id) from mysql.transaction_registry);
-        else
-             set @time=tx_id;
-        end if;
-    if (select distinct id from cfe_18.host_group for system_time as of transaction @time where groupName = grp_name) is null then
-        SIGNAL SQLSTATE '45000' set MYSQL_ERRNO = 50000;
-    end if;
-    select h.MD5          as MD5,
-           h.id           as host_id,
-           hg.groupName   as group_name,
-           hgxh.host_type as host_type,
-           hg.id          as host_group_id
-    from cfe_18.host for system_time as of transaction @time h
-             inner join cfe_18.host_group_x_host for system_time as of transaction @time hgxh on h.id = hgxh.host_id
-             inner join cfe_18.host_group for system_time as of transaction @time hg on hgxh.host_group_id = hg.id
-    where hg.groupName = grp_name;
+    IF ((SELECT COUNT(id) FROM cfe_18.host_group WHERE id = p_host_group_id) = 0) THEN
+        SIGNAL SQLSTATE '45000' SET MYSQL_ERRNO = 50000;
+    END IF;
+
+    DELETE FROM cfe_18.host_group WHERE id = p_host_group_id;
     COMMIT;
 END;
 //

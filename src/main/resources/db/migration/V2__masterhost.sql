@@ -119,7 +119,7 @@ create table host_group
 (
     id        int primary key auto_increment,
     host_type varchar(64)  not null check (host_type in ('aws', 'manual', 'cfe', 'windows', 'hec', 'azure', 'relp')),
-    groupName varchar(255) not null,
+    group_name varchar(255) not null,
     unique (id, host_type),
     start_trxid BIGINT UNSIGNED GENERATED ALWAYS AS ROW START INVISIBLE,
     end_trxid BIGINT UNSIGNED GENERATED ALWAYS AS ROW END INVISIBLE,
@@ -128,14 +128,13 @@ create table host_group
 
 create table host_group_x_host
 (
-    id            int primary key auto_increment,
-    host_group_id int         not null,
     host_id       int         not null,
+    host_group_id int         not null,
     host_type     varchar(64) not null check (host_type in ('aws', 'manual', 'cfe', 'windows', 'hec', 'azure', 'relp')),
+    primary key (host_id,host_group_id),
     constraint hostToHostGroupType foreign key (host_id, host_type) references cfe_18.host (id, host_type),
-    constraint hostTypeToHostGroup foreign key (host_group_id, host_type) references cfe_18.host_group (id, host_type) on delete cascade,
+    constraint hostTypeToHostGroup foreign key (host_group_id, host_type) references cfe_18.host_group (id, host_type),
     unique key (host_group_id, host_id),
-    index (host_type, host_group_id),
     start_trxid BIGINT UNSIGNED GENERATED ALWAYS AS ROW START INVISIBLE,
     end_trxid BIGINT UNSIGNED GENERATED ALWAYS AS ROW END INVISIBLE,
     PERIOD FOR SYSTEM_TIME(start_trxid, end_trxid)
