@@ -108,7 +108,7 @@ public class OAuth2ResourceServer {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         // @formatter:off
-        http.authorizeRequests().antMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll().and()
+        http.addFilterBefore(requestLoggingFilter, org.springframework.security.web.authentication.www.BasicAuthenticationFilter.class).authorizeRequests().antMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll().and()
                 .authorizeRequests((authorize) -> authorize
                         .antMatchers(HttpMethod.GET,"/**").hasAnyAuthority("ROLE_READ_ONLY","ROLE_ALL_ACCESS")
                         .antMatchers(HttpMethod.PUT,"/**").hasAuthority("ROLE_ALL_ACCESS")

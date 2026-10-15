@@ -33,6 +33,8 @@
         {CALL cfe_18.retrieve_all_capture_groups(#{param1},#{param2},#{param3})}
     </select>
     <resultMap id="allCaptureGroup" type="com.teragrep.cfe18.handlers.entities.CaptureGroup">
+        <result property="id" column="id"/>
+        <result property="captureGroupId" column="capture_group_id"/>
         <result property="capture_def_group_name" column="group_name"/>
         <result property="capture_group_type" column="group_type"/>
         <result property="tag" column="capture_tag"/>

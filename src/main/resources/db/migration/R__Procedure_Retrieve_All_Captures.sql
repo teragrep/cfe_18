@@ -67,7 +67,6 @@ BEGIN
            f.name                    as flow,
            L7.app_protocol           as L7,
            ct.capture_type           as type,
-           cg.capture_def_group_name as groupName,
            cmf.tagPath               as tagpath,
            cmf.capturePath           as capturepath,
            pt.type_name              as processing_type
@@ -82,10 +81,6 @@ BEGIN
              inner join flow.capture_sink for system_time as of transaction @time cas on cd.flow_id = cas.flow_id and cd.L7_id = cas.L7_id
              inner join flow.L7 for system_time as of transaction @time L7 on cd.L7_id = L7.id
              left join capture_type for system_time as of transaction @time ct on cd.capture_type_id = ct.id
-             left join capture_def_group_x_capture_def for system_time as of transaction @time cdgxcd
-                       on cd.id = cdgxcd.capture_def_id and cd.capture_type = cdgxcd.capture_type and
-                          t.id = cdgxcd.tag_id
-             left join capture_def_group for system_time as of transaction @time cg on cdgxcd.capture_def_group_id = cg.id
              left join capture_meta_file for system_time as of transaction @time cmf on ct.id = cmf.id and ct.capture_type = cmf.capture_type
              left join processing_type for system_time as of transaction @time pt on cmf.processing_type_id = pt.id
              JOIN (SELECT cd2.id FROM cfe_18.capture_definition for SYSTEM_TIME as of TRANSACTION @time cd2 where cd2.id>last_id ORDER BY cd2.id LIMIT page_size)

@@ -53,15 +53,25 @@ public class HostGroup {
     public enum group_type {
         cfe, relp
     }
-
+    @Schema(accessMode = Schema.AccessMode.READ_ONLY)
+    private int id;
+    @Schema(accessMode = Schema.AccessMode.READ_ONLY)
+    private int hostGroupId;
     private int host_id;
     private String host_group_name;
     @Schema(accessMode = Schema.AccessMode.READ_ONLY)
     private group_type host_group_type;
     @Schema(accessMode = Schema.AccessMode.READ_ONLY)
     private String md5;
-    @Schema(accessMode = Schema.AccessMode.READ_ONLY)
-    private int id;
+
+
+    public int getHostGroupId() {
+        return hostGroupId;
+    }
+
+    public void setHostGroupId(int hostGroupId) {
+        this.hostGroupId = hostGroupId;
+    }
 
     public int getHost_id() {
         return host_id;
