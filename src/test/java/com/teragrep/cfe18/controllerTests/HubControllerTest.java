@@ -103,7 +103,7 @@ public class HubControllerTest extends TestSpringBootInformation {
         // set requestEntity to the put request
         request.setEntity(requestEntity);
         // Header
-        request.setHeader("Authorization", "Bearer " + token);
+        request.setHeader("Authorization", "Bearer " + readWriteToken);
 
         // Get the response from endpoint
         HttpResponse httpResponse = HttpClientBuilder.create().build().execute(request);
@@ -153,7 +153,7 @@ public class HubControllerTest extends TestSpringBootInformation {
         // set requestEntity to the put request
         request2.setEntity(requestEntity2);
         // Header
-        request2.setHeader("Authorization", "Bearer " + token);
+        request2.setHeader("Authorization", "Bearer " + readWriteToken);
 
         // Get the response from endpoint
         HttpClientBuilder.create().build().execute(request2);
@@ -173,7 +173,7 @@ public class HubControllerTest extends TestSpringBootInformation {
         // Asserting get request                                        // request host_id as path variable
         HttpGet requestGet = new HttpGet("http://localhost:" + port + "/host/hub/" + 1);
 
-        requestGet.setHeader("Authorization", "Bearer " + token);
+        requestGet.setHeader("Authorization", "Bearer " + readWriteToken);
 
         HttpResponse responseGet = HttpClientBuilder.create().build().execute(requestGet);
 
@@ -207,7 +207,7 @@ public class HubControllerTest extends TestSpringBootInformation {
         // set requestEntity to the put request
         request1.setEntity(requestEntity1);
         // Header
-        request1.setHeader("Authorization", "Bearer " + token);
+        request1.setHeader("Authorization", "Bearer " + readWriteToken);
 
         // Get the response from endpoint
         HttpClientBuilder.create().build().execute(request1);
@@ -231,7 +231,7 @@ public class HubControllerTest extends TestSpringBootInformation {
         // set requestEntity to the put request
         request2.setEntity(requestEntity2);
         // Header
-        request2.setHeader("Authorization", "Bearer " + token);
+        request2.setHeader("Authorization", "Bearer " + readWriteToken);
 
         // Get the response from endpoint
         HttpClientBuilder.create().build().execute(request2);
@@ -263,7 +263,7 @@ public class HubControllerTest extends TestSpringBootInformation {
         // Asserting get request                                        // request host_id as path variable
         HttpGet requestGet = new HttpGet("http://localhost:" + port + "/host/hub");
 
-        requestGet.setHeader("Authorization", "Bearer " + token);
+        requestGet.setHeader("Authorization", "Bearer " + readWriteToken);
 
         HttpResponse responseGet = HttpClientBuilder.create().build().execute(requestGet);
 
@@ -300,7 +300,7 @@ public class HubControllerTest extends TestSpringBootInformation {
         // set requestEntity to the put request
         request.setEntity(requestEntity);
         // Header
-        request.setHeader("Authorization", "Bearer " + token);
+        request.setHeader("Authorization", "Bearer " + readWriteToken);
 
         // Get the response from endpoint
         HttpClientBuilder.create().build().execute(request);
@@ -311,7 +311,7 @@ public class HubControllerTest extends TestSpringBootInformation {
         HttpDelete delete = new HttpDelete("http://localhost:" + port + "/host/hub/" + 1);
 
         // Header
-        delete.setHeader("Authorization", "Bearer " + token);
+        delete.setHeader("Authorization", "Bearer " + readWriteToken);
 
         HttpResponse deleteResponse = HttpClientBuilder.create().build().execute(delete);
 
@@ -336,7 +336,7 @@ public class HubControllerTest extends TestSpringBootInformation {
         HttpDelete delete = new HttpDelete("http://localhost:" + port + "/host/hub/" + 112412214);
 
         // Header
-        delete.setHeader("Authorization", "Bearer " + token);
+        delete.setHeader("Authorization", "Bearer " + readWriteToken);
 
         HttpResponse deleteResponse = HttpClientBuilder.create().build().execute(delete);
 
@@ -361,7 +361,7 @@ public class HubControllerTest extends TestSpringBootInformation {
         HttpDelete delete = new HttpDelete("http://localhost:" + port + "/host/hub/" + 2);
 
         // Header
-        delete.setHeader("Authorization", "Bearer " + token);
+        delete.setHeader("Authorization", "Bearer " + readWriteToken);
 
         HttpResponse deleteResponse = HttpClientBuilder.create().build().execute(delete);
 

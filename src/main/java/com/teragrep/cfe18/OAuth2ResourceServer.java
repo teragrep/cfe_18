@@ -49,14 +49,20 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
+import org.springframework.http.HttpMethod;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.oauth2.jwt.JwtDecoder;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
+import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
+import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationProvider;
 import org.springframework.security.web.SecurityFilterChain;
 
 import java.security.interfaces.RSAPublicKey;
+import java.util.Arrays;
 
 @Configuration
 @PropertySource(ignoreResourceNotFound = true, value = "classpath:application.properties")
@@ -64,33 +70,56 @@ import java.security.interfaces.RSAPublicKey;
 @EnableMethodSecurity
 public class OAuth2ResourceServer {
 
-    private final RequestLoggingFilter requestLoggingFilter;
+    @Value("${public.key.write}")
+    RSAPublicKey writeKey;
 
-    public OAuth2ResourceServer(){
-        this.requestLoggingFilter = new RequestLoggingFilter();
+    @Value("${public.key.read}")
+    RSAPublicKey readKey;
+
+    /** Decodes public keys and assigns SimpleGrantedAuthority value depending on key used. Authority is used in SecurityFilterChain to match HttpMethod with given token
+     *
+     * @return ProviderManager
+     */
+    @Bean
+    AuthenticationManager authenticationManager() {
+
+        JwtAuthenticationProvider readWriteProvider = new JwtAuthenticationProvider(
+                NimbusJwtDecoder.withPublicKey(writeKey).build()
+        );
+        JwtAuthenticationConverter readWriteConverter = new JwtAuthenticationConverter();
+        readWriteConverter.setJwtGrantedAuthoritiesConverter(
+                jwt -> Arrays.asList(new SimpleGrantedAuthority("ROLE_ALL_ACCESS"))
+        );
+        readWriteProvider.setJwtAuthenticationConverter(readWriteConverter);
+
+        JwtAuthenticationProvider readOnlyProvider = new JwtAuthenticationProvider(
+                NimbusJwtDecoder.withPublicKey(readKey).build()
+        );
+        JwtAuthenticationConverter readOnlyConverter = new JwtAuthenticationConverter();
+        readOnlyConverter.setJwtGrantedAuthoritiesConverter(
+                jwt -> Arrays.asList(new SimpleGrantedAuthority("ROLE_READ_ONLY"))
+        );
+        readOnlyProvider.setJwtAuthenticationConverter(readOnlyConverter);
+
+        return new ProviderManager(Arrays.asList(readOnlyProvider, readWriteProvider));
     }
 
-    @Value("${spring.security.oauth2.resourceserver.jwt.public-key-location}")
-    RSAPublicKey key;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         // @formatter:off
         http.addFilterBefore(requestLoggingFilter, org.springframework.security.web.authentication.www.BasicAuthenticationFilter.class).authorizeRequests().antMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll().and()
                 .authorizeRequests((authorize) -> authorize
-                        .requestMatchers().hasAuthority("SCOPE_message:read")
+                        .antMatchers(HttpMethod.GET,"/**").hasAnyAuthority("ROLE_READ_ONLY","ROLE_ALL_ACCESS")
+                        .antMatchers(HttpMethod.PUT,"/**").hasAuthority("ROLE_ALL_ACCESS")
+                        .antMatchers(HttpMethod.DELETE,"/**").hasAuthority("ROLE_ALL_ACCESS")
                         .anyRequest().authenticated()
                 )
                 .oauth2ResourceServer((oauth2) -> oauth2
-                        .jwt((jwt) -> jwt.decoder(jwtDecoder()))
+                        .jwt((jwt) -> jwt.authenticationManager(authenticationManager()))
                 );
         // @formatter:on
         return http.build();
-    }
-
-    @Bean
-    JwtDecoder jwtDecoder() {
-        return NimbusJwtDecoder.withPublicKey(this.key).build();
     }
 
 

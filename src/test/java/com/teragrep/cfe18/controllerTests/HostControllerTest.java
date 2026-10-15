@@ -46,7 +46,6 @@
 package com.teragrep.cfe18.controllerTests;
 
 import com.google.gson.Gson;
-import com.teragrep.cfe18.handlers.HostController;
 import com.teragrep.cfe18.handlers.entities.*;
 import jakarta.json.*;
 import org.apache.http.HttpEntity;
@@ -104,7 +103,7 @@ public class HostControllerTest extends TestSpringBootInformation {
         // set requestEntity to the put request
         request.setEntity(requestEntity);
         // Header
-        request.setHeader("Authorization", "Bearer " + token);
+        request.setHeader("Authorization", "Bearer " + readWriteToken);
 
         // Get the response from endpoint
         HttpResponse httpResponse = HttpClientBuilder.create().build().execute(request);
@@ -145,7 +144,7 @@ public class HostControllerTest extends TestSpringBootInformation {
         // Asserting get request
         HttpGet requestGet = new HttpGet("http://localhost:" + port + "/host/relp/" + 1);
 
-        requestGet.setHeader("Authorization", "Bearer " + token);
+        requestGet.setHeader("Authorization", "Bearer " + readWriteToken);
 
         HttpResponse responseGet = HttpClientBuilder.create().build().execute(requestGet);
 
@@ -181,7 +180,7 @@ public class HostControllerTest extends TestSpringBootInformation {
         // set requestEntity to the put request
         request1.setEntity(requestEntity1);
         // Header
-        request1.setHeader("Authorization", "Bearer " + token);
+        request1.setHeader("Authorization", "Bearer " + readWriteToken);
 
         // Get the response from endpoint
         HttpClientBuilder.create().build().execute(request1);
@@ -204,7 +203,7 @@ public class HostControllerTest extends TestSpringBootInformation {
         // set requestEntity to the put request
         request.setEntity(requestEntity);
         // Header
-        request.setHeader("Authorization", "Bearer " + token);
+        request.setHeader("Authorization", "Bearer " + readWriteToken);
 
         // Get the response from endpoint
         HttpResponse httpResponse = HttpClientBuilder.create().build().execute(request);
@@ -261,7 +260,7 @@ public class HostControllerTest extends TestSpringBootInformation {
         // set requestEntity to the put request
         request.setEntity(requestEntity);
         // Header
-        request.setHeader("Authorization", "Bearer " + token);
+        request.setHeader("Authorization", "Bearer " + readWriteToken);
 
         // Get the response from endpoint
         HttpResponse httpResponse = HttpClientBuilder.create().build().execute(request);
@@ -310,7 +309,7 @@ public class HostControllerTest extends TestSpringBootInformation {
         // set requestEntity to the put request
         request.setEntity(requestEntity);
         // Header
-        request.setHeader("Authorization", "Bearer " + token);
+        request.setHeader("Authorization", "Bearer " + readWriteToken);
 
         // Get the response from endpoint
         HttpResponse httpResponse = HttpClientBuilder.create().build().execute(request);
@@ -358,7 +357,7 @@ public class HostControllerTest extends TestSpringBootInformation {
         // set requestEntity to the put request
         request.setEntity(requestEntity);
         // Header
-        request.setHeader("Authorization", "Bearer " + token);
+        request.setHeader("Authorization", "Bearer " + readWriteToken);
 
         // Get the response from endpoint
         HttpResponse httpResponse = HttpClientBuilder.create().build().execute(request);
@@ -402,7 +401,7 @@ public class HostControllerTest extends TestSpringBootInformation {
         // Asserting get request
         HttpGet requestGet = new HttpGet("http://localhost:" + port + "/host/meta/ip");
 
-        requestGet.setHeader("Authorization", "Bearer " + token);
+        requestGet.setHeader("Authorization", "Bearer " + readWriteToken);
 
         HttpResponse responseGet = HttpClientBuilder.create().build().execute(requestGet);
 
@@ -429,7 +428,7 @@ public class HostControllerTest extends TestSpringBootInformation {
         // Asserting get request
         HttpGet requestGet = new HttpGet("http://localhost:" + port + "/host/meta/interface");
 
-        requestGet.setHeader("Authorization", "Bearer " + token);
+        requestGet.setHeader("Authorization", "Bearer " + readWriteToken);
 
         HttpResponse responseGet = HttpClientBuilder.create().build().execute(requestGet);
 
@@ -463,7 +462,7 @@ public class HostControllerTest extends TestSpringBootInformation {
         // Asserting get request
         HttpGet requestGet = new HttpGet("http://localhost:" + port + "/host/meta");
 
-        requestGet.setHeader("Authorization", "Bearer " + token);
+        requestGet.setHeader("Authorization", "Bearer " + readWriteToken);
 
         HttpResponse responseGet = HttpClientBuilder.create().build().execute(requestGet);
 
@@ -497,7 +496,7 @@ public class HostControllerTest extends TestSpringBootInformation {
         // Asserting get request
         HttpGet requestGet = new HttpGet("http://localhost:" + port + "/host/file/" + 3);
 
-        requestGet.setHeader("Authorization", "Bearer " + token);
+        requestGet.setHeader("Authorization", "Bearer " + readWriteToken);
 
         HttpResponse responseGet = HttpClientBuilder.create().build().execute(requestGet);
 
@@ -550,7 +549,7 @@ public class HostControllerTest extends TestSpringBootInformation {
         // Asserting get request
         HttpGet requestGet = new HttpGet("http://localhost:" + port + "/host");
 
-        requestGet.setHeader("Authorization", "Bearer " + token);
+        requestGet.setHeader("Authorization", "Bearer " + readWriteToken);
 
         HttpResponse responseGet = HttpClientBuilder.create().build().execute(requestGet);
 
@@ -581,7 +580,7 @@ public class HostControllerTest extends TestSpringBootInformation {
         // Asserting get request
         HttpGet requestGet = new HttpGet("http://localhost:" + port + "/host?pageSize=1&lastId=0");
 
-        requestGet.setHeader("Authorization", "Bearer " + token);
+        requestGet.setHeader("Authorization", "Bearer " + readWriteToken);
 
         HttpResponse responseGet = HttpClientBuilder.create().build().execute(requestGet);
 
@@ -625,7 +624,7 @@ public class HostControllerTest extends TestSpringBootInformation {
         // Asserting get request
         HttpGet requestGet = new HttpGet("http://localhost:" + port + "/host?pageSize=2&lastId=1");
 
-        requestGet.setHeader("Authorization", "Bearer " + token);
+        requestGet.setHeader("Authorization", "Bearer " + readWriteToken);
 
         HttpResponse responseGet = HttpClientBuilder.create().build().execute(requestGet);
 
@@ -690,7 +689,7 @@ public class HostControllerTest extends TestSpringBootInformation {
         // Asserting get request
         HttpGet requestGet = new HttpGet("http://localhost:" + port + "/host?pageSize=1");
 
-        requestGet.setHeader("Authorization", "Bearer " + token);
+        requestGet.setHeader("Authorization", "Bearer " + readWriteToken);
 
         HttpResponse responseGet = HttpClientBuilder.create().build().execute(requestGet);
 
@@ -707,7 +706,7 @@ public class HostControllerTest extends TestSpringBootInformation {
         // Asserting get request
         HttpGet requestGet2 = new HttpGet("http://localhost:" + port + "/host?lastId="+lastId+"&pageSize=1");
 
-        requestGet2.setHeader("Authorization", "Bearer " + token);
+        requestGet2.setHeader("Authorization", "Bearer " + readWriteToken);
 
         HttpResponse responseGet2 = HttpClientBuilder.create().build().execute(requestGet2);
 
@@ -724,7 +723,7 @@ public class HostControllerTest extends TestSpringBootInformation {
         // Asserting get request
         HttpGet requestGet3 = new HttpGet("http://localhost:" + port + "/host?lastId="+lastId2+"&pageSize=1");
 
-        requestGet3.setHeader("Authorization", "Bearer " + token);
+        requestGet3.setHeader("Authorization", "Bearer " + readWriteToken);
 
         HttpResponse responseGet3 = HttpClientBuilder.create().build().execute(requestGet3);
 
@@ -748,7 +747,7 @@ public class HostControllerTest extends TestSpringBootInformation {
         HttpDelete delete = new HttpDelete("http://localhost:" + port + "/host/" + 1);
 
         // Header
-        delete.setHeader("Authorization", "Bearer " + token);
+        delete.setHeader("Authorization", "Bearer " + readWriteToken);
 
         HttpResponse deleteResponse = HttpClientBuilder.create().build().execute(delete);
 
@@ -775,7 +774,7 @@ public class HostControllerTest extends TestSpringBootInformation {
         HttpDelete delete = new HttpDelete("http://localhost:" + port + "/host/" + 99999);
 
         // Header
-        delete.setHeader("Authorization", "Bearer " + token);
+        delete.setHeader("Authorization", "Bearer " + readWriteToken);
 
         HttpResponse deleteResponse = HttpClientBuilder.create().build().execute(delete);
 
@@ -801,7 +800,7 @@ public class HostControllerTest extends TestSpringBootInformation {
         HttpDelete delete = new HttpDelete("http://localhost:" + port + "/host/meta/" + 99999);
 
         // Header
-        delete.setHeader("Authorization", "Bearer " + token);
+        delete.setHeader("Authorization", "Bearer " + readWriteToken);
 
         HttpResponse deleteResponse = HttpClientBuilder.create().build().execute(delete);
 
@@ -827,7 +826,7 @@ public class HostControllerTest extends TestSpringBootInformation {
         HttpDelete delete = new HttpDelete("http://localhost:" + port + "/host/meta/ip/" + 99999);
 
         // Header
-        delete.setHeader("Authorization", "Bearer " + token);
+        delete.setHeader("Authorization", "Bearer " + readWriteToken);
 
         HttpResponse deleteResponse = HttpClientBuilder.create().build().execute(delete);
 
@@ -854,7 +853,7 @@ public class HostControllerTest extends TestSpringBootInformation {
         HttpDelete delete = new HttpDelete("http://localhost:" + port + "/host/meta/ip/" + 1);
 
         // Header
-        delete.setHeader("Authorization", "Bearer " + token);
+        delete.setHeader("Authorization", "Bearer " + readWriteToken);
 
         HttpResponse deleteResponse = HttpClientBuilder.create().build().execute(delete);
 
@@ -880,7 +879,7 @@ public class HostControllerTest extends TestSpringBootInformation {
         HttpDelete delete = new HttpDelete("http://localhost:" + port + "/host/meta/ip/" + 99999);
 
         // Header
-        delete.setHeader("Authorization", "Bearer " + token);
+        delete.setHeader("Authorization", "Bearer " + readWriteToken);
 
         HttpResponse deleteResponse = HttpClientBuilder.create().build().execute(delete);
 
@@ -907,7 +906,7 @@ public class HostControllerTest extends TestSpringBootInformation {
         HttpDelete delete = new HttpDelete("http://localhost:" + port + "/host/meta/interface/" + 1);
 
         // Header
-        delete.setHeader("Authorization", "Bearer " + token);
+        delete.setHeader("Authorization", "Bearer " + readWriteToken);
 
         HttpResponse deleteResponse = HttpClientBuilder.create().build().execute(delete);
 
@@ -934,7 +933,7 @@ public class HostControllerTest extends TestSpringBootInformation {
 
 
         // Header
-        delete.setHeader("Authorization", "Bearer " + token);
+        delete.setHeader("Authorization", "Bearer " + readWriteToken);
 
         HttpResponse deleteResponse = HttpClientBuilder.create().build().execute(delete);
 
@@ -962,7 +961,7 @@ public class HostControllerTest extends TestSpringBootInformation {
 
 
         // Header
-        delete.setHeader("Authorization", "Bearer " + token);
+        delete.setHeader("Authorization", "Bearer " + readWriteToken);
 
         HttpResponse deleteResponse = HttpClientBuilder.create().build().execute(delete);
 
@@ -990,7 +989,7 @@ public class HostControllerTest extends TestSpringBootInformation {
 
 
         // Header
-        delete.setHeader("Authorization", "Bearer " + token);
+        delete.setHeader("Authorization", "Bearer " + readWriteToken);
 
         HttpResponse deleteResponse = HttpClientBuilder.create().build().execute(delete);
 

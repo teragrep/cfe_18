@@ -307,7 +307,8 @@
             <exclude>src/main/resources/com/teragrep/cfe18/**</exclude>
             <exclude>src/main/resources/application.properties</exclude>
             <exclude>src/main/resources/mybatis-config.xml</exclude>
-            <exclude>src/main/resources/notForProd.pub</exclude>
+            <exclude>src/main/resources/readonly.pub</exclude>
+            <exclude>src/main/resources/readwrite.pub</exclude>
             <exclude>src/main/resources/web.xml</exclude>
             <exclude>src/main/resources/static/**</exclude>
             <!-- Web -->
@@ -319,6 +320,8 @@
             <!-- Docker -->
             <exclude>Dockerfile</exclude>
             <exclude>tomcatContainerImage/</exclude>
+            <!-- jwt generate -->
+            <exclude>jwt_generate.sh</exclude>
           </excludes>
         </configuration>
       </plugin>

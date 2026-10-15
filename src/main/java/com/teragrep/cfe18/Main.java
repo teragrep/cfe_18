@@ -60,8 +60,6 @@ import java.security.interfaces.RSAPublicKey;
 @SpringBootApplication
 public class Main extends SpringBootServletInitializer {
     private static final Logger LOGGER = LoggerFactory.getLogger(Main.class);
-    @Value("${spring.security.oauth2.resourceserver.jwt.public-key-location}")
-    RSAPublicKey key;
 
     @Override
     protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {

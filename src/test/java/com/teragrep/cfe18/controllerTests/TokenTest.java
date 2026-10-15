@@ -45,14 +45,21 @@
  */
 package com.teragrep.cfe18.controllerTests;
 
+import com.google.gson.Gson;
+import com.teragrep.cfe18.handlers.entities.Flow;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPut;
 import org.apache.http.client.methods.HttpUriRequest;
+import org.apache.http.entity.ContentType;
+import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.util.EntityUtils;
 
+import org.json.JSONObject;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.boot.test.context.SpringBootTest;
 
@@ -64,10 +71,13 @@ import java.io.IOException;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ExtendWith(MigrateDatabaseExtension.class)
 public class TokenTest extends TestSpringBootInformation {
+
+    Gson gson = new Gson();
 
     @LocalServerPort
     private int port;
@@ -79,7 +89,7 @@ public class TokenTest extends TestSpringBootInformation {
 
         // Given
         HttpUriRequest request = new HttpGet("http://localhost:" + port + "/capture/jwt");
-        request.setHeader("Authorization", "Bearer " + token);
+        request.setHeader("Authorization", "Bearer " + readWriteToken);
         // When
 
         HttpResponse httpResponse = HttpClientBuilder.create().build().execute(request);
@@ -114,7 +124,6 @@ public class TokenTest extends TestSpringBootInformation {
     }
 
 
-    // Tests that giving no token returns 500
     @Test
     public void testNoToken() throws IOException {
 
@@ -131,4 +140,48 @@ public class TokenTest extends TestSpringBootInformation {
                 equalTo(HttpStatus.SC_UNAUTHORIZED));
     }
 
+    // Test that read token is not able to insert data
+    @Test
+    public void readUnauthorized() {
+        Flow flow = new Flow();
+        flow.setName("flowWithoutPerms");
+
+        String json = gson.toJson(flow);
+
+        StringEntity requestEntity = new StringEntity(
+                String.valueOf(json),
+                ContentType.APPLICATION_JSON);
+
+        HttpPut request = new HttpPut("http://localhost:" + port + "/flow");
+        request.setEntity(requestEntity);
+        request.setHeader("Authorization", "Bearer " + readToken);
+
+        HttpResponse httpResponse = Assertions.assertDoesNotThrow(() -> HttpClientBuilder.create().build().execute(request));
+
+        assertEquals(HttpStatus.SC_FORBIDDEN, httpResponse.getStatusLine().getStatusCode());
+    }
+
+
+    // Test that read token is able to read data
+    @Test
+    public void testReadToken()  {
+
+        // Given
+        HttpUriRequest request = new HttpGet("http://localhost:" + port + "/capture/jwt");
+        request.setHeader("Authorization", "Bearer " + readToken);
+        // When
+
+        HttpResponse httpResponse = Assertions.assertDoesNotThrow(() -> HttpClientBuilder.create().build().execute(request));
+
+        HttpEntity entity = httpResponse.getEntity();
+
+        String responseString = Assertions.assertDoesNotThrow(() -> EntityUtils.toString(entity, "UTF-8"));
+
+        // Then
+        assertEquals(
+                HttpStatus.SC_OK,
+                httpResponse.getStatusLine().getStatusCode());
+        // Subject which is declared in the jwt generation script
+        assertEquals("Hello, readingSubject!", responseString);
+    }
 }
