@@ -101,7 +101,7 @@ public class FlowControllerTest extends TestSpringBootInformation {
         // set requestEntity to the put request
         request.setEntity(requestEntity);
         // Header
-        request.setHeader("Authorization", "Bearer " + token);
+        request.setHeader("Authorization", "Bearer " + readWriteToken);
 
         // Get the response from endpoint
         HttpResponse httpResponse = HttpClientBuilder.create().build().execute(request);
@@ -151,7 +151,7 @@ public class FlowControllerTest extends TestSpringBootInformation {
         // set requestEntity to the put request
         request.setEntity(requestEntity);
         // Header
-        request.setHeader("Authorization", "Bearer " + token);
+        request.setHeader("Authorization", "Bearer " + readWriteToken);
 
         HttpClientBuilder.create().build().execute(request);
 
@@ -170,7 +170,7 @@ public class FlowControllerTest extends TestSpringBootInformation {
         // Asserting get request
         HttpGet requestGet = new HttpGet("http://localhost:" + port + "/flow");
 
-        requestGet.setHeader("Authorization", "Bearer " + token);
+        requestGet.setHeader("Authorization", "Bearer " + readWriteToken);
 
         HttpResponse responseGet = HttpClientBuilder.create().build().execute(requestGet);
 
@@ -192,7 +192,7 @@ public class FlowControllerTest extends TestSpringBootInformation {
         HttpDelete delete = new HttpDelete("http://localhost:" + port + "/flow/nonExistentFlow");
 
         // Header
-        delete.setHeader("Authorization", "Bearer " + token);
+        delete.setHeader("Authorization", "Bearer " + readWriteToken);
 
         HttpResponse deleteResponse = HttpClientBuilder.create().build().execute(delete);
 
@@ -236,7 +236,7 @@ public class FlowControllerTest extends TestSpringBootInformation {
         // set requestEntity to the put request
         request.setEntity(requestEntity);
         // Header
-        request.setHeader("Authorization", "Bearer " + token);
+        request.setHeader("Authorization", "Bearer " + readWriteToken);
 
         // Get the response from endpoint
         HttpClientBuilder.create().build().execute(request);
@@ -245,7 +245,7 @@ public class FlowControllerTest extends TestSpringBootInformation {
         HttpDelete delete = new HttpDelete("http://localhost:" + port + "/flow/Testflow");
 
         // Header
-        delete.setHeader("Authorization", "Bearer " + token);
+        delete.setHeader("Authorization", "Bearer " + readWriteToken);
 
         HttpResponse deleteResponse = HttpClientBuilder.create().build().execute(delete);
 
@@ -271,7 +271,7 @@ public class FlowControllerTest extends TestSpringBootInformation {
         HttpDelete delete = new HttpDelete("http://localhost:" + port + "/flow/Testflow1");
 
         // Header
-        delete.setHeader("Authorization", "Bearer " + token);
+        delete.setHeader("Authorization", "Bearer " + readWriteToken);
 
         HttpResponse deleteResponse = HttpClientBuilder.create().build().execute(delete);
 

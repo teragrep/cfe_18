@@ -79,7 +79,7 @@ public class TokenTest extends TestSpringBootInformation {
 
         // Given
         HttpUriRequest request = new HttpGet("http://localhost:" + port + "/capture/jwt");
-        request.setHeader("Authorization", "Bearer " + token);
+        request.setHeader("Authorization", "Bearer " + readWriteToken);
         // When
 
         HttpResponse httpResponse = HttpClientBuilder.create().build().execute(request);
@@ -114,7 +114,6 @@ public class TokenTest extends TestSpringBootInformation {
     }
 
 
-    // Tests that giving no token returns 500
     @Test
     public void testNoToken() throws IOException {
 
@@ -130,5 +129,9 @@ public class TokenTest extends TestSpringBootInformation {
                 httpResponse2.getStatusLine().getStatusCode(),
                 equalTo(HttpStatus.SC_UNAUTHORIZED));
     }
+
+    // Test that read token is not able to insert data
+
+    // Test that read token is able to read data
 
 }

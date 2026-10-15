@@ -99,7 +99,7 @@ public class CaptureMetaControllerTest extends TestSpringBootInformation{
         // set requestEntity to the put request
         request2.setEntity(requestEntity2);
         // Header
-        request2.setHeader("Authorization", "Bearer " + token);
+        request2.setHeader("Authorization", "Bearer " + readWriteToken);
 
         Assertions.assertDoesNotThrow(() -> {HttpClientBuilder.create().build().execute(request2);});
 
@@ -123,7 +123,7 @@ public class CaptureMetaControllerTest extends TestSpringBootInformation{
         // set requestEntity to the put request
         request1.setEntity(requestEntity1);
         // Header
-        request1.setHeader("Authorization", "Bearer " + token);
+        request1.setHeader("Authorization", "Bearer " + readWriteToken);
 
         // Get the response from endpoint
         Assertions.assertDoesNotThrow(() -> {HttpClientBuilder.create().build().execute(request1); });
@@ -150,7 +150,7 @@ public class CaptureMetaControllerTest extends TestSpringBootInformation{
         // set requestEntity to the put request
         request3.setEntity(requestEntity3);
         // Header
-        request3.setHeader("Authorization", "Bearer " + token);
+        request3.setHeader("Authorization", "Bearer " + readWriteToken);
 
         Assertions.assertDoesNotThrow(() -> {HttpClientBuilder.create().build().execute(request3); });
 
@@ -174,7 +174,7 @@ public class CaptureMetaControllerTest extends TestSpringBootInformation{
         // set requestEntity to the put request
         request4.setEntity(requestEntity4);
         // Header
-        request4.setHeader("Authorization", "Bearer " + token);
+        request4.setHeader("Authorization", "Bearer " + readWriteToken);
 
         // Get the response from endpoint
 
@@ -216,7 +216,7 @@ public class CaptureMetaControllerTest extends TestSpringBootInformation{
         // Asserting get request
         HttpGet requestGet = new HttpGet("http://localhost:" + port + "/capture/meta/" + 1);
 
-        requestGet.setHeader("Authorization", "Bearer " + token);
+        requestGet.setHeader("Authorization", "Bearer " + readWriteToken);
 
         HttpResponse responseGet = Assertions.assertDoesNotThrow(() ->  HttpClientBuilder.create().build().execute(requestGet));
 
@@ -250,7 +250,7 @@ public class CaptureMetaControllerTest extends TestSpringBootInformation{
         // set requestEntity to the put request
         request4.setEntity(requestEntity4);
         // Header
-        request4.setHeader("Authorization", "Bearer " + token);
+        request4.setHeader("Authorization", "Bearer " + readWriteToken);
 
         // Get the response from endpoint
         HttpResponse httpResponse = Assertions.assertDoesNotThrow(() ->  HttpClientBuilder.create().build().execute(request4));
@@ -301,7 +301,7 @@ public class CaptureMetaControllerTest extends TestSpringBootInformation{
         // set requestEntity to the put request
         request3.setEntity(requestEntity3);
         // Header
-        request3.setHeader("Authorization", "Bearer " + token);
+        request3.setHeader("Authorization", "Bearer " + readWriteToken);
 
         Assertions.assertDoesNotThrow(() -> {HttpClientBuilder.create().build().execute(request3); });
 
@@ -310,7 +310,7 @@ public class CaptureMetaControllerTest extends TestSpringBootInformation{
         // Fetching capture that does not exist
         HttpGet requestGet = new HttpGet("http://localhost:" + port + "/capture/meta/" + 555);
 
-        requestGet.setHeader("Authorization", "Bearer " + token);
+        requestGet.setHeader("Authorization", "Bearer " + readWriteToken);
 
         HttpResponse responseGet = Assertions.assertDoesNotThrow(() -> HttpClientBuilder.create().build().execute(requestGet));
 
@@ -354,7 +354,7 @@ public class CaptureMetaControllerTest extends TestSpringBootInformation{
         // set requestEntity to the put request
         request4.setEntity(requestEntity4);
         // Header
-        request4.setHeader("Authorization", "Bearer " + token);
+        request4.setHeader("Authorization", "Bearer " + readWriteToken);
 
         // Execute inserting another capture meta
         Assertions.assertDoesNotThrow(() -> {HttpClientBuilder.create().build().execute(request4);});
@@ -373,7 +373,7 @@ public class CaptureMetaControllerTest extends TestSpringBootInformation{
         // Fetching all capture metas
         HttpGet requestGet = new HttpGet("http://localhost:" + port + "/capture/meta" );
 
-        requestGet.setHeader("Authorization", "Bearer " + token);
+        requestGet.setHeader("Authorization", "Bearer " + readWriteToken);
 
         HttpResponse responseGet = Assertions.assertDoesNotThrow(() ->  HttpClientBuilder.create().build().execute(requestGet));
 
@@ -394,7 +394,7 @@ public class CaptureMetaControllerTest extends TestSpringBootInformation{
         HttpDelete delete = new HttpDelete("http://localhost:" + port + "/capture/meta/"+1);
 
         // Header
-        delete.setHeader("Authorization", "Bearer " + token);
+        delete.setHeader("Authorization", "Bearer " + readWriteToken);
 
         HttpResponse deleteResponse = Assertions.assertDoesNotThrow(() ->  HttpClientBuilder.create().build().execute(delete));
 
@@ -421,7 +421,7 @@ public class CaptureMetaControllerTest extends TestSpringBootInformation{
         HttpDelete delete = new HttpDelete("http://localhost:" + port + "/capture/meta/"+122);
 
         // Header
-        delete.setHeader("Authorization", "Bearer " + token);
+        delete.setHeader("Authorization", "Bearer " + readWriteToken);
 
         HttpResponse deleteResponse = Assertions.assertDoesNotThrow(() ->  HttpClientBuilder.create().build().execute(delete));
 

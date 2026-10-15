@@ -102,7 +102,7 @@ public class GXGControllerTest extends TestSpringBootInformation {
         // set requestEntity to the put request
         request2.setEntity(requestEntity2);
         // Header
-        request2.setHeader("Authorization", "Bearer " + token);
+        request2.setHeader("Authorization", "Bearer " + readWriteToken);
 
         HttpClientBuilder.create().build().execute(request2);
 
@@ -127,7 +127,7 @@ public class GXGControllerTest extends TestSpringBootInformation {
         // set requestEntity to the put request
         request.setEntity(requestEntity);
         // Header
-        request.setHeader("Authorization", "Bearer " + token);
+        request.setHeader("Authorization", "Bearer " + readWriteToken);
 
         // Get the response from endpoint
         HttpClientBuilder.create().build().execute(request);
@@ -156,7 +156,7 @@ public class GXGControllerTest extends TestSpringBootInformation {
         // set requestEntity to the put request
         requestCapture.setEntity(requestEntityCapture);
         // Header
-        requestCapture.setHeader("Authorization", "Bearer " + token);
+        requestCapture.setHeader("Authorization", "Bearer " + readWriteToken);
 
         // Get the response from endpoint
         HttpClientBuilder.create().build().execute(requestCapture);
@@ -178,7 +178,7 @@ public class GXGControllerTest extends TestSpringBootInformation {
         // set requestEntity to the put request
         requestCaptureGroup.setEntity(requestEntityCaptureGroup);
         // Header
-        requestCaptureGroup.setHeader("Authorization", "Bearer " + token);
+        requestCaptureGroup.setHeader("Authorization", "Bearer " + readWriteToken);
 
         // Get the response from endpoint
         HttpResponse httpResponse = HttpClientBuilder.create().build().execute(requestCaptureGroup);
@@ -230,7 +230,7 @@ public class GXGControllerTest extends TestSpringBootInformation {
         // set requestEntity to the put request
         request.setEntity(requestEntity);
         // Header
-        request.setHeader("Authorization", "Bearer " + token);
+        request.setHeader("Authorization", "Bearer " + readWriteToken);
 
         // Get the response from endpoint
         HttpClientBuilder.create().build().execute(request);
@@ -253,7 +253,7 @@ public class GXGControllerTest extends TestSpringBootInformation {
         // set requestEntity to the put request
         requestGroup.setEntity(requestEntityGroup);
         // Header
-        requestGroup.setHeader("Authorization", "Bearer " + token);
+        requestGroup.setHeader("Authorization", "Bearer " + readWriteToken);
 
         // Get the response from endpoint
         HttpResponse httpResponse = HttpClientBuilder.create().build().execute(requestGroup);
@@ -302,7 +302,7 @@ public class GXGControllerTest extends TestSpringBootInformation {
         // set requestEntity to the put request
         requestGroup.setEntity(requestEntityGroup);
         // Header
-        requestGroup.setHeader("Authorization", "Bearer " + token);
+        requestGroup.setHeader("Authorization", "Bearer " + readWriteToken);
 
         // Get the response from endpoint
         HttpResponse httpResponse = HttpClientBuilder.create().build().execute(requestGroup);
@@ -349,7 +349,7 @@ public class GXGControllerTest extends TestSpringBootInformation {
         // Asserting get request
         HttpGet requestGet = new HttpGet("http://localhost:" + port + "/capture/group/groupRelp");
 
-        requestGet.setHeader("Authorization", "Bearer " + token);
+        requestGet.setHeader("Authorization", "Bearer " + readWriteToken);
 
         HttpResponse responseGet = HttpClientBuilder.create().build().execute(requestGet);
 
@@ -380,7 +380,7 @@ public class GXGControllerTest extends TestSpringBootInformation {
         // Asserting get request
         HttpGet requestGet = new HttpGet("http://localhost:" + port + "/host/group/hostgroup1");
 
-        requestGet.setHeader("Authorization", "Bearer " + token);
+        requestGet.setHeader("Authorization", "Bearer " + readWriteToken);
 
         HttpResponse responseGet = HttpClientBuilder.create().build().execute(requestGet);
 
@@ -413,7 +413,7 @@ public class GXGControllerTest extends TestSpringBootInformation {
         // Asserting get request
         HttpGet requestGet = new HttpGet("http://localhost:" + port + "/capture/groups/linkage/hostgroup1");
 
-        requestGet.setHeader("Authorization", "Bearer " + token);
+        requestGet.setHeader("Authorization", "Bearer " + readWriteToken);
 
         HttpResponse responseGet = HttpClientBuilder.create().build().execute(requestGet);
 
@@ -445,7 +445,7 @@ public class GXGControllerTest extends TestSpringBootInformation {
         // Asserting get request
         HttpGet requestGet = new HttpGet("http://localhost:" + port + "/capture/group");
 
-        requestGet.setHeader("Authorization", "Bearer " + token);
+        requestGet.setHeader("Authorization", "Bearer " + readWriteToken);
 
         HttpResponse responseGet = HttpClientBuilder.create().build().execute(requestGet);
 
@@ -476,7 +476,7 @@ public class GXGControllerTest extends TestSpringBootInformation {
         // Asserting get request
         HttpGet requestGet = new HttpGet("http://localhost:" + port + "/capture/group?pageSize=1&lastId=0");
 
-        requestGet.setHeader("Authorization", "Bearer " + token);
+        requestGet.setHeader("Authorization", "Bearer " + readWriteToken);
 
         HttpResponse responseGet = HttpClientBuilder.create().build().execute(requestGet);
 
@@ -506,7 +506,7 @@ public class GXGControllerTest extends TestSpringBootInformation {
 
         HttpPut requestCaptureGroup = new HttpPut("http://localhost:" + port + "/capture/group");
         requestCaptureGroup.setEntity(requestEntityCaptureGroup);
-        requestCaptureGroup.setHeader("Authorization", "Bearer " + token);
+        requestCaptureGroup.setHeader("Authorization", "Bearer " + readWriteToken);
 
         HttpClientBuilder.create().build().execute(requestCaptureGroup);
 
@@ -548,7 +548,7 @@ public class GXGControllerTest extends TestSpringBootInformation {
         // Asserting get request
         HttpGet requestGet = new HttpGet("http://localhost:" + port + "/capture/group?pageSize=1");
 
-        requestGet.setHeader("Authorization", "Bearer " + token);
+        requestGet.setHeader("Authorization", "Bearer " + readWriteToken);
 
         HttpResponse responseGet = HttpClientBuilder.create().build().execute(requestGet);
 
@@ -567,7 +567,7 @@ public class GXGControllerTest extends TestSpringBootInformation {
         // Rolling to second one
         HttpGet requestGet2 = new HttpGet("http://localhost:" + port + "/capture/group?lastId="+lastId+"&pageSize=1");
 
-        requestGet2.setHeader("Authorization", "Bearer " + token);
+        requestGet2.setHeader("Authorization", "Bearer " + readWriteToken);
 
         HttpResponse responseGet2 = HttpClientBuilder.create().build().execute(requestGet2);
 
@@ -599,7 +599,7 @@ public class GXGControllerTest extends TestSpringBootInformation {
         // Asserting get request
         HttpGet requestGet = new HttpGet("http://localhost:" + port + "/host/group");
 
-        requestGet.setHeader("Authorization", "Bearer " + token);
+        requestGet.setHeader("Authorization", "Bearer " + readWriteToken);
 
         HttpResponse responseGet = HttpClientBuilder.create().build().execute(requestGet);
 
@@ -630,7 +630,7 @@ public class GXGControllerTest extends TestSpringBootInformation {
         // Asserting get request
         HttpGet requestGet = new HttpGet("http://localhost:" + port + "/host/group?pageSize=1&lastId=0");
 
-        requestGet.setHeader("Authorization", "Bearer " + token);
+        requestGet.setHeader("Authorization", "Bearer " + readWriteToken);
 
         HttpResponse responseGet = HttpClientBuilder.create().build().execute(requestGet);
 
@@ -659,7 +659,7 @@ public class GXGControllerTest extends TestSpringBootInformation {
 
         HttpPut requestGroup = new HttpPut("http://localhost:" + port + "/host/group");
         requestGroup.setEntity(requestEntityGroup);
-        requestGroup.setHeader("Authorization", "Bearer " + token);
+        requestGroup.setHeader("Authorization", "Bearer " + readWriteToken);
 
         HttpClientBuilder.create().build().execute(requestGroup);
 
@@ -696,7 +696,7 @@ public class GXGControllerTest extends TestSpringBootInformation {
         // Asserting get request
         HttpGet requestGet = new HttpGet("http://localhost:" + port + "/host/group?pageSize=1");
 
-        requestGet.setHeader("Authorization", "Bearer " + token);
+        requestGet.setHeader("Authorization", "Bearer " + readWriteToken);
 
         HttpResponse responseGet = HttpClientBuilder.create().build().execute(requestGet);
 
@@ -713,7 +713,7 @@ public class GXGControllerTest extends TestSpringBootInformation {
 
         HttpGet requestGet2 = new HttpGet("http://localhost:" + port + "/host/group?lastId="+lastId+"&pageSize=1");
 
-        requestGet2.setHeader("Authorization", "Bearer " + token);
+        requestGet2.setHeader("Authorization", "Bearer " + readWriteToken);
 
         HttpResponse responseGet2 = HttpClientBuilder.create().build().execute(requestGet2);
 
@@ -750,7 +750,7 @@ public class GXGControllerTest extends TestSpringBootInformation {
         // Asserting get request
         HttpGet requestGet = new HttpGet("http://localhost:" + port + "/capture/groups/linkage");
 
-        requestGet.setHeader("Authorization", "Bearer " + token);
+        requestGet.setHeader("Authorization", "Bearer " + readWriteToken);
 
         HttpResponse responseGet = HttpClientBuilder.create().build().execute(requestGet);
 
@@ -772,7 +772,7 @@ public class GXGControllerTest extends TestSpringBootInformation {
         HttpDelete delete = new HttpDelete("http://localhost:" + port + "/capture/group/groupRelp");
 
         // Header
-        delete.setHeader("Authorization", "Bearer " + token);
+        delete.setHeader("Authorization", "Bearer " + readWriteToken);
 
         HttpResponse deleteResponse = HttpClientBuilder.create().build().execute(delete);
 
@@ -799,7 +799,7 @@ public class GXGControllerTest extends TestSpringBootInformation {
         HttpDelete delete = new HttpDelete("http://localhost:" + port + "/capture/group/125412");
 
         // Header
-        delete.setHeader("Authorization", "Bearer " + token);
+        delete.setHeader("Authorization", "Bearer " + readWriteToken);
 
         HttpResponse deleteResponse = HttpClientBuilder.create().build().execute(delete);
 
@@ -827,7 +827,7 @@ public class GXGControllerTest extends TestSpringBootInformation {
         HttpDelete delete = new HttpDelete("http://localhost:" + port + "/host/group/hostgroup1");
 
         // Header
-        delete.setHeader("Authorization", "Bearer " + token);
+        delete.setHeader("Authorization", "Bearer " + readWriteToken);
 
         HttpResponse deleteResponse = HttpClientBuilder.create().build().execute(delete);
 
@@ -853,7 +853,7 @@ public class GXGControllerTest extends TestSpringBootInformation {
         HttpDelete delete = new HttpDelete("http://localhost:" + port + "/host/group/124");
 
         // Header
-        delete.setHeader("Authorization", "Bearer " + token);
+        delete.setHeader("Authorization", "Bearer " + readWriteToken);
 
         HttpResponse deleteResponse = HttpClientBuilder.create().build().execute(delete);
 
@@ -881,7 +881,7 @@ public class GXGControllerTest extends TestSpringBootInformation {
         HttpDelete delete = new HttpDelete("http://localhost:" + port + "/capture/groups/linkage/125");
 
         // Header
-        delete.setHeader("Authorization", "Bearer " + token);
+        delete.setHeader("Authorization", "Bearer " + readWriteToken);
 
         HttpResponse deleteResponse = HttpClientBuilder.create().build().execute(delete);
 
@@ -908,7 +908,7 @@ public class GXGControllerTest extends TestSpringBootInformation {
         HttpDelete delete = new HttpDelete("http://localhost:" + port + "/capture/groups/linkage/1");
 
         // Header
-        delete.setHeader("Authorization", "Bearer " + token);
+        delete.setHeader("Authorization", "Bearer " + readWriteToken);
 
         HttpResponse deleteResponse = HttpClientBuilder.create().build().execute(delete);
 
@@ -955,7 +955,7 @@ public class GXGControllerTest extends TestSpringBootInformation {
         // set requestEntity to the put request
         requestCapture.setEntity(requestEntityCapture);
         // Header
-        requestCapture.setHeader("Authorization", "Bearer " + token);
+        requestCapture.setHeader("Authorization", "Bearer " + readWriteToken);
 
         // Get the response from endpoint
         HttpClientBuilder.create().build().execute(requestCapture);
@@ -979,7 +979,7 @@ public class GXGControllerTest extends TestSpringBootInformation {
         // set requestEntity to the put request
         requestCaptureGroup.setEntity(requestEntityCaptureGroup);
         // Header
-        requestCaptureGroup.setHeader("Authorization", "Bearer " + token);
+        requestCaptureGroup.setHeader("Authorization", "Bearer " + readWriteToken);
 
         // Get the response from endpoint
         HttpResponse httpResponse = HttpClientBuilder.create().build().execute(requestCaptureGroup);
@@ -1016,7 +1016,7 @@ public class GXGControllerTest extends TestSpringBootInformation {
         HttpDelete delete = new HttpDelete("http://localhost:" + port + "/capture/group/groupRelp");
 
         // Header
-        delete.setHeader("Authorization", "Bearer " + token);
+        delete.setHeader("Authorization", "Bearer " + readWriteToken);
 
         HttpResponse deleteResponse = HttpClientBuilder.create().build().execute(delete);
 
@@ -1044,7 +1044,7 @@ public class GXGControllerTest extends TestSpringBootInformation {
         HttpDelete delete = new HttpDelete("http://localhost:" + port + "/host/group/hostgroup1");
 
         // Header
-        delete.setHeader("Authorization", "Bearer " + token);
+        delete.setHeader("Authorization", "Bearer " + readWriteToken);
 
         HttpResponse deleteResponse = HttpClientBuilder.create().build().execute(delete);
 

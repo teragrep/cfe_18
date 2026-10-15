@@ -111,7 +111,7 @@ public class CaptureControllerTest extends TestSpringBootInformation {
         // set requestEntity to the put request
         request.setEntity(requestEntity);
         // Header
-        request.setHeader("Authorization", "Bearer " + token);
+        request.setHeader("Authorization", "Bearer " + readWriteToken);
 
         // Get the response from endpoint
         HttpClientBuilder.create().build().execute(request);
@@ -132,7 +132,7 @@ public class CaptureControllerTest extends TestSpringBootInformation {
         // set requestEntity to the put request
         request2.setEntity(requestEntity2);
         // Header
-        request2.setHeader("Authorization", "Bearer " + token);
+        request2.setHeader("Authorization", "Bearer " + readWriteToken);
 
         HttpClientBuilder.create().build().execute(request2);
 
@@ -156,7 +156,7 @@ public class CaptureControllerTest extends TestSpringBootInformation {
         // set requestEntity to the put request
         request1.setEntity(requestEntity1);
         // Header
-        request1.setHeader("Authorization", "Bearer " + token);
+        request1.setHeader("Authorization", "Bearer " + readWriteToken);
 
         // Get the response from endpoint
         HttpClientBuilder.create().build().execute(request1);
@@ -189,7 +189,7 @@ public class CaptureControllerTest extends TestSpringBootInformation {
         // set requestEntity to the put request
         request3.setEntity(requestEntity3);
         // Header
-        request3.setHeader("Authorization", "Bearer " + token);
+        request3.setHeader("Authorization", "Bearer " + readWriteToken);
 
         // Get the response from endpoint
         HttpResponse httpResponse = HttpClientBuilder.create().build().execute(request3);
@@ -243,7 +243,7 @@ public class CaptureControllerTest extends TestSpringBootInformation {
         // set requestEntity to the put request
         request3.setEntity(requestEntity3);
         // Header
-        request3.setHeader("Authorization", "Bearer " + token);
+        request3.setHeader("Authorization", "Bearer " + readWriteToken);
 
         // Get the response from endpoint
         HttpResponse httpResponse = HttpClientBuilder.create().build().execute(request3);
@@ -294,7 +294,7 @@ public class CaptureControllerTest extends TestSpringBootInformation {
         // Asserting get request                                            // relp id
         HttpGet requestGet = new HttpGet("http://localhost:" + port + "/capture/relp/" + 2);
 
-        requestGet.setHeader("Authorization", "Bearer " + token);
+        requestGet.setHeader("Authorization", "Bearer " + readWriteToken);
 
         HttpResponse responseGet = HttpClientBuilder.create().build().execute(requestGet);
 
@@ -330,7 +330,7 @@ public class CaptureControllerTest extends TestSpringBootInformation {
         // Asserting get request                                            // cfe id
         HttpGet requestGet = new HttpGet("http://localhost:" + port + "/capture/file/" + 1);
 
-        requestGet.setHeader("Authorization", "Bearer " + token);
+        requestGet.setHeader("Authorization", "Bearer " + readWriteToken);
 
         HttpResponse responseGet = HttpClientBuilder.create().build().execute(requestGet);
 
@@ -384,7 +384,7 @@ public class CaptureControllerTest extends TestSpringBootInformation {
         // Asserting get request
         HttpGet requestGet = new HttpGet("http://localhost:" + port + "/capture/");
 
-        requestGet.setHeader("Authorization", "Bearer " + token);
+        requestGet.setHeader("Authorization", "Bearer " + readWriteToken);
 
         HttpResponse responseGet = HttpClientBuilder.create().build().execute(requestGet);
 
@@ -425,7 +425,7 @@ public class CaptureControllerTest extends TestSpringBootInformation {
         // Asserting get request
         HttpGet requestGet = new HttpGet("http://localhost:" + port + "/capture/?lastId=0&pageSize=1");
 
-        requestGet.setHeader("Authorization", "Bearer " + token);
+        requestGet.setHeader("Authorization", "Bearer " + readWriteToken);
 
         HttpResponse responseGet = HttpClientBuilder.create().build().execute(requestGet);
 
@@ -464,7 +464,7 @@ public class CaptureControllerTest extends TestSpringBootInformation {
         // Asserting get request
         HttpGet requestGet = new HttpGet("http://localhost:" + port + "/capture/?lastId=1&pageSize=1");
 
-        requestGet.setHeader("Authorization", "Bearer " + token);
+        requestGet.setHeader("Authorization", "Bearer " + readWriteToken);
 
         HttpResponse responseGet = HttpClientBuilder.create().build().execute(requestGet);
 
@@ -523,7 +523,7 @@ public class CaptureControllerTest extends TestSpringBootInformation {
 
         HttpGet requestGet = new HttpGet("http://localhost:" + port + "/capture/?pageSize=1");
 
-        requestGet.setHeader("Authorization", "Bearer " + token);
+        requestGet.setHeader("Authorization", "Bearer " + readWriteToken);
 
         HttpResponse responseGet = HttpClientBuilder.create().build().execute(requestGet);
 
@@ -540,7 +540,7 @@ public class CaptureControllerTest extends TestSpringBootInformation {
 
         HttpGet requestGetSecond = new HttpGet("http://localhost:" + port + "/capture/?lastId="+lastId+"&pageSize=1");
 
-        requestGetSecond.setHeader("Authorization", "Bearer " + token);
+        requestGetSecond.setHeader("Authorization", "Bearer " + readWriteToken);
 
         HttpResponse responseGetSecond = HttpClientBuilder.create().build().execute(requestGetSecond);
 
@@ -563,7 +563,7 @@ public class CaptureControllerTest extends TestSpringBootInformation {
         HttpDelete delete = new HttpDelete("http://localhost:" + port + "/capture/124124");
 
         // Header
-        delete.setHeader("Authorization", "Bearer " + token);
+        delete.setHeader("Authorization", "Bearer " + readWriteToken);
 
         HttpResponse deleteResponse = HttpClientBuilder.create().build().execute(delete);
 
@@ -590,7 +590,7 @@ public class CaptureControllerTest extends TestSpringBootInformation {
         HttpDelete delete = new HttpDelete("http://localhost:" + port + "/capture/" + 1);
 
         // Header
-        delete.setHeader("Authorization", "Bearer " + token);
+        delete.setHeader("Authorization", "Bearer " + readWriteToken);
 
         HttpResponse deleteResponse = HttpClientBuilder.create().build().execute(delete);
 

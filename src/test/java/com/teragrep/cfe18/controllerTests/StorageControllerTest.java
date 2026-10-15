@@ -101,7 +101,7 @@ public class StorageControllerTest extends TestSpringBootInformation {
         // set requestEntity to the put request
         request.setEntity(requestEntity);
         // Header
-        request.setHeader("Authorization", "Bearer " + token);
+        request.setHeader("Authorization", "Bearer " + readWriteToken);
 
         // Get the response from endpoint
         HttpResponse httpResponse = HttpClientBuilder.create().build().execute(request);
@@ -146,7 +146,7 @@ public class StorageControllerTest extends TestSpringBootInformation {
         // Asserting get request
         HttpGet requestGet = new HttpGet("http://localhost:" + port + "/storage");
 
-        requestGet.setHeader("Authorization", "Bearer " + token);
+        requestGet.setHeader("Authorization", "Bearer " + readWriteToken);
 
         HttpResponse responseGet = HttpClientBuilder.create().build().execute(requestGet);
 
@@ -178,7 +178,7 @@ public class StorageControllerTest extends TestSpringBootInformation {
         // set requestEntity to the put request
         request.setEntity(requestEntity);
         // Header
-        request.setHeader("Authorization", "Bearer " + token);
+        request.setHeader("Authorization", "Bearer " + readWriteToken);
 
         // Get the response from endpoint
         HttpClientBuilder.create().build().execute(request);
@@ -200,7 +200,7 @@ public class StorageControllerTest extends TestSpringBootInformation {
         // set requestEntity to the put request
         requestEntityStorage.setEntity(requestEntityStorageFlow);
         // Header
-        requestEntityStorage.setHeader("Authorization", "Bearer " + token);
+        requestEntityStorage.setHeader("Authorization", "Bearer " + readWriteToken);
 
         // Get the response from endpoint
         HttpResponse httpResponse = HttpClientBuilder.create().build().execute(requestEntityStorage);
@@ -245,7 +245,7 @@ public class StorageControllerTest extends TestSpringBootInformation {
         // Asserting get request
         HttpGet requestGet = new HttpGet("http://localhost:" + port + "/storage/flow/Testflow");
 
-        requestGet.setHeader("Authorization", "Bearer " + token);
+        requestGet.setHeader("Authorization", "Bearer " + readWriteToken);
 
         HttpResponse responseGet = HttpClientBuilder.create().build().execute(requestGet);
 
@@ -277,7 +277,7 @@ public class StorageControllerTest extends TestSpringBootInformation {
         // Asserting get request
         HttpGet requestGet = new HttpGet("http://localhost:" + port + "/storage/flow");
 
-        requestGet.setHeader("Authorization", "Bearer " + token);
+        requestGet.setHeader("Authorization", "Bearer " + readWriteToken);
 
         HttpResponse responseGet = HttpClientBuilder.create().build().execute(requestGet);
 
@@ -315,7 +315,7 @@ public class StorageControllerTest extends TestSpringBootInformation {
         // set requestEntity to the put request
         request1.setEntity(requestEntity1);
         // Header
-        request1.setHeader("Authorization", "Bearer " + token);
+        request1.setHeader("Authorization", "Bearer " + readWriteToken);
 
         // Get the response from endpoint
         HttpClientBuilder.create().build().execute(request1);
@@ -344,7 +344,7 @@ public class StorageControllerTest extends TestSpringBootInformation {
         // set requestEntity to the put request
         request3.setEntity(requestEntity3);
         // Header
-        request3.setHeader("Authorization", "Bearer " + token);
+        request3.setHeader("Authorization", "Bearer " + readWriteToken);
 
         // Get the response from endpoint
         HttpClientBuilder.create().build().execute(request3);
@@ -369,7 +369,7 @@ public class StorageControllerTest extends TestSpringBootInformation {
         // set requestEntity to the put request
         requestEntityStorage.setEntity(requestEntityStorageCapture);
         // Header
-        requestEntityStorage.setHeader("Authorization", "Bearer " + token);
+        requestEntityStorage.setHeader("Authorization", "Bearer " + readWriteToken);
 
         // Get the response from endpoint
         HttpResponse httpResponse = HttpClientBuilder.create().build().execute(requestEntityStorage);
@@ -413,7 +413,7 @@ public class StorageControllerTest extends TestSpringBootInformation {
         // Asserting get request
         HttpGet requestGet = new HttpGet("http://localhost:" + port + "/storage/capture/1");
 
-        requestGet.setHeader("Authorization", "Bearer " + token);
+        requestGet.setHeader("Authorization", "Bearer " + readWriteToken);
 
         HttpResponse responseGet = HttpClientBuilder.create().build().execute(requestGet);
 
@@ -440,7 +440,7 @@ public class StorageControllerTest extends TestSpringBootInformation {
         // Asserting get request
         HttpGet requestGet = new HttpGet("http://localhost:" + port + "/storage/capture");
 
-        requestGet.setHeader("Authorization", "Bearer " + token);
+        requestGet.setHeader("Authorization", "Bearer " + readWriteToken);
 
         HttpResponse responseGet = HttpClientBuilder.create().build().execute(requestGet);
 
@@ -460,7 +460,7 @@ public class StorageControllerTest extends TestSpringBootInformation {
         HttpDelete delete = new HttpDelete("http://localhost:" + port + "/storage/" + 124);
 
         // Header
-        delete.setHeader("Authorization", "Bearer " + token);
+        delete.setHeader("Authorization", "Bearer " + readWriteToken);
 
         HttpResponse deleteResponse = HttpClientBuilder.create().build().execute(delete);
 
@@ -488,7 +488,7 @@ public class StorageControllerTest extends TestSpringBootInformation {
         HttpDelete delete = new HttpDelete("http://localhost:" + port + "/storage/" + 1);
 
         // Header
-        delete.setHeader("Authorization", "Bearer " + token);
+        delete.setHeader("Authorization", "Bearer " + readWriteToken);
 
         HttpResponse deleteResponse = HttpClientBuilder.create().build().execute(delete);
 
@@ -514,7 +514,7 @@ public class StorageControllerTest extends TestSpringBootInformation {
         HttpDelete delete = new HttpDelete("http://localhost:" + port + "/storage/flow/" + "Testflow/" + 124);
 
         // Header
-        delete.setHeader("Authorization", "Bearer " + token);
+        delete.setHeader("Authorization", "Bearer " + readWriteToken);
 
         HttpResponse deleteResponse = HttpClientBuilder.create().build().execute(delete);
 
@@ -542,7 +542,7 @@ public class StorageControllerTest extends TestSpringBootInformation {
 
 
         // Header
-        delete.setHeader("Authorization", "Bearer " + token);
+        delete.setHeader("Authorization", "Bearer " + readWriteToken);
 
         HttpResponse deleteResponse = HttpClientBuilder.create().build().execute(delete);
 
@@ -569,7 +569,7 @@ public class StorageControllerTest extends TestSpringBootInformation {
         HttpDelete delete = new HttpDelete("http://localhost:" + port + "/storage/capture/" + 112 + "/" + 112);
 
         // Header
-        delete.setHeader("Authorization", "Bearer " + token);
+        delete.setHeader("Authorization", "Bearer " + readWriteToken);
 
         HttpResponse deleteResponse = HttpClientBuilder.create().build().execute(delete);
 
@@ -594,7 +594,7 @@ public class StorageControllerTest extends TestSpringBootInformation {
     public void testDeleteCaptureStorage() throws Exception {
         HttpDelete delete = new HttpDelete("http://localhost:" + port + "/storage/capture/" + 1 + "/" + 1);
         // Header
-        delete.setHeader("Authorization", "Bearer " + token);
+        delete.setHeader("Authorization", "Bearer " + readWriteToken);
 
         HttpResponse deleteResponse = HttpClientBuilder.create().build().execute(delete);
 
@@ -621,7 +621,7 @@ public class StorageControllerTest extends TestSpringBootInformation {
     public void testDeleteFlowStorage() throws Exception {
         HttpDelete delete = new HttpDelete("http://localhost:" + port + "/storage/flow/" + "Testflow/" + 1);
         // Header
-        delete.setHeader("Authorization", "Bearer " + token);
+        delete.setHeader("Authorization", "Bearer " + readWriteToken);
 
         HttpResponse deleteResponse = HttpClientBuilder.create().build().execute(delete);
 
@@ -648,7 +648,7 @@ public class StorageControllerTest extends TestSpringBootInformation {
     public void testDeleteStorage() throws Exception {
         HttpDelete delete = new HttpDelete("http://localhost:" + port + "/storage/" + 1);
         // Header
-        delete.setHeader("Authorization", "Bearer " + token);
+        delete.setHeader("Authorization", "Bearer " + readWriteToken);
 
         HttpResponse deleteResponse = HttpClientBuilder.create().build().execute(delete);
 
