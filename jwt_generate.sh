@@ -3,7 +3,8 @@
  # Generates public_key.pem for authentication
  # Echoes the bearer token when ran and provides public_key.pem in target directory
  # Path to public_key.pem needs to be declared in application.properties
- # spring.security.oauth2.resourceserver.jwt.public-key-location=file:/absolute/path/in/os/public_key.pem
+ # public.key.write=file:/absolute/path/in/os/public_key.pem
+ # Similar thing is generated for read only token. This is separated with _read suffix.
 
 rm -rf target
 mkdir -p target
@@ -23,7 +24,7 @@ openssl dgst -sha256 -sign target/private_key.pem -out target/jwt.signature targ
 
 JWTSIGNATURE=$(openssl base64 -e -in target/jwt.signature | tr -d '=' | tr '/+' '_-' | tr -d '\n')
 
-echo "write " ${JWTHEADER}.${JWTPAYLOAD}.${JWTSIGNATURE}
+echo "write token = " ${JWTHEADER}.${JWTPAYLOAD}.${JWTSIGNATURE}
 
 echo \
 
@@ -42,6 +43,6 @@ openssl dgst -sha256 -sign target/private_key_read.pem -out target/jwt_read.sign
 
 JWTSIGNATUREREAD=$(openssl base64 -e -in target/jwt_read.signature | tr -d '=' | tr '/+' '_-' | tr -d '\n')
 
-echo "read " ${JWTHEADERREAD}.${JWTPAYLOADREAD}.${JWTSIGNATUREREAD}
+echo "read token = " ${JWTHEADERREAD}.${JWTPAYLOADREAD}.${JWTSIGNATUREREAD}
 
 echo \
