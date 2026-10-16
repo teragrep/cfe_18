@@ -76,6 +76,12 @@ public class OAuth2ResourceServer {
     @Value("${public.key.read}")
     RSAPublicKey readKey;
 
+    private final RequestLoggingFilter requestLoggingFilter;
+
+    public OAuth2ResourceServer(){
+        this.requestLoggingFilter = new RequestLoggingFilter();
+    }
+
     /** Decodes public keys and assigns SimpleGrantedAuthority value depending on key used. Authority is used in SecurityFilterChain to match HttpMethod with given token
      *
      * @return ProviderManager
