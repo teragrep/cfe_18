@@ -43,10 +43,9 @@
  * Teragrep, the applicable Commercial License may apply to this file if you as
  * a licensee so wish it.
  */
-use cfe_18;
+USE cfe_18;
 DELIMITER //
-CREATE OR REPLACE PROCEDURE add_host_group_with_host(proc_host_id int, host_group varchar(255))
-
+CREATE OR REPLACE PROCEDURE select_host_group(p_host_group_id INT, tx_id INT)
 BEGIN
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
         BEGIN
@@ -54,31 +53,22 @@ BEGIN
             RESIGNAL;
         END;
     START TRANSACTION;
+    IF (tx_id) IS NULL THEN
+        SET @time = (SELECT MAX(transaction_id) FROM mysql.transaction_registry);
+    ELSE
+        SET @time = tx_id;
+    END IF;
+    IF ((SELECT COUNT(hg.id)
+         FROM cfe_18.host_group FOR SYSTEM_TIME AS OF TRANSACTION @time hg
+         WHERE hg.id = p_host_group_id) = 0) THEN
+        SIGNAL SQLSTATE '45000' SET MYSQL_ERRNO = 50000;
+    END IF;
 
-    if (select id from cfe_18.host where id = proc_host_id) is null then
-        SIGNAL SQLSTATE '45000' set MYSQL_ERRNO = 50000;
-    end if;
-
-    select host_type into @type from cfe_18.host where id = proc_host_id;
-
-
-    -- check if the group exists. If not then create said group
-    if (select groupName from cfe_18.host_group where groupName = host_group) is null then
-        insert into cfe_18.host_group(groupName, host_type) values (host_group, @type);
-        select last_insert_id() into @GroupId;
-    else
-        select id into @GroupId from cfe_18.host_group where groupName = host_group;
-    end if;
-
-    if (select id
-        from host_group_x_host
-        where host_group_id = @GroupId
-          and host_id = proc_host_id
-          and host_type = @type) is null then
-        insert into cfe_18.host_group_x_host(host_group_id, host_id, host_type)
-        values (@GroupId, proc_host_id, @type);
-    end if;
-    select host_group as name, @GroupId as last;
+    SELECT hg.id         AS host_group_id,
+           hg.group_name AS host_group_name,
+           hg.host_type  AS host_group_type
+    FROM cfe_18.host_group FOR SYSTEM_TIME AS OF TRANSACTION @time hg
+    WHERE hg.id = p_host_group_id;
     COMMIT;
 END;
 //

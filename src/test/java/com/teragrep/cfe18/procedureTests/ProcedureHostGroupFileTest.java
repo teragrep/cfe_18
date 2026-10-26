@@ -55,11 +55,7 @@ import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.sql.CallableStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 /*
 Tests for host group
@@ -94,9 +90,9 @@ public class ProcedureHostGroupFileTest extends DBUnitbase {
         ITable expectedTable2 = expectedDataSet.getTable("cfe_18.host");
         ITable expectedTable3 = expectedDataSet.getTable("cfe_18.host_group");
 
-        CallableStatement stmnt = conn.prepareCall("{call cfe_18.add_host_group_with_host(?,?)}");
-        stmnt.setInt(1, 1); // host id
-        stmnt.setString(2, "host_group_6");
+        CallableStatement stmnt = conn.prepareCall("{call cfe_18.insert_host_to_group(?,?)}");
+        stmnt.setInt(1, 6);
+        stmnt.setInt(2, 1);
         stmnt.execute();
         ITable actualTable2 = databaseConnection.createQueryTable("result", "select * from cfe_18.host");
         ITable actualTable3 = databaseConnection.createQueryTable("result", "select * from cfe_18.host_group");
@@ -108,40 +104,13 @@ public class ProcedureHostGroupFileTest extends DBUnitbase {
     }
 
     /*
-    This test is for checking that new host group is created when one does not exist during insertion.
-     */
-    public void testProcedureAddHostWithNewGroup() throws Exception {
-        IDataSet expectedDataSet = new FlatXmlDataSetBuilder()
-                .build(new File("src/test/resources/XMLProcedureHostGroup/procedureHostGroupTestDataExpected2.xml"));
-        ITable expectedTable1 = expectedDataSet.getTable("cfe_18.host_group_x_host");
-        ITable expectedTable2 = expectedDataSet.getTable("cfe_18.host");
-        ITable expectedTable3 = expectedDataSet.getTable("cfe_18.host_group");
-
-        CallableStatement stmnt = conn.prepareCall("{call cfe_18.add_host_group_with_host(?,?)}");
-        stmnt.setInt(1, 1); // host id
-        stmnt.setString(2, "new_host_group");
-        stmnt.execute();
-
-        ITable actualTable1 = databaseConnection.createQueryTable("result", "select * from cfe_18.host_group_x_host");
-        ITable actualTable2 = databaseConnection.createQueryTable("result", "select * from cfe_18.host");
-        ITable actualTable3 = databaseConnection.createQueryTable("result", "select * from cfe_18.host_group");
-
-        Assertion.assertEqualsIgnoreCols(expectedTable1, actualTable1, new String[] {
-                "id"
-        });
-        Assertion.assertEquals(expectedTable2, actualTable2);
-        Assertion.assertEquals(expectedTable3, actualTable3);
-
-    }
-
-    /*
     This test is for checking if the host id check is in place when inserting a host group with invalid host id
      */
     public void testHostValidityWithHostGroup() throws Exception {
         SQLException state = Assertions.assertThrows(SQLException.class, () -> {
-            CallableStatement stmnt = conn.prepareCall("{CALL cfe_18.add_host_group_with_host(?,?)}");
-            stmnt.setInt(1, 1000);
-            stmnt.setString(2, "host_group_1");
+            CallableStatement stmnt = conn.prepareCall("{CALL cfe_18.insert_host_to_group(?,?)}");
+            stmnt.setInt(1, 1);
+            stmnt.setInt(2, 1000);
             stmnt.execute();
         });
         Assertions.assertEquals("45000", state.getSQLState());
@@ -150,6 +119,8 @@ public class ProcedureHostGroupFileTest extends DBUnitbase {
     /*
     This test is for checking the validity of host group output. Goal is that the matching values are returned using correct host group name
      */
+    //"This is to be done in separate PR where HostGroup members are fetched"
+    /*
     public void testRetrieveHostGroupDetails() throws Exception {
         List<Integer> host_id = new ArrayList<>();
         List<String> md5 = new ArrayList<>();
@@ -167,4 +138,6 @@ public class ProcedureHostGroupFileTest extends DBUnitbase {
         Assertions.assertEquals(Arrays.asList(1, 2, 3, 4), host_id);
         Assertions.assertEquals(Arrays.asList("12365", "12322", "1323", "4123"), md5);
     }
+    
+     */
 }

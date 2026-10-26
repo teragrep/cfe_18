@@ -62,7 +62,7 @@ BEGIN
            cdg.capture_def_group_name as capture_group_name,
            cdg.capture_type           as capture_type,
            hg.id                      as host_group_id,
-           hg.groupName               as host_group_name,
+           hg.group_name               as host_group_name,
            hg.host_type               as host_type
     from cfe_18.host_groups_x_capture_def_group for system_time as of transaction @time hgxcdg
              inner join capture_def_group for system_time as of transaction @time cdg on hgxcdg.capture_group_id = cdg.id
