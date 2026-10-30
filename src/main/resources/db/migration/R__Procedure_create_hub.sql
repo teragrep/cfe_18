@@ -43,9 +43,10 @@
  * Teragrep, the applicable Commercial License may apply to this file if you as
  * a licensee so wish it.
  */
-use cfe_18;
+USE cfe_18;
 DELIMITER //
-CREATE OR REPLACE PROCEDURE retrieve_cfe_hub_details(proc_hub_id int,tx_id int)
+CREATE OR REPLACE PROCEDURE insert_cfe_hub(fqhost VARCHAR(128), md5 VARCHAR(32),
+                                           ip VARCHAR(255))
 BEGIN
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
         BEGIN
@@ -53,23 +54,43 @@ BEGIN
             RESIGNAL;
         END;
     START TRANSACTION;
-            if(tx_id) is null then
-             set @time = (select max(transaction_id) from mysql.transaction_registry);
-        else
-             set @time=tx_id;
-        end if;
-    if (select id from cfe_18.hubs for system_time as of transaction @time where id = proc_hub_id) is null then
-        SIGNAL SQLSTATE '45000' set MYSQL_ERRNO = 50000;
-    end if;
-    select hu.id      as hub_id,
-           hu.host_id as host_id,
-           h.fqhost   as hub_fq_host,
-           hu.ip      as ip,
-           h.md5      as md5
-    from cfe_18.hubs for system_time as of transaction @time hu
-             inner join cfe_18.host for system_time as of transaction @time h on hu.host_id = h.id
-    where hu.id = proc_hub_id;
+    IF ((SELECT COUNT(h.id)
+         FROM cfe_18.host h
+         WHERE h.MD5 = md5
+           AND h.fqhost = fqhost
+           AND h.host_type = 'CFE') = 0) THEN
+
+        INSERT INTO cfe_18.host(MD5, fqhost, host_type)
+        VALUES (md5, fqhost, 'CFE');
+        SELECT LAST_INSERT_ID() INTO @hid;
+    ELSE
+        SELECT id INTO @hid FROM cfe_18.host h WHERE h.MD5 = md5 AND h.fqhost = fqhost AND h.host_type = 'CFE';
+    END IF;
+
+    IF ((SELECT COUNT(hu.host_id)
+         FROM cfe_18.hubs hu
+         WHERE hu.host_id = @hid
+           AND hu.ip = ip
+           AND hu.host_type = 'CFE') = 0) THEN
+
+        INSERT INTO cfe_18.hubs(host_id, ip, host_type)
+        VALUES (@hid, ip, 'CFE');
+    END IF;
+
+    SELECT id INTO @id FROM cfe_18.hubs hu WHERE hu.host_id = @hid AND hu.ip = ip AND hu.host_type = 'CFE';
+
+    IF ((SELECT COUNT(htc.host_id)
+         FROM cfe_18.host_type_cfe htc
+         WHERE htc.host_id = @hid
+           AND htc.host_type = 'CFE'
+           AND htc.hub_id = @id) = 0) THEN
+
+        INSERT INTO cfe_18.host_type_cfe(host_id, host_type, hub_id)
+        VALUES (@hid, 'CFE', @id);
+    END IF;
     COMMIT;
+    SELECT @id AS id;
+
 END;
 //
 DELIMITER ;

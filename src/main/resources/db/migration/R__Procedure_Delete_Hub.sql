@@ -43,9 +43,9 @@
  * Teragrep, the applicable Commercial License may apply to this file if you as
  * a licensee so wish it.
  */
-use cfe_18;
+USE cfe_18;
 DELIMITER //
-CREATE OR REPLACE PROCEDURE remove_hub(proc_hub_id int)
+CREATE OR REPLACE PROCEDURE delete_hub(input_hub_id INT)
 BEGIN
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
         BEGIN
@@ -53,36 +53,29 @@ BEGIN
             RESIGNAL;
         END;
     START TRANSACTION;
-    if (select id from cfe_18.hubs where id = proc_hub_id) is null then
-        SIGNAL SQLSTATE '45000' set MYSQL_ERRNO = 50000;
-    end if;
+    IF ((SELECT COUNT(id) FROM cfe_18.hubs WHERE id = input_hub_id) = 0) THEN
+        SIGNAL SQLSTATE '45000' SET MYSQL_ERRNO = 50000;
+    END IF;
 
-
-    select h.id
-    into @hostid
-    from cfe_18.host h
-             inner join hubs h2 on h.id = h2.host_id
-    where h2.id = proc_hub_id;
-
-
-    select count(htc.host_id)
-    into @rowcount
-    from cfe_18.host_type_cfe htc
-    where hub_id = proc_hub_id
-      and host_id != @hostid;
-
-    if (@rowcount > 0) then
-        select count(htc2.host_id)
-        into @hamount
-        from cfe_18.host_type_cfe htc2
-        where hub_id = proc_hub_id;
-        signal sqlstate '45000' set MYSQL_ERRNO = 50020 ;
-    end if;
-
-    delete from cfe_18.host_type_cfe where hub_id = proc_hub_id;
-    delete from cfe_18.hubs where id = proc_hub_id;
-    delete from cfe_18.host where id = @hostid;
+    -- check if there are hosts using the hub before deleting
+    -- Without this check all the hosts connected to hub are deleted. This is due to host_type_cfe delete on cascade hosts.
+    IF ((SELECT COUNT(htc.host_id)
+         FROM cfe_18.host_type_cfe htc
+         WHERE htc.hub_id = input_hub_id
+           AND htc.host_id != (SELECT h.id
+                           FROM cfe_18.host h
+                                    INNER JOIN hubs h2 ON h.id = h2.host_id
+                           WHERE h2.id = input_hub_id)) > 0) THEN
+        -- Signal user error due to user not removing hosts from Hub before deleting.
+        SIGNAL SQLSTATE '45000' SET MYSQL_ERRNO = 50020;
+    END IF;
+    -- select the host id before deleting hub since it's not accessible later
+    SELECT host_id INTO @HostId FROM cfe_18.hubs WHERE id = input_hub_id;
+    DELETE FROM cfe_18.host_type_cfe WHERE hub_id = input_hub_id;
+    DELETE FROM cfe_18.hubs WHERE id = input_hub_id;
+    DELETE FROM cfe_18.host WHERE id = @HostId;
     COMMIT;
+
 END;
 
 //
