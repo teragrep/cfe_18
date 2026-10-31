@@ -72,7 +72,7 @@ BEGIN
     VALUES (p_capture_id, @keyId, capture_meta_value);
 
     -- return ID
-    SELECT distinct cm.capture_id AS id FROM cfe_18.capture_meta cm WHERE cm.capture_id = p_capture_id;
+    SELECT distinct cm.capture_id AS id, cm.meta_key_id as keyId FROM cfe_18.capture_meta cm WHERE cm.capture_id = p_capture_id;
     COMMIT;
 END;
 //

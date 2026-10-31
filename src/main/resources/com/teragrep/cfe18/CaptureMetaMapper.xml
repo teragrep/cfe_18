@@ -12,6 +12,7 @@
     <!-- ID return map -->
     <resultMap id="insertedID" type="com.teragrep.cfe18.handlers.entities.CaptureMeta">
         <result property="captureId"                       column="id"/>
+        <result property="metaKeyId"                       column="keyId"/>
     </resultMap>
 
     <!-- get                ( capture_id INT, tx_id INT ) -->

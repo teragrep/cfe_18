@@ -123,7 +123,8 @@ public class CaptureMetaController {
                 );
         LOGGER.debug("Values returned <[{}]>", cm);
         JSONObject jsonObject = new JSONObject();
-        jsonObject.put("id", captureId);
+        jsonObject.put("id", cm.captureId);
+        jsonObject.put("keyId", cm.metaKeyId);
         jsonObject.put("message", "New capture meta created");
         return new ResponseEntity<>(jsonObject.toString(), HttpStatus.CREATED);
 
