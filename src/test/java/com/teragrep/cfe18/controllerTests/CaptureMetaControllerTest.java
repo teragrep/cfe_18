@@ -119,10 +119,16 @@ public class CaptureMetaControllerTest extends TestSpringBootInformation {
         JSONObject responseAsJson = Assertions.assertDoesNotThrow(() -> new JSONObject(responseString));
 
         String expected = "New capture meta created";
+        int expectedId = 1;
+        int expectedKeyId = 1;
 
         String actual = Assertions.assertDoesNotThrow(() -> responseAsJson.get("message").toString());
+        int actualId = Assertions.assertDoesNotThrow(() -> responseAsJson.getInt("id"));
+        int actualKeyId = Assertions.assertDoesNotThrow(() -> responseAsJson.getInt("keyId"));
 
         assertEquals(expected, actual);
+        assertEquals(expectedId, actualId);
+        assertEquals(expectedKeyId, actualKeyId);
         assertEquals(HttpStatus.SC_CREATED, httpResponse.getStatusLine().getStatusCode());
     }
 

@@ -51,6 +51,8 @@ public class CaptureMeta {
 
     @Schema(accessMode = Schema.AccessMode.READ_ONLY)
     public int captureId;
+    @Schema(accessMode = Schema.AccessMode.READ_ONLY)
+    public int metaKeyId;
     public String captureMetaKey;
     public String captureMetaValue;
 
