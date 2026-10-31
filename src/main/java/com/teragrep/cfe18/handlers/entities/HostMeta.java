@@ -53,6 +53,8 @@ public class HostMeta {
 
     @Schema(accessMode = Schema.AccessMode.READ_ONLY)
     private int hostId;
+    @Schema(accessMode = Schema.AccessMode.READ_ONLY)
+    private int metaKeyId;
     private String metaKey;
     private String metaValue;
 
@@ -62,6 +64,14 @@ public class HostMeta {
 
     public void setHostId(int hostId) {
         this.hostId = hostId;
+    }
+
+    public int getMetaKeyId() {
+        return metaKeyId;
+    }
+
+    public void setMetaKeyId(int metaKeyId) {
+        this.metaKeyId = metaKeyId;
     }
 
     public String getMetaKey() {
@@ -82,7 +92,7 @@ public class HostMeta {
 
     @Override
     public String toString() {
-        return "HostMeta{" + "hostId=" + hostId + ", metaKey='" + metaKey + '\'' + ", metaValue='" + metaValue + '\''
-                + '}';
+        return "HostMeta{" + "hostId=" + hostId + ", metaKeyId=" + metaKeyId + ", metaKey='" + metaKey + '\''
+                + ", metaValue='" + metaValue + '\'' + '}';
     }
 }

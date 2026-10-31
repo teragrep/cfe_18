@@ -113,6 +113,7 @@ public class HostMetaController {
         LOGGER.debug("Values returned <[{}]>", hm);
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("id", hm.getHostId());
+        jsonObject.put("keyId", hm.getMetaKeyId());
         jsonObject.put("message", "New host meta added");
         return new ResponseEntity<>(jsonObject.toString(), HttpStatus.CREATED);
     }

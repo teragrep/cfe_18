@@ -12,6 +12,7 @@
     <!-- ID return map -->
     <resultMap id="insertedID" type="com.teragrep.cfe18.handlers.entities.HostMeta">
         <result property="hostId"    column="host_id"/>
+        <result property="metaKeyId"    column="keyId"/>
     </resultMap>
 
     <!-- meta_key VARCHAR(1024), tx_id INT -->

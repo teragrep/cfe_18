@@ -106,10 +106,16 @@ public class HostMetaControllerTest extends TestSpringBootInformation {
         JSONObject responseAsJson = Assertions.assertDoesNotThrow(() -> new JSONObject(responseString));
 
         String expected = "New host meta added";
+        int expectedKeyId = 1;
+        int expectedId = 1;
 
         String actual = Assertions.assertDoesNotThrow(() -> responseAsJson.get("message").toString());
+        int actualKeyId = Assertions.assertDoesNotThrow(() -> responseAsJson.getInt("id"));
+        int actualId = Assertions.assertDoesNotThrow(() -> responseAsJson.getInt("keyId"));
 
         assertEquals(expected, actual);
+        assertEquals(expectedKeyId, actualKeyId);
+        assertEquals(expectedId, actualId);
         assertEquals(HttpStatus.SC_CREATED, httpResponse.getStatusLine().getStatusCode());
     }
 
