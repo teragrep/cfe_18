@@ -43,22 +43,43 @@
  * Teragrep, the applicable Commercial License may apply to this file if you as
  * a licensee so wish it.
  */
-use cfe_18;
+USE cfe_18;
 DELIMITER //
-CREATE OR REPLACE PROCEDURE remove_hostmeta_ip(proc_ip_id int)
+CREATE OR REPLACE PROCEDURE select_all_host_metas(p_host_id INT, meta_key VARCHAR(1024), tx_id INT)
 BEGIN
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
         BEGIN
             ROLLBACK;
             RESIGNAL;
         END;
-    START TRANSACTION;
-    if (select id from cfe_18.ip_addresses where id = proc_ip_id) is null then
-        SELECT JSON_OBJECT('id', null, 'message', 'IP does not exist') into @i;
-        signal sqlstate '45000' set message_text = @i;
-    end if;
-    delete from cfe_18.ip_addresses where id = proc_ip_id;
-    COMMIT;
+    IF (tx_id) IS NULL THEN
+        SET @time = (SELECT MAX(transaction_id) FROM mysql.transaction_registry);
+    ELSE
+        SET @time = tx_id;
+    END IF;
+        if((select count(*) from cfe_18.host_meta where host_id=p_host_id)=0) THEN
+        SIGNAL SQLSTATE '45000' SET MYSQL_ERRNO =50000;
+    END IF;
+
+    -- if no key is provided
+    IF meta_key IS NULL THEN
+        SELECT hm.host_id        AS host_id,
+               hmk.meta_key_name AS meta_key,
+               hm.meta_value     AS meta_value
+        FROM cfe_18.host_meta FOR SYSTEM_TIME AS OF TRANSACTION @time hm
+                 INNER JOIN cfe_18.host_meta_key FOR SYSTEM_TIME AS OF TRANSACTION @time hmk
+        WHERE hm.host_id = p_host_id;
+    ELSE
+        -- if key is provided then sort by key
+        SELECT hm.host_id        AS host_id,
+               hmk.meta_key_name AS meta_key,
+               hm.meta_value     AS meta_value
+        FROM cfe_18.host_meta FOR SYSTEM_TIME AS OF TRANSACTION @time hm
+                 INNER JOIN cfe_18.host_meta_key FOR SYSTEM_TIME AS OF TRANSACTION @time hmk
+        WHERE hm.host_id = p_host_id
+          AND hmk.meta_key_name = meta_key;
+    END IF;
+
 END;
 //
 DELIMITER ;

@@ -46,8 +46,6 @@
 package com.teragrep.cfe18;
 
 import com.teragrep.cfe18.handlers.entities.HostMeta;
-import com.teragrep.cfe18.handlers.entities.InterfaceType;
-import com.teragrep.cfe18.handlers.entities.IPAddress;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
@@ -55,23 +53,9 @@ import java.util.List;
 @Mapper
 public interface HostMetaMapper {
 
-    List<HostMeta> getHostMetaById(int host_meta_id, Integer version);
+    HostMeta create(final Integer hostId, final String key, final String hostMetaValue);
 
-    HostMeta addHostMeta(String arch, String flavor, String hostname, int host_id, String os, String release_version);
+    List<HostMeta> get(final Integer hostMetaId, final String key, final Integer version);
 
-    InterfaceType addInterface_type(String interface_type, int host_meta_id);
-
-    IPAddress addIpAddress(int host_meta_id, String ip_address);
-
-    List<HostMeta> getAllHostMeta(Integer version);
-
-    List<IPAddress> getAllHostMetaIp(Integer version);
-
-    List<InterfaceType> getAllHostMetaInterface(Integer version);
-
-    IPAddress deleteIp(int id);
-
-    InterfaceType deleteInterface(int id);
-
-    HostMeta deleteHostmeta(int id);
+    void delete(final Integer id, final String key);
 }
